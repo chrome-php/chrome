@@ -4,7 +4,7 @@
   "description": "Control headless chrome instances from php",
   "type": "library",
   "keywords": ["chrome", "browser", "headless"],
-  "homepage": "https://github.com/gsouf/headless-chrome-php",
+  "homepage": "https://github.com/gsouf/headless-chromium-php",
   "license": "Fair",
 
   "authors": [

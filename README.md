@@ -1,8 +1,8 @@
-HEADLESS CHROME FOR PHP
-=======================
+HEADLESS CHROMIUM PHP
+=====================
 
 
-Control headless chrome from php.
+Control headless chrome from PHP.
 
 
 
@@ -16,7 +16,6 @@ communicate directly with chrome devtool protocol.
 Example:
 
 ```php
-
   use HeadlessChromium\Communication\Connection;
   use HeadlessChromium\Communication\Message;
 
@@ -38,5 +37,4 @@ Example:
   }else {
     // not ok
   }
-
 ```
