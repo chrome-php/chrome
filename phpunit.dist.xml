@@ -1,0 +1,38 @@
+<phpunit bootstrap="vendor/autoload.php"
+         backupGlobals="false"
+         forceCoversAnnotation="true"
+         backupStaticAttributes="false"
+         colors="true"
+         verbose="true"
+         convertErrorsToExceptions="true"
+         convertNoticesToExceptions="true"
+         convertWarningsToExceptions="true"
+         processIsolation="false"
+         stopOnFailure="false">
+
+    <testsuites>
+        <testsuite>
+            <directory>test/suites</directory>
+        </testsuite>
+    </testsuites>
+
+
+    <filter>
+        <blacklist>
+            <directory>./vendor</directory>
+            <directory>./doc</directory>
+            <directory>./script</directory>
+            <directory>./test</directory>
+        </blacklist>
+        <whitelist processUncoveredFilesFromWhitelist="true">
+            <directory suffix=".php">./src</directory>
+        </whitelist>
+    </filter>
+
+    <logging>
+        <log type="coverage-html" target="build/logs/html" lowUpperBound="35" highLowerBound="70"/>
+        <log type="coverage-clover" target="build/logs/clover.xml"/>
+        <log type="coverage-text" target="php://stdout" showUncoveredFiles="false"/>
+    </logging>
+
+</phpunit>

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ruleset name="gsouf">
+
+    <file>./src/</file>
+    <file>./test/suites</file>
+
+    <!--The complete PSR-2 ruleset-->
+    <rule ref="PSR2"/>
+
+    <!-- Arrays -->
+    <rule ref="Generic.Arrays.DisallowLongArraySyntax"/>
+    <rule ref="Squiz.Arrays.ArrayBracketSpacing"/>
+
+    <!-- Long lines do no apply on test files -->
+    <rule ref="Generic.Files.LineLength.TooLong">
+        <exclude-pattern>./test/*</exclude-pattern>
+    </rule>
+    <!-- When test method have weird signatures -->
+    <rule ref="PEAR.Functions.ValidDefaultValue.NotAtEnd">
+        <exclude-pattern>./test/*</exclude-pattern>
+    </rule>
+
+    <!-- By default we use single quote only. Double quotes come when a variable is inside -->
+    <rule ref="Squiz.Strings.DoubleQuoteUsage">
+        <exclude name="Squiz.Strings.DoubleQuoteUsage.ContainsVar"/>
+    </rule>
+
+    <!-- Disallow some function like var_dump -->
+    <rule ref="Squiz.PHP.ForbiddenFunctions">
+        <properties>
+            <property name="forbiddenFunctions" type="array" value="dump=>null,var_dump=>null,sizeof=>count,delete=>unset,print=>echo"/>
+        </properties>
+    </rule>
+
+
+</ruleset>
