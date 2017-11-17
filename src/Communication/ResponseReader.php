@@ -93,8 +93,8 @@ class ResponseReader
             return $this->getResponse();
         }
 
-        // default 1000ms
-        $timeout = $timeout ?? 1000;
+        // default 2000ms
+        $timeout = $timeout ?? 2000;
 
         // 10 microseconds between each iteration
         $tryDelay = 10;

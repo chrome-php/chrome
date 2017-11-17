@@ -10,6 +10,7 @@ use HeadlessChromium\Communication\Socket\Wrench;
 use HeadlessChromium\Exception\CommunicationException;
 use HeadlessChromium\Exception\CommunicationException\InvalidResponse;
 use HeadlessChromium\Exception\CommunicationException\CannotReadResponse;
+use HeadlessChromium\Exception\NoResponseAvailable;
 use Wrench\Client as WrenchBaseClient;
 
 class Connection
@@ -29,8 +30,14 @@ class Connection
     protected $responseBuffer = [];
 
     /**
+     * Default timeout for send sync in ms
+     * @var int
+     */
+    protected $sendSyncDefaultTimeout = 10000;
+
+    /**
      * CommunicationChannel constructor.
-     * @param $wsUri
+     * @param SocketInterface|string $socketClient
      */
     public function __construct($socketClient)
     {
@@ -92,6 +99,7 @@ class Connection
     /**
      * Sends the given message and returns a response reader
      * @param Message $message
+     * @throws CommunicationException
      * @return ResponseReader
      */
     public function sendMessage(Message $message): ResponseReader
@@ -107,6 +115,24 @@ class Connection
         }
 
         return new ResponseReader($message, $this);
+    }
+
+    /**
+     * @param Message $message
+     * @param int|null $timeout
+     * @throws NoResponseAvailable
+     * @return Response
+     */
+    public function sendMessageSync(Message $message, $timeout = null): Response
+    {
+        $responseReader = $this->sendMessage($message);
+        $response = $responseReader->waitForResponse($timeout ?? $this->sendSyncDefaultTimeout);
+
+        if (!$response) {
+            throw new NoResponseAvailable('No response was sent in the given timeout');
+        }
+
+        return $response;
     }
 
     /**

@@ -11,6 +11,7 @@ use HeadlessChromium\Communication\ResponseReader;
 use HeadlessChromium\Communication\Socket\MockSocket;
 use HeadlessChromium\Exception\CommunicationException\CannotReadResponse;
 use HeadlessChromium\Exception\CommunicationException\InvalidResponse;
+use HeadlessChromium\Exception\NoResponseAvailable;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -75,6 +76,33 @@ class ConnectionTest extends TestCase
         );
     }
 
+    public function testSendMessageSync()
+    {
+        $connection = new Connection($this->mocSocket);
+        $connection->connect();
+
+        $message = new Message('foo', ['bar' => 'baz']);
+
+        $this->mocSocket->addReceivedData(json_encode(['id' => 2, 'bar' => 'foo']));
+
+        $response = $connection->sendMessageSync($message, 2);
+
+        $this->assertSame($message, $response->getMessage());
+        $this->assertEquals(['id' => 2, 'bar' => 'foo'], $response->getData());
+    }
+
+    public function testSendMessageSyncException()
+    {
+        $connection = new Connection($this->mocSocket);
+        $connection->connect();
+
+        $message = new Message('foo', ['bar' => 'baz']);
+
+        $this->expectException(NoResponseAvailable::class);
+
+        $connection->sendMessageSync($message, 2);
+    }
+    
     public function testReadData()
     {
         $connection = new Connection($this->mocSocket);
