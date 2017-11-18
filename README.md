@@ -23,11 +23,11 @@ Example:
   $webSocketUri = 'ws://127.0.0.1:9222/devtools/browser/xxx';
 
   // create a connection
-  $channel = new Connection($webSocketUri);
-  $channel->connect();
+  $connection = new Connection($webSocketUri);
+  $connection->connect();
   
   // send method "Target.activateTarget"
-  $responseReader = $channel->sendMessage(New Message('Target.activateTarget', ['targetId' => 'xxx']));
+  $responseReader = $connection->sendMessage(new Message('Target.activateTarget', ['targetId' => 'xxx']));
   
   // wait up to 1000ms for a response
   $response = $responseReader->waitForResponse(1000);
@@ -37,4 +37,17 @@ Example:
   }else {
     // not ok
   }
+```
+
+Create a session and send message to the target:
+
+```php
+  // given a target id
+  $targetId = 'yyy';
+
+  // create a session for this target (attachToTarget)
+  $session = $connection->createSession($targetId);
+
+  // send message to this target (Target.sendMessageToTarget)
+  $response = $session->sendMessageSync(new Message('Page.reload'));
 ```
