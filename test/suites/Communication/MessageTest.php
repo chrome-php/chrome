@@ -21,6 +21,11 @@ class MessageTest extends TestCase
         $this->assertEquals('foo', $message->getMethod());
         $this->assertEquals(['bar' => 'baz'], $message->getParams());
 
+        $this->assertEquals(
+            json_encode(['id' => $message->getId(), 'method' => 'foo', 'params' => ['bar' => 'baz']]),
+            (string) $message
+        );
+
         $message2 = new Message('qux', ['quux' => 'corge']);
         $this->assertEquals(Message::getLastMessageId(), $message2->getId());
         $this->assertNotSame($message->getId(), $message2->getId());

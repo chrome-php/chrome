@@ -73,4 +73,16 @@ class Message
     {
         return $this->params;
     }
+
+    /**
+     * @inheritdoc
+     */
+    public function __toString(): string
+    {
+        return json_encode([
+            'id'        => $this->getId(),
+            'method'    => $this->getMethod(),
+            'params'    => $this->getParams()
+        ]);
+    }
 }
