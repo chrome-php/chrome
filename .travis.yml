@@ -14,11 +14,12 @@ matrix:
 
   allow_failures:
   - php: nightly
+  - php: hhvm
 
 before_script:
   - if [ -z "$IGNORE_XDEBUG" ];then phpenv config-rm xdebug.ini; fi
   - travis_retry composer self-update
-  - travis_retry composer update --prefer-dist
+  - travis_retry composer update --prefer-dist --ignore-platform-reqs
   - if [ -n "$PROCESS_CODECLIMATE" ];then echo 'zend_extension=xdebug.so' >> ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/travis.ini; fi
 
 script: ./test/bin/ci.bash summary
