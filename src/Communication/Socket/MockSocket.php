@@ -14,6 +14,7 @@ class MockSocket implements SocketInterface
     protected $sentData = [];
 
     protected $receivedData = [];
+    protected $receivedDataForNextMessage = [];
 
     protected $isConnected = false;
 
@@ -30,6 +31,17 @@ class MockSocket implements SocketInterface
         }
 
         $this->sentData[] = $data;
+
+        if (!empty($this->receivedDataForNextMessage)) {
+            $data = json_decode($data, true);
+            if ($data['id']) {
+                $next = array_shift($this->receivedDataForNextMessage);
+                $next = json_decode($next, true);
+                $next['id'] = $data['id'];
+                $this->receivedData[] = json_encode($next);
+            }
+        }
+
         return true;
     }
 
@@ -62,11 +74,17 @@ class MockSocket implements SocketInterface
     /**
      * Add data to be returned with receiveData
      * @param $data
+     * @param $forNextMessage
      */
-    public function addReceivedData($data)
+    public function addReceivedData($data, $forNextMessage = false)
     {
-        $this->receivedData[] = $data;
+        if ($forNextMessage) {
+            $this->receivedDataForNextMessage[] = $data;
+        } else {
+            $this->receivedData[] = $data;
+        }
     }
+
 
 
     /**

@@ -51,4 +51,20 @@ class MockSocketTest extends TestCase
         $mock->disconnect();
         $this->assertFalse($mock->isConnected());
     }
+    
+    public function testReceivedDateForNextMessage()
+    {
+        $mock = new MockSocket();
+
+        // connected
+        $mock->connect();
+        
+        $mock->addReceivedData(json_encode(['foo' => 'bar']), true);
+
+        $this->assertEmpty($mock->receiveData());
+
+        $mock->sendData(json_encode(['id' => 1]));
+
+        $this->assertEquals([json_encode(['foo' => 'bar', 'id' => 1])], $mock->receiveData());
+    }
 }
