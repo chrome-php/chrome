@@ -1,9 +1,6 @@
 <?php
 /**
- * Created by PhpStorm.
- * User: bob
- * Date: 18/11/17
- * Time: 19:03
+ * @license see LICENSE
  */
 
 namespace HeadlessChromium\Communication;
