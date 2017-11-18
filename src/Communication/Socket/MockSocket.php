@@ -74,7 +74,8 @@ class MockSocket implements SocketInterface
     /**
      * Add data to be returned with receiveData
      * @param $data
-     * @param $forNextMessage
+     * @param bool $forNextMessage true to set the response id automatically
+     * for next message (can stack for multiple messages
      */
     public function addReceivedData($data, $forNextMessage = false)
     {
@@ -84,8 +85,6 @@ class MockSocket implements SocketInterface
             $this->receivedData[] = $data;
         }
     }
-
-
 
     /**
      * @inheritdoc
