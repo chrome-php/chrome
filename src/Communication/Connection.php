@@ -104,14 +104,18 @@ class Connection
      */
     public function sendMessage(Message $message): ResponseReader
     {
-        $sent = $this->wsClient->sendData(json_encode([
-            'id'        => $message->getId(),
-            'method'    => $message->getMethod(),
-            'params'    => $message->getParams()
-        ]));
+        $sent = $this->wsClient->sendData((string)$message);
 
         if (!$sent) {
-            throw new CommunicationException('Message could not be sent');
+            $message = 'Message could not be sent.';
+
+            if (!$this->isConnected()) {
+                $message .= ' Reason: the connection is closed.';
+            } else {
+                $message .= ' Reason: unknown.';
+            }
+
+            throw new CommunicationException($message);
         }
 
         return new ResponseReader($message, $this);
@@ -133,6 +137,20 @@ class Connection
         }
 
         return $response;
+    }
+
+    /**
+     * Create a session for the given target id
+     * @param $targetId
+     * @return Session
+     */
+    public function createSession($targetId): Session
+    {
+        $response = $this->sendMessageSync(
+            new Message('Target.attachToTarget', ['targetId' => $targetId])
+        );
+        $sessionId = $response['result']['sessionId'];
+        return new Session($targetId, $sessionId, $this);
     }
 
     /**
@@ -178,6 +196,11 @@ class Connection
 
             // id is required to identify the response
             if (!isset($response['id'])) {
+                if (isset($response['method'])) {
+                    // TODO handle events?
+                    continue;
+                }
+
                 if ($this->isStrict()) {
                     throw new InvalidResponse(
                         'Response from chrome remote interface did not provide a valid message id'
@@ -185,6 +208,8 @@ class Connection
                 }
                 continue;
             }
+
+
 
             // flag data received
             $hasData = true;

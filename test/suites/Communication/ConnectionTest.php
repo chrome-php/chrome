@@ -8,6 +8,7 @@ namespace HeadlessChromium\Test\Communication;
 use HeadlessChromium\Communication\Connection;
 use HeadlessChromium\Communication\Message;
 use HeadlessChromium\Communication\ResponseReader;
+use HeadlessChromium\Communication\Session;
 use HeadlessChromium\Communication\Socket\MockSocket;
 use HeadlessChromium\Exception\CommunicationException\CannotReadResponse;
 use HeadlessChromium\Exception\CommunicationException\InvalidResponse;
@@ -51,6 +52,21 @@ class ConnectionTest extends TestCase
         $this->assertFalse($this->mocSocket->isConnected());
     }
 
+    public function testCreateSession()
+    {
+        $connection = new Connection($this->mocSocket);
+        $connection->connect();
+
+        $this->mocSocket->addReceivedData(json_encode(['result' => ['sessionId' => 'foo-bar']]), true);
+
+        $session = $connection->createSession('baz-qux');
+
+        $this->assertInstanceOf(Session::class, $session);
+        $this->assertEquals('foo-bar', $session->getSessionId());
+        $this->assertEquals('baz-qux', $session->getTargetId());
+        $this->assertSame($connection, $session->getConnection());
+    }
+    
     public function testSendMessage()
     {
         $connection = new Connection($this->mocSocket);
@@ -83,12 +99,12 @@ class ConnectionTest extends TestCase
 
         $message = new Message('foo', ['bar' => 'baz']);
 
-        $this->mocSocket->addReceivedData(json_encode(['id' => 2, 'bar' => 'foo']));
+        $this->mocSocket->addReceivedData(json_encode(['id' => $message->getId(), 'bar' => 'foo']));
 
         $response = $connection->sendMessageSync($message, 2);
 
         $this->assertSame($message, $response->getMessage());
-        $this->assertEquals(['id' => 2, 'bar' => 'foo'], $response->getData());
+        $this->assertEquals(['id' => $message->getId(), 'bar' => 'foo'], $response->getData());
     }
 
     public function testSendMessageSyncException()
