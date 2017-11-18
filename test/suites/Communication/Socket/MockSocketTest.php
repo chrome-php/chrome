@@ -3,13 +3,13 @@
  * @license see LICENSE
  */
 
-namespace HeadlessChromium\Test\Communication;
+namespace HeadlessChromium\Test\Communication\Socket;
 
 use HeadlessChromium\Communication\Socket\MockSocket;
 use PHPUnit\Framework\TestCase;
 
 /**
- * @covers \HeadlessChromium\Communication\Channel\MockSocket
+ * @covers \HeadlessChromium\Communication\Socket\MockSocket
  */
 class MockSocketTest extends TestCase
 {
