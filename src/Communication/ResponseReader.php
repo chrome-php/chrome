@@ -71,6 +71,8 @@ class ResponseReader
      * Note: response will always be empty until checkForResponse is called and the response is available in the buffer
      *
      * @return Response
+     * @throws NoResponseAvailable
+     *
      */
     public function getResponse(): Response
     {
@@ -83,10 +85,10 @@ class ResponseReader
 
     /**
      * Wait for a response
-     * @param null $timeout time to wait for a response (milliseconds)
+     * @param int $timeout time to wait for a response (milliseconds)
      * @return Response|null the response or null if no responses were found before the given timeout is reached
      */
-    public function waitForResponse($timeout = null)
+    public function waitForResponse(int $timeout = null)
     {
 
         if ($this->hasResponse()) {
