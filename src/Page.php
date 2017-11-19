@@ -5,6 +5,7 @@
 
 namespace HeadlessChromium;
 
+use HeadlessChromium\Communication\Message;
 use HeadlessChromium\Communication\Session;
 
 class Page
@@ -27,5 +28,14 @@ class Page
     public function getSession(): Session
     {
         return $this->session;
+    }
+
+    /**
+     * Navigates to the given url
+     * @param $url
+     */
+    public function navigate($url)
+    {
+        $this->session->sendMessageSync(new Message('Page.navigate', ['url' => $url]));
     }
 }
