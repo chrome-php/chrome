@@ -1,18 +1,24 @@
-CHROMIUM PHP
+Chromium PHP
 ============
 
-Control (headless) chrome from PHP.
+This library lets you start playing with chrome/chromium from PHP.
 
+Install
+-------
+
+...
 
 Usage
 -----
+
+Chromium PHP uses a simple and understandable API to start chrome, create pages, take screenshots, crawl websites...
 
 ```php
     use HeadlessChromium\BrowserFactory;
 
     $browserFactory = new BrowserFactory();
 
-    // starts headless chrome with a new empty user data (history, cookies, cache, etc...)
+    // starts headless chrome
     $browser = $browserFactory->createBrowser();
 
     // creates a new page and navigate to an url
@@ -20,9 +26,10 @@ Usage
     $page->navigate('http://example.com');
 ```
 
-**Debug options**
 
-The following example disables headless mode and intentionally slows chrome operation to see what happens
+### Debugging 
+
+The following example disables headless mode and intentionally slows chrome operations to help debugging
 
 ```php
     use HeadlessChromium\BrowserFactory;
@@ -35,7 +42,7 @@ The following example disables headless mode and intentionally slows chrome oper
     ]);
 ```
 
-**define the chrome executable**
+### define the chrome executable
 
 By default we assume that chrome will run with the commande ``chrome`` but you can change the executable:
 
@@ -47,16 +54,17 @@ By default we assume that chrome will run with the commande ``chrome`` but you c
 ```
 
 
-Browser API
------------
+API
+---
+
+### Browser API
 
 
 
 
-Page API
---------
+### Page API
 
-**Navigate to an url**
+#### Navigate to an url
 
 ```php
     $page->navigate('http://example.com');
@@ -94,8 +102,7 @@ Example:
   }
 ```
 
-Create a session and send message to the target
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+### Create a session and send message to the target
 
 ```php
   // given a target id
@@ -108,8 +115,7 @@ Create a session and send message to the target
   $response = $session->sendMessageSync(new Message('Page.reload'));
 ```
 
-Debugging
-^^^^^^^^^
+### Debugging
 
 You can ease the debugging by setting a delay before each operation is made:
 
@@ -117,8 +123,7 @@ You can ease the debugging by setting a delay before each operation is made:
   $connection->setConnectionDelay(500); // wait for 500 ms between each operation to ease debugging
 ```
 
-Browser (standalone)
-^^^^^^^^^^^^^^^^^^^^
+### Browser (standalone)
 
 ```php
     use HeadlessChromium\Communication\Connection;
