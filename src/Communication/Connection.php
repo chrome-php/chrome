@@ -23,10 +23,28 @@ class Connection
     protected $strict = true;
 
     /**
+     * time in ms to wait between each message to be sent
+     * That helps to see what is happening when debugging
+     * @var int
+     */
+    protected $delay;
+
+    /**
+     * time in ms when the previous message was sent. Used to know how long to wait for before send next message
+     * (only when $delay is set)
+     * @var int
+     */
+    private $lastMessageSentTime;
+
+    /**
      * @var SocketInterface
      */
     protected $wsClient;
 
+    /**
+     * List of response sent from the remote host and that are waiting to be read
+     * @var array
+     */
     protected $responseBuffer = [];
 
     /**
@@ -51,6 +69,15 @@ class Connection
         }
 
         $this->wsClient = $socketClient;
+    }
+
+    /**
+     * Set the delay to apply everytime before data are sent
+     * @param $delay
+     */
+    public function setConnectionDelay(int $delay)
+    {
+        $this->delay = $delay;
     }
 
     /**
@@ -97,6 +124,23 @@ class Connection
     }
 
     /**
+     * Wait before sending next message
+     */
+    private function waitForDelay()
+    {
+        if ($this->lastMessageSentTime) {
+            $currentTime = (int) (microtime(true) * 1000);
+            // if not enough time was spent until last message was sent, wait
+            if ($this->lastMessageSentTime + $this->delay > $currentTime) {
+                $timeToWait = ($this->lastMessageSentTime + $this->delay) - $currentTime;
+                usleep($timeToWait * 1000);
+            }
+        }
+
+        $this->lastMessageSentTime = (int) (microtime(true) * 1000);
+    }
+
+    /**
      * Sends the given message and returns a response reader
      * @param Message $message
      * @throws CommunicationException
@@ -104,6 +148,12 @@ class Connection
      */
     public function sendMessage(Message $message): ResponseReader
     {
+
+        // if delay enabled wait before sending message
+        if ($this->delay > 0) {
+            $this->waitForDelay();
+        }
+
         $sent = $this->wsClient->sendData((string)$message);
 
         if (!$sent) {

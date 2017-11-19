@@ -92,6 +92,41 @@ class ConnectionTest extends TestCase
         );
     }
 
+    /**
+     * This test asserts that data are sent when a delay is set. It does not test that the delay works
+     */
+    public function testSendMessageWorksWithDelay()
+    {
+        $connection = new Connection($this->mocSocket);
+        $connection->connect();
+        $connection->setConnectionDelay(1);
+
+        $message = new Message('foo', ['bar' => 'baz']);
+
+        $connection->sendMessage($message);
+        $connection->sendMessage($message);
+
+        $this->assertEquals(
+            [
+                json_encode(
+                    [
+                        'id' => $message->getId(),
+                        'method' => 'foo',
+                        'params' => ['bar' => 'baz']
+                    ]
+                ),
+                json_encode(
+                    [
+                        'id' => $message->getId(),
+                        'method' => 'foo',
+                        'params' => ['bar' => 'baz']
+                    ]
+                )
+            ],
+            $this->mocSocket->getSentData()
+        );
+    }
+
     public function testSendMessageSync()
     {
         $connection = new Connection($this->mocSocket);

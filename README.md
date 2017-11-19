@@ -29,6 +29,15 @@ Create a browser and navigate to a page
 ```
 
 
+Debug mode
+----------
+
+You can ease the debugging by setting a delay before each operation is made:
+
+```php
+  $connection->setConnectionDelay(500); // wait for 500 ms between each operation to ease debugging
+```
+
 
 Advanced usage
 --------------
