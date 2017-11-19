@@ -28,6 +28,14 @@ Create a browser and navigate to a page
     // see page doc for further examples for page
 ```
 
+Page API
+--------
+
+**Navigate to an url**
+
+```php
+    $page->navigate('http://example.com');
+```
 
 Debug mode
 ----------
