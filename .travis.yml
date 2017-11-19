@@ -4,6 +4,7 @@ sudo: false
 
 matrix:
   include:
+  - php: 7.0
   - php: 7.1
     env: PROCESS_CODECLIMATE=true
   - php: nightly
@@ -14,6 +15,7 @@ matrix:
 
   allow_failures:
   - php: nightly
+  - php: 7.0
   - php: hhvm
 
 before_script:
