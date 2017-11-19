@@ -27,10 +27,11 @@
   },
 
   "require": {
-    "php": ">=7.1",
+    "php": ">=7.0",
 
-    "symfony/process": "~3.0",
-    "wrench/wrench": "^2.0"
+    "symfony/process": "^3",
+    "wrench/wrench": "^2.0",
+    "symfony/filesystem": "^2.1|^3|^4"
   },
 
   "require-dev":{

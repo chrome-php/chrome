@@ -104,6 +104,8 @@ class ResponseReader
         // time to wait for the response
         $waitUntil = microtime(true) + $timeout / 1000;
 
+        
+        // TODO replace with Utils::tryWithTimeout
         do {
             // read available response
             $hasResponse = $this->checkForResponse();
