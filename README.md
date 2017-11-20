@@ -1,7 +1,12 @@
 Chromium PHP
 ============
 
-This library lets you start playing with chrome/chromium from PHP.
+[![Build Status](https://travis-ci.org/gsouf/headless-chromium-php.svg?branch=master)](https://travis-ci.org/gsouf/headless-chromium-php)
+[![Test Coverage](https://codeclimate.com/github/gsouf/headless-chromium-php/badges/coverage.svg)](https://codeclimate.com/github/gsouf/headless-chromium-php/coverage)
+[![Latest Stable Version](https://poser.pugx.org/gsouf/headless-chromium-php/version)](https://packagist.org/packages/gsouf/headless-chromium-php)
+[![License](https://poser.pugx.org/serps/search-engine-google/license)](https://packagist.org/packages/gsouf/headless-chromium-php)
+
+This library lets you start playing with chrome/chromium in headless mode from PHP.
 
 Install
 -------
@@ -11,7 +16,7 @@ Install
 Usage
 -----
 
-Chromium PHP uses a simple and understandable API to start chrome, create pages, take screenshots, crawl websites...
+Chromium PHP uses a simple and understandable API to start chrome, open pages, take screenshots, crawl websites... and almost everything that you can do with chrome as an human.
 
 ```php
     use HeadlessChromium\BrowserFactory;
@@ -24,6 +29,8 @@ Chromium PHP uses a simple and understandable API to start chrome, create pages,
     // creates a new page and navigate to an url
     $page = $browser->createPage();
     $page->navigate('http://example.com');
+    
+    $browser->close();
 ```
 
 
@@ -38,7 +45,7 @@ The following example disables headless mode and intentionally slows chrome oper
 
     $browser = $browserFactory->createBrowser([
         'headless'        => false,      // disable headless mode
-        'connectionDelay' => 1           // add 1 second delay between each operation to chrome
+        'connectionDelay' => 0.8           // add 0.8 second of delay between each instruction sent to chrome
     ]);
 ```
 
@@ -49,7 +56,7 @@ By default we assume that chrome will run with the commande ``chrome`` but you c
 ```php
     use HeadlessChromium\BrowserFactory;
 
-    // replace 'chrome' with 'chromium-browser'
+    // replace default 'chrome' with 'chromium-browser'
     $browserFactory = new BrowserFactory('chromium-browser');
 ```
 
