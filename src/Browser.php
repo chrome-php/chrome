@@ -29,6 +29,14 @@ class Browser
     }
 
     /**
+     * Closes the browser
+     */
+    public function close()
+    {
+        // TODO
+    }
+    
+    /**
      * Creates a new page
      * @param string|null $uri url to open the page on
      * @param array|null $dimensions dimensions of the window: [width, height]
