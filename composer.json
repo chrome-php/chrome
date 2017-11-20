@@ -1,7 +1,7 @@
 {
 
-  "name": "gsouf/headless-chromium",
-  "description": "Control headless chrome instances from php",
+  "name": "gsouf/chromium",
+  "description": "Instrument headless chrome/chromium instances from php",
   "type": "library",
   "keywords": ["chrome", "chromium", "crawl", "browser", "headless"],
   "homepage": "https://github.com/gsouf/headless-chromium-php",
