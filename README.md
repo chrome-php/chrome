@@ -3,8 +3,8 @@ Chromium PHP
 
 [![Build Status](https://travis-ci.org/gsouf/headless-chromium-php.svg?branch=master)](https://travis-ci.org/gsouf/headless-chromium-php)
 [![Test Coverage](https://codeclimate.com/github/gsouf/headless-chromium-php/badges/coverage.svg)](https://codeclimate.com/github/gsouf/headless-chromium-php/coverage)
-[![Latest Stable Version](https://poser.pugx.org/gsouf/headless-chromium-php/version)](https://packagist.org/packages/gsouf/headless-chromium-php)
-[![License](https://poser.pugx.org/serps/search-engine-google/license)](https://packagist.org/packages/gsouf/headless-chromium-php)
+[![Latest Stable Version](https://poser.pugx.org/gsouf/chromium/version)](https://packagist.org/packages/gsouf/chromium)
+[![License](https://poser.pugx.org/gsouf/chromium/license)](https://packagist.org/packages/gsouf/chromium)
 
 This library lets you start playing with chrome/chromium in headless mode from PHP.
 
