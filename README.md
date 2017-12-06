@@ -8,10 +8,21 @@ Chromium PHP
 
 This library lets you start playing with chrome/chromium in headless mode from PHP.
 
+
+
+Requirements
+------------
+
+Requires php 7 and chrome/chromium exacutable. As of version 60 of chrome/chromium the library proved to work correctly.
+
+The library was only tested on linux.
+
 Install
 -------
 
-...
+The library can be installed with composer and is available on packagist under [gsouf/chromium](https://packagist.org/packages/gsouf/chromium)
+
+``composer require gsouf/chromium``
 
 Usage
 -----
@@ -163,3 +174,20 @@ You can ease the debugging by setting a delay before each operation is made:
     // create browser
     $browser = new Browser($connection);
 ```
+
+
+## Credits
+
+Thanks to [puppeteer](https://github.com/GoogleChrome/puppeteer) that served as an inspiration.
+
+## Roadmap
+
+- Improve browser shutdown (check for chrome 63)
+- Dispatch events sent by chrome and allow async-like mode
+- Interact with DOM/javascript
+- Make screenshots
+- Make pdf
+- Create a DOM manipulation framework
+- Inspect network traces
+- Emulate hardware (mouse/keyboard)
+- Adding api documentation (https://github.com/victorjonsson/PHP-Markdown-Documentation-Generator/blob/master/docs.md)
