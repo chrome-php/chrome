@@ -44,10 +44,14 @@ The following example disables headless mode and intentionally slows chrome oper
     $browserFactory = new BrowserFactory();
 
     $browser = $browserFactory->createBrowser([
-        'headless'        => false,      // disable headless mode
-        'connectionDelay' => 0.8           // add 0.8 second of delay between each instruction sent to chrome
+        'headless'        => false,         // disable headless mode
+        'connectionDelay' => 0.8            // add 0.8 second of delay between each instruction sent to chrome,
+        'debugLogger'     => 'php://stdout' // will enable verbose mode
     ]);
 ```
+
+About ``debugLogger``: this can be any of a resource string, a resource or an object implementing ``LoggerInterface`` from Psr\Log (such as [monolog](https://github.com/Seldaek/monolog) or [apix/log](https://github.com/apix/log)).
+
 
 ### define the chrome executable
 

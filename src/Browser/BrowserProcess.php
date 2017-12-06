@@ -10,14 +10,20 @@ use HeadlessChromium\Communication\Connection;
 use HeadlessChromium\Communication\Message;
 use HeadlessChromium\Exception\OperationTimedOut;
 use HeadlessChromium\Utils;
+use Psr\Log\LoggerAwareInterface;
+use Psr\Log\LoggerAwareTrait;
+use Psr\Log\LoggerInterface;
+use Psr\Log\NullLogger;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Process\Process;
 
 /**
  * A browser process starter. Don't use directly, use BrowserFactory instead
  */
-class BrowserProcess
+class BrowserProcess implements LoggerAwareInterface
 {
+
+    use LoggerAwareTrait;
 
     /**
      * chrome instance's user data data
@@ -57,6 +63,17 @@ class BrowserProcess
     protected $wasStarted = false;
 
     /**
+     * BrowserProcess constructor.
+     * @param LoggerInterface $logger
+     */
+    public function __construct(LoggerInterface $logger = null)
+    {
+
+        // set or create logger
+        $this->setLogger($logger ?? new NullLogger());
+    }
+
+    /**
      * Starts the browser
      * @param $binaries
      * @param $options
@@ -68,8 +85,11 @@ class BrowserProcess
             // starting in again would result in replacing those data.
             throw new \RuntimeException('This process was already started');
         }
-        
+
         $this->wasStarted = true;
+
+        // log
+        $this->logger->debug('process: initializing');
 
         // user data dir
         if (!array_key_exists('userDataDir', $options) || !$options['userDataDir']) {
@@ -81,11 +101,20 @@ class BrowserProcess
         }
         $this->userDataDir = $options['userDataDir'];
 
+        // log
+        $this->logger->debug('process: using directory: ' . $options['userDataDir']);
+
         // get args for command line
         $args = $this->getArgsFromOptions($options);
 
+        // process string
+        $processString = $binaries . ' ' . implode(' ', $args);
+
+        // log
+        $this->logger->debug('process: starting process: ' . $processString);
+
         // setup chrome process
-        $process = new Process($binaries . ' ' . implode(' ', $args));
+        $process = new Process($processString);
         $this->process = $process;
         // and start
         $process->start();
@@ -94,8 +123,11 @@ class BrowserProcess
         $startupTimeout = $options['startupTimeout'] ?? 30;
         $ws = $this->waitForStartup($process, $startupTimeout * 1000 * 1000);
 
+        // log
+        $this->logger->debug('process: connecting using ' . $ws);
+
         // connect to browser
-        $connection = new Connection($ws);
+        $connection = new Connection($ws, $this->logger);
         $connection->connect();
 
         // connection delay
@@ -124,7 +156,12 @@ class BrowserProcess
     public function kill()
     {
 
+        // log
+        $this->logger->debug('process: killing chrome');
+
         if ($this->wasKilled) {
+            // log
+            $this->logger->debug('process: chrome already killed, ignoring');
             return;
         }
 
@@ -138,18 +175,29 @@ class BrowserProcess
                     // first try to close with Browser.close
                     // if Browser.close is not implemented, try to kill by closing all pages
                     try {
+                        // log
+                        $this->logger->debug('process: trying to close chrome gracefully');
+
                         // TODO check browser.close on chrome 63
                         $r = $this->connection->sendMessageSync(new Message('Browser.close'));
                         if (!$r->isSuccessful()) {
+                            // log
+                            $this->logger->debug('process: ✗ could not close gracefully');
                             throw new \Exception('cannot close, Browser.close not supported');
                         }
                     } catch (\Exception $e) {
+                        //log
+                        $this->logger->debug('process: closing chrome gracefully - compatibility');
+
                         // close all pages if connected
                         $this->connection->isConnected() && Utils::closeAllPage($this->connection);
                     }
 
                     // disconnect socket
                     $this->connection->disconnect();
+
+                    // log
+                    $this->logger->debug('process: waiting for process to close');
 
                     // wait for process to close
                     $generator = function (Process $process) {
@@ -163,15 +211,27 @@ class BrowserProcess
             }
 
             // stop process if running
-            $this->process->isRunning() && $this->process->stop();
+            if ($this->process->isRunning()) {
+                // log
+                $this->logger->debug('process: stopping process');
+
+                // stop process
+                $this->process->stop();
+            }
         }
 
         // remove data dir
         if ($this->userDataDirIsTemp && $this->userDataDir) {
             try {
+                // log
+                $this->logger->debug('process: cleaning temporary resources:' . $this->userDataDir);
+
+                // cleaning
                 $fs = new Filesystem();
                 $fs->remove($this->userDataDir);
             } catch (\Exception $e) {
+                // log
+                $this->logger->debug('process: ✗ could not clean temporary resources');
             }
         }
     }
@@ -234,18 +294,34 @@ class BrowserProcess
      */
     private function waitForStartup(Process $process, int $timeout)
     {
+        // log
+        $this->logger->debug('process: waiting for ' . $timeout / 1000000 . ' seconds for startup');
+
         try {
             $generator = function (Process $process) {
                 while (true) {
                     if (!$process->isRunning()) {
+                        // log
+                        $this->logger->debug('process: ✗ chrome process stopped');
+
+                        // exception
                         throw new \RuntimeException('Chrome process stopped before startup completed');
                     }
 
                     $output = $process->getIncrementalErrorOutput();
 
                     if ($output) {
+                        // log
+                        $this->logger->debug('process: chrome output:' . $output);
+
+                        // find socket uri
                         if (preg_match('#^DevTools listening on (ws://.*)$#', trim($output), $matches)) {
+                            // log
+                            $this->logger->debug('process: ✓ accepted output');
                             return $matches[1];
+                        } else {
+                            // log
+                            $this->logger->debug('process: ignoring output');
                         }
                     }
 

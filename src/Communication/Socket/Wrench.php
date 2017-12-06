@@ -5,11 +5,17 @@
 
 namespace HeadlessChromium\Communication\Socket;
 
+use Psr\Log\LoggerAwareInterface;
+use Psr\Log\LoggerAwareTrait;
+use Psr\Log\LoggerInterface;
+use Psr\Log\NullLogger;
 use Wrench\Client as WrenchClient;
 use Wrench\Payload\Payload;
 
-class Wrench implements SocketInterface
+class Wrench implements SocketInterface, LoggerAwareInterface
 {
+
+    use LoggerAwareTrait;
 
     /**
      * @var WrenchClient
@@ -19,9 +25,11 @@ class Wrench implements SocketInterface
     /**
      * @param WrenchClient $client
      */
-    public function __construct(WrenchClient $client)
+    public function __construct(WrenchClient $client, LoggerInterface $logger = null)
     {
         $this->client = $client;
+
+        $this->setLogger($logger ?? new NullLogger());
     }
 
     /**
@@ -29,6 +37,10 @@ class Wrench implements SocketInterface
      */
     public function sendData($data)
     {
+        // log
+        $this->logger->debug('socket: |=> sending data:' . $data);
+
+        // send data
         return $this->client->sendData($data);
     }
 
@@ -44,7 +56,11 @@ class Wrench implements SocketInterface
         if ($playloads) {
             foreach ($playloads as $playload) {
                 /** @var $playload Payload */
-                $data[] = $playload->getPayload();
+                $dataString = $playload->getPayload();
+                $data[] = $dataString;
+
+                // log
+                $this->logger->debug('socket: <=| receiving data:' . $dataString);
             }
         }
 
@@ -56,7 +72,18 @@ class Wrench implements SocketInterface
      */
     public function connect()
     {
-        return $this->client->connect();
+        // log
+        $this->logger->debug('socket: connecting');
+
+        $connected = $this->client->connect();
+
+        if ($connected) {
+            // log
+            $this->logger->debug('socket: ✓ connected');
+        } else {
+            // log
+            $this->logger->debug('socket: ✗ could not connect');
+        }
     }
 
     /**
@@ -72,6 +99,18 @@ class Wrench implements SocketInterface
      */
     public function disconnect($reason = 1000)
     {
-        return $this->client->disconnect($reason);
+        // log
+        $this->logger->debug('socket: disconnecting');
+
+        $disconnected = $this->client->disconnect($reason);
+
+        if ($disconnected) {
+            // log
+            $this->logger->debug('socket: ✓ disconnected');
+        } else {
+            // log
+            $this->logger->debug('socket: ✗ could not disconnect');
+        }
+        return $disconnected;
     }
 }
