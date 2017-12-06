@@ -289,6 +289,11 @@ class BrowserProcess implements LoggerAwareInterface
             $args[] = '--mute-audio';
         }
 
+        // disable loading of images (currently can't be done via devtools, only CLI)
+        if(array_key_exists('images', $options) && ($options['images'] === false)) {
+            $args[] = '--blink-settings=imagesEnabled=false';
+        }
+
         // add user data dir to args
         $args[] = '--user-data-dir=' . $options['userDataDir'];
 
