@@ -7,6 +7,7 @@ namespace HeadlessChromium;
 
 use Apix\Log\Logger\Stream as StreamLogger;
 use HeadlessChromium\Browser\BrowserProcess;
+use Symfony\Component\Process\Process;
 
 class BrowserFactory
 {
@@ -40,6 +41,12 @@ class BrowserFactory
             $logger = new StreamLogger($logger);
         }
 
+        // log
+        if ($logger) {
+            $chromeVersion = $this->getChromeVersion();
+            $logger->debug('Factory: chrome version: ' . $chromeVersion);
+        }
+
         // create process browser process
         $browserProcess = new BrowserProcess($logger);
 
@@ -50,5 +57,25 @@ class BrowserFactory
         $browserProcess->start($this->chromeBinaries, $options);
 
         return $browserProcess->getBrowser();
+    }
+
+    /**
+     * Get chrome version
+     * @return string
+     */
+    public function getChromeVersion()
+    {
+        $process = new Process($this->chromeBinaries . ' --version');
+
+        $exitCode = $process->run();
+
+        if ($exitCode != 0) {
+            $message = 'Cannot get chrome version, make sure you provided the correct chrome binaries';
+            $message .= ' using (' . $this->chromeBinaries . '). ';
+            $message .= trim($process->getErrorOutput());
+            throw new \RuntimeException($message);
+        }
+
+        return trim($process->getOutput());
     }
 }
