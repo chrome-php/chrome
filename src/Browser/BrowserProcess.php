@@ -205,8 +205,14 @@ class BrowserProcess implements LoggerAwareInterface
                             yield 2 * 1000; // wait for 2ms
                         }
                     };
-                    $timeout = 15 * 1000 * 1000; // 15 seconds
-                    Utils::tryWithTimeout($timeout, $generator($this->process));
+                    $timeout = 8 * 1000 * 1000; // 8 seconds
+
+                    try {
+                        Utils::tryWithTimeout($timeout, $generator($this->process));
+                    } catch (OperationTimedOut $e) {
+                        // log
+                        $this->logger->debug('process: process didn\'t close by itself');
+                    }
                 }
             }
 
@@ -216,7 +222,10 @@ class BrowserProcess implements LoggerAwareInterface
                 $this->logger->debug('process: stopping process');
 
                 // stop process
-                $this->process->stop();
+                $exitCode = $this->process->stop();
+
+                // log
+                $this->logger->debug('process: process stopped with exit code ' . $exitCode);
             }
         }
 
