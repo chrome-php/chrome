@@ -47,7 +47,7 @@ Chromium PHP uses a simple and understandable API to start chrome, open pages, t
 
 ### Debugging 
 
-The following example disables adds some features to help debugging 
+The following example adds some development-oriented features to help debugging 
 
 ```php
     use HeadlessChromium\BrowserFactory;
@@ -175,6 +175,9 @@ You can ease the debugging by setting a delay before each operation is made:
     $browser = new Browser($connection);
 ```
 
+## Contributing
+
+See [CONTRIBUTING.md](./CONTRIBUTING.md) for contribution details.
 
 ## Credits
 
@@ -191,3 +194,13 @@ Thanks to [puppeteer](https://github.com/GoogleChrome/puppeteer) that served as 
 - Inspect network traces
 - Emulate hardware (mouse/keyboard)
 - Adding api documentation (https://github.com/victorjonsson/PHP-Markdown-Documentation-Generator/blob/master/docs.md)
+
+## Authors
+
+* **Soufiane Ghzal** - *Initial work* - [gsouf](https://github.com/gsouf)
+
+See also the list of [contributors](https://github.com/gsouf/headless-chromium-php/contributors) who participated in this project.
+
+## License
+
+This project is licensed under the [Fair License](./LICENSE).
