@@ -36,7 +36,7 @@ Chromium PHP uses a simple and understandable API to start chrome, open pages, t
 
 ### Debugging 
 
-The following example disables headless mode and intentionally slows chrome operations to help debugging
+The following example disables adds some features to help debugging 
 
 ```php
     use HeadlessChromium\BrowserFactory;
@@ -53,7 +53,7 @@ The following example disables headless mode and intentionally slows chrome oper
 About ``debugLogger``: this can be any of a resource string, a resource or an object implementing ``LoggerInterface`` from Psr\Log (such as [monolog](https://github.com/Seldaek/monolog) or [apix/log](https://github.com/apix/log)).
 
 
-### define the chrome executable
+### Using different chrome executable
 
 By default we assume that chrome will run with the commande ``chrome`` but you can change the executable:
 
@@ -70,8 +70,21 @@ API
 
 ### Browser API
 
+#### Create a new page (tab)
 
+```php
+    $page = $browser->createPage();
+    
+    // destination can be specified
+    $uri = 'http://example.com';
+    $page = $browser->createPage($uri);
+```
 
+#### Close the browser
+
+```php
+    $browser->close();
+```
 
 ### Page API
 

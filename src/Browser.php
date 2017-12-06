@@ -34,8 +34,9 @@ class Browser
     public function close()
     {
         // TODO
+        throw new \Exception('Not implemented yet, see ProcessAwareBrowser instead');
     }
-    
+
     /**
      * Creates a new page
      * @param string|null $uri url to open the page on
