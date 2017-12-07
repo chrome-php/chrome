@@ -80,6 +80,18 @@ By default we assume that chrome will run with the commande ``chrome`` but you c
 API
 ---
 
+### Browser Factory
+
+#### Options
+
+Here are the options available for the browser factory:
+
+| Option name        | Default               | Description                                                                     |
+|--------------------|-----------------------|---------------------------------------------------------------------------------|
+| connectionDelay    | 0                     | Delay to apply between each operation for debugging purposes                    |
+| debugLogger        | null                  | A string (e.g "php://stdout"), or resource, or PSR-3 logger instance to print debug messages |
+| headless           | true                  | Enable or disable headless mode                                                 |
+
 ### Browser API
 
 #### Create a new page (tab)
