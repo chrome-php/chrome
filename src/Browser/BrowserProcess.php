@@ -290,7 +290,7 @@ class BrowserProcess implements LoggerAwareInterface
         }
 
         // disable loading of images (currently can't be done via devtools, only CLI)
-        if(array_key_exists('images', $options) && ($options['images'] === false)) {
+        if(array_key_exists('enableImages', $options) && ($options['enableImages'] === false)) {
             $args[] = '--blink-settings=imagesEnabled=false';
         }
 
