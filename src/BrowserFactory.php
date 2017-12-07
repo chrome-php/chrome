@@ -27,6 +27,7 @@ class BrowserFactory
      * - headless: whether chrome should be started headless (default: true)
      * - userDataDir: chrome user data dir (default: a new empty dir is generated temporarily)
      * - connectionDelay: amount of time in seconds to slows down connection for debugging purposes (default: none)
+     * - debugLogger: resource string ("php://stdout"), resource or psr-3 logger instance (default: none)
      *
      * @return Browser a Browser instance to interact with the new chrome process
      */
