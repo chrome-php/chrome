@@ -94,6 +94,7 @@ Here are the options available for the browser factory:
 | headless           | true                  | Enable or disable headless mode                                                 |
 | startupTimeout     | 30                    | Maximum time in seconds to wait for chrome to start                             |
 | userDataDir        | none                  | chrome user data dir (default: a new empty dir is generated temporarily)        |
+| enableImages       | true                  | Toggles loading of images |
 
 ### Browser API
 
