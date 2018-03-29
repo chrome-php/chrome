@@ -57,7 +57,8 @@ The following example adds some development-oriented features to help debugging
 
     $browser = $browserFactory->createBrowser([
         'headless'        => false,         // disable headless mode
-        'connectionDelay' => 0.8            // add 0.8 second of delay between each instruction sent to chrome,
+        'enableImages'    => false,         // toggles loading of images (default: true)
+        'connectionDelay' => 0.8,           // add 0.8 second of delay between each instruction sent to chrome,
         'debugLogger'     => 'php://stdout' // will enable verbose mode
     ]);
 ```
@@ -93,6 +94,7 @@ Here are the options available for the browser factory:
 | headless           | true                  | Enable or disable headless mode                                                 |
 | startupTimeout     | 30                    | Maximum time in seconds to wait for chrome to start                             |
 | userDataDir        | none                  | chrome user data dir (default: a new empty dir is generated temporarily)        |
+| enableImages       | true                  | Toggles loading of images |
 
 ### Browser API
 
