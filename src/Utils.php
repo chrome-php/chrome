@@ -18,7 +18,25 @@ class Utils
      *
      * When the generator yields a value, this value is the time in microseconds to wait before trying again.
      *
-     * See examples in the source for usage.
+     * Example waiting for a process to complete:
+     *
+     * ```php
+     *  // wait for process to close
+     *  $generator = function (Process $process) {
+     *      while ($process->isRunning()) {
+     *          yield 2 * 1000; // wait for 2ms
+     *      }
+     *  };
+     *
+     *  $timeout = 8 * 1000 * 1000; // 8 seconds
+     *
+     *  try {
+     *      Utils::tryWithTimeout($timeout, $generator($this->process));
+     *  } catch (OperationTimedOut $e) {
+     *      // log
+     *      $this->logger->debug('process: process didn\'t close by itself');
+     *  }
+     * ```
      *
      * @param int $timeoutMicroSec
      * @param \Generator $generator
@@ -29,7 +47,7 @@ class Utils
     public static function tryWithTimeout(int $timeoutMicroSec, \Generator $generator, callable $onTimeout = null)
     {
         $waitUntilMicroSec = microtime(true) * 1000 * 1000 + $timeoutMicroSec;
-        
+
         foreach ($generator as $v) {
             // if timeout reached or if time+delay exceed timeout stop the execution
             if (microtime(true) * 1000 * 1000 + $v >= $waitUntilMicroSec) {
@@ -50,7 +68,7 @@ class Utils
 
             usleep($v);
         }
-        
+
         return $generator->getReturn();
     }
 
