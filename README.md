@@ -57,7 +57,6 @@ The following example adds some development-oriented features to help debugging
 
     $browser = $browserFactory->createBrowser([
         'headless'        => false,         // disable headless mode
-        'enableImages'    => false,         // toggles loading of images (default: true)
         'connectionDelay' => 0.8,           // add 0.8 second of delay between each instruction sent to chrome,
         'debugLogger'     => 'php://stdout' // will enable verbose mode
     ]);

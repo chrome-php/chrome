@@ -5,6 +5,7 @@
 
 namespace HeadlessChromium\Communication;
 
+use Evenement\EventEmitter;
 use HeadlessChromium\Communication\Socket\SocketInterface;
 use HeadlessChromium\Communication\Socket\Wrench;
 use HeadlessChromium\Exception\CommunicationException;
@@ -17,8 +18,10 @@ use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 use Wrench\Client as WrenchBaseClient;
 
-class Connection implements LoggerAwareInterface
+class Connection extends EventEmitter implements LoggerAwareInterface
 {
+
+    const EVENT_TARGET_CREATED = 'method:Target.targetCreated';
 
     use LoggerAwareTrait;
 
@@ -58,6 +61,11 @@ class Connection implements LoggerAwareInterface
      * @var int
      */
     protected $sendSyncDefaultTimeout = 10000;
+
+    /**
+     * @var Session[]
+     */
+    protected $sessions = [];
 
     /**
      * CommunicationChannel constructor.
@@ -209,7 +217,11 @@ class Connection implements LoggerAwareInterface
             new Message('Target.attachToTarget', ['targetId' => $targetId])
         );
         $sessionId = $response['result']['sessionId'];
-        return new Session($targetId, $sessionId, $this);
+        $session = new Session($targetId, $sessionId, $this);
+
+        $this->sessions[$sessionId] = $session;
+
+        return $session;
     }
 
     /**
@@ -256,7 +268,8 @@ class Connection implements LoggerAwareInterface
             // id is required to identify the response
             if (!isset($response['id'])) {
                 if (isset($response['method'])) {
-                    // TODO handle events?
+                    $this->logger->debug('connection: dispatching method:' . $response['method']);
+                    $this->emit('method:' . $response['method'], [$response['params']]);
                     continue;
                 }
 

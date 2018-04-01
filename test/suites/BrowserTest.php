@@ -15,7 +15,7 @@ use HeadlessChromium\Page;
  */
 class BrowserTest extends BaseTestCase
 {
-    
+
     public function testBrowser()
     {
         $connection = new Connection(new MockSocket());
@@ -23,7 +23,7 @@ class BrowserTest extends BaseTestCase
         $browser = new Browser($connection);
         $this->assertSame($connection, $browser->getConnection());
     }
-    
+
     public function testCreatePage()
     {
         $mockSocket = new MockSocket();
@@ -33,6 +33,7 @@ class BrowserTest extends BaseTestCase
         $browser = new Browser($connection);
 
         // set received data for Target.createPage and AttachTargetTo
+        $mockSocket->addReceivedData(json_encode(['method' => 'Target.targetCreated', 'params' => ['targetInfo' => ['targetId' => 'foo-bar']]]), false);
         $mockSocket->addReceivedData(json_encode(['result' => ['targetId' => 'foo-bar']]), true);
         $mockSocket->addReceivedData(json_encode(['result' => ['sessionId' => 'baz-qux']]), true);
 

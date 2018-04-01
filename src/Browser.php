@@ -7,6 +7,7 @@ namespace HeadlessChromium;
 
 use HeadlessChromium\Communication\Connection;
 use HeadlessChromium\Communication\Message;
+use HeadlessChromium\Communication\Target;
 
 class Browser
 {
@@ -15,9 +16,26 @@ class Browser
      */
     protected $connection;
 
+    /**
+     * @var Target[]
+     */
+    protected $targets = [];
+
     public function __construct(Connection $connection)
     {
         $this->connection = $connection;
+
+        $this->connection->on(Connection::EVENT_TARGET_CREATED, function (array $params) {
+
+            // create a session for the target
+            $session = $this->connection->createSession($params['targetInfo']['targetId']);
+
+            // create and store the target
+            $this->targets[$params['targetInfo']['targetId']] = new Target(
+                $params['targetInfo'],
+                $session
+            );
+        });
     }
 
     /**
@@ -61,12 +79,18 @@ class Browser
         // create page
         $response = $this->connection->sendMessageSync(new Message('Target.createTarget', $params));
 
+        // get created target id
+        $targetId = $response['result']['targetId'];
+
         // todo handle error
 
+        if (!array_key_exists($targetId, $this->targets)) {
+            throw new \RuntimeException('Target could not be created for page');
+        }
+
         // create target session
-        $session = $this->connection->createSession($response['result']['targetId']);
 
         // create page
-        return new Page($session);
+        return new Page($this->targets[$targetId]);
     }
 }

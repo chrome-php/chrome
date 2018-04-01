@@ -138,7 +138,11 @@ class BrowserProcess implements LoggerAwareInterface
         // set connection to allow killing chrome
         $this->connection = $connection;
 
+        // create browser instance
         $this->browser = new ProcessAwareBrowser($connection, $this);
+
+        // enable target discovery
+        $connection->sendMessageSync(new Message('Target.setDiscoverTargets', ['discover' => true]));
     }
 
     /**

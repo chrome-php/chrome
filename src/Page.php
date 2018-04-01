@@ -7,18 +7,19 @@ namespace HeadlessChromium;
 
 use HeadlessChromium\Communication\Message;
 use HeadlessChromium\Communication\Session;
+use HeadlessChromium\Communication\Target;
 
 class Page
 {
 
     /**
-     * @var Session
+     * @var Target
      */
-    protected $session;
+    protected $target;
 
-    public function __construct(Session $session)
+    public function __construct(Target $target)
     {
-        $this->session = $session;
+        $this->target = $target;
     }
 
     /**
@@ -27,15 +28,16 @@ class Page
      */
     public function getSession(): Session
     {
-        return $this->session;
+        return $this->target->getSession();
     }
 
     /**
-     * Navigates to the given url
      * @param $url
+     * @return Communication\Response
+     * @throws Exception\NoResponseAvailable
      */
     public function navigate($url)
     {
-        $this->session->sendMessageSync(new Message('Page.navigate', ['url' => $url]));
+        return $this->getSession()->sendMessageSync(new Message('Page.navigate', ['url' => $url]));
     }
 }

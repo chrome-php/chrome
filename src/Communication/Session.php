@@ -22,7 +22,7 @@ class Session
      * @var Connection
      */
     protected $connection;
-    
+
     public function __construct(string $targetId, string $sessionId, Connection $connection)
     {
         $this->sessionId  = $sessionId;
