@@ -54,7 +54,7 @@ class SessionTest extends TestCase
         $this->assertEquals(
             [
                 json_encode([
-                    'id' => $responseReader->getMessage()->getId(),
+                    'id' => $responseReader->getTopResponseReader()->getMessage()->getId(),
                     'method' => 'Target.sendMessageToTarget',
                     'params' => [
                         'message' => json_encode([
@@ -80,6 +80,7 @@ class SessionTest extends TestCase
         $message = new Message('baz', ['qux' => 'quux']);
 
         $this->mockSocket->addReceivedData(json_encode(['corge' => 'grault']), true);
+        $this->mockSocket->addReceivedData(json_encode(['id' => $message->getId(), 'garply' => 'thud']));
 
         $response = $session->sendMessageSync($message);
 
@@ -87,7 +88,7 @@ class SessionTest extends TestCase
         $this->assertEquals(
             [
                 json_encode([
-                    'id' => $response->getMessage()->getId(),
+                    'id' => $message->getId() + 1,
                     'method' => 'Target.sendMessageToTarget',
                     'params' => [
                         'message' => json_encode([

@@ -5,7 +5,11 @@
 
 namespace HeadlessChromium\Communication;
 
-class Session
+use Evenement\EventEmitter;
+use HeadlessChromium\Exception\CommunicationException;
+use HeadlessChromium\Exception\NoResponseAvailable;
+
+class Session extends EventEmitter
 {
 
     /**
@@ -32,28 +36,36 @@ class Session
 
     /**
      * @param Message $message
-     * @return ResponseReader
-     * @throws \HeadlessChromium\Exception\CommunicationException
+     * @return SessionResponseReader
+     * @throws CommunicationException
      */
-    public function sendMessage(Message $message)
+    public function sendMessage(Message $message): SessionResponseReader
     {
-        return $this->connection->sendMessage(new Message('Target.sendMessageToTarget', [
+        $topResponse = $this->connection->sendMessage(new Message('Target.sendMessageToTarget', [
             'message' => (string) $message,
             'sessionId' => $this->getSessionId()
         ]));
+
+        return new SessionResponseReader($topResponse, $message);
     }
 
     /**
      * @param Message $message
      * @return Response
-     * @throws \HeadlessChromium\Exception\NoResponseAvailable
+     * @throws NoResponseAvailable
+     * @throws CommunicationException
      */
-    public function sendMessageSync(Message $message)
+    public function sendMessageSync(Message $message, $timeout = null): Response
     {
-        return $this->connection->sendMessageSync(new Message('Target.sendMessageToTarget', [
-            'message' => (string) $message,
-            'sessionId' => $this->getSessionId()
-        ]));
+        $responseReader = $this->sendMessage($message);
+
+        $response = $responseReader->waitForResponse($timeout ?? $this->connection->getSendSyncDefaultTimeout());
+
+        if (!$response) {
+            throw new NoResponseAvailable('No response was sent in the given timeout');
+        }
+
+        return $response;
     }
 
     /**

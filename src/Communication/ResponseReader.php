@@ -63,16 +63,14 @@ class ResponseReader
         return $this->connection;
     }
 
-
-
     /**
-     * Get the response or an empty array if the response is not available.
+     * Get the response
      *
-     * Note: response will always be empty until checkForResponse is called and the response is available in the buffer
+     * Note: response will always be missing until checkForResponse is called
+     * and the response is available in the buffer
      *
      * @return Response
      * @throws NoResponseAvailable
-     *
      */
     public function getResponse(): Response
     {
@@ -104,7 +102,6 @@ class ResponseReader
         // time to wait for the response
         $waitUntil = microtime(true) + $timeout / 1000;
 
-        
         // TODO replace with Utils::tryWithTimeout
         do {
             // read available response

@@ -60,7 +60,7 @@ class Connection extends EventEmitter implements LoggerAwareInterface
      * Default timeout for send sync in ms
      * @var int
      */
-    protected $sendSyncDefaultTimeout = 10000;
+    protected $sendSyncDefaultTimeout = 3000;
 
     /**
      * @var Session[]
@@ -95,6 +95,15 @@ class Connection extends EventEmitter implements LoggerAwareInterface
     public function setConnectionDelay(int $delay)
     {
         $this->delay = $delay;
+    }
+
+    /**
+     * Gets the default timeout used when sending a message synchronously
+     * @return int
+     */
+    public function getSendSyncDefaultTimeout(): int
+    {
+        return $this->sendSyncDefaultTimeout;
     }
 
     /**
@@ -240,57 +249,82 @@ class Connection extends EventEmitter implements LoggerAwareInterface
 
         // and analyze them
         foreach ($data as $datum) {
-            // responses come as json string
-            $response = json_decode($datum, true);
-
-            // if json not valid throw exception
-            $jsonError = json_last_error();
-            if ($jsonError !== JSON_ERROR_NONE) {
-                if ($this->isStrict()) {
-                    throw new CannotReadResponse(
-                        sprintf(
-                            'Response from chrome remote interface is not a valid json response. JSON error: %s',
-                            $jsonError
-                        )
-                    );
-                }
-                continue;
+            // dispatch message
+            if ($this->dispatchMessage($datum)) {
+                $hasData = true;
             }
-
-            // response must be array
-            if (!is_array($response)) {
-                if ($this->isStrict()) {
-                    throw new CannotReadResponse('Response from chrome remote interface was not a valid array');
-                }
-                continue;
-            }
-
-            // id is required to identify the response
-            if (!isset($response['id'])) {
-                if (isset($response['method'])) {
-                    $this->logger->debug('connection: dispatching method:' . $response['method']);
-                    $this->emit('method:' . $response['method'], [$response['params']]);
-                    continue;
-                }
-
-                if ($this->isStrict()) {
-                    throw new InvalidResponse(
-                        'Response from chrome remote interface did not provide a valid message id'
-                    );
-                }
-                continue;
-            }
-
-
-
-            // flag data received
-            $hasData = true;
-
-            // store response
-            $this->responseBuffer[$response['id']] = $response;
         }
 
         return $hasData;
+    }
+
+    /**
+     * Dispatches the message and either stores the response or emit an event
+     * @param array $response
+     * @return bool
+     * @throws InvalidResponse
+     * @internal
+     */
+    private function dispatchMessage(string $message, Session $session = null)
+    {
+
+        // responses come as json string
+        $response = json_decode($message, true);
+
+        // if json not valid throw exception
+        $jsonError = json_last_error();
+        if ($jsonError !== JSON_ERROR_NONE) {
+            if ($this->isStrict()) {
+                throw new CannotReadResponse(
+                    sprintf(
+                        'Response from chrome remote interface is not a valid json response. JSON error: %s',
+                        $jsonError
+                    )
+                );
+            }
+            return false;
+        }
+
+        // response must be array
+        if (!is_array($response)) {
+            if ($this->isStrict()) {
+                throw new CannotReadResponse('Response from chrome remote interface was not a valid array');
+            }
+            return false;
+        }
+
+        // id is required to identify the response
+        if (!isset($response['id'])) {
+            if (isset($response['method'])) {
+                if ($response['method'] == 'Target.receivedMessageFromTarget') {
+                    $session = $this->sessions[$response['params']['sessionId']];
+                    return $this->dispatchMessage($response['params']['message'], $session);
+                } else {
+                    if ($session) {
+                        $this->logger->debug(
+                            'session(' . $session->getSessionId() . '): dispatching method:' . $response['method']
+                        );
+                        $session->emit('method:' . $response['method'], [$response['params']]);
+                    } else {
+                        $this->logger->debug('connection: dispatching method:' . $response['method']);
+                        $this->emit('method:' . $response['method'], [$response['params']]);
+                    }
+                }
+                return false;
+            }
+
+            if ($this->isStrict()) {
+                throw new InvalidResponse(
+                    'Response from chrome remote interface did not provide a valid message id'
+                );
+            }
+            return false;
+        }
+
+        // store response
+        $this->responseBuffer[$response['id']] = $response;
+
+        return true;
     }
 
     /**

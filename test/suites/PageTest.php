@@ -6,6 +6,7 @@
 namespace HeadlessChromium\Test;
 
 use HeadlessChromium\Communication\Connection;
+use HeadlessChromium\Communication\Message;
 use HeadlessChromium\Communication\Session;
 use HeadlessChromium\Communication\Socket\MockSocket;
 use HeadlessChromium\Communication\Target;
@@ -37,7 +38,9 @@ class PageTest extends BaseTestCase
 
         $page = new Page($target);
 
-        $mockSocket->addReceivedData(json_encode([]), true);
+        $messageId = (new Message('foo'))->getId();
+        $mockSocket->addReceivedData(json_encode(['id' => $messageId + 2]));
+        $mockSocket->addReceivedData(json_encode(['id' => $messageId + 1]));
 
         $page->navigate('http://foo.bar');
 
