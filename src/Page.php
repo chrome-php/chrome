@@ -6,6 +6,7 @@
 namespace HeadlessChromium;
 
 use HeadlessChromium\Communication\Message;
+use HeadlessChromium\Communication\ResponseReader;
 use HeadlessChromium\Communication\Session;
 use HeadlessChromium\Communication\Target;
 
@@ -17,9 +18,10 @@ class Page
      */
     protected $target;
 
-    public function __construct(Target $target)
+    public function __construct(Target $target, array $frameTree)
     {
         $this->target = $target;
+        $this->frameManager = new FrameManager($this, $frameTree);
     }
 
     /**
@@ -33,11 +35,28 @@ class Page
 
     /**
      * @param $url
-     * @return Communication\Response
+     * @return ResponseReader
      * @throws Exception\NoResponseAvailable
      */
     public function navigate($url)
     {
-        return $this->getSession()->sendMessageSync(new Message('Page.navigate', ['url' => $url]));
+        return $this->getSession()->sendMessage(new Message('Page.navigate', ['url' => $url]));
+    }
+
+    /**
+     * Gets the lifecycle of the main frame of the page.
+     *
+     * Events come as an associative array with event name as keys and time they occurred at in values.
+     *
+     * @return array
+     */
+    public function getCurrentLifecycle()
+    {
+        return $this->frameManager->getMainFrame()->getLifeCycle();
+    }
+
+    public function waitForLifecycleEvent($event = null)
+    {
+
     }
 }

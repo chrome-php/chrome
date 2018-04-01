@@ -37,6 +37,9 @@ class BrowserTest extends BaseTestCase
         $mockSocket->addReceivedData(json_encode(['result' => ['targetId' => 'foo-bar']]), true);
         $mockSocket->addReceivedData(json_encode(['result' => ['sessionId' => 'baz-qux']]), true);
 
+        // Page.enable
+        $mockSocket->addReceivedData(json_encode(['result' => []]), true);
+
         $page = $browser->createPage();
 
         // test page
@@ -59,6 +62,18 @@ class BrowserTest extends BaseTestCase
                     'method' => 'Target.attachToTarget',
                     'params' => [
                         'targetId' => 'foo-bar'
+                    ]
+                ],
+                [
+                    'id' => '%id',
+                    'method' => 'Target.sendMessageToTarget',
+                    'params' => [
+                        'message' =>  json_encode([
+                            'id' => '%id',
+                            'method' => 'Page.enable',
+                            'params' => []
+                        ]),
+                        'sessionId' => 'baz-qux'
                     ]
                 ]
             ],

@@ -34,11 +34,17 @@ class MockSocket implements SocketInterface
 
         if (!empty($this->receivedDataForNextMessage)) {
             $data = json_decode($data, true);
+
             if ($data['id']) {
                 $next = array_shift($this->receivedDataForNextMessage);
                 $next = json_decode($next, true);
                 $next['id'] = $data['id'];
                 $this->receivedData[] = json_encode($next);
+
+                if (isset($data['method']) && $data['method'] == 'Target.sendMessageToTarget') {
+                    $next['id']--;
+                    $this->receivedData[] = json_encode($next);
+                }
             }
         }
 

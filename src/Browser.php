@@ -8,6 +8,8 @@ namespace HeadlessChromium;
 use HeadlessChromium\Communication\Connection;
 use HeadlessChromium\Communication\Message;
 use HeadlessChromium\Communication\Target;
+use HeadlessChromium\Exception\CommunicationException;
+use HeadlessChromium\Exception\NoResponseAvailable;
 
 class Browser
 {
@@ -57,40 +59,40 @@ class Browser
 
     /**
      * Creates a new page
-     * @param string|null $uri url to open the page on
-     * @param array|null $dimensions dimensions of the window: [width, height]
-     * @throws Exception\NoResponseAvailable
+     * @throws NoResponseAvailable
+     * @throws CommunicationException
      * @return Page
      */
-    public function createPage(
-        string $uri = null,
-        array $dimensions = null
-    ): Page {
+    public function createPage(): Page
+    {
 
         // page url
-        $params = ['url' => $uri ?? 'about:blank'];
+        $params = ['url' => 'about:blank'];
 
-        // page dimensions
-        if ($dimensions) {
-            $params['width']  = $dimensions[0];
-            $params['height'] = $dimensions[1];
-        }
-
-        // create page
+        // create page and get target id
         $response = $this->connection->sendMessageSync(new Message('Target.createTarget', $params));
-
-        // get created target id
         $targetId = $response['result']['targetId'];
 
         // todo handle error
 
+        // make sure target was created (via Target.targetCreated event)
         if (!array_key_exists($targetId, $this->targets)) {
             throw new \RuntimeException('Target could not be created for page');
         }
+        $target = $this->targets[$targetId];
 
-        // create target session
+        // get initial frame tree
+        $frameTree = $target->getSession()->sendMessageSync(new Message('Page.getFrameTree'));
 
         // create page
-        return new Page($this->targets[$targetId]);
+        $page = new Page($target, $frameTree['result']['frameTree']);
+
+        // Page.enable
+        $page->getSession()->sendMessageSync(new Message('Page.enable'));
+
+        // Page.setLifecycleEventsEnabled
+        $page->getSession()->sendMessageSync(new Message('Page.setLifecycleEventsEnabled', ['enabled' => true]));
+
+        return $page;
     }
 }

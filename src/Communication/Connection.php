@@ -259,7 +259,7 @@ class Connection extends EventEmitter implements LoggerAwareInterface
     }
 
     /**
-     * Dispatches the message and either stores the response or emit an event
+     * Dispatches the message and either stores the response or emits an event
      * @param array $response
      * @return bool
      * @throws InvalidResponse
@@ -302,11 +302,11 @@ class Connection extends EventEmitter implements LoggerAwareInterface
                 } else {
                     if ($session) {
                         $this->logger->debug(
-                            'session(' . $session->getSessionId() . '): dispatching method:' . $response['method']
+                            'session(' . $session->getSessionId() . '): ⇶ dispatching method:' . $response['method']
                         );
                         $session->emit('method:' . $response['method'], [$response['params']]);
                     } else {
-                        $this->logger->debug('connection: dispatching method:' . $response['method']);
+                        $this->logger->debug('connection: ⇶ dispatching method:' . $response['method']);
                         $this->emit('method:' . $response['method'], [$response['params']]);
                     }
                 }
