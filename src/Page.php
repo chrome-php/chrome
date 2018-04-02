@@ -44,6 +44,35 @@ class Page
     }
 
     /**
+     * Evaluates the given string in the page context
+     *
+     * Example:
+     *
+     * ```php
+     * $evaluation = $page->evaluate('document.querySelector("title").innerHTML');
+     * $response = $evaluation->waitForResponse();
+     * ```
+     *
+     * @param string $expression
+     * @return ResponseReader
+     * @throws Exception\CommunicationException
+     * @throws Exception\NoResponseAvailable
+     */
+    public function evaluate(string $expression)
+    {
+        return $this->getSession()->sendMessage(
+            new Message(
+                'Runtime.evaluate',
+                [
+                    'awaitPromise' => true,
+                    'returnByValue' => true,
+                    'expression' => $expression
+                ]
+            )
+        );
+    }
+
+    /**
      * Gets the lifecycle of the main frame of the page.
      *
      * Events come as an associative array with event name as keys and time they occurred at in values.
@@ -57,6 +86,6 @@ class Page
 
     public function waitForLifecycleEvent($event = null)
     {
-
+        // TODO
     }
 }
