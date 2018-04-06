@@ -242,9 +242,6 @@ Thanks to [puppeteer](https://github.com/GoogleChrome/puppeteer) that served as 
 
 ## Roadmap
 
-- Improve browser shutdown (check for chrome 63)
-- Dispatch events sent by chrome and allow async-like mode
-- Interact with DOM/javascript
 - Make screenshots
 - Make pdf
 - Create a DOM manipulation framework
