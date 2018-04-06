@@ -141,6 +141,23 @@ You can change the timeout or the event to listen for:
     $navigation->waitForNavigation(Page::DOM_CONTENT_LOADED, 10000)
 ```
 
+When you want to wait for the page to navigate there are 2 things that could happen. 
+First the page is too long to load and second the page you were waiting to be loaded has been replaced.
+The good news is that you can handle those issue with exceptions:
+
+```php
+  use HeadlessChromium\Exception\OperationTimedOut;
+  use HeadlessChromium\Exception\NavigationExpired;
+
+  try {
+    $navigation->waitForNavigation()
+  } catch (OperationTimedOut $e) {
+    // too long to load
+  } catch (NavigationExpired $e) {
+    // An other page was loaded
+  }
+```
+
 #### Evaluate script on the page
 
 Once the page has completed the navigation you can evaluate arbitrary script on this page. 

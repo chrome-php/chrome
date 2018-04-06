@@ -5,7 +5,7 @@
 
 namespace HeadlessChromium;
 
-use HeadlessChromium\Exception\NavigationExpiredException;
+use HeadlessChromium\Exception\NavigationExpired;
 
 /**
  * A class that is aimed to be used withing the method Page::navigate
@@ -54,7 +54,7 @@ class PageNavigation
      *      $navigation->waitForNavigation(Page::DOM_CONTENT_LOADED, 30000);
      * } catch (OperationTimedOut $e) {
      *      // too long to load
-     * } catch (NavigationExpiredException $e) {
+     * } catch (NavigationExpired $e) {
      *      // an other page loaded since this navigation was initiated
      * }
      * ```
@@ -65,7 +65,7 @@ class PageNavigation
      * @throws Exception\CommunicationException\CannotReadResponse
      * @throws Exception\CommunicationException\InvalidResponse
      * @throws Exception\OperationTimedOut
-     * @throws NavigationExpiredException
+     * @throws NavigationExpired
      */
     public function waitForNavigation($eventName = Page::LOADED, $timeout = 30000)
     {
@@ -79,7 +79,7 @@ class PageNavigation
      * @return bool|\Generator
      * @throws Exception\CommunicationException\CannotReadResponse
      * @throws Exception\CommunicationException\InvalidResponse
-     * @throws NavigationExpiredException
+     * @throws NavigationExpired
      */
     private function navigationComplete($eventName)
     {
@@ -103,7 +103,7 @@ class PageNavigation
 
             // else if a new loader is present that means that a new navigation started
             } else {
-                throw new NavigationExpiredException(
+                throw new NavigationExpired(
                     'The page has navigatied to an other page and this navigation expired'
                 );
             }
