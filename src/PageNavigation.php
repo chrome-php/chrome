@@ -67,7 +67,7 @@ class PageNavigation
      * @throws Exception\OperationTimedOut
      * @throws NavigationExpired
      */
-    public function waitForNavigation($eventName = Page::LOADED, $timeout = 30000)
+    public function waitForNavigation($eventName = Page::LOAD, $timeout = 30000)
     {
         return Utils::tryWithTimeout($timeout * 1000, $this->navigationComplete($eventName));
     }

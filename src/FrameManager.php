@@ -40,8 +40,10 @@ class FrameManager
         // TODO listen for frame events
 
         $this->page->getSession()->on('method:Page.lifecycleEvent', function (array $params) {
-            $frame = $this->frames[$params['frameId']];
-            $frame->onLifecycleEvent($params);
+            if (isset($this->frames[$params['frameId']])) {
+                $frame = $this->frames[$params['frameId']];
+                $frame->onLifecycleEvent($params);
+            }
         });
     }
 

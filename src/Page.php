@@ -17,7 +17,7 @@ class Page
 {
 
     const DOM_CONTENT_LOADED = 'DOMContentLoaded';
-    const LOADED = 'loaded';
+    const LOAD = 'load';
 
     /**
      * @var Target
@@ -118,7 +118,7 @@ class Page
      * Example:
      *
      * ```php
-     * $page->hasLifecycleEvent(Page::DOM_CONTENT_LOADED);
+     * $page->hasLifecycleEvent(Page::DOM_CONTENT_LOAD);
      * ```
      *
      * @param string $event
