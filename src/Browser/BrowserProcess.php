@@ -326,20 +326,31 @@ class BrowserProcess implements LoggerAwareInterface
                         throw new \RuntimeException('Chrome process stopped before startup completed');
                     }
 
-                    $output = $process->getIncrementalErrorOutput();
+                    $output = trim($process->getIncrementalErrorOutput());
 
                     if ($output) {
                         // log
                         $this->logger->debug('process: chrome output:' . $output);
 
-                        // find socket uri
-                        if (preg_match('#^DevTools listening on (ws://.*)$#', trim($output), $matches)) {
-                            // log
-                            $this->logger->debug('process: ✓ accepted output');
-                            return $matches[1];
-                        } else {
-                            // log
-                            $this->logger->debug('process: ignoring output');
+                        $outputs = explode(PHP_EOL, $output);
+
+                        foreach ($outputs as $output) {
+                            $output = trim($output);
+
+                            // ignore empty line
+                            if (empty($output)) {
+                                continue;
+                            }
+
+                            // find socket uri
+                            if (preg_match('#^DevTools listening on (ws://.*)$#', $output, $matches)) {
+                                // log
+                                $this->logger->debug('process: ✓ accepted output');
+                                return $matches[1];
+                            } else {
+                                // log
+                                $this->logger->debug('process: ignoring output:' . trim($output));
+                            }
                         }
                     }
 
