@@ -5,7 +5,6 @@
 
 namespace HeadlessChromium;
 
-
 class Frame
 {
 
@@ -22,12 +21,18 @@ class Frame
     protected $lifeCycleEvents = [];
 
     /**
+     * @var string
+     */
+    protected $latestLoaderId;
+
+    /**
      * Frame constructor.
      * @param array $frameData
      */
     public function __construct(array $frameData)
     {
         $this->frameData = $frameData;
+        $this->latestLoaderId = $frameData['loaderId'];
     }
 
     /**
@@ -38,9 +43,19 @@ class Frame
     {
         if (self::LIFECYCLE_INIT === $params['name']) {
             $this->lifeCycleEvents = [];
+            $this->latestLoaderId = $params['loaderId'];
         }
 
+
         $this->lifeCycleEvents[$params['name']] = $params['timestamp'];
+    }
+
+    /**
+     * @return string
+     */
+    public function getLatestLoaderId(): string
+    {
+        return $this->latestLoaderId;
     }
 
     /**

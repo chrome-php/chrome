@@ -14,9 +14,12 @@ This library lets you start playing with chrome/chromium in headless mode from P
 Requirements
 ------------
 
-Requires php 7 and chrome/chromium exacutable. As of version 60 of chrome/chromium the library proved to work correctly.
+Requires php 7 and a chrome/chromium exacutable. 
 
-The library was only tested on linux.
+As of version 65 of chrome/chromium the library proved to work correctly. There are known bug prior to version 63
+that the library doesn't plan to had support for.
+
+Note that the library is only tested on linux.
 
 Install
 -------
@@ -28,7 +31,8 @@ The library can be installed with composer and is available on packagist under [
 Usage
 -----
 
-Chromium PHP uses a simple and understandable API to start chrome, open pages, take screenshots, crawl websites... and almost everything that you can do with chrome as an human.
+Chromium PHP uses a simple and understandable API to start chrome, to open pages, to take screenshots, 
+to crawl websites... and almost everything that you can do with chrome as a human.
 
 ```php
     use HeadlessChromium\BrowserFactory;
@@ -118,7 +122,34 @@ Here are the options available for the browser factory:
 #### Navigate to an url
 
 ```php
-    $page->navigate('http://example.com');
+    // navigate
+    $navigation = $page->navigate('http://example.com');
+    
+    // wait for the page to be loaded
+    $navigation->waitForNavigation();
+```
+
+When Using ``$navigation->waitForNavigation()`` you will wait for 30sec until the page event "loaded" is triggered.
+You can change the timeout or the event to listen for:
+
+```php
+    // wait 10secs for the event "DOMContentLoaded" to be triggered
+    $navigation->waitForNavigation(Page::DOM_CONTENT_LOADED, 10000)
+```
+
+#### Evaluate script on the page
+
+Once the page has completed the navigation you can evaluate arbitrary script on this page. 
+Full example with waitForNavigation:
+
+```php
+    // navigate
+    $navigation = $page->navigate('http://example.com');
+        
+    // wait for the page to be loaded
+    $navigation->waitForNavigation();
+    
+    $page->evaluate('document.documentElement.innerHTML');
 ```
 
 Advanced usage

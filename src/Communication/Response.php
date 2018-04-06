@@ -32,6 +32,24 @@ class Response implements \ArrayAccess
     }
 
     /**
+     * Get the error message if set.
+     * @return string|null
+     */
+    public function getErrorMessage()
+    {
+        return $this->data['error']['message'] ?? null;
+    }
+
+    /**
+     * @param $name
+     * @return mixed
+     */
+    public function getResultData($name)
+    {
+        return $this->data['result'][$name] ?? null;
+    }
+
+    /**
      * @return Message
      */
     public function getMessage(): Message

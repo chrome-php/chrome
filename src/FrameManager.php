@@ -5,7 +5,6 @@
 
 namespace HeadlessChromium;
 
-
 class FrameManager
 {
 
@@ -40,7 +39,7 @@ class FrameManager
 
         // TODO listen for frame events
 
-        $this->page->getSession()->on('method:Page.lifecycleEvent', function(array $params) {
+        $this->page->getSession()->on('method:Page.lifecycleEvent', function (array $params) {
             $frame = $this->frames[$params['frameId']];
             $frame->onLifecycleEvent($params);
         });

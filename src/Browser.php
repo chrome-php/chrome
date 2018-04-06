@@ -10,6 +10,7 @@ use HeadlessChromium\Communication\Message;
 use HeadlessChromium\Communication\Target;
 use HeadlessChromium\Exception\CommunicationException;
 use HeadlessChromium\Exception\NoResponseAvailable;
+use HeadlessChromium\Exception\CommunicationException\ResponseHasError;
 
 class Browser
 {
@@ -82,10 +83,15 @@ class Browser
         $target = $this->targets[$targetId];
 
         // get initial frame tree
-        $frameTree = $target->getSession()->sendMessageSync(new Message('Page.getFrameTree'));
+        $frameTreeResponse = $target->getSession()->sendMessageSync(new Message('Page.getFrameTree'));
+
+        // make sure frame tree was found
+        if (!$frameTreeResponse->isSuccessful()) {
+            throw new ResponseHasError('Cannot read frame tree. Please, consider upgrading chrome version.');
+        }
 
         // create page
-        $page = new Page($target, $frameTree['result']['frameTree']);
+        $page = new Page($target, $frameTreeResponse['result']['frameTree']);
 
         // Page.enable
         $page->getSession()->sendMessageSync(new Message('Page.enable'));

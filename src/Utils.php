@@ -51,8 +51,8 @@ class Utils
         foreach ($generator as $v) {
             // if timeout reached or if time+delay exceed timeout stop the execution
             if (microtime(true) * 1000 * 1000 + $v >= $waitUntilMicroSec) {
-                // if callback was set execute it
                 if ($onTimeout) {
+                    // if callback was set execute it
                     return $onTimeout();
                 } else {
                     if ($timeoutMicroSec > 1000 * 1000) {
