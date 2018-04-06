@@ -182,6 +182,12 @@ class Page
             $screenshotOptions['quality'] = $options['quality'];
         }
 
+        // TODO document clip
+        // TODO validate clip/use viewport object
+        if (array_key_exists('clip', $options)) {
+            $screenshotOptions['clip'] = $options['clip'];
+        }
+
         // request screen shot
         $responseReader = $this->getSession()
             ->sendMessage(new Message('Page.captureScreenshot', $screenshotOptions));

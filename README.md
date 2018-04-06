@@ -61,7 +61,7 @@ to crawl websites... and almost everything that you can do with chrome as a huma
     // get page title
     $pageTitle = $page->evaluate('document.title')->getReturnValue();
     
-    // screenshot - Say "Cheese"!
+    // screenshot - Say "Cheese"! 😄
     $page->screenshot()->saveToFile('/foo/bar.png');
     
     // bye

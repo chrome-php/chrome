@@ -8,6 +8,7 @@ namespace HeadlessChromium;
 use HeadlessChromium\Communication\Response;
 use HeadlessChromium\Communication\ResponseReader;
 use HeadlessChromium\Exception\EvaluationFailed;
+use HeadlessChromium\Exception\JavascriptException;
 
 /**
  * Used to read data from page evaluation response
@@ -41,13 +42,20 @@ class PageEvaluation
      */
     public function waitForResponse()
     {
-        $response = $this->responseReader->waitForResponse();
+        $this->response = $this->responseReader->waitForResponse();
 
         if (!$this->response->isSuccessful()) {
             throw new EvaluationFailed('Could not evaluate the script in the page.');
         }
 
-        $this->response = $response;
+        $result = $this->response->getResultData('result');
+
+        $resultSubType = $result['subtype'] ?? null;
+
+        if ($resultSubType == 'error') {
+            // TODO dump javascript trace
+            throw new JavascriptException('Error during javascript evaluation: ' . $result['description']);
+        }
 
         return $this;
     }
@@ -63,7 +71,7 @@ class PageEvaluation
             $this->waitForResponse();
         }
 
-        return $this->response->getResultData('value');
+        return $this->response->getResultData('result')['value'] ?? null;
     }
 
     /**
@@ -77,6 +85,6 @@ class PageEvaluation
             $this->waitForResponse();
         }
 
-        return $this->response->getResultData('type');
+        return $this->response->getResultData('result')['type'] ?? null;
     }
 }

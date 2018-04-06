@@ -6,6 +6,8 @@
 namespace HeadlessChromium\Communication;
 
 use HeadlessChromium\Exception\NoResponseAvailable;
+use HeadlessChromium\Utils;
+use HeadlessChromium\Exception\OperationTimedOut;
 
 class ResponseReader
 {
@@ -75,7 +77,7 @@ class ResponseReader
     public function getResponse(): Response
     {
         if (!$this->response) {
-            throw new NoResponseAvailable('Response is not available');
+            throw new NoResponseAvailable('Response is not available. Try to use the method waitForResponse instead.');
         }
 
         return $this->response;
@@ -84,11 +86,13 @@ class ResponseReader
     /**
      * Wait for a response
      * @param int $timeout time to wait for a response (milliseconds)
-     * @return Response|null the response or null if no responses were found before the given timeout is reached
+     * @return Response
+     *
+     * @throws NoResponseAvailable
+     * @throws OperationTimedOut
      */
-    public function waitForResponse(int $timeout = null)
+    public function waitForResponse(int $timeout = null): Response
     {
-
         if ($this->hasResponse()) {
             return $this->getResponse();
         }
@@ -96,14 +100,23 @@ class ResponseReader
         // default 2000ms
         $timeout = $timeout ?? 2000;
 
-        // 10 microseconds between each iteration
-        $tryDelay = 10;
-
-        // time to wait for the response
-        $waitUntil = microtime(true) + $timeout / 1000;
-
         // TODO replace with Utils::tryWithTimeout
-        do {
+        return Utils::tryWithTimeout($timeout * 1000, $this->waitForResponseGenerator());
+    }
+
+    /**
+     * To be used in waitForResponse method
+     * @return \Generator|Response
+     * @throws NoResponseAvailable
+     * @internal
+     */
+    private function waitForResponseGenerator()
+    {
+        while (true) {
+
+            // 50 microseconds between each iteration
+            $tryDelay = 50;
+
             // read available response
             $hasResponse = $this->checkForResponse();
 
@@ -113,10 +126,8 @@ class ResponseReader
             }
 
             // wait before next check
-            usleep($tryDelay);
-        } while (microtime(true) < $waitUntil);
-
-        return null;
+            yield $tryDelay;
+        }
     }
 
     /**

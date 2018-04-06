@@ -71,10 +71,18 @@ class PageScreenshot
         }
 
         // save screenshot
-        if (!is_writable($path)) {
-            throw new FilesystemException(
-                sprintf('The file %s is not writable.', $path)
-            );
+        if (file_exists($path)) {
+            if (!is_writable($path)) {
+                throw new FilesystemException(
+                    sprintf('The file %s is not writable.', $path)
+                );
+            }
+        } else {
+            if (!touch($path)) {
+                throw new FilesystemException(
+                    sprintf('The file %s could not be created.', $path)
+                );
+            }
         }
 
         $file = fopen($path, 'wb');
