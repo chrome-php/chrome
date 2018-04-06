@@ -81,6 +81,10 @@ By default we assume that chrome will run with the commande ``chrome`` but you c
 ```
 
 
+------------------------------------------------------------------------------------------------------------------------
+
+
+
 API
 ---
 
@@ -151,6 +155,12 @@ Full example with waitForNavigation:
     
     $page->evaluate('document.documentElement.innerHTML');
 ```
+
+
+
+------------------------------------------------------------------------------------------------------------------------
+
+
 
 Advanced usage
 --------------
