@@ -10,6 +10,18 @@ This library lets you start playing with chrome/chromium in headless mode from P
 
 > **/!\\** The library is currently at a very early stage. You are enouraged to play with it but keepin mind that it is still very young and still lacks most of the features you would expect.
 
+Features
+--------
+
+- Open chrome or chromium browser from php
+- Create pages and navigate to pages
+- Take screenshots
+- Evaluate javascript in the page
+- *TODO* Make PDF
+- *TODO* Emulate mouse and keyboard 
+- Always IDE friendly
+
+Happy browsing!
 
 Requirements
 ------------
@@ -17,7 +29,7 @@ Requirements
 Requires php 7 and a chrome/chromium exacutable. 
 
 As of version 65 of chrome/chromium the library proved to work correctly. There are known bug prior to version 63
-that the library doesn't plan to had support for.
+that the library doesn't plan to add support for.
 
 Note that the library is only tested on linux.
 
@@ -44,8 +56,15 @@ to crawl websites... and almost everything that you can do with chrome as a huma
 
     // creates a new page and navigate to an url
     $page = $browser->createPage();
-    $page->navigate('http://example.com');
+    $page->navigate('http://example.com')->waitForNavigation();
     
+    // get page title
+    $pageTitle = $page->evaluate('document.title')->getReturnValue();
+    
+    // screenshot - Say "Cheese"!
+    $page->screenshot()->saveToFile('/foo/bar.png');
+    
+    // bye
     $browser->close();
 ```
 
@@ -71,7 +90,7 @@ About ``debugLogger``: this can be any of a resource string, a resource or an ob
 
 ### Using different chrome executable
 
-By default we assume that chrome will run with the commande ``chrome`` but you can change the executable:
+By default we assume that chrome will run with the command ``chrome`` but you can change the executable:
 
 ```php
     use HeadlessChromium\BrowserFactory;
@@ -141,9 +160,9 @@ You can change the timeout or the event to listen for:
     $navigation->waitForNavigation(Page::DOM_CONTENT_LOADED, 10000)
 ```
 
-When you want to wait for the page to navigate there are 2 things that could happen. 
+When you want to wait for the page to navigate there are 2 main issues that may occur. 
 First the page is too long to load and second the page you were waiting to be loaded has been replaced.
-The good news is that you can handle those issue with exceptions:
+The good news is that you can handle those issues using a good old try catch:
 
 ```php
   use HeadlessChromium\Exception\OperationTimedOut;
@@ -174,6 +193,26 @@ Once the page has completed the navigation you can evaluate arbitrary script on 
     
     // wait for the value to return and get it
     $value = $evaluation->getReturnValue();
+```
+
+
+#### Make a screenshot
+
+```php
+    // navigate
+    $navigation = $page->navigate('http://example.com');
+        
+    // wait for the page to be loaded
+    $navigation->waitForNavigation();
+    
+    // evaluate script in the browser
+    $screenshot = $page->screenshot([
+        'format'  => 'jpeg',  // default to 'png' - possible values: 'png', 'jpeg',
+        'quality' => 80       // only if format is 'jpeg' - default 100 
+    ]);
+    
+    // save the screenshot
+    $screenshot->saveToFile('/some/place/file.jpg');
 ```
 
 

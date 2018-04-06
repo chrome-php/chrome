@@ -5,7 +5,7 @@
 
 namespace HeadlessChromium\Exception;
 
-class EvaluationFailed extends \Exception
+class ScreenshotFailed extends \Exception
 {
 
 }

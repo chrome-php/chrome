@@ -5,7 +5,6 @@
 
 namespace HeadlessChromium;
 
-
 use HeadlessChromium\Communication\Response;
 use HeadlessChromium\Communication\ResponseReader;
 use HeadlessChromium\Exception\EvaluationFailed;

@@ -132,4 +132,60 @@ class Page
     {
         return array_key_exists($event, $this->getCurrentLifecycle());
     }
+
+
+    /**
+     *
+     */
+    public function screenshot(array $options = []): PageScreenshot
+    {
+        $screenshotOptions = [];
+
+        // get format
+        if (array_key_exists('format', $options)) {
+            $screenshotOptions['format'] = $options['format'];
+        } else {
+            $screenshotOptions['format'] = 'png';
+        }
+
+        // make sure format is valid
+        if (!in_array($screenshotOptions['format'], ['png', 'jpeg'])) {
+            throw new \InvalidArgumentException(
+                'Invalid options "format" for page screenshot. Format must be "png" or "jpeg".'
+            );
+        }
+
+        // get quality
+        if (array_key_exists('quality', $options)) {
+            // quality requires type to be jpeg
+            if ($screenshotOptions['format'] !== 'jpeg') {
+                throw new \InvalidArgumentException(
+                    'Invalid options "quality" for page screenshot. Quality requires the image format to be "jpeg".'
+                );
+            }
+
+            // quality must be an integer
+            if (!is_int($options['quality'])) {
+                throw new \InvalidArgumentException(
+                    'Invalid options "quality" for page screenshot. Quality must be an integer value.'
+                );
+            }
+
+            // quality must be between 0 and 100
+            if ($options['quality'] < 0 || $options['quality'] > 100) {
+                throw new \InvalidArgumentException(
+                    'Invalid options "quality" for page screenshot. Quality must be comprised between 0 and 100.'
+                );
+            }
+
+            // set quality
+            $screenshotOptions['quality'] = $options['quality'];
+        }
+
+        // request screen shot
+        $responseReader = $this->getSession()
+            ->sendMessage(new Message('Page.captureScreenshot', $screenshotOptions));
+
+        return new PageScreenshot($responseReader);
+    }
 }
