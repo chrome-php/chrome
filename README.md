@@ -3,8 +3,8 @@ Chromium PHP
 
 [![Build Status](https://travis-ci.org/gsouf/headless-chromium-php.svg?branch=master)](https://travis-ci.org/gsouf/headless-chromium-php)
 [![Test Coverage](https://codeclimate.com/github/gsouf/headless-chromium-php/badges/coverage.svg)](https://codeclimate.com/github/gsouf/headless-chromium-php/coverage)
-[![Latest Stable Version](https://poser.pugx.org/gsouf/chromium/version)](https://packagist.org/packages/gsouf/chromium)
-[![License](https://poser.pugx.org/gsouf/chromium/license)](https://packagist.org/packages/gsouf/chromium)
+[![Latest Stable Version](https://poser.pugx.org/chrome/chrome/version)](https://packagist.org/packages/chrome/chrome)
+[![License](https://poser.pugx.org/chrome/chrome/license)](https://packagist.org/packages/chrome/chrome)
 
 This library lets you start playing with chrome/chromium in headless mode from PHP.
 
@@ -24,9 +24,9 @@ Note that the library is only tested on linux.
 Install
 -------
 
-The library can be installed with composer and is available on packagist under [gsouf/chromium](https://packagist.org/packages/gsouf/chromium)
+The library can be installed with composer and is available on packagist under [chrome/chrome](https://packagist.org/packages/chrome/chrome)
 
-``composer require gsouf/chromium``
+``composer require chrome/chrome``
 
 Usage
 -----
@@ -160,8 +160,7 @@ The good news is that you can handle those issue with exceptions:
 
 #### Evaluate script on the page
 
-Once the page has completed the navigation you can evaluate arbitrary script on this page. 
-Full example with waitForNavigation:
+Once the page has completed the navigation you can evaluate arbitrary script on this page:
 
 ```php
     // navigate
@@ -170,6 +169,7 @@ Full example with waitForNavigation:
     // wait for the page to be loaded
     $navigation->waitForNavigation();
     
+    // evaluate script in the browser
     $page->evaluate('document.documentElement.innerHTML');
 ```
 
