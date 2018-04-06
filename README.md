@@ -8,7 +8,8 @@ Chromium PHP
 
 This library lets you start playing with chrome/chromium in headless mode from PHP.
 
-> **/!\\** The library is currently at a very early stage. You are enouraged to play with it but keepin mind that it is still very young and still lacks most of the features you would expect.
+> **/!\\** The library is currently at a very early stage. You are encouraged to play with it but keep in mind that it is still very young and still lacks most of the features you would expect. The library follows semver for versioning.
+  That means that until version 1.0.0 a lot of changes might occur.
 
 Features
 --------
