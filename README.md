@@ -170,7 +170,10 @@ Once the page has completed the navigation you can evaluate arbitrary script on 
     $navigation->waitForNavigation();
     
     // evaluate script in the browser
-    $page->evaluate('document.documentElement.innerHTML');
+    $evaluation = $page->evaluate('document.documentElement.innerHTML');
+    
+    // wait for the value to return and get it
+    $value = $evaluation->getReturnValue();
 ```
 
 

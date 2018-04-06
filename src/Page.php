@@ -76,16 +76,16 @@ class Page
      *
      * ```php
      * $evaluation = $page->evaluate('document.querySelector("title").innerHTML');
-     * $response = $evaluation->waitForResponse();
+     * $response = $evaluation->getReturnValue();
      * ```
      *
      * @param string $expression
-     * @return ResponseReader
+     * @return PageEvaluation
      * @throws Exception\CommunicationException
      */
     public function evaluate(string $expression)
     {
-        return $this->getSession()->sendMessage(
+        $reader = $this->getSession()->sendMessage(
             new Message(
                 'Runtime.evaluate',
                 [
@@ -95,6 +95,8 @@ class Page
                 ]
             )
         );
+
+        return new PageEvaluation($reader);
     }
 
     /**
