@@ -1,10 +1,10 @@
-Chromium PHP
-============
+Chrome PHP
+==========
 
 [![Build Status](https://travis-ci.org/gsouf/headless-chromium-php.svg?branch=master)](https://travis-ci.org/gsouf/headless-chromium-php)
 [![Test Coverage](https://codeclimate.com/github/gsouf/headless-chromium-php/badges/coverage.svg)](https://codeclimate.com/github/gsouf/headless-chromium-php/coverage)
-[![Latest Stable Version](https://poser.pugx.org/chrome/chrome/version)](https://packagist.org/packages/chrome/chrome)
-[![License](https://poser.pugx.org/chrome/chrome/license)](https://packagist.org/packages/chrome/chrome)
+[![Latest Stable Version](https://poser.pugx.org/chrome-php/chrome/version)](https://packagist.org/packages/chrome-php/chrome)
+[![License](https://poser.pugx.org/chrome-php/chrome/license)](https://packagist.org/packages/chrome-php/chrome)
 
 This library lets you start playing with chrome/chromium in headless mode from PHP.
 
@@ -37,14 +37,14 @@ Note that the library is only tested on linux.
 Install
 -------
 
-The library can be installed with composer and is available on packagist under [chrome/chrome](https://packagist.org/packages/chrome/chrome)
+The library can be installed with composer and is available on packagist under [chrome-php/chrome](https://packagist.org/packages/chrome-php/chrome)
 
-``composer require chrome/chrome``
+``composer require chrome-php/chrome``
 
 Usage
 -----
 
-Chromium PHP uses a simple and understandable API to start chrome, to open pages, to take screenshots, 
+It uses a simple and understandable API to start chrome, to open pages, to take screenshots, 
 to crawl websites... and almost everything that you can do with chrome as a human.
 
 ```php
