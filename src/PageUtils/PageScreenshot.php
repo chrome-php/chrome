@@ -26,6 +26,14 @@ class PageScreenshot
     }
 
     /**
+     * @return ResponseReader
+     */
+    public function getResponseReader(): ResponseReader
+    {
+        return $this->responseReader;
+    }
+
+    /**
      * Get base64 representation of the file
      * @return mixed
      * @throws ScreenshotFailed
@@ -49,10 +57,10 @@ class PageScreenshot
      * @throws FilesystemException
      * @throws ScreenshotFailed
      */
-    public function saveToFile(string $path)
+    public function saveToFile(string $path, int $timeout = 5000)
     {
 
-        $response = $this->responseReader->waitForResponse();
+        $response = $this->responseReader->waitForResponse($timeout);
 
         if (!$response->isSuccessful()) {
             throw new ScreenshotFailed(

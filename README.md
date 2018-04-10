@@ -206,10 +206,40 @@ Once the page has completed the navigation you can evaluate arbitrary script on 
     // wait for the page to be loaded
     $navigation->waitForNavigation();
     
-    // evaluate script in the browser
+    // take a screenshot
     $screenshot = $page->screenshot([
         'format'  => 'jpeg',  // default to 'png' - possible values: 'png', 'jpeg',
         'quality' => 80       // only if format is 'jpeg' - default 100 
+    ]);
+    
+    // save the screenshot
+    $screenshot->saveToFile('/some/place/file.jpg');
+```
+
+**choose an area**
+
+You can use the option "clip" in order to choose an area for the screenshot.
+
+```php
+
+    use HeadlessChromium\Clip;
+
+    // navigate
+    $navigation = $page->navigate('http://example.com');
+        
+    // wait for the page to be loaded
+    $navigation->waitForNavigation();
+    
+    // create a rectangle by specifying to left corner coordinates + width and height
+    $x = 10;
+    $y = 10;
+    $width = 100;
+    $height = 100;
+    $clip = new Clip($x, $y, $width, $height);
+    
+    // take the screenshot
+    $screenshot = $page->screenshot([
+        'clip'  => $clip'
     ]);
     
     // save the screenshot

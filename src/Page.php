@@ -139,6 +139,15 @@ class Page
 
     /**
      *
+     * Example:
+     *
+     * ```php
+     * $page->screenshot()->saveToFile();
+     * ```
+     *
+     * @param array $options
+     * @return PageScreenshot
+     * @throws CommunicationException
      */
     public function screenshot(array $options = []): PageScreenshot
     {
@@ -185,13 +194,27 @@ class Page
             $screenshotOptions['quality'] = $options['quality'];
         }
 
-        // TODO document clip
-        // TODO validate clip/use viewport object
+        // clip
         if (array_key_exists('clip', $options)) {
-            $screenshotOptions['clip'] = $options['clip'];
+
+            // make sure it's a Clip instance
+            if (!($options['clip'] instanceof Clip)) {
+                throw new \InvalidArgumentException(
+                    sprintf('Invalid options "clip" for page screenshot, it must be a %s instance.', Clip::class)
+                );
+            }
+
+            // add to params
+            $screenshotOptions['clip'] = [
+                'x' => $options['clip']->getX(),
+                'y' => $options['clip']->getY(),
+                'width' => $options['clip']->getWidth(),
+                'height' => $options['clip']->getHeight(),
+                'scale' => $options['clip']->getScale()
+            ];
         }
 
-        // request screen shot
+        // request screenshot
         $responseReader = $this->getSession()
             ->sendMessage(new Message('Page.captureScreenshot', $screenshotOptions));
 
