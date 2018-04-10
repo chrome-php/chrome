@@ -3,7 +3,7 @@
  * @license see LICENSE
  */
 
-namespace HeadlessChromium;
+namespace HeadlessChromium\PageUtils;
 
 use HeadlessChromium\Communication\Response;
 use HeadlessChromium\Communication\ResponseReader;

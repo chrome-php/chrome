@@ -3,7 +3,7 @@
  * @license see LICENSE
  */
 
-namespace HeadlessChromium;
+namespace HeadlessChromium\PageUtils;
 
 use HeadlessChromium\Communication\ResponseReader;
 use HeadlessChromium\Exception\FilesystemException;

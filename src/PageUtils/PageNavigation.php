@@ -3,9 +3,13 @@
  * @license see LICENSE
  */
 
-namespace HeadlessChromium;
+namespace HeadlessChromium\PageUtils;
 
+use HeadlessChromium\Exception;
 use HeadlessChromium\Exception\NavigationExpired;
+use HeadlessChromium\Frame;
+use HeadlessChromium\Page;
+use HeadlessChromium\Utils;
 
 /**
  * A class that is aimed to be used withing the method Page::navigate

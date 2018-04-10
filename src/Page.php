@@ -12,6 +12,9 @@ use HeadlessChromium\Communication\Target;
 use HeadlessChromium\Exception\CommunicationException;
 use HeadlessChromium\Exception\NoResponseAvailable;
 use HeadlessChromium\Exception\CommunicationException\ResponseHasError;
+use HeadlessChromium\PageUtils\PageEvaluation;
+use HeadlessChromium\PageUtils\PageNavigation;
+use HeadlessChromium\PageUtils\PageScreenshot;
 
 class Page
 {
