@@ -1,5 +1,5 @@
 {
-  "name": "chrome/chrome",
+  "name": "chrome-php/chrome",
   "description": "Instrument headless chrome/chromium instances from php",
   "type": "library",
   "keywords": ["chrome", "chromium", "crawl", "browser", "headless", "screenshot", "pdf"],
