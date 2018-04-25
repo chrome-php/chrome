@@ -69,6 +69,19 @@ to crawl websites... and almost everything that you can do with chrome as a huma
     $browser->close();
 ```
 
+### Using different chrome executable
+
+When starting the factory will look for the environment variable ``"CHROME_PATH"`` to find the chrome executable.
+If the variable is not found then it will use ``"chrome"`` as the executable.
+
+You can use an arbitrary executable of your choice. For instance ``"chromium-browser"``:
+
+```php
+    use HeadlessChromium\BrowserFactory;
+
+    // replace default 'chrome' with 'chromium-browser'
+    $browserFactory = new BrowserFactory('chromium-browser');
+```
 
 ### Debugging 
 
@@ -89,16 +102,6 @@ The following example adds some development-oriented features to help debugging
 About ``debugLogger``: this can be any of a resource string, a resource or an object implementing ``LoggerInterface`` from Psr\Log (such as [monolog](https://github.com/Seldaek/monolog) or [apix/log](https://github.com/apix/log)).
 
 
-### Using different chrome executable
-
-By default we assume that chrome will run with the command ``chrome`` but you can change the executable:
-
-```php
-    use HeadlessChromium\BrowserFactory;
-
-    // replace default 'chrome' with 'chromium-browser'
-    $browserFactory = new BrowserFactory('chromium-browser');
-```
 
 
 ------------------------------------------------------------------------------------------------------------------------

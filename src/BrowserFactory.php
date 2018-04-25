@@ -14,8 +14,20 @@ class BrowserFactory
 
     protected $chromeBinaries;
 
-    public function __construct(string $chromeBinaries = 'chrome')
+    public function __construct(string $chromeBinaries = null)
     {
+        // auto guess chrome binaries
+        if (null === $chromeBinaries) {
+            $envChromePath = getenv('CHROME_PATH');
+
+            if ($envChromePath) {
+                $chromeBinaries = $envChromePath;
+            } else {
+                $chromeBinaries = 'chrome';
+            }
+
+        }
+
         $this->chromeBinaries = $chromeBinaries;
     }
 
@@ -73,8 +85,13 @@ class BrowserFactory
 
         if ($exitCode != 0) {
             $message = 'Cannot get chrome version, make sure you provided the correct chrome binaries';
-            $message .= ' using (' . $this->chromeBinaries . '). ';
-            $message .= trim($process->getErrorOutput());
+            $message .= ' using: "' . $this->chromeBinaries . '". ';
+
+            $error = trim($process->getErrorOutput());
+
+            if (!empty($error)) {
+                $message .= 'Additional info: ' . $error;
+            }
             throw new \RuntimeException($message);
         }
 
