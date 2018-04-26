@@ -39,8 +39,10 @@ class BrowserFactory
      * - headless: whether chrome should be started headless (default: true)
      * - userDataDir: chrome user data dir (default: a new empty dir is generated temporarily)
      * - connectionDelay: amount of time in seconds to slows down connection for debugging purposes (default: none)
-     * - debugLogger: resource string ("php://stdout"), resource or psr-3 logger instance (default: none)
      * - enableImages: toggle the loading of images (default: true)
+     * - debug: toggles the debug mode than allows to print additional details (default: false)
+     * - debugLogger: resource string ("php://stdout"), resource or psr-3 logger instance (default: none)
+     *   enabling debug logger will also enable debug mode.
      *
      * @return Browser a Browser instance to interact with the new chrome process
      */
@@ -53,12 +55,18 @@ class BrowserFactory
         // create logger from string name or resource
         if (is_string($logger) || is_resource($logger)) {
             $logger = new StreamLogger($logger);
+            $options['debug'] = true;
         }
 
+        $debugEnabled = $options['debug'] ?? false;
+
         // log
-        if ($logger) {
+        if ($debugEnabled) {
             $chromeVersion = $this->getChromeVersion();
-            $logger->debug('Factory: chrome version: ' . $chromeVersion);
+
+            if ($logger) {
+                $logger->debug('Factory: chrome version: ' . $chromeVersion);
+            }
         }
 
         // create process browser process
@@ -84,7 +92,7 @@ class BrowserFactory
         $exitCode = $process->run();
 
         if ($exitCode != 0) {
-            $message = 'Cannot get chrome version, make sure you provided the correct chrome binaries';
+            $message = 'Cannot read chrome version, make sure you provided the correct chrome executable';
             $message .= ' using: "' . $this->chromeBinaries . '". ';
 
             $error = trim($process->getErrorOutput());

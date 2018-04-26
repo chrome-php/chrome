@@ -323,7 +323,12 @@ class BrowserProcess implements LoggerAwareInterface
                         $this->logger->debug('process: ✗ chrome process stopped');
 
                         // exception
-                        throw new \RuntimeException('Chrome process stopped before startup completed');
+                        $message = 'Chrome process stopped before startup completed.';
+                        $error = trim($process->getErrorOutput());
+                        if (!empty($error)) {
+                            $message .= ' Additional info: ' . $error;
+                        }
+                        throw new \RuntimeException($message);
                     }
 
                     $output = trim($process->getIncrementalErrorOutput());
