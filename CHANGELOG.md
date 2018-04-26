@@ -22,10 +22,10 @@
     
 * Features:
   * Improved startup error message
+* Bug fixes:
   * Fixed bugs on shutdown
   * Fixed unit tests
-* Bug fixes:
-  * none
+  * Allow CHROME_PATH to have spaces in the path
   
 --------------
 
