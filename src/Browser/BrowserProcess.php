@@ -16,6 +16,7 @@ use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Process\Process;
+use Wrench\Exception\SocketException;
 
 /**
  * A browser process starter. Don't use directly, use BrowserFactory instead
@@ -198,7 +199,11 @@ class BrowserProcess implements LoggerAwareInterface
                     }
 
                     // disconnect socket
-                    $this->connection->disconnect();
+                    try {
+                        $this->connection->disconnect();
+                    } catch (SocketException $e) {
+                        // Socket might be already disconnected
+                    }
 
                     // log
                     $this->logger->debug('process: waiting for process to close');
