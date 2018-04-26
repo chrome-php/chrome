@@ -2,7 +2,7 @@
 
 ## x.x.x
 
-> *20xx-xx-xx*
+> *20xx-xx-xx* (not released)
 
 > Description
     
@@ -13,10 +13,21 @@
   
 --------------
 
+## 0.1.3
 
-## 0.1.2 (not released)
+> *2018-04-26*
 
-> *20xx-xx-xx*
+> Description
+    
+* Features:
+  * Add PageEvaluation::waitForPageReload
+  
+--------------
+
+
+## 0.1.2
+
+> *2018-04-26*
 
 > Description
     
