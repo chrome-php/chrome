@@ -5,7 +5,8 @@ addons:
   chrome: stable
 
 env:
-  - CHROME_PATH="google-chrome-stable"
+  global:
+    - CHROME_PATH="google-chrome-stable"
 
 matrix:
   include:
