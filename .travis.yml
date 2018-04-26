@@ -4,6 +4,9 @@ sudo: required
 addons:
   chrome: stable
 
+env:
+  - CHROME_PATH="google-chrome-stable"
+
 matrix:
   include:
   - php: 7.0
