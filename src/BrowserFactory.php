@@ -25,7 +25,6 @@ class BrowserFactory
             } else {
                 $chromeBinaries = 'chrome';
             }
-
         }
 
         $this->chromeBinaries = $chromeBinaries;

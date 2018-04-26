@@ -6,78 +6,60 @@
 namespace HeadlessChromium\Test;
 
 use HeadlessChromium\Browser;
-use HeadlessChromium\Communication\Connection;
-use HeadlessChromium\Communication\Socket\MockSocket;
-use HeadlessChromium\Page;
+use HeadlessChromium\BrowserFactory;
 
 /**
  * @covers \HeadlessChromium\Browser
+ * @covers \HeadlessChromium\Page
  */
 class BrowserTest extends BaseTestCase
 {
 
-    public function testBrowser()
-    {
-        $connection = new Connection(new MockSocket());
+    /**
+     * @var Browser\ProcessAwareBrowser
+     */
+    public static $browser;
 
-        $browser = new Browser($connection);
-        $this->assertSame($connection, $browser->getConnection());
+    public static function setUpBeforeClass()
+    {
+        parent::setUpBeforeClass();
+        $factory = new BrowserFactory();
+        self::$browser = $factory->createBrowser();
     }
 
-    public function testCreatePage()
+    public static function tearDownAfterClass()
     {
-        $mockSocket = new MockSocket();
-        $connection = new Connection($mockSocket);
-        $connection->connect();
+        parent::tearDownAfterClass();
+        self::$browser->close();
+    }
 
-        $browser = new Browser($connection);
+    private function sitePath($file)
+    {
+        return 'file://' . __DIR__ . '/../resources/static-web/' . $file;
+    }
 
-        // set received data for Target.createPage and AttachTargetTo
-        $mockSocket->addReceivedData(json_encode(['method' => 'Target.targetCreated', 'params' => ['targetInfo' => ['targetId' => 'foo-bar']]]), false);
-        $mockSocket->addReceivedData(json_encode(['result' => ['targetId' => 'foo-bar']]), true);
-        $mockSocket->addReceivedData(json_encode(['result' => ['sessionId' => 'baz-qux']]), true);
+    private function openSitePage($file)
+    {
+        $page = self::$browser->createPage();
+        $page->navigate($this->sitePath($file))->waitForNavigation();
 
-        // Page.enable
-        $mockSocket->addReceivedData(json_encode(['result' => []]), true);
+        return $page;
+    }
 
-        $page = $browser->createPage();
+    /**
+     * @throws \HeadlessChromium\Exception\CommunicationException
+     * @throws \HeadlessChromium\Exception\NoResponseAvailable
+     */
+    public function testPageNavigateEvaluate()
+    {
+        // initial navigation
+        $page = $this->openSitePage('index.html');
+        $title = $page->evaluate('document.title')->getReturnValue();
+        $this->assertEquals('foo', $title);
 
-        // test page
-        $this->assertInstanceOf(Page::class, $page);
-        $this->assertEquals('foo-bar', $page->getSession()->getTargetId());
-        $this->assertEquals('baz-qux', $page->getSession()->getSessionId());
-
-        // assert data sent
-        $this->assertDataSentEquals(
-            [
-                [
-                    'id' => '%id',
-                    'method' => 'Target.createTarget',
-                    'params' => [
-                        'url' => 'about:blank'
-                    ]
-                ],
-                [
-                    'id' => '%id',
-                    'method' => 'Target.attachToTarget',
-                    'params' => [
-                        'targetId' => 'foo-bar'
-                    ]
-                ],
-                [
-                    'id' => '%id',
-                    'method' => 'Target.sendMessageToTarget',
-                    'params' => [
-                        'message' =>  json_encode([
-                            'id' => '%id',
-                            'method' => 'Page.enable',
-                            'params' => []
-                        ]),
-                        'sessionId' => 'baz-qux'
-                    ]
-                ]
-            ],
-            $mockSocket->getSentData()
-        );
+        // navigate again
+        $page->navigate($this->sitePath('a.html'))->waitForNavigation();
+        $title = $page->evaluate('document.title')->getReturnValue();
+        $this->assertEquals('a - test', $title);
     }
 }

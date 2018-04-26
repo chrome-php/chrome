@@ -11,7 +11,7 @@ use HeadlessChromium\Communication\Socket\Wrench;
 use HeadlessChromium\Exception\CommunicationException;
 use HeadlessChromium\Exception\CommunicationException\InvalidResponse;
 use HeadlessChromium\Exception\CommunicationException\CannotReadResponse;
-use HeadlessChromium\Exception\NoResponseAvailable;
+use HeadlessChromium\Exception\OperationTimedOut;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
 use Psr\Log\LoggerInterface;
@@ -200,17 +200,13 @@ class Connection extends EventEmitter implements LoggerAwareInterface
     /**
      * @param Message $message
      * @param int|null $timeout
-     * @throws NoResponseAvailable
+     * @throws OperationTimedOut
      * @return Response
      */
     public function sendMessageSync(Message $message, $timeout = null): Response
     {
         $responseReader = $this->sendMessage($message);
         $response = $responseReader->waitForResponse($timeout ?? $this->sendSyncDefaultTimeout);
-
-        if (!$response) {
-            throw new NoResponseAvailable('No response was sent in the given timeout');
-        }
 
         return $response;
     }

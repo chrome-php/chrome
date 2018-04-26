@@ -11,6 +11,7 @@ use HeadlessChromium\Communication\Response;
 use HeadlessChromium\Communication\ResponseReader;
 use HeadlessChromium\Communication\Socket\MockSocket;
 use HeadlessChromium\Exception\NoResponseAvailable;
+use HeadlessChromium\Exception\OperationTimedOut;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -30,12 +31,17 @@ class ResponseReaderTest extends TestCase
         $this->assertSame($message, $responseReader->getMessage());
         $this->assertSame($connection, $responseReader->getConnection());
 
-
         // no response
         $this->assertFalse($responseReader->hasResponse());
-        $this->assertNull($responseReader->waitForResponse(1));
-        $this->assertFalse($responseReader->checkForResponse());
 
+        try {
+            $responseReader->waitForResponse(1);
+            $this->fail('exception not thrown');
+        } catch (OperationTimedOut $e) {
+            $this->assertTrue(true);
+        }
+
+        $this->assertFalse($responseReader->checkForResponse());
 
         // add response
         $mockSocket->addReceivedData(json_encode(['id' => $message->getId(), 'foo' => 'qux']));
@@ -55,8 +61,13 @@ class ResponseReaderTest extends TestCase
         $connection = new Connection($mockSocket);
 
         $responseReader = new ResponseReader($message, $connection);
-        
-        $this->assertNull($responseReader->waitForResponse(1));
+
+        try {
+            $responseReader->waitForResponse(1);
+            $this->fail('exception not thrown');
+        } catch (OperationTimedOut $e) {
+            $this->assertTrue(true);
+        }
 
         // receive data
         $mockSocket->addReceivedData(json_encode(['id' => $message->getId(), 'foo' => 'qux']));

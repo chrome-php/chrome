@@ -5,7 +5,6 @@
 
 namespace HeadlessChromium;
 
-
 class Clip
 {
 
@@ -111,5 +110,4 @@ class Clip
     {
         $this->scale = $scale;
     }
-
 }

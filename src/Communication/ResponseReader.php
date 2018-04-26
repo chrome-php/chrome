@@ -100,7 +100,6 @@ class ResponseReader
         // default 2000ms
         $timeout = $timeout ?? 2000;
 
-        // TODO replace with Utils::tryWithTimeout
         return Utils::tryWithTimeout($timeout * 1000, $this->waitForResponseGenerator());
     }
 
@@ -113,7 +112,6 @@ class ResponseReader
     private function waitForResponseGenerator()
     {
         while (true) {
-
             // 50 microseconds between each iteration
             $tryDelay = 50;
 

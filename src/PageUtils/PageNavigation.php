@@ -108,7 +108,7 @@ class PageNavigation
             // else if a new loader is present that means that a new navigation started
             } else {
                 throw new NavigationExpired(
-                    'The page has navigatied to an other page and this navigation expired'
+                    'The page has navigated to an other page and this navigation expired'
                 );
             }
 

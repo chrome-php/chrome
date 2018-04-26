@@ -12,7 +12,7 @@ use HeadlessChromium\Communication\Session;
 use HeadlessChromium\Communication\Socket\MockSocket;
 use HeadlessChromium\Exception\CommunicationException\CannotReadResponse;
 use HeadlessChromium\Exception\CommunicationException\InvalidResponse;
-use HeadlessChromium\Exception\NoResponseAvailable;
+use HeadlessChromium\Exception\OperationTimedOut;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -66,7 +66,7 @@ class ConnectionTest extends TestCase
         $this->assertEquals('baz-qux', $session->getTargetId());
         $this->assertSame($connection, $session->getConnection());
     }
-    
+
     public function testSendMessage()
     {
         $connection = new Connection($this->mocSocket);
@@ -149,11 +149,11 @@ class ConnectionTest extends TestCase
 
         $message = new Message('foo', ['bar' => 'baz']);
 
-        $this->expectException(NoResponseAvailable::class);
+        $this->expectException(OperationTimedOut::class);
 
         $connection->sendMessageSync($message, 2);
     }
-    
+
     public function testReadData()
     {
         $connection = new Connection($this->mocSocket);

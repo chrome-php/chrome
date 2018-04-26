@@ -31,11 +31,13 @@ class FrameManager
     {
         $this->page = $page;
 
-        // TODO parse children frames
-        $this->frames[$frameTree['frame']['id']] = new Frame($frameTree['frame']);
+        if (isset($frameTree['frame'])) {
+            // TODO parse children frames
+            $this->frames[$frameTree['frame']['id']] = new Frame($frameTree['frame']);
 
-        // associate main frame
-        $this->mainFrame = $this->frames[$frameTree['frame']['id']];
+            // associate main frame
+            $this->mainFrame = $this->frames[$frameTree['frame']['id']];
+        }
 
         // TODO listen for frame events
 

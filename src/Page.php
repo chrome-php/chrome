@@ -196,7 +196,6 @@ class Page
 
         // clip
         if (array_key_exists('clip', $options)) {
-
             // make sure it's a Clip instance
             if (!($options['clip'] instanceof Clip)) {
                 throw new \InvalidArgumentException(
