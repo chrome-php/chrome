@@ -12,7 +12,7 @@ use HeadlessChromium\BrowserFactory;
  * @covers \HeadlessChromium\Browser
  * @covers \HeadlessChromium\Page
  */
-class BrowserTest extends BaseTestCase
+class BrowsingTest extends BaseTestCase
 {
 
     /**
@@ -61,5 +61,21 @@ class BrowserTest extends BaseTestCase
         $page->navigate($this->sitePath('a.html'))->waitForNavigation();
         $title = $page->evaluate('document.title')->getReturnValue();
         $this->assertEquals('a - test', $title);
+    }
+
+
+    public function testFormSubmission()
+    {
+        // initial navigation
+        $page = $this->openSitePage('form.html');
+        $evaluation = $page->evaluate(
+            '(() => {
+                document.querySelector("#myinput").value = "hello";
+                setTimeout(() => {document.querySelector("#myform").submit();}, 300)
+            })()'
+        );
+
+        $evaluation->waitForPageReload();
+        $this->assertEquals('hello', $page->evaluate('document.querySelector("#value").innerHTML')->getReturnValue());
     }
 }

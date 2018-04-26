@@ -88,6 +88,7 @@ class Page
      */
     public function evaluate(string $expression)
     {
+        $currentLoaderId = $this->frameManager->getMainFrame()->getLatestLoaderId();
         $reader = $this->getSession()->sendMessage(
             new Message(
                 'Runtime.evaluate',
@@ -98,8 +99,7 @@ class Page
                 ]
             )
         );
-
-        return new PageEvaluation($reader);
+        return new PageEvaluation($reader, $currentLoaderId, $this);
     }
 
     /**
@@ -136,6 +136,52 @@ class Page
         return array_key_exists($event, $this->getCurrentLifecycle());
     }
 
+    /**
+     * Wait for the page to unload
+     * @throws CommunicationException\CannotReadResponse
+     * @throws CommunicationException\InvalidResponse
+     * @throws Exception\OperationTimedOut
+     *
+     * @return $this
+     */
+    public function waitForReload($eventName = Page::LOAD, $timeout = 30000, $loaderId = null)
+    {
+        if (!$loaderId) {
+            $loaderId = $loader = $this->frameManager->getMainFrame()->getLatestLoaderId();
+        }
+
+        Utils::tryWithTimeout($timeout * 1000, $this->waitForReloadGenerator($eventName, $loaderId));
+        return $this;
+    }
+
+    /**
+     * @param $loaderId
+     * @return bool|\Generator
+     * @throws CommunicationException\CannotReadResponse
+     * @throws CommunicationException\InvalidResponse
+     * @internal
+     */
+    private function waitForReloadGenerator($eventName, $loaderId)
+    {
+        $delay = 500;
+
+        while (true) {
+            // make sure that the current loader is the good one
+            if ($this->frameManager->getMainFrame()->getLatestLoaderId() !== $loaderId) {
+                if ($this->hasLifecycleEvent($eventName)) {
+                    return true;
+                }
+
+                yield $delay;
+
+                // else if frame has still the previous loader, wait for the new one
+            } else {
+                yield $delay;
+            }
+
+            $this->getSession()->getConnection()->readData();
+        }
+    }
 
     /**
      *

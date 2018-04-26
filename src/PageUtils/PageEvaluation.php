@@ -9,6 +9,7 @@ use HeadlessChromium\Communication\Response;
 use HeadlessChromium\Communication\ResponseReader;
 use HeadlessChromium\Exception\EvaluationFailed;
 use HeadlessChromium\Exception\JavascriptException;
+use HeadlessChromium\Page;
 
 /**
  * Used to read data from page evaluation response
@@ -28,13 +29,33 @@ class PageEvaluation
     protected $response;
 
     /**
+     * @var string
+     */
+    protected $pageLoaderId;
+
+    /**
+     * @var Page
+     */
+    protected $page;
+
+    /**
      * PageEvaluation constructor.
      * @param ResponseReader $responseReader
      * @internal
      */
-    public function __construct(ResponseReader $responseReader)
+    public function __construct(ResponseReader $responseReader, $pageLoaderId, Page $page)
     {
         $this->responseReader = $responseReader;
+        $this->pageLoaderId = $pageLoaderId;
+        $this->page = $page;
+    }
+
+    /**
+     * If the script requested a page reload this method will help to wait for the page to be fully reloaded
+     */
+    public function waitForPageReload($eventName = Page::LOAD, $timeout = 30000)
+    {
+        $this->page->waitForReload($eventName, $timeout, $this->pageLoaderId);
     }
 
     /**
