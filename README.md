@@ -199,6 +199,13 @@ Once the page has completed the navigation you can evaluate arbitrary script on 
     $value = $evaluation->getReturnValue();
 ```
 
+Sometime the script you evaluate will click a link or submit a form, in this case the page will reload and you
+will want to wait for the new page to reload.
+
+You can achieve this by using ``$page->evaluate('some js that will reload the page')->waitForPageReload()``.
+An example is available in [form-submit.php](./examples/form-submit.php)
+
+
 
 #### Make a screenshot
 
