@@ -1,21 +1,21 @@
 language: php
-
-sudo: false
+dist: trusty
+sudo: required
+addons:
+  chrome: stable
 
 matrix:
   include:
   - php: 7.0
   - php: 7.1
+  - php: 7.2
     env: PROCESS_CODECLIMATE=true
-  - php: nightly
   - php: hhvm
     env: IGNORE_XDEBUG=true
 
   fast_finish: true
 
   allow_failures:
-  - php: nightly
-  - php: 7.0
   - php: hhvm
 
 before_script:
