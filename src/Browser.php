@@ -39,6 +39,20 @@ class Browser
                 $session
             );
         });
+
+        $this->connection->on(Connection::EVENT_TARGET_DESTROYED, function (array $params) {
+
+            $target = $this->getTarget($params['targetId']);
+
+            if ($target) {
+                // remove the target
+                unset($this->targets[$params['targetId']]);
+                $target->destroy();
+                $this->connection
+                    ->getLogger()
+                    ->debug('✘ target(' . $params['targetId'] . ') was destroyed and unreferenced.');
+            }
+        });
     }
 
     /**
@@ -76,11 +90,10 @@ class Browser
 
         // todo handle error
 
-        // make sure target was created (via Target.targetCreated event)
-        if (!array_key_exists($targetId, $this->targets)) {
-            throw new \RuntimeException('Target could not be created for page');
+        $target = $this->getTarget($targetId);
+        if (!$target) {
+            throw new \RuntimeException('Target could not be created for page.');
         }
-        $target = $this->targets[$targetId];
 
         // get initial frame tree
         $frameTreeResponse = $target->getSession()->sendMessageSync(new Message('Page.getFrameTree'));
@@ -100,5 +113,18 @@ class Browser
         $page->getSession()->sendMessageSync(new Message('Page.setLifecycleEventsEnabled', ['enabled' => true]));
 
         return $page;
+    }
+
+    /**
+     * @param $targetId
+     * @return Target|null
+     */
+    public function getTarget($targetId)
+    {
+        // make sure target was created (via Target.targetCreated event)
+        if (!array_key_exists($targetId, $this->targets)) {
+            return null;
+        }
+        return $this->targets[$targetId];
     }
 }

@@ -12,6 +12,7 @@ use HeadlessChromium\Communication\Target;
 use HeadlessChromium\Exception\CommunicationException;
 use HeadlessChromium\Exception\NoResponseAvailable;
 use HeadlessChromium\Exception\CommunicationException\ResponseHasError;
+use HeadlessChromium\Exception\TargetDestroyed;
 use HeadlessChromium\PageUtils\PageEvaluation;
 use HeadlessChromium\PageUtils\PageNavigation;
 use HeadlessChromium\PageUtils\PageScreenshot;
@@ -27,10 +28,25 @@ class Page
      */
     protected $target;
 
+    /**
+     * @var FrameManager
+     */
+    protected $frameManager;
+
     public function __construct(Target $target, array $frameTree)
     {
         $this->target = $target;
         $this->frameManager = new FrameManager($this, $frameTree);
+    }
+
+    /**
+     * @return FrameManager
+     */
+    public function getFrameManager(): FrameManager
+    {
+        $this->assertNotClosed();
+
+        return $this->frameManager;
     }
 
     /**
@@ -39,6 +55,8 @@ class Page
      */
     public function getSession(): Session
     {
+        $this->assertNotClosed();
+
         return $this->target->getSession();
     }
 
@@ -51,6 +69,8 @@ class Page
      */
     public function navigate($url)
     {
+        $this->assertNotClosed();
+
         // make sure latest loaderId was pulled
         $this->getSession()->getConnection()->readData();
 
@@ -88,6 +108,8 @@ class Page
      */
     public function evaluate(string $expression)
     {
+        $this->assertNotClosed();
+
         $currentLoaderId = $this->frameManager->getMainFrame()->getLatestLoaderId();
         $reader = $this->getSession()->sendMessage(
             new Message(
@@ -113,6 +135,8 @@ class Page
      */
     public function getCurrentLifecycle()
     {
+        $this->assertNotClosed();
+
         $this->getSession()->getConnection()->readData();
         return $this->frameManager->getMainFrame()->getLifeCycle();
     }
@@ -133,6 +157,8 @@ class Page
      */
     public function hasLifecycleEvent(string $event): bool
     {
+        $this->assertNotClosed();
+
         return array_key_exists($event, $this->getCurrentLifecycle());
     }
 
@@ -146,6 +172,8 @@ class Page
      */
     public function waitForReload($eventName = Page::LOAD, $timeout = 30000, $loaderId = null)
     {
+        $this->assertNotClosed();
+
         if (!$loaderId) {
             $loaderId = $loader = $this->frameManager->getMainFrame()->getLatestLoaderId();
         }
@@ -197,6 +225,8 @@ class Page
      */
     public function screenshot(array $options = []): PageScreenshot
     {
+        $this->assertNotClosed();
+
         $screenshotOptions = [];
 
         // get format
@@ -264,5 +294,36 @@ class Page
             ->sendMessage(new Message('Page.captureScreenshot', $screenshotOptions));
 
         return new PageScreenshot($responseReader);
+    }
+
+    /**
+     * Request to close the page
+     * @throws CommunicationException
+     */
+    public function close()
+    {
+
+        $this->assertNotClosed();
+
+        $this->getSession()
+            ->getConnection()
+            ->sendMessage(
+                new Message(
+                    'Target.closeTarget',
+                    ['targetId' => $this->getSession()->getTargetId()]
+                )
+            );
+
+        // TODO return close waiter
+    }
+
+    /**
+     * Throws if the page was closed
+     */
+    private function assertNotClosed()
+    {
+        if ($this->target->isDestroyed()) {
+            throw new TargetDestroyed('The page was closed and is not available anymore.');
+        }
     }
 }

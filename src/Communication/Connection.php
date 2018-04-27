@@ -22,6 +22,7 @@ class Connection extends EventEmitter implements LoggerAwareInterface
 {
 
     const EVENT_TARGET_CREATED = 'method:Target.targetCreated';
+    const EVENT_TARGET_DESTROYED = 'method:Target.targetDestroyed';
 
     use LoggerAwareTrait;
 
@@ -86,6 +87,14 @@ class Connection extends EventEmitter implements LoggerAwareInterface
         }
 
         $this->wsClient = $socketClient;
+    }
+
+    /**
+     * @return LoggerInterface
+     */
+    public function getLogger(): LoggerInterface
+    {
+        return $this->logger;
     }
 
     /**
@@ -225,6 +234,11 @@ class Connection extends EventEmitter implements LoggerAwareInterface
         $session = new Session($targetId, $sessionId, $this);
 
         $this->sessions[$sessionId] = $session;
+
+        $session->on('destroyed', function () use ($sessionId) {
+            $this->logger->debug('✘ session(' . $sessionId . ') was destroyed and unreferenced.');
+            unset($this->sessions[$sessionId]);
+        });
 
         return $session;
     }

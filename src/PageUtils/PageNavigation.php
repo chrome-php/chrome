@@ -41,7 +41,7 @@ class PageNavigation
     public function __construct(Page $page, string $previousLoaderId, string $currentLoaderId)
     {
         $this->page = $page;
-        $this->frame = $this->page->frameManager->getMainFrame();
+        $this->frame = $this->page->getFrameManager()->getMainFrame();
         $this->previousLoaderId = $previousLoaderId;
         $this->currentLoaderId = $currentLoaderId;
     }

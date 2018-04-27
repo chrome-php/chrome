@@ -5,6 +5,8 @@
 
 namespace HeadlessChromium\Communication;
 
+use HeadlessChromium\Exception\TargetDestroyed;
+
 class Target
 {
     /**
@@ -16,6 +18,8 @@ class Target
      * @var Session
      */
     protected $session;
+
+    protected $destroyed = false;
 
     /**
      * Target constructor.
@@ -33,6 +37,31 @@ class Target
      */
     public function getSession(): Session
     {
+        if ($this->destroyed) {
+            throw new TargetDestroyed('The target was destroyed.');
+        }
         return $this->session;
+    }
+
+    /**
+     * Marks the target as destroyed
+     * @internal
+     */
+    public function destroy()
+    {
+        if ($this->destroyed) {
+            throw new TargetDestroyed('The target was already destroyed.');
+        }
+        $this->session->destroy();
+        $this->session = null;
+        $this->destroyed = true;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isDestroyed(): bool
+    {
+        return $this->destroyed;
     }
 }
