@@ -69,6 +69,11 @@ class Connection extends EventEmitter implements LoggerAwareInterface
     protected $sessions = [];
 
     /**
+     * @var array array of data received and waiting to be read
+     */
+    protected $receivedData = [];
+
+    /**
      * CommunicationChannel constructor.
      * @param SocketInterface|string $socketClient
      */
@@ -244,6 +249,14 @@ class Connection extends EventEmitter implements LoggerAwareInterface
     }
 
     /**
+     * Receive and stack data from the socket
+     */
+    private function receiveData()
+    {
+        $this->receivedData = array_merge($this->receivedData, $this->wsClient->receiveData());
+    }
+
+    /**
      * Read data from CRI and store messages
      *
      * @return bool true if data were received
@@ -254,18 +267,27 @@ class Connection extends EventEmitter implements LoggerAwareInterface
     {
         $hasData = false;
 
-        // receive data from client
-        $data = $this->wsClient->receiveData();
-
-        // and analyze them
-        foreach ($data as $datum) {
-            // dispatch message
-            if ($this->dispatchMessage($datum)) {
-                $hasData = true;
-            }
+        while($this->readLine()) {
+            $hasData = true;
         }
 
         return $hasData;
+    }
+
+    public function readLine()
+    {
+        // if buffer empty, then read from input
+        if (empty($this->receivedData)) {
+            $this->receiveData();
+        }
+
+        // dispatch first line of buffer
+        $datum = array_shift($this->receivedData);
+        if ($datum) {
+            return $this->dispatchMessage($datum);
+        }
+
+        return false;
     }
 
     /**
