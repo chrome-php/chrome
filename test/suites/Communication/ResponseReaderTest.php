@@ -82,6 +82,40 @@ class ResponseReaderTest extends TestCase
         $this->assertSame($response, $responseReader->waitForResponse(0));
     }
 
+    /**
+     * Tests that waitForResponse will stop dispatching data once it got the response for its message.
+     * @throws NoResponseAvailable
+     * @throws OperationTimedOut
+     */
+    public function testWaitForResponseIsAtomic()
+    {
+        $message = new Message('foo', ['bar' => 'baz']);
+        $mockSocket = new MockSocket();
+        $connection = new Connection($mockSocket);
+
+        $emitWatcher = new \stdClass();
+        $emitWatcher->emittedCount = 0;
+
+        $connection->on('method:qux.quux', function () use ($emitWatcher) {
+            $emitWatcher->emittedCount++;
+        });
+
+        $responseReader = new ResponseReader($message, $connection);
+
+        // receive data
+        $mockSocket->addReceivedData(json_encode(['id' => $message->getId(), 'foo' => 'qux']));
+        $mockSocket->addReceivedData(json_encode(['method' => 'qux.quux', 'params' => []]));
+
+        // wait for response should not read the second message (method:qux.quux)
+        $response = $responseReader->waitForResponse(1);
+        $this->assertEquals(['id' => $message->getId(), 'foo' => 'qux'], $response->getData());
+        $this->assertEquals(0, $emitWatcher->emittedCount);
+
+        // next call to read line should read the second message (method:qux.quux)
+        $connection->readLine();
+        $this->assertEquals(1, $emitWatcher->emittedCount);
+    }
+
     public function testExceptionNoResponse()
     {
         $message = new Message('foo', ['bar' => 'baz']);

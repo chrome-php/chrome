@@ -267,7 +267,7 @@ class Connection extends EventEmitter implements LoggerAwareInterface
     {
         $hasData = false;
 
-        while($this->readLine()) {
+        while ($this->readLine()) {
             $hasData = true;
         }
 

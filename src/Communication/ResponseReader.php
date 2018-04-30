@@ -148,7 +148,11 @@ class ResponseReader
         }
 
         // read data
-        $this->connection->readData();
+        while (!$this->connection->hasResponseForId($id)) {
+            if (!$this->connection->readLine()) {
+                break;
+            }
+        }
 
         // if response store it
         if ($this->connection->hasResponseForId($id)) {
