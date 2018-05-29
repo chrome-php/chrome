@@ -1,7 +1,7 @@
 Chrome PHP
 ==========
 
-[![Build Status](https://travis-ci.org/gsouf/headless-chromium-php.svg?branch=master)](https://travis-ci.org/gsouf/headless-chromium-php)
+[![Build Status](https://travis-ci.org/serp-spider/http-client-phantomjs.svg?branch=master)](https://travis-ci.org/serp-spider/http-client-phantomjs)
 [![Test Coverage](https://codeclimate.com/github/gsouf/headless-chromium-php/badges/coverage.svg)](https://codeclimate.com/github/gsouf/headless-chromium-php/coverage)
 [![Latest Stable Version](https://poser.pugx.org/chrome-php/chrome/version)](https://packagist.org/packages/chrome-php/chrome)
 [![License](https://poser.pugx.org/chrome-php/chrome/license)](https://packagist.org/packages/chrome-php/chrome)
