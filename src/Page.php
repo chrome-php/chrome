@@ -62,12 +62,13 @@ class Page
 
     /**
      * @param $url
+     * @param int $timeout
      * @return PageNavigation
      *
      * @throws NoResponseAvailable
      * @throws CommunicationException
      */
-    public function navigate($url)
+    public function navigate($url, $timeout = null)
     {
         $this->assertNotClosed();
 
@@ -78,7 +79,7 @@ class Page
         $previousLoaderId = $this->frameManager->getMainFrame()->getLatestLoaderId();
 
         // set navigation message
-        $response = $this->getSession()->sendMessageSync(new Message('Page.navigate', ['url' => $url]));
+        $response = $this->getSession()->sendMessageSync(new Message('Page.navigate', ['url' => $url]), $timeout);
 
         // make sure navigation has no error
         if (!$response->isSuccessful()) {
