@@ -164,6 +164,12 @@ You can change the timeout or the event to listen for:
     $navigation->waitForNavigation(Page::DOM_CONTENT_LOADED, 10000)
 ```
 
+Available events (in the order they trigger):
+
+- ``Page::DOM_CONTENT_LOADED``: dom has completely loaded
+- ``Page::LOAD``: (default) page and all resources are loaded
+- ``Page::NETWORK_IDLE``: page has loaded, and no network activity has occured for at least 500ms
+
 When you want to wait for the page to navigate there are 2 main issues that may occur. 
 First the page is too long to load and second the page you were waiting to be loaded has been replaced.
 The good news is that you can handle those issues using a good old try catch:

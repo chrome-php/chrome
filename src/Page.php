@@ -22,6 +22,7 @@ class Page
 
     const DOM_CONTENT_LOADED = 'DOMContentLoaded';
     const LOAD = 'load';
+    const NETWORK_IDLE = 'networkIdle';
 
     /**
      * @var Target
