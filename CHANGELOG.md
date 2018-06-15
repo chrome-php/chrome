@@ -10,6 +10,18 @@
   * none
 * Bug fixes:
   * none
+
+## 0.2.0
+
+> *2018-06-15*
+
+> Description
+    
+* Features:
+  * Add constant Page::NETWORK_IDLE
+* Bug fixes:
+  * Make connection reader to be more atomic in order to read messages and events in the order they come in
+  * Make Page::navigate()->waitForNavigation (#20)
   
 --------------
 
