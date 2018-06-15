@@ -70,26 +70,7 @@ class Page
     public function navigate($url)
     {
         $this->assertNotClosed();
-
-        // make sure latest loaderId was pulled
-        $this->getSession()->getConnection()->readData();
-
-        // get previous loaderId for the navigation watcher
-        $previousLoaderId = $this->frameManager->getMainFrame()->getLatestLoaderId();
-
-        // set navigation message
-        $response = $this->getSession()->sendMessageSync(new Message('Page.navigate', ['url' => $url]));
-
-        // make sure navigation has no error
-        if (!$response->isSuccessful()) {
-            throw new ResponseHasError(
-                sprintf('Cannot load page for url: "%s". Reason: %s', $url, $response->getErrorMessage())
-            );
-        }
-
-        // create PageNavigation instance
-        $loaderId = $response->getResultData('loaderId');
-        return new PageNavigation($this, $previousLoaderId, $loaderId);
+        return new PageNavigation($this, $url);
     }
 
     /**
