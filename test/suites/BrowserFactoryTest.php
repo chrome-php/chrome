@@ -9,7 +9,7 @@ use HeadlessChromium\BrowserFactory;
 
 /**
  * @covers \HeadlessChromium\BrowserFactory
- * @covers \HeadlessChromium\BrowserProcess
+ * @covers \HeadlessChromium\Browser\BrowserProcess
  */
 class BrowserFactoryTest extends BaseTestCase
 {
