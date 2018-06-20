@@ -16,6 +16,7 @@ use HeadlessChromium\Exception\TargetDestroyed;
 use HeadlessChromium\PageUtils\PageEvaluation;
 use HeadlessChromium\PageUtils\PageNavigation;
 use HeadlessChromium\PageUtils\PageScreenshot;
+use HeadlessChromium\PageUtils\ResponseWaiter;
 
 class Page
 {
@@ -276,6 +277,60 @@ class Page
             ->sendMessage(new Message('Page.captureScreenshot', $screenshotOptions));
 
         return new PageScreenshot($responseReader);
+    }
+
+    /**
+     * Allows to change viewport size, enabling mobile mode, or changing the scale factor
+     *
+     * usage:
+     *
+     * ```
+     * $page->setDeviceMetricsOverride
+     * ```
+     * @param $overrides
+     * @throws CommunicationException
+     * @throws NoResponseAvailable
+     *
+     * @return ResponseWaiter
+     *
+     */
+    public function setDeviceMetricsOverride(array $overrides)
+    {
+        if (!array_key_exists('width', $overrides)) {
+            $overrides['width'] = 0;
+        }
+        if (!array_key_exists('height', $overrides)) {
+            $overrides['height'] = 0;
+        }
+        if (!array_key_exists('deviceScaleFactor', $overrides)) {
+            $overrides['deviceScaleFactor'] = 0;
+        }
+        if (!array_key_exists('mobile', $overrides)) {
+            $overrides['mobile'] = false;
+        }
+
+        $this->assertNotClosed();
+        return new ResponseWaiter($this->getSession()->sendMessage(
+            new Message('Emulation.setDeviceMetricsOverride', $overrides)
+        ));
+    }
+
+    /**
+     * Set viewport size
+     *
+     * @param int $width
+     * @param int $height
+     * @throws CommunicationException
+     * @throws NoResponseAvailable
+     *
+     * @return ResponseWaiter
+     */
+    public function setViewport(int $width, int $height)
+    {
+        return $this->setDeviceMetricsOverride([
+            'width' => $width,
+            'height' => $height
+        ]);
     }
 
     /**

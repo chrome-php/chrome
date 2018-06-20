@@ -19,6 +19,7 @@
     
 * Features:
   * Added option ``windowSize`` in BrowserFactory
+  * Added methods ``Page::setViewportSize`` and ``Page::setDeviceMetricsOverride``
 
 ## 0.2.0
 

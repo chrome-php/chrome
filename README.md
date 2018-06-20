@@ -135,7 +135,7 @@ Here are the options available for the browser factory:
 | headless           | true                  | Enable or disable headless mode                                                 |
 | userDataDir        | none                  | chrome user data dir (default: a new empty dir is generated temporarily)        |
 | startupTimeout     | 30                    | Maximum time in seconds to wait for chrome to start                             |
-| windowSize         | -                     | Size of the window. Must be an array of 2 number ``[$width, $height]``          |
+| windowSize         | -                     | Size of the window. usage: ``[$width, $height]`` - see also Page::setViewportSize |
 
 ### Browser API
 
@@ -223,6 +223,17 @@ You can achieve this by using ``$page->evaluate('some js that will reload the pa
 An example is available in [form-submit.php](./examples/form-submit.php)
 
 
+#### Set viewport size
+
+This features allows to change the size of the viewport (emulation) for the current page without affecting the size of 
+all the browser's pages (see also option ``"windowSize"`` of [BrowserFactory::createBrowser](#options)).
+
+```php
+    $width = 600;
+    $height = 300;
+    $page->setViewportSize($width, $height)
+        ->await(); // wait for operation to complete
+```
 
 #### Make a screenshot
 
