@@ -13,9 +13,9 @@
 
 ## 0.2.1
 
-> *20xx-xx-xx* (not released)
+> *2018-06-20*
 
-> Make viewport and window size customizable
+> Make viewport and window's size customizable
     
 * Features:
   * Added option ``windowSize`` in BrowserFactory
