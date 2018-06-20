@@ -34,14 +34,15 @@ class BrowserFactory
      * Start a chrome process and allows to interact with it
      *
      * @param array $options options for browser creation:
-     * - startupTimeout: maximum time in seconds to wait for chrome to start (default: 30 sec)
-     * - headless: whether chrome should be started headless (default: true)
-     * - userDataDir: chrome user data dir (default: a new empty dir is generated temporarily)
      * - connectionDelay: amount of time in seconds to slows down connection for debugging purposes (default: none)
-     * - enableImages: toggle the loading of images (default: true)
      * - debug: toggles the debug mode than allows to print additional details (default: false)
      * - debugLogger: resource string ("php://stdout"), resource or psr-3 logger instance (default: none)
      *   enabling debug logger will also enable debug mode.
+     * - enableImages: toggle the loading of images (default: true)
+     * - headless: whether chrome should be started headless (default: true)
+     * - startupTimeout: maximum time in seconds to wait for chrome to start (default: 30 sec)
+     * - userDataDir: chrome user data dir (default: a new empty dir is generated temporarily)
+     * - windowSize: size of the window, ex: [1920, 1080] (default: none)
      *
      * @return Browser a Browser instance to interact with the new chrome process
      */
