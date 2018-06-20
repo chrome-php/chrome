@@ -33,11 +33,6 @@ class BrowsingTest extends BaseTestCase
         self::$browser->close();
     }
 
-    private function sitePath($file)
-    {
-        return 'file://' . __DIR__ . '/../resources/static-web/' . $file;
-    }
-
     private function openSitePage($file)
     {
         $page = self::$browser->createPage();

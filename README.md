@@ -113,6 +113,16 @@ API
 
 ### Browser Factory
 
+```php
+    use \HeadlessChromium\BrowserFactory;
+  
+    $browserFactory = new BrowserFactory();
+    $browser = $browserFactory->createBrowser([
+        'windowSize' => [1920, 1000],
+        'enableImages' => false
+    ]);
+```
+
 #### Options
 
 Here are the options available for the browser factory:
@@ -121,10 +131,11 @@ Here are the options available for the browser factory:
 |--------------------|-----------------------|---------------------------------------------------------------------------------|
 | connectionDelay    | 0                     | Delay to apply between each operation for debugging purposes                    |
 | debugLogger        | null                  | A string (e.g "php://stdout"), or resource, or PSR-3 logger instance to print debug messages |
-| headless           | true                  | Enable or disable headless mode                                                 |
-| startupTimeout     | 30                    | Maximum time in seconds to wait for chrome to start                             |
-| userDataDir        | none                  | chrome user data dir (default: a new empty dir is generated temporarily)        |
 | enableImages       | true                  | Toggles loading of images |
+| headless           | true                  | Enable or disable headless mode                                                 |
+| userDataDir        | none                  | chrome user data dir (default: a new empty dir is generated temporarily)        |
+| startupTimeout     | 30                    | Maximum time in seconds to wait for chrome to start                             |
+| windowSize         | -                     | Size of the window. Must be an array of 2 number ``[$width, $height]``          |
 
 ### Browser API
 

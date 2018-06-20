@@ -64,4 +64,9 @@ class BaseTestCase extends TestCase
             $this->assertEquals($datum, $sent[$k]);
         }
     }
+
+    protected function sitePath($file)
+    {
+        return 'file://' . __DIR__ . '/../resources/static-web/' . $file;
+    }
 }

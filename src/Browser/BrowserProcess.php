@@ -303,6 +303,21 @@ class BrowserProcess implements LoggerAwareInterface
             $args[] = '--blink-settings=imagesEnabled=false';
         }
 
+        // window's size
+        if (array_key_exists('windowSize', $options) && $options['windowSize']) {
+            if (!is_array($options['windowSize']) ||
+                count($options['windowSize']) !== 2 ||
+                !is_numeric($options['windowSize'][0]) ||
+                !is_numeric($options['windowSize'][1])
+            ) {
+                throw new \InvalidArgumentException(
+                    'Option "windowSize" must be an array of dimensions (eg: [1000, 1200])'
+                );
+            }
+
+            $args[] = '--window-size=' . implode(',', $options['windowSize']) ;
+        }
+
         // add user data dir to args
         $args[] = '--user-data-dir=' . $options['userDataDir'];
 

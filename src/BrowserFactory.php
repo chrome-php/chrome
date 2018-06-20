@@ -68,7 +68,7 @@ class BrowserFactory
             }
         }
 
-        // create process browser process
+        // create browser process
         $browserProcess = new BrowserProcess($logger);
 
         // instruct the runtime to kill chrome and clean temp files on exit
