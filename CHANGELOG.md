@@ -11,6 +11,15 @@
 * Bug fixes:
   * none
 
+## 0.2.1
+
+> *20xx-xx-xx* (not released)
+
+> Make viewport and window size customizable
+    
+* Features:
+  * Added option ``windowSize`` in BrowserFactory
+
 ## 0.2.0
 
 > *2018-06-15*
