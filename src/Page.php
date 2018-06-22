@@ -6,13 +6,12 @@
 namespace HeadlessChromium;
 
 use HeadlessChromium\Communication\Message;
-use HeadlessChromium\Communication\ResponseReader;
 use HeadlessChromium\Communication\Session;
 use HeadlessChromium\Communication\Target;
 use HeadlessChromium\Exception\CommunicationException;
 use HeadlessChromium\Exception\NoResponseAvailable;
-use HeadlessChromium\Exception\CommunicationException\ResponseHasError;
 use HeadlessChromium\Exception\TargetDestroyed;
+use HeadlessChromium\Input\Mouse;
 use HeadlessChromium\PageUtils\PageEvaluation;
 use HeadlessChromium\PageUtils\PageNavigation;
 use HeadlessChromium\PageUtils\PageScreenshot;
@@ -34,6 +33,11 @@ class Page
      * @var FrameManager
      */
     protected $frameManager;
+
+    /**
+     * @var Mouse|Null
+     */
+    protected $mouse;
 
     public function __construct(Target $target, array $frameTree)
     {
@@ -65,9 +69,6 @@ class Page
     /**
      * @param $url
      * @return PageNavigation
-     *
-     * @throws NoResponseAvailable
-     * @throws CommunicationException
      */
     public function navigate($url)
     {
@@ -147,11 +148,14 @@ class Page
 
     /**
      * Wait for the page to unload
+     *
+     * @param string $eventName
+     * @param int $timeout
+     * @param null $loaderId
+     * @return $this
      * @throws CommunicationException\CannotReadResponse
      * @throws CommunicationException\InvalidResponse
      * @throws Exception\OperationTimedOut
-     *
-     * @return $this
      */
     public function waitForReload($eventName = Page::LOAD, $timeout = 30000, $loaderId = null)
     {
@@ -334,6 +338,19 @@ class Page
     }
 
     /**
+     * Get mouse object to play with
+     * @return Mouse
+     */
+    public function mouse()
+    {
+        if (!$this->mouse) {
+            $this->mouse = new Mouse($this);
+        }
+
+        return $this->mouse;
+    }
+
+    /**
      * Request to close the page
      * @throws CommunicationException
      */
@@ -357,7 +374,7 @@ class Page
     /**
      * Throws if the page was closed
      */
-    private function assertNotClosed()
+    public function assertNotClosed()
     {
         if ($this->target->isDestroyed()) {
             throw new TargetDestroyed('The page was closed and is not available anymore.');

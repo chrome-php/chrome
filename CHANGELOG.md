@@ -11,6 +11,18 @@
 * Bug fixes:
   * none
 
+
+## 0.2.2
+
+> *20xx-xx-xx* (not released)
+
+> Added input controls
+    
+* Features:
+  * Added mouse api (move, click)
+* Bug fixes:
+  * none
+
 ## 0.2.1
 
 > *2018-06-20*
