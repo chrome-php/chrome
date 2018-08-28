@@ -27,10 +27,14 @@ class ResponseWaiter
      * @param $time
      * @throws \HeadlessChromium\Exception\NoResponseAvailable
      * @throws \HeadlessChromium\Exception\OperationTimedOut
+     *
+     * @return $this
      */
     public function await(int $time = null)
     {
         $this->responseReader->waitForResponse($time);
+
+        return $this;
     }
 
     /**

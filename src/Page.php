@@ -12,6 +12,7 @@ use HeadlessChromium\Exception\CommunicationException;
 use HeadlessChromium\Exception\NoResponseAvailable;
 use HeadlessChromium\Exception\TargetDestroyed;
 use HeadlessChromium\Input\Mouse;
+use HeadlessChromium\PageUtils\CookiesGetter;
 use HeadlessChromium\PageUtils\PageEvaluation;
 use HeadlessChromium\PageUtils\PageNavigation;
 use HeadlessChromium\PageUtils\PageScreenshot;
@@ -199,7 +200,6 @@ class Page
     }
 
     /**
-     *
      * Example:
      *
      * ```php
@@ -397,5 +397,33 @@ class Page
 
         // get url from target info
         return $this->target->getTargetInfo('url');
+    }
+
+    /**
+     * Read cookies
+     *
+     * usage:
+     *
+     * ```
+     *   $page->readCookies()->await()->getCookies();
+     * ```
+     *
+     * @return CookiesGetter
+     * @throws CommunicationException
+     * @throws CommunicationException\CannotReadResponse
+     * @throws CommunicationException\InvalidResponse
+     */
+    public function readCookies()
+    {
+        $response = $this->getSession()->sendMessage(
+            new Message(
+                'Network.getCookies',
+                [
+                    'urls' => [$this->getCurrentUrl()]
+                ]
+            )
+        );
+
+        return new CookiesGetter($response);
     }
 }
