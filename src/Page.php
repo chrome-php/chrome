@@ -8,6 +8,8 @@ namespace HeadlessChromium;
 use HeadlessChromium\Communication\Message;
 use HeadlessChromium\Communication\Session;
 use HeadlessChromium\Communication\Target;
+use HeadlessChromium\Cookies\Cookie;
+use HeadlessChromium\Cookies\CookiesCollection;
 use HeadlessChromium\Exception\CommunicationException;
 use HeadlessChromium\Exception\NoResponseAvailable;
 use HeadlessChromium\Exception\TargetDestroyed;
@@ -400,13 +402,17 @@ class Page
     }
 
     /**
-     * Read cookies
+     * Read cookies for the current page
      *
      * usage:
      *
      * ```
      *   $page->readCookies()->await()->getCookies();
      * ```
+     *
+     * @see getCookies
+     * @see readAllCookies
+     * @see getAllCookies
      *
      * @return CookiesGetter
      * @throws CommunicationException
@@ -415,6 +421,10 @@ class Page
      */
     public function readCookies()
     {
+        // ensure target is not closed
+        $this->assertNotClosed();
+
+        // read cookies async
         $response = $this->getSession()->sendMessage(
             new Message(
                 'Network.getCookies',
@@ -424,6 +434,107 @@ class Page
             )
         );
 
+        // return async helper
         return new CookiesGetter($response);
+    }
+
+    /**
+     * Read all cookies in the browser
+     *
+     * @see getCookies
+     * @see readCookies
+     * @see getAllCookies
+     *
+     * ```
+     *   $page->readCookies()->await()->getCookies();
+     * ```
+     * @return CookiesGetter
+     * @throws CommunicationException
+     */
+    public function readAllCookies()
+    {
+        // ensure target is not closed
+        $this->assertNotClosed();
+
+        // read cookies async
+        $response = $this->getSession()->sendMessage(new Message('Network.getAllCookies'));
+
+        // return async helper
+        return new CookiesGetter($response);
+    }
+
+    /**
+     * Get cookies for the current page synchronously
+     *
+     * @see readCookies
+     * @see readAllCookies
+     * @see getAllCookies
+     *
+     * @param int|null $timeout
+     * @return CookiesCollection
+     * @throws CommunicationException
+     * @throws Exception\OperationTimedOut
+     * @throws NoResponseAvailable
+     */
+    public function getCookies(int $timeout = null)
+    {
+        return $this->readCookies()->await($timeout)->getCookies();
+    }
+
+    /**
+     * Get all browser cookies synchronously
+     *
+     * @see getCookies
+     * @see readAllCookies
+     * @see readCookies
+     *
+     * @param int|null $timeout
+     * @return CookiesCollection
+     * @throws CommunicationException
+     * @throws Exception\OperationTimedOut
+     * @throws NoResponseAvailable
+     */
+    public function getAllCookies(int $timeout = null)
+    {
+        return $this->readAllCookies()->await($timeout)->getCookies();
+    }
+
+    /**
+     * @param Cookie[]|CookiesCollection $cookies
+     */
+    public function setCookies($cookies)
+    {
+        // define params to send in cookie message
+        $allowedParams = ['url', 'domain', 'path', 'secure', 'httpOnly', 'sameSite', 'expires'];
+
+        // init list of cookies to send
+        $browserCookies = [];
+
+        // feed list of cookies to send
+        foreach ($cookies as $cookie) {
+            $browserCookie = [
+                'name' => $cookie->getName(),
+                'value' => $cookie->getValue(),
+            ];
+
+            foreach ($allowedParams as $param) {
+                if ($cookie->offsetExists($param)) {
+                    $browserCookie[$param] = $cookie->offsetGet($param);
+                }
+            }
+
+            // set domain from current page
+            if (!isset($browserCookie['domain'])) {
+                $browserCookie['domain'] = parse_url($this->getCurrentUrl(), PHP_URL_HOST);
+            }
+
+            $browserCookies[] = $browserCookie;
+        }
+
+        // send cookies
+        $response = $this->getSession()->sendMessage(new Message('Network.setCookies', ['cookies' => $browserCookies]));
+
+        // return async helper
+        return new ResponseWaiter($response);
     }
 }

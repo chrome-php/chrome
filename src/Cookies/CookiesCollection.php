@@ -66,4 +66,56 @@ class CookiesCollection implements \IteratorAggregate, \Countable
         }
         return $this->cookies[$i];
     }
+
+    /**
+     * Find cookies with matching values
+     *
+     * usage:
+     *
+     * ```
+     * // find cookies having name == 'foo'
+     * $newCookies = $cookies->filterBy('name', 'foo');
+     *
+     * // find cookies having domain == 'example.com'
+     * $newCookies = $cookies->filterBy('domain', 'example.com');
+     * ```
+     *
+     * @param string $param
+     * @param string $value
+     * @return CookiesCollection
+     */
+    public function filterBy(string $param, string $value)
+    {
+        return new CookiesCollection(array_filter($this->cookies, function (Cookie $cookie) use ($param, $value) {
+            return $cookie[$param] == $value;
+        }));
+    }
+
+    /**
+     * Find first cookies with matching value
+     *
+     * usage:
+     *
+     * ```
+     * // find first cookie having name == 'foo'
+     * $cookie = $cookies->findOneBy('name', 'foo');
+     *
+     * if ($cookie) {
+     *   // do something
+     * }
+     * ```
+     *
+     * @param string $param
+     * @param string $value
+     * @return Cookie|null
+     */
+    public function findOneBy(string $param, string $value)
+    {
+        foreach ($this->cookies as $cookie) {
+            if ($cookie[$param] == $value) {
+                return $cookie;
+            }
+        }
+        return null;
+    }
 }

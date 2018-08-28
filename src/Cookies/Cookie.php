@@ -19,6 +19,10 @@ class Cookie implements \ArrayAccess
      */
     public function __construct(array $data)
     {
+        if (isset($data['expires'])  && is_string($data['expires']) && !is_numeric($data['expires'])) {
+            $data['expires'] = strtotime($data['expires']);
+        }
+
         $this->data = $data;
     }
 
@@ -36,6 +40,14 @@ class Cookie implements \ArrayAccess
     public function getName()
     {
         return $this->offsetGet('name');
+    }
+
+    /**
+     * @return mixed|null
+     */
+    public function getDomain()
+    {
+        return $this->offsetGet('domain');
     }
 
     /**
@@ -68,5 +80,18 @@ class Cookie implements \ArrayAccess
     public function offsetUnset($offset)
     {
         throw new \RuntimeException('Cannot unset cookie values');
+    }
+
+    /**
+     * @param $name
+     * @param $value
+     * @param $params
+     * @return Cookie
+     */
+    public static function create($name, $value, array $params = [])
+    {
+        $params['name'] = $name;
+        $params['value'] = $value;
+        return new Cookie($params);
     }
 }
