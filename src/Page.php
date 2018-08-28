@@ -532,9 +532,28 @@ class Page
         }
 
         // send cookies
-        $response = $this->getSession()->sendMessage(new Message('Network.setCookies', ['cookies' => $browserCookies]));
+        $response = $this->getSession()
+            ->sendMessage(
+                new Message('Network.setCookies', ['cookies' => $browserCookies])
+            );
 
         // return async helper
+        return new ResponseWaiter($response);
+    }
+
+    /**
+     * Set user agent for the current page
+     * @param string $userAgent
+     * @return ResponseWaiter
+     * @throws CommunicationException
+     */
+    public function setUserAgent(string $userAgent)
+    {
+        $response = $this->getSession()
+            ->sendMessage(
+                new Message('Network.setUserAgentOverride', ['userAgent' => $userAgent])
+            );
+
         return new ResponseWaiter($response);
     }
 }

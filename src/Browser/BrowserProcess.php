@@ -318,6 +318,10 @@ class BrowserProcess implements LoggerAwareInterface
             $args[] = '--window-size=' . implode(',', $options['windowSize']) ;
         }
 
+        if (array_key_exists('userAgent', $options)) {
+            $args[] = '--user-agent=' . $options['userAgent'];
+        }
+
         // add user data dir to args
         $args[] = '--user-data-dir=' . $options['userDataDir'];
 
