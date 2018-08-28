@@ -356,7 +356,6 @@ class Page
      */
     public function close()
     {
-
         $this->assertNotClosed();
 
         $this->getSession()
@@ -379,5 +378,24 @@ class Page
         if ($this->target->isDestroyed()) {
             throw new TargetDestroyed('The page was closed and is not available anymore.');
         }
+    }
+
+    /**
+     * Gets the current url of the page, always in sync with the browser.
+     *
+     * @return mixed|null
+     * @throws CommunicationException\CannotReadResponse
+     * @throws CommunicationException\InvalidResponse
+     */
+    public function getCurrentUrl()
+    {
+        // ensure target is not closed
+        $this->assertNotClosed();
+
+        // ensure target info are updated
+        $this->getSession()->getConnection()->readData();
+
+        // get url from target info
+        return $this->target->getTargetInfo('url');
     }
 }
