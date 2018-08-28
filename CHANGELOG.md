@@ -14,12 +14,16 @@
 
 ## 0.2.2
 
-> *20xx-xx-xx* (not released)
-
-> Added input controls
+> *2018-08-28*
     
 * Features:
   * Added mouse api (move, click)
+  * Page info are now in sync with the browser
+  * Added a shortcut to get current page url: ``Page::getCurrentUrl``
+  * Added ability to get and set cookies from a page: ``Page.setCookies``, ``Page.readCookies`` , ``Page.readAllCookies`` 
+  * improved some error reporting
+  * fixed a bug with directory creation for screenshots
+  * added ability to set custom user agent: ``Page::setUserAgent`` or via factory option ``userAgent``
 * Bug fixes:
   * none
 
