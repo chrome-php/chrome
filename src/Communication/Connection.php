@@ -22,6 +22,7 @@ class Connection extends EventEmitter implements LoggerAwareInterface
 {
 
     const EVENT_TARGET_CREATED = 'method:Target.targetCreated';
+    const EVENT_TARGET_INFO_CHANGED = 'method:Target.targetInfoChanged';
     const EVENT_TARGET_DESTROYED = 'method:Target.targetDestroyed';
 
     use LoggerAwareTrait;
