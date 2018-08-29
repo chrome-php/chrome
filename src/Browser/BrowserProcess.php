@@ -324,7 +324,7 @@ class BrowserProcess implements LoggerAwareInterface
         }
 
         if (array_key_exists('userAgent', $options)) {
-            $args[] = '--user-agent=' . $options['userAgent'];
+            $args[] = '--user-agent=' . escapeshellarg($options['userAgent']);
         }
 
         // add user data dir to args
