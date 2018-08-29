@@ -318,6 +318,11 @@ class BrowserProcess implements LoggerAwareInterface
             $args[] = '--window-size=' . implode(',', $options['windowSize']) ;
         }
 
+        // sandbox mode - useful if you want to use chrome headless inside docker
+        if (array_key_exists('nosandbox', $options)) {
+            $args[] = '--no-sandbox';
+        }
+
         // add user data dir to args
         $args[] = '--user-data-dir=' . $options['userDataDir'];
 
@@ -368,7 +373,7 @@ class BrowserProcess implements LoggerAwareInterface
                             }
 
                             // find socket uri
-                            if (preg_match('#^DevTools listening on (ws://.*)$#', $output, $matches)) {
+                            if (preg_match('/DevTools listening on (ws:\/\/.*)/', $output, $matches)) {
                                 // log
                                 $this->logger->debug('process: ✓ accepted output');
                                 return $matches[1];
