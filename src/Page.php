@@ -70,10 +70,10 @@ class Page
      * @param $url
      * @return PageNavigation
      */
-    public function navigate($url)
+    public function navigate($url, ?string $preScript = NULL)
     {
         $this->assertNotClosed();
-        return new PageNavigation($this, $url);
+        return new PageNavigation($this, $url, $preScript);
     }
 
     /**
