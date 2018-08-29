@@ -78,7 +78,7 @@ class Browser
      * @throws CommunicationException
      * @return Page
      */
-    public function createPage(): Page
+    public function createPage(array $options = []): Page
     {
 
         // page url
@@ -104,7 +104,7 @@ class Browser
         }
 
         // create page
-        $page = new Page($target, $frameTreeResponse['result']['frameTree']);
+        $page = new Page($target, $frameTreeResponse['result']['frameTree'], $options);
 
         // Page.enable
         $page->getSession()->sendMessageSync(new Message('Page.enable'));
