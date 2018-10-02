@@ -319,10 +319,11 @@ class BrowserProcess implements LoggerAwareInterface
         }
 
         // sandbox mode - useful if you want to use chrome headless inside docker
-        if (array_key_exists('nosandbox', $options)) {
+        if (array_key_exists('noSandbox', $options) && $options['noSandbox']) {
             $args[] = '--no-sandbox';
         }
 
+        // user agent
         if (array_key_exists('userAgent', $options)) {
             $args[] = '--user-agent=' . escapeshellarg($options['userAgent']);
         }

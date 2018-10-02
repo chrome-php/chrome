@@ -11,6 +11,19 @@
 * Bug fixes:
   * none
 
+## x.x.x
+
+> *20xx-xx-xx* (not released)
+
+> Description
+    
+* Features:
+  * Added method ``Browser::setPagePreScript``
+  * Added method ``Page::addPreScript``
+  * Added option ``"nosandbox"`` for browser factory
+  * Added option ``"sendSyncDefaultTimeout"`` for browser factory
+* Bug fixes:
+  * Fixed user agent string for browser factory 
 
 ## 0.2.2
 
@@ -22,10 +35,9 @@
   * Added a shortcut to get current page url: ``Page::getCurrentUrl``
   * Added ability to get and set cookies from a page: ``Page.setCookies``, ``Page.readCookies`` , ``Page.readAllCookies`` 
   * improved some error reporting
-  * fixed a bug with directory creation for screenshots
   * added ability to set custom user agent: ``Page::setUserAgent`` or via factory option ``userAgent``
 * Bug fixes:
-  * none
+  * fixed a bug with directory creation for screenshots
 
 ## 0.2.1
 

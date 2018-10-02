@@ -57,13 +57,59 @@ class PageTest extends BaseTestCase
         $pageFooBar->setUserAgent('foobar')->await();
         $pageBarBaz->setUserAgent('barbaz')->await();
 
-        $pageFooBar->navigate('http://requestbin.fullcontact.com/uhunfhuh')->waitForNavigation();
-        $pageBarBaz->navigate('http://requestbin.fullcontact.com/uhunfhuh')->waitForNavigation();
+        $pageFooBar->navigate($this->sitePath('a.html'))->waitForNavigation();
+        $pageBarBaz->navigate($this->sitePath('a.html'))->waitForNavigation();
 
         $value1 = $pageFooBar->evaluate('navigator.userAgent')->getReturnValue();
         $value2 = $pageBarBaz->evaluate('navigator.userAgent')->getReturnValue();
 
         $this->assertEquals('foobar', $value1);
         $this->assertEquals('barbaz', $value2);
+    }
+
+
+    public function testPreScriptOption()
+    {
+        $factory = new BrowserFactory();
+
+        $browser = $factory->createBrowser();
+
+        $preScript1 =
+            "if(!('foo' in navigator)) {
+                navigator.foo = 0
+            }
+            navigator.foo++;";
+
+        $preScript2 =
+            "if(!('bar' in navigator)) {
+                navigator.bar = 10
+            }
+            navigator.bar++;";
+
+        $page = $browser->createPage();
+        $page2 = $browser->createPage();
+        $page->addPreScript($preScript1);
+        $page->addPreScript($preScript2);
+
+        // make sure prescript evaluates
+        $page->navigate($this->sitePath('a.html'))->waitForNavigation();
+        $fooValue = $page->evaluate('navigator.foo')->getReturnValue();
+        $barValue = $page->evaluate('navigator.bar')->getReturnValue();
+        $this->assertEquals(1, $fooValue);
+        $this->assertEquals(11, $barValue);
+
+        // make sure prescript is not adding again and again on every requests
+        $page->navigate($this->sitePath('b.html'))->waitForNavigation();
+        $fooValue = $page->evaluate('navigator.foo')->getReturnValue();
+        $barValue = $page->evaluate('navigator.bar')->getReturnValue();
+        $this->assertEquals(1, $fooValue);
+        $this->assertEquals(11, $barValue);
+
+        // make sure prescript did not pollute other pages
+        $page2->navigate($this->sitePath('b.html'))->waitForNavigation();
+        $fooValue = $page2->evaluate('navigator.foo')->getReturnValue();
+        $barValue = $page2->evaluate('navigator.bar')->getReturnValue();
+        $this->assertEquals(null, $fooValue);
+        $this->assertEquals(null, $barValue);
     }
 }

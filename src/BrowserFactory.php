@@ -35,11 +35,13 @@ class BrowserFactory
      *
      * @param array $options options for browser creation:
      * - connectionDelay: amount of time in seconds to slows down connection for debugging purposes (default: none)
-     * - debug: toggles the debug mode than allows to print additional details (default: false)
+     * - debug: toggles the debug mode that allows to print additional details (default: false)
      * - debugLogger: resource string ("php://stdout"), resource or psr-3 logger instance (default: none)
      *   enabling debug logger will also enable debug mode.
      * - enableImages: toggle the loading of images (default: true)
      * - headless: whether chrome should be started headless (default: true)
+     * - noSandbox: enable no sandbox mode (default: false)
+     * - sendSyncDefaultTimeout: maximum time in ms to wait for synchronous messages to send (default 3000 ms)
      * - startupTimeout: maximum time in seconds to wait for chrome to start (default: 30 sec)
      * - userAgent: user agent to use for the browser
      * - userDataDir: chrome user data dir (default: a new empty dir is generated temporarily)

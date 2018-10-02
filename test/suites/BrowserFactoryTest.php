@@ -34,13 +34,13 @@ class BrowserFactoryTest extends BaseTestCase
         $factory = new BrowserFactory();
 
         $browser = $factory->createBrowser([
-            'userAgent' => 'foobarbaz'
+            'userAgent' => 'foo bar baz'
         ]);
 
         $page = $browser->createPage();
 
         $response = $page->evaluate('navigator.userAgent')->getReturnValue();
 
-        $this->assertEquals('foobarbaz', $response);
+        $this->assertEquals('foo bar baz', $response);
     }
 }

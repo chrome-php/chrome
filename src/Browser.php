@@ -11,6 +11,7 @@ use HeadlessChromium\Communication\Target;
 use HeadlessChromium\Exception\CommunicationException;
 use HeadlessChromium\Exception\NoResponseAvailable;
 use HeadlessChromium\Exception\CommunicationException\ResponseHasError;
+use HeadlessChromium\Exception\OperationTimedOut;
 
 class Browser
 {
@@ -23,6 +24,12 @@ class Browser
      * @var Target[]
      */
     protected $targets = [];
+
+    /**
+     * A preScript to be automatically added on every new pages
+     * @var string|null
+     */
+    protected $pagePreScript;
 
     public function __construct(Connection $connection)
     {
@@ -78,6 +85,17 @@ class Browser
     }
 
     /**
+     * Set a preScript to be added on every new pages.
+     * Use null to disable it.
+     *
+     * @param string|null $script
+     */
+    public function setPagePreScript(string $script = null)
+    {
+        $this->pagePreScript = $script;
+    }
+
+    /**
      * Closes the browser
      */
     public function close()
@@ -90,9 +108,10 @@ class Browser
      * Creates a new page
      * @throws NoResponseAvailable
      * @throws CommunicationException
+     * @throws OperationTimedOut
      * @return Page
      */
-    public function createPage(array $options = []): Page
+    public function createPage(): Page
     {
 
         // page url
@@ -118,7 +137,7 @@ class Browser
         }
 
         // create page
-        $page = new Page($target, $frameTreeResponse['result']['frameTree'], $options);
+        $page = new Page($target, $frameTreeResponse['result']['frameTree']);
 
         // Page.enable
         $page->getSession()->sendMessageSync(new Message('Page.enable'));
@@ -128,6 +147,11 @@ class Browser
 
         // Page.setLifecycleEventsEnabled
         $page->getSession()->sendMessageSync(new Message('Page.setLifecycleEventsEnabled', ['enabled' => true]));
+
+        // add prescript
+        if ($this->pagePreScript) {
+            $page->addPreScript($this->pagePreScript);
+        }
 
         return $page;
     }

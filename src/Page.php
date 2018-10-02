@@ -43,15 +43,28 @@ class Page
     protected $mouse;
 
     /**
-     * @var array
+     * Page constructor.
+     * @param Target $target
+     * @param array $frameTree
      */
-    protected $options = [];
-
-    public function __construct(Target $target, array $frameTree, array $options = [])
+    public function __construct(Target $target, array $frameTree)
     {
         $this->target = $target;
         $this->frameManager = new FrameManager($this, $frameTree);
-        $this->options = $options;
+    }
+
+    /**
+     * Adds a script to be evaluated upon page navigation
+     *
+     * @param string $script
+     * @throws CommunicationException
+     * @throws NoResponseAvailable
+     */
+    public function addPreScript(string $script)
+    {
+        $this->getSession()->sendMessageSync(
+            new Message('Page.addScriptToEvaluateOnNewDocument', ['source' => $script])
+        );
     }
 
     /**
@@ -79,15 +92,11 @@ class Page
      * @param $url
      * @return PageNavigation
      */
-    public function navigate($url, ?string $preScript = NULL)
+    public function navigate($url)
     {
         $this->assertNotClosed();
 
-        if (isset($this->options['preScript'])){
-            $preScript = $this->options['preScript'].$preScript;
-        }
-
-        return new PageNavigation($this, $url, $preScript);
+        return new PageNavigation($this, $url);
     }
 
     /**

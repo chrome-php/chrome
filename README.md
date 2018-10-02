@@ -130,13 +130,16 @@ Here are the options available for the browser factory:
 | Option name        | Default               | Description                                                                       |
 |--------------------|-----------------------|-----------------------------------------------------------------------------------|
 | connectionDelay    | 0                     | Delay to apply between each operation for debugging purposes                      |
+| debug              | false                 | Allows to enable debug mode                                                       |
 | debugLogger        | null                  | A string (e.g "php://stdout"), or resource, or PSR-3 logger instance to print debug messages |
 | enableImages       | true                  | Toggles loading of images                                                         |
 | headless           | true                  | Enable or disable headless mode                                                   |
+| noSandbox          | false                 | Useful to run in a docker container                                               |
+| sendSyncDefaultTimeout | 3000              | Default timeout (ms) for sending sync messages                                    |
+| startupTimeout     | 30                    | Maximum time in seconds to wait for chrome to start                               |
 | userAgent          | none                  | User agent to use for the whole browser  (see page api for alternative)           |
 | userDataDir        | none                  | chrome user data dir (default: a new empty dir is generated temporarily)          |
-| startupTimeout     | 30                    | Maximum time in seconds to wait for chrome to start                               |
-| windowSize         | -                     | Size of the window. usage: ``[$width, $height]`` - see also Page::setViewportSize |
+| windowSize         | none                  | Size of the window. usage: ``[$width, $height]`` - see also Page::setViewportSize |
 
 ### Browser API
 
@@ -154,6 +157,21 @@ Here are the options available for the browser factory:
 
 ```php
     $browser->close();
+```
+
+### Set a script to evaluate before every page created by this browser will navigate
+
+```php
+    $script = 
+     '// Simulate navigator permissions;
+      const originalQuery = window.navigator.permissions.query;
+      window.navigator.permissions.query = (parameters) => (
+          parameters.name === 'notifications' ?
+              Promise.resolve({ state: Notification.permission }) :
+              originalQuery(parameters)
+      );'
+
+    $browser->setPagePreScript($script);
 ```
 
 ### Page API
@@ -223,6 +241,20 @@ will want to wait for the new page to reload.
 You can achieve this by using ``$page->evaluate('some js that will reload the page')->waitForPageReload()``.
 An example is available in [form-submit.php](./examples/form-submit.php)
 
+### Add a script to evaluate upon page navigation
+
+```php
+    $script = 
+     '// Simulate navigator permissions;
+      const originalQuery = window.navigator.permissions.query;
+      window.navigator.permissions.query = (parameters) => (
+          parameters.name === 'notifications' ?
+              Promise.resolve({ state: Notification.permission }) :
+              originalQuery(parameters)
+      );'
+
+    $page->addPreScript($script);
+```
 
 #### Set viewport size
 

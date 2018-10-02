@@ -62,7 +62,7 @@ class Connection extends EventEmitter implements LoggerAwareInterface
      * Default timeout for send sync in ms
      * @var int
      */
-    protected $sendSyncDefaultTimeout = 3000;
+    protected $sendSyncDefaultTimeout;
 
     /**
      * @var Session[]
@@ -77,13 +77,15 @@ class Connection extends EventEmitter implements LoggerAwareInterface
     /**
      * CommunicationChannel constructor.
      * @param SocketInterface|string $socketClient
+     * @param int|null $sendSyncDefaultTimeout
      */
-    public function __construct($socketClient, LoggerInterface $logger = null, ?int $sendSyncDefaultTimeout = 3000)
+    public function __construct($socketClient, LoggerInterface $logger = null, int $sendSyncDefaultTimeout = null)
     {
         // set or create logger
         $this->setLogger($logger ?? new NullLogger());
 
-        $this->sendSyncDefaultTimeout = $sendSyncDefaultTimeout;
+        // set timeout
+        $this->sendSyncDefaultTimeout = $sendSyncDefaultTimeout ?? 3000;
 
         // create socket client
         if (is_string($socketClient)) {
@@ -220,7 +222,7 @@ class Connection extends EventEmitter implements LoggerAwareInterface
      * @throws OperationTimedOut
      * @return Response
      */
-    public function sendMessageSync(Message $message, $timeout = null): Response
+    public function sendMessageSync(Message $message, int $timeout = null): Response
     {
         $responseReader = $this->sendMessage($message);
         $response = $responseReader->waitForResponse($timeout ?? $this->sendSyncDefaultTimeout);
