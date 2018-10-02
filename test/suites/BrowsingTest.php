@@ -58,7 +58,6 @@ class BrowsingTest extends BaseTestCase
         $this->assertEquals('a - test', $title);
     }
 
-
     public function testFormSubmission()
     {
         // initial navigation
@@ -72,5 +71,18 @@ class BrowsingTest extends BaseTestCase
 
         $evaluation->waitForPageReload();
         $this->assertEquals('hello', $page->evaluate('document.querySelector("#value").innerHTML')->getReturnValue());
+    }
+
+    public function testGetCurrentUrl()
+    {
+        $page = self::$browser->createPage();
+
+        $page->getSession()->getConnection()->readData();
+
+        $this->assertEquals('about:blank', $page->getCurrentUrl());
+
+        $page->navigate($this->sitePath('a.html'))->waitForNavigation();
+
+        $this->assertEquals($this->sitePath('a.html'), $page->getCurrentUrl());
     }
 }

@@ -41,6 +41,7 @@ class BrowserFactory
      * - enableImages: toggle the loading of images (default: true)
      * - headless: whether chrome should be started headless (default: true)
      * - startupTimeout: maximum time in seconds to wait for chrome to start (default: 30 sec)
+     * - userAgent: user agent to use for the browser
      * - userDataDir: chrome user data dir (default: a new empty dir is generated temporarily)
      * - windowSize: size of the window, ex: [1920, 1080] (default: none)
      *
