@@ -78,10 +78,12 @@ class Connection extends EventEmitter implements LoggerAwareInterface
      * CommunicationChannel constructor.
      * @param SocketInterface|string $socketClient
      */
-    public function __construct($socketClient, LoggerInterface $logger = null)
+    public function __construct($socketClient, LoggerInterface $logger = null, ?int $sendSyncDefaultTimeout = 3000)
     {
         // set or create logger
         $this->setLogger($logger ?? new NullLogger());
+
+        $this->sendSyncDefaultTimeout = $sendSyncDefaultTimeout;
 
         // create socket client
         if (is_string($socketClient)) {

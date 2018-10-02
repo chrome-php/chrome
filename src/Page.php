@@ -42,10 +42,16 @@ class Page
      */
     protected $mouse;
 
-    public function __construct(Target $target, array $frameTree)
+    /**
+     * @var array
+     */
+    protected $options = [];
+
+    public function __construct(Target $target, array $frameTree, array $options = [])
     {
         $this->target = $target;
         $this->frameManager = new FrameManager($this, $frameTree);
+        $this->options = $options;
     }
 
     /**
@@ -73,10 +79,15 @@ class Page
      * @param $url
      * @return PageNavigation
      */
-    public function navigate($url)
+    public function navigate($url, ?string $preScript = NULL)
     {
         $this->assertNotClosed();
-        return new PageNavigation($this, $url);
+
+        if (isset($this->options['preScript'])){
+            $preScript = $this->options['preScript'].$preScript;
+        }
+
+        return new PageNavigation($this, $url, $preScript);
     }
 
     /**

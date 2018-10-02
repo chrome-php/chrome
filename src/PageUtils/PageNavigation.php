@@ -58,7 +58,7 @@ class PageNavigation
      * @throws Exception\CommunicationException\CannotReadResponse
      * @throws Exception\CommunicationException\InvalidResponse
      */
-    public function __construct(Page $page, string $url)
+    public function __construct(Page $page, string $url, ?string $preScript = NULL)
     {
 
         // make sure latest loaderId was pulled
@@ -66,6 +66,13 @@ class PageNavigation
 
         // get previous loaderId for the navigation watcher
         $this->previousLoaderId = $page->getFrameManager()->getMainFrame()->getLatestLoaderId();
+
+
+        if ($preScript !== NULL){
+            $page->getSession()->sendMessageSync(
+                new Message('Page.addScriptToEvaluateOnNewDocument', ['source'=>$preScript])
+            );
+        }
 
         // send navigation message
         $this->navigateResponseReader = $page->getSession()->sendMessage(

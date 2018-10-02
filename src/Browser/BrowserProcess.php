@@ -128,7 +128,7 @@ class BrowserProcess implements LoggerAwareInterface
         $this->logger->debug('process: connecting using ' . $ws);
 
         // connect to browser
-        $connection = new Connection($ws, $this->logger);
+        $connection = new Connection($ws, $this->logger, $options['sendSyncDefaultTimeout'] ?? 3000);
         $connection->connect();
 
         // connection delay
@@ -318,8 +318,13 @@ class BrowserProcess implements LoggerAwareInterface
             $args[] = '--window-size=' . implode(',', $options['windowSize']) ;
         }
 
+        // sandbox mode - useful if you want to use chrome headless inside docker
+        if (array_key_exists('nosandbox', $options)) {
+            $args[] = '--no-sandbox';
+        }
+
         if (array_key_exists('userAgent', $options)) {
-            $args[] = '--user-agent=' . $options['userAgent'];
+            $args[] = '--user-agent=' . escapeshellarg($options['userAgent']);
         }
 
         // add user data dir to args
@@ -372,7 +377,7 @@ class BrowserProcess implements LoggerAwareInterface
                             }
 
                             // find socket uri
-                            if (preg_match('#^DevTools listening on (ws://.*)$#', $output, $matches)) {
+                            if (preg_match('/DevTools listening on (ws:\/\/.*)/', $output, $matches)) {
                                 // log
                                 $this->logger->debug('process: ✓ accepted output');
                                 return $matches[1];
