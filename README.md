@@ -127,20 +127,21 @@ API
 
 Here are the options available for the browser factory:
 
-| Option name        | Default               | Description                                                                       |
-|--------------------|-----------------------|-----------------------------------------------------------------------------------|
-| connectionDelay    | 0                     | Delay to apply between each operation for debugging purposes                      |
-| debug              | false                 | Allows to enable debug mode                                                       |
-| debugLogger        | null                  | A string (e.g "php://stdout"), or resource, or PSR-3 logger instance to print debug messages |
-| enableImages       | true                  | Toggles loading of images                                                         |
-| headless           | true                  | Enable or disable headless mode                                                   |
-| ignoreCertificateErrors | false            | Set chrome to ignore ssl errors                                                   |
-| noSandbox          | false                 | Useful to run in a docker container                                               |
-| sendSyncDefaultTimeout | 3000              | Default timeout (ms) for sending sync messages                                    |
-| startupTimeout     | 30                    | Maximum time in seconds to wait for chrome to start                               |
-| userAgent          | none                  | User agent to use for the whole browser  (see page api for alternative)           |
-| userDataDir        | none                  | chrome user data dir (default: a new empty dir is generated temporarily)          |
-| windowSize         | none                  | Size of the window. usage: ``[$width, $height]`` - see also Page::setViewportSize |
+| Option name        | Default       | Description                                                                                      |
+|--------------------|---------------|--------------------------------------------------------------------------------------------------|
+| connectionDelay    | 0             | Delay to apply between each operation for debugging purposes                                     |
+| customFlags        | none          | Array of flags to pass to the command line. Eg: ``['--option1', '--option2=someValue']``         |
+| debug              | false         | Allows to enable debug mode                                                                      |
+| debugLogger        | null          | A string (e.g "php://stdout"), or resource, or PSR-3 logger instance to print debug messages     |
+| enableImages       | true          | Toggles loading of images                                                                        |
+| headless           | true          | Enable or disable headless mode                                                                  |
+| ignoreCertificateErrors | false    | Set chrome to ignore ssl errors                                                                  |
+| noSandbox          | false         | Useful to run in a docker container                                                              |
+| sendSyncDefaultTimeout | 3000      | Default timeout (ms) for sending sync messages                                                   |
+| startupTimeout     | 30            | Maximum time in seconds to wait for chrome to start                                              |
+| userAgent          | none          | User agent to use for the whole browser  (see page api for alternative)                          |
+| userDataDir        | none          | chrome user data dir (default: a new empty dir is generated temporarily)                         |
+| windowSize         | none          | Size of the window. usage: ``[$width, $height]`` - see also Page::setViewportSize                |
 
 ### Browser API
 

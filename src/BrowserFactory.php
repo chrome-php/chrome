@@ -35,6 +35,7 @@ class BrowserFactory
      *
      * @param array $options options for browser creation:
      * - connectionDelay: amount of time in seconds to slows down connection for debugging purposes (default: none)
+     * - customFlags: array of custom flag to flags to pass to the command line
      * - debug: toggles the debug mode that allows to print additional details (default: false)
      * - debugLogger: resource string ("php://stdout"), resource or psr-3 logger instance (default: none)
      *   enabling debug logger will also enable debug mode.

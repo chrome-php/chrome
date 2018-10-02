@@ -333,6 +333,11 @@ class BrowserProcess implements LoggerAwareInterface
             $args[] = '--ignore-certificate-errors';
         }
 
+        // add custom flags
+        if (array_key_exists('customFlags', $options) && is_array($options['customFlags'])) {
+            $args =  array_merge($args, $options['customFlags']);
+        }
+
         // add user data dir to args
         $args[] = '--user-data-dir=' . $options['userDataDir'];
 
