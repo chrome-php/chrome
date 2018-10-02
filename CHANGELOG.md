@@ -11,9 +11,9 @@
 * Bug fixes:
   * none
 
-## x.x.x
+## 0.2.3
 
-> *20xx-xx-xx* (not released)
+> *2018-10-02*
 
 > Description
     
