@@ -22,6 +22,7 @@
   * Added method ``Page::addPreScript``
   * Added option ``"nosandbox"`` for browser factory
   * Added option ``"sendSyncDefaultTimeout"`` for browser factory
+  * Added option ``"ignoreCertificateErrors"`` for browser factory
 * Bug fixes:
   * Fixed user agent string for browser factory 
 

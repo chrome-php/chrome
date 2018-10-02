@@ -134,6 +134,7 @@ Here are the options available for the browser factory:
 | debugLogger        | null                  | A string (e.g "php://stdout"), or resource, or PSR-3 logger instance to print debug messages |
 | enableImages       | true                  | Toggles loading of images                                                         |
 | headless           | true                  | Enable or disable headless mode                                                   |
+| ignoreCertificateErrors | false            | Set chrome to ignore ssl errors                                                   |
 | noSandbox          | false                 | Useful to run in a docker container                                               |
 | sendSyncDefaultTimeout | 3000              | Default timeout (ms) for sending sync messages                                    |
 | startupTimeout     | 30                    | Maximum time in seconds to wait for chrome to start                               |

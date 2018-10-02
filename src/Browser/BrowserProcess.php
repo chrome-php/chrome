@@ -328,6 +328,11 @@ class BrowserProcess implements LoggerAwareInterface
             $args[] = '--user-agent=' . escapeshellarg($options['userAgent']);
         }
 
+        // ignore certificate errors
+        if (array_key_exists('ignoreCertificateErrors', $options) && $options['ignoreCertificateErrors']) {
+            $args[] = '--ignore-certificate-errors';
+        }
+
         // add user data dir to args
         $args[] = '--user-data-dir=' . $options['userDataDir'];
 

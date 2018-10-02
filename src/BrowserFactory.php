@@ -40,6 +40,7 @@ class BrowserFactory
      *   enabling debug logger will also enable debug mode.
      * - enableImages: toggle the loading of images (default: true)
      * - headless: whether chrome should be started headless (default: true)
+     * - ignoreCertificateErrors: set chrome to ignore ssl errors
      * - noSandbox: enable no sandbox mode (default: false)
      * - sendSyncDefaultTimeout: maximum time in ms to wait for synchronous messages to send (default 3000 ms)
      * - startupTimeout: maximum time in seconds to wait for chrome to start (default: 30 sec)
