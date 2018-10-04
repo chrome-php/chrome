@@ -11,11 +11,18 @@
 * Bug fixes:
   * none
 
+## 0.2.4
+
+> *2018-10-04*
+    
+* Bug fixes:
+  * Fixed a race condition in target creations/destruction (thanks @choval)
+
 ## 0.2.3
 
 > *2018-10-02*
 
-> Description
+> Fixed usergent and added page prescript (thanks @tanasecosminromeo) and added some new options for browser factory
     
 * Features:
   * Added method ``Browser::setPagePreScript``
