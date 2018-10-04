@@ -38,14 +38,8 @@ class Browser
         // listen for target created
         $this->connection->on(Connection::EVENT_TARGET_CREATED, function (array $params) {
 
-            // create a session for the target
-            $session = $this->connection->createSession($params['targetInfo']['targetId']);
-
             // create and store the target
-            $this->targets[$params['targetInfo']['targetId']] = new Target(
-                $params['targetInfo'],
-                $session
-            );
+            $this->targets[$params['targetInfo']['targetId']] = new Target($params['targetInfo'], $this->connection);
         });
 
         // listen for target info changed
@@ -167,5 +161,13 @@ class Browser
             return null;
         }
         return $this->targets[$targetId];
+    }
+
+    /**
+     * @return Target[]
+     */
+    public function getTargets()
+    {
+        return array_values($this->targets);
     }
 }

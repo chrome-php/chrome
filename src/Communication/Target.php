@@ -19,6 +19,14 @@ class Target
      */
     protected $session;
 
+    /**
+     * @var Connection
+     */
+    private $connection;
+
+    /**
+     * @var bool
+     */
     protected $destroyed = false;
 
     /**
@@ -26,10 +34,10 @@ class Target
      * @param array $targetInfo
      * @param Session $session
      */
-    public function __construct(array $targetInfo, Session $session)
+    public function __construct(array $targetInfo, Connection $connection)
     {
         $this->targetInfo = $targetInfo;
-        $this->session = $session;
+        $this->connection = $connection;
     }
 
     /**
@@ -40,6 +48,12 @@ class Target
         if ($this->destroyed) {
             throw new TargetDestroyed('The target was destroyed.');
         }
+
+        // if not already done, create a session for the target
+        if (!$this->session) {
+            $this->session = $session = $this->connection->createSession($this->getTargetInfo('targetId'));
+        }
+
         return $this->session;
     }
 
@@ -52,8 +66,12 @@ class Target
         if ($this->destroyed) {
             throw new TargetDestroyed('The target was already destroyed.');
         }
-        $this->session->destroy();
-        $this->session = null;
+
+        if ($this->session) {
+            $this->session->destroy();
+            $this->session = null;
+        }
+
         $this->destroyed = true;
     }
 

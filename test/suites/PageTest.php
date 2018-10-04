@@ -18,16 +18,6 @@ use HeadlessChromium\Page;
 class PageTest extends BaseTestCase
 {
 
-    public function testPage()
-    {
-        $connection = new Connection(new MockSocket());
-        $session = new Session('foo', 'bar', $connection);
-        $target = new Target([], $session);
-        $page = new Page($target, []);
-
-        $this->assertSame($session, $page->getSession());
-    }
-
     public function testSetViewport()
     {
         $factory = new BrowserFactory();
