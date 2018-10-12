@@ -64,6 +64,11 @@ class BrowserProcess implements LoggerAwareInterface
     protected $wasStarted = false;
 
     /**
+     * @var string
+     */
+    protected $wsUri;
+
+    /**
      * BrowserProcess constructor.
      * @param LoggerInterface $logger
      */
@@ -122,13 +127,13 @@ class BrowserProcess implements LoggerAwareInterface
 
         // wait for start and retrieve ws uri
         $startupTimeout = $options['startupTimeout'] ?? 30;
-        $ws = $this->waitForStartup($process, $startupTimeout * 1000 * 1000);
+        $this->wsUri = $this->waitForStartup($process, $startupTimeout * 1000 * 1000);
 
         // log
-        $this->logger->debug('process: connecting using ' . $ws);
+        $this->logger->debug('process: connecting using ' . $this->wsUri);
 
         // connect to browser
-        $connection = new Connection($ws, $this->logger, $options['sendSyncDefaultTimeout'] ?? 3000);
+        $connection = new Connection($this->wsUri, $this->logger, $options['sendSyncDefaultTimeout'] ?? 3000);
         $connection->connect();
 
         // connection delay
@@ -152,6 +157,14 @@ class BrowserProcess implements LoggerAwareInterface
     public function getBrowser()
     {
         return $this->browser;
+    }
+
+    /**
+     * @return string
+     */
+    public function getSocketUri()
+    {
+        return $this->wsUri;
     }
 
     /**

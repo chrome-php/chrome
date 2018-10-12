@@ -43,4 +43,13 @@ class BrowserFactoryTest extends BaseTestCase
 
         $this->assertEquals('foo bar baz', $response);
     }
+
+    public function testBrowserFactory()
+    {
+        $factory = new BrowserFactory();
+
+        $browser = $factory->createBrowser();
+
+        $this->assertRegExp('#^ws://#', $browser->getSocketUri());
+    }
 }

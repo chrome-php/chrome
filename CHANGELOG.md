@@ -16,9 +16,10 @@
 > *20xx-xx-xx* (not released)
 
 > Make a crawl instance sharable among multiple scripts
-    
+
 * Features:
   * Added option ``keepAlive`` for browser factory.
+  * Added methods ``BrowserProcess::getSocketUri`` and ``ProcessAwareBrowser::getSocketUri``
 * Bug fixes:
   * none
 

@@ -7,6 +7,7 @@ namespace HeadlessChromium;
 
 use Apix\Log\Logger\Stream as StreamLogger;
 use HeadlessChromium\Browser\BrowserProcess;
+use HeadlessChromium\Browser\ProcessAwareBrowser;
 use Symfony\Component\Process\Process;
 
 class BrowserFactory
@@ -50,9 +51,9 @@ class BrowserFactory
      * - userDataDir: chrome user data dir (default: a new empty dir is generated temporarily)
      * - windowSize: size of the window, ex: [1920, 1080] (default: none)
      *
-     * @return Browser a Browser instance to interact with the new chrome process
+     * @return ProcessAwareBrowser a Browser instance to interact with the new chrome process
      */
-    public function createBrowser(array $options = []): Browser
+    public function createBrowser(array $options = []): ProcessAwareBrowser
     {
 
         // prepare logger
