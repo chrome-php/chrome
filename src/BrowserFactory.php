@@ -42,6 +42,7 @@ class BrowserFactory
      * - enableImages: toggle the loading of images (default: true)
      * - headless: whether chrome should be started headless (default: true)
      * - ignoreCertificateErrors: set chrome to ignore ssl errors
+     * - keepAlive: true to keep alive the chrome instance when the script terminates (default: false)
      * - noSandbox: enable no sandbox mode (default: false)
      * - sendSyncDefaultTimeout: maximum time in ms to wait for synchronous messages to send (default 3000 ms)
      * - startupTimeout: maximum time in seconds to wait for chrome to start (default: 30 sec)
@@ -78,7 +79,9 @@ class BrowserFactory
         $browserProcess = new BrowserProcess($logger);
 
         // instruct the runtime to kill chrome and clean temp files on exit
-        register_shutdown_function([$browserProcess, 'kill']);
+        if (!array_key_exists('keepAlive', $options) || !$options['keepAlive']) {
+            register_shutdown_function([$browserProcess, 'kill']);
+        }
 
         // start the browser and connect to it
         $browserProcess->start($this->chromeBinaries, $options);

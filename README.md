@@ -8,8 +8,9 @@ Chrome PHP
 
 This library lets you start playing with chrome/chromium in headless mode from PHP.
 
-> **/!\\** The library is currently at a very early stage. You are encouraged to play with it but keep in mind that it is still very young and still lacks most of the features you would expect. The library follows semver for versioning.
-  That means that until version 1.0.0 a lot of changes might occur.
+> **/!\\** The library is currently at a very early stage. You are encouraged to play with it but keep in mind that
+ it is still very young and still lacks most of the features you would expect. The library follows semver for versioning.
+ That means that until version 1.0.0 a lot of changes might occur.
 
 Features
 --------
@@ -99,7 +100,8 @@ The following example adds some development-oriented features to help debugging
     ]);
 ```
 
-About ``debugLogger``: this can be any of a resource string, a resource or an object implementing ``LoggerInterface`` from Psr\Log (such as [monolog](https://github.com/Seldaek/monolog) or [apix/log](https://github.com/apix/log)).
+About ``debugLogger``: this can be any of a resource string, a resource or an object implementing 
+``LoggerInterface`` from Psr\Log (such as [monolog](https://github.com/Seldaek/monolog) or [apix/log](https://github.com/apix/log)).
 
 
 
@@ -136,6 +138,7 @@ Here are the options available for the browser factory:
 | enableImages       | true          | Toggles loading of images                                                                        |
 | headless           | true          | Enable or disable headless mode                                                                  |
 | ignoreCertificateErrors | false    | Set chrome to ignore ssl errors                                                                  |
+| keepAlive          | true          | true to keep alive the chrome instance when the script terminates                                |
 | noSandbox          | false         | Useful to run in a docker container                                                              |
 | sendSyncDefaultTimeout | 3000      | Default timeout (ms) for sending sync messages                                                   |
 | startupTimeout     | 30            | Maximum time in seconds to wait for chrome to start                                              |

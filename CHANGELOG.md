@@ -10,6 +10,17 @@
   * none
 * Bug fixes:
   * none
+  
+## 0.2.5
+
+> *20xx-xx-xx* (not released)
+
+> Make a crawl instance sharable among multiple scripts
+    
+* Features:
+  * Added option ``keepAlive`` for browser factory.
+* Bug fixes:
+  * none
 
 ## 0.2.4
 
