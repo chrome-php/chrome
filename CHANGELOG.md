@@ -13,7 +13,7 @@
   
 ## 0.3.0
 
-> *20xx-xx-xx* (not released)
+> *2018-08-13*
 
 > Make a crawl instance sharable among multiple scripts
 
