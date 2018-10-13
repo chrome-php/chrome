@@ -11,7 +11,7 @@
 * Bug fixes:
   * none
   
-## 0.2.5
+## 0.3.0
 
 > *20xx-xx-xx* (not released)
 
@@ -23,7 +23,7 @@
   * Removed unused option ``debug``
   * Added ``BrowserFactory::connectToBrowser``
 * Bug fixes:
-  * none
+  * (BC Break) Page navigation now allows by default that the initial loader is replaced with a new one #40
 
 ## 0.2.4
 

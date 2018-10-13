@@ -85,4 +85,18 @@ class BrowsingTest extends BaseTestCase
 
         $this->assertEquals($this->sitePath('a.html'), $page->getCurrentUrl());
     }
+
+    public function testPageNavigationLocalNotFoundUrl()
+    {
+        $factory = new BrowserFactory();
+        $browser = $factory->createBrowser();
+
+        $page = $browser->createPage();
+
+        // for some reasons chrome creates a new loader when we navigate to a local non-existent file
+        // here we are testing that feature with strict and non strict modes
+        $page->navigate('file:///does-not-exist')->waitForNavigation();
+
+        $this->assertTrue(true);
+    }
 }

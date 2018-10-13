@@ -89,14 +89,18 @@ class Page
     }
 
     /**
-     * @param $url
+     * @param string $url
+     * @param array $options
+     *  - strict: make waitForNAvigation to fail if a new navigation is initiated. Default: false
+     *
      * @return PageNavigation
+     * @throws Exception\CommunicationException
      */
-    public function navigate($url)
+    public function navigate(string $url, array $options = [])
     {
         $this->assertNotClosed();
 
-        return new PageNavigation($this, $url);
+        return new PageNavigation($this, $url, $options['strict'] ?? false);
     }
 
     /**
