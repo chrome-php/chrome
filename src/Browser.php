@@ -68,6 +68,9 @@ class Browser
                     ->debug('✘ target(' . $params['targetId'] . ') was destroyed and unreferenced.');
             }
         });
+
+        // enable target discovery
+        $connection->sendMessageSync(new Message('Target.setDiscoverTargets', ['discover' => true]));
     }
 
     /**

@@ -8,7 +8,10 @@ namespace HeadlessChromium;
 use Apix\Log\Logger\Stream as StreamLogger;
 use HeadlessChromium\Browser\BrowserProcess;
 use HeadlessChromium\Browser\ProcessAwareBrowser;
+use HeadlessChromium\Communication\Connection;
+use HeadlessChromium\Exception\BrowserConnectionFailed;
 use Symfony\Component\Process\Process;
+use Wrench\Exception\HandshakeException;
 
 class BrowserFactory
 {
@@ -37,9 +40,7 @@ class BrowserFactory
      * @param array $options options for browser creation:
      * - connectionDelay: amount of time in seconds to slows down connection for debugging purposes (default: none)
      * - customFlags: array of custom flag to flags to pass to the command line
-     * - debug: toggles the debug mode that allows to print additional details (default: false)
      * - debugLogger: resource string ("php://stdout"), resource or psr-3 logger instance (default: none)
-     *   enabling debug logger will also enable debug mode.
      * - enableImages: toggle the loading of images (default: true)
      * - headless: whether chrome should be started headless (default: true)
      * - ignoreCertificateErrors: set chrome to ignore ssl errors
@@ -56,24 +57,13 @@ class BrowserFactory
     public function createBrowser(array $options = []): ProcessAwareBrowser
     {
 
-        // prepare logger
-        $logger = $options['debugLogger'] ?? null;
+        // create logger from options
+        $logger = self::createLogger($options);
 
-        // create logger from string name or resource
-        if (is_string($logger) || is_resource($logger)) {
-            $logger = new StreamLogger($logger);
-            $options['debug'] = true;
-        }
-
-        $debugEnabled = $options['debug'] ?? false;
-
-        // log
-        if ($debugEnabled) {
+        // log chrome version
+        if ($logger) {
             $chromeVersion = $this->getChromeVersion();
-
-            if ($logger) {
-                $logger->debug('Factory: chrome version: ' . $chromeVersion);
-            }
+            $logger->debug('Factory: chrome version: ' . $chromeVersion);
         }
 
         // create browser process
@@ -113,5 +103,77 @@ class BrowserFactory
         }
 
         return trim($process->getOutput());
+    }
+
+    /**
+     * Connects to an existing browser using it's web socket uri.
+     *
+     * usage:
+     *
+     * ```
+     * $browserFactory = new BrowserFactory();
+     * $browser = $browserFactory->createBrowser();
+     *
+     * $uri = $browser->getSocketUri();
+     *
+     * $existingBrowser = BrowserFactory::connectToBrowser($uri);
+     * ```
+     *
+     * @param string $uri
+     * @param array $options options when creating the connection to the browser:
+     *  - connectionDelay: amount of time in seconds to slows down connection for debugging purposes (default: none)
+     *  - debugLogger: resource string ("php://stdout"), resource or psr-3 logger instance (default: none)
+     *  - sendSyncDefaultTimeout: maximum time in ms to wait for synchronous messages to send (default 3000 ms)
+     *
+     * @return Browser
+     * @throws BrowserConnectionFailed
+     */
+    public static function connectToBrowser(string $uri, array $options = []): Browser
+    {
+        $logger = self::createLogger($options);
+
+        if ($logger) {
+            $logger->debug('Browser Factory: connecting using ' . $uri);
+        }
+
+        // connect to browser
+        $connection = new Connection($uri, $logger, $options['sendSyncDefaultTimeout'] ?? 3000);
+
+        // try to connect
+        try {
+            $connection->connect();
+        } catch (HandshakeException $e) {
+            throw new BrowserConnectionFailed('Invalid socket uri', 0, $e);
+        }
+
+        // make sure it is connected
+        if (!$connection->isConnected()) {
+            throw new BrowserConnectionFailed('Cannot connect to the browser, make sure it was not closed');
+        }
+
+        // connection delay
+        if (array_key_exists('connectionDelay', $options)) {
+            $connection->setConnectionDelay($options['connectionDelay']);
+        }
+
+        return new Browser($connection);
+    }
+
+    /**
+     * Create a logger instance from given options
+     * @param $options
+     * @return StreamLogger|null
+     */
+    private static function createLogger($options)
+    {
+        // prepare logger
+        $logger = $options['debugLogger'] ?? null;
+
+        // create logger from string name or resource
+        if (is_string($logger) || is_resource($logger)) {
+            $logger = new StreamLogger($logger);
+        }
+
+        return $logger;
     }
 }

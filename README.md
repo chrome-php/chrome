@@ -133,7 +133,6 @@ Here are the options available for the browser factory:
 |--------------------|---------------|--------------------------------------------------------------------------------------------------|
 | connectionDelay    | 0             | Delay to apply between each operation for debugging purposes                                     |
 | customFlags        | none          | Array of flags to pass to the command line. Eg: ``['--option1', '--option2=someValue']``         |
-| debug              | false         | Allows to enable debug mode                                                                      |
 | debugLogger        | null          | A string (e.g "php://stdout"), or resource, or PSR-3 logger instance to print debug messages     |
 | enableImages       | true          | Toggles loading of images                                                                        |
 | headless           | true          | Enable or disable headless mode                                                                  |

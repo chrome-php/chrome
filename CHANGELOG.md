@@ -20,6 +20,8 @@
 * Features:
   * Added option ``keepAlive`` for browser factory.
   * Added methods ``BrowserProcess::getSocketUri`` and ``ProcessAwareBrowser::getSocketUri``
+  * Removed unused option ``debug``
+  * Added ``BrowserFactory::connectToBrowser``
 * Bug fixes:
   * none
 

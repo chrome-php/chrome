@@ -70,7 +70,7 @@ class BrowserProcess implements LoggerAwareInterface
 
     /**
      * BrowserProcess constructor.
-     * @param LoggerInterface $logger
+     * @param LoggerInterface|null $logger
      */
     public function __construct(LoggerInterface $logger = null)
     {
@@ -146,9 +146,6 @@ class BrowserProcess implements LoggerAwareInterface
 
         // create browser instance
         $this->browser = new ProcessAwareBrowser($connection, $this);
-
-        // enable target discovery
-        $connection->sendMessageSync(new Message('Target.setDiscoverTargets', ['discover' => true]));
     }
 
     /**
