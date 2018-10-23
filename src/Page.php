@@ -16,6 +16,7 @@ use HeadlessChromium\Exception\TargetDestroyed;
 use HeadlessChromium\Input\Mouse;
 use HeadlessChromium\PageUtils\CookiesGetter;
 use HeadlessChromium\PageUtils\PageEvaluation;
+use HeadlessChromium\PageUtils\PageLayoutMetrics;
 use HeadlessChromium\PageUtils\PageNavigation;
 use HeadlessChromium\PageUtils\PageScreenshot;
 use HeadlessChromium\PageUtils\ResponseWaiter;
@@ -65,6 +66,30 @@ class Page
         $this->getSession()->sendMessageSync(
             new Message('Page.addScriptToEvaluateOnNewDocument', ['source' => $script])
         );
+    }
+
+    /**
+     * Retrieves layout metrics of the page
+     *
+     * Example:
+     *
+     * ```php
+     * $metrics = $page->getLayoutMetrics();
+     * $contentSize = $metrics->getContentSize();
+     * ```
+     *
+     * @return PageLayoutMetrics
+     * @throws CommunicationException
+     */
+    public function getLayoutMetrics()
+    {
+        $this->assertNotClosed();
+
+        $reader = $this->getSession()->sendMessage(
+            new Message('Page.getLayoutMetrics')
+        );
+
+        return new PageLayoutMetrics($reader);
     }
 
     /**
