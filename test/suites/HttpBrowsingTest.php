@@ -85,6 +85,7 @@ class HttpBrowsingTest extends HttpEnabledTestCase
         $page->evaluate('document.language')->getReturnValue();
 
         // assert created/destroyed
+        // Note: sometimes there are races conditions and this test needs to be run again
         $this->assertTrue($helper->created);
         $this->assertTrue($helper->destroyed);
         // Note: if that stops to assert, it could mean that chrome changed the way it works and that this test is

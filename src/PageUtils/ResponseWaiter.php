@@ -34,9 +34,7 @@ class ResponseWaiter
      */
     public function await(int $time = null)
     {
-        $this->responseReader->waitForResponse($time);
-
-        $response = $this->responseReader->getResponse();
+        $response = $this->responseReader->waitForResponse($time);
 
         if (!$response->isSuccessful()) {
             throw new ResponseHasError($response->getErrorMessage(true));
