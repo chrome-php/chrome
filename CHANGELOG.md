@@ -10,10 +10,20 @@
   * none
 * Bug fixes:
   * none
+
+## 0.4.0
+
+> *2018-10-25*
+
+> Ability to take full page screenshots
+    
+* Features:
+  * Added ``Page::getLayoutMetrics`` that allows to take full page screenshots (#43 #44) thanks @kaero598
+  * Added ``Page::getFullPageClip`` to ease full page screenshots
   
 ## 0.3.0
 
-> *2018-08-13*
+> *2018-10-13*
 
 > Make a crawl instance sharable among multiple scripts
 
