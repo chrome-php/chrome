@@ -251,13 +251,42 @@ class Page
     }
 
     /**
-     * Example:
+     * Get a clip that uses the full layout page, not only the viewport
+     *
+     * This method is synchronous
+     *
+     * Fullpage screenshot exemple:
      *
      * ```php
-     * $page->screenshot()->saveToFile();
+     *     $page
+ *          ->screenshot([
+     *          'clip' => $page->getFullPageClip()
+     *      ])
+     *      ->saveToFile('/tmp/image.jpg');
+     * ```
+     *
+     * @return Clip
+     */
+    public function getFullPageClip(): Clip
+    {
+        $contentSize = $this->getLayoutMetrics()->await()->getContentSize();
+        return new Clip(0, 0, $contentSize['width'], $contentSize['height']);
+    }
+
+    /**
+     * Take a screenshot
+     *
+     * Usage:
+     *
+     * ```php
+     * $page->screenshot()->saveToFile('/tmp/image.jpg');
      * ```
      *
      * @param array $options
+     *  - format: "png"|"jpg" default "png"
+     *  - quality: number from 0 to 100. Only for jpegs
+     *  - clip: instance of a Clip to choose an area for the screenshot
+     *
      * @return PageScreenshot
      * @throws CommunicationException
      */

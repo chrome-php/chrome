@@ -28,7 +28,13 @@ class PageLayoutMetrics
         $this->responseReader = $responseReader;
     }
 
-    public function waitForResponse()
+    /**
+     * @return $this
+     * @throws LayoutMetricsFailed
+     * @throws \HeadlessChromium\Exception\NoResponseAvailable
+     * @throws \HeadlessChromium\Exception\OperationTimedOut
+     */
+    public function await()
     {
         $this->response = $this->responseReader->waitForResponse();
 

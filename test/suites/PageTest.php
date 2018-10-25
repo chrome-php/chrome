@@ -155,4 +155,23 @@ class PageTest extends BaseTestCase
             $visualViewport
         );
     }
+
+    public function testGetFullPageClip()
+    {
+        $factory = new BrowserFactory();
+
+        $browser = $factory->createBrowser([
+            'windowSize' => [500, 500]
+        ]);
+
+        $page = $browser->createPage();
+        $page->navigate($this->sitePath('bigLayout.html'))->waitForNavigation();
+
+        $clip = $page->getFullPageClip();
+
+        $this->assertEquals(0, $clip->getX());
+        $this->assertEquals(0, $clip->getY());
+        $this->assertEquals(900, $clip->getWidth());
+        $this->assertEquals(1000, $clip->getHeight());
+    }
 }

@@ -293,7 +293,13 @@ all the browser's pages (see also option ``"windowSize"`` of [BrowserFactory::cr
 
 **choose an area**
 
-You can use the option "clip" in order to choose an area for the screenshot.
+You can use the option "clip" in order to choose an area for the screenshot (TODO exemple)
+
+**take a full page screenshot**
+
+You can also take a screenshot for the full layout (not only the layout) using ``$page->getFullPageClip`` (TODO exemple)
+
+TODO ``Page.getFullPageClip();``
 
 ```php
 
