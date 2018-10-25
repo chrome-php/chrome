@@ -50,13 +50,10 @@ class PageLayoutMetrics
      * @return array
      * @throws LayoutMetricsFailed
      */
-    public function getMetrics()
+    public function getMetrics(): array
     {
-        if (!$this->response) {
-            $this->waitForResponse();
-        }
-
-        return $this->response['result'];
+        $response = $this->responseReader->waitForResponse();
+        return $response->getData()['results'];
     }
 
     /**
@@ -64,13 +61,10 @@ class PageLayoutMetrics
      * @return array
      * @throws LayoutMetricsFailed
      */
-    public function getContentSize()
+    public function getContentSize(): array
     {
-        if (!$this->response) {
-            $this->waitForResponse();
-        }
-
-        return $this->response->getResultData('contentSize');
+        $response = $this->responseReader->waitForResponse();
+        return $response->getResultData('contentSize');
     }
 
     /**
@@ -78,13 +72,10 @@ class PageLayoutMetrics
      * @return array
      * @throws LayoutMetricsFailed
      */
-    public function getLayoutViewport()
+    public function getLayoutViewport(): array
     {
-        if (!$this->response) {
-            $this->waitForResponse();
-        }
-
-        return $this->response->getResultData('layoutViewport');
+        $response = $this->responseReader->waitForResponse();
+        return $response->getResultData('layoutViewport');
     }
 
     /**
@@ -94,10 +85,7 @@ class PageLayoutMetrics
      */
     public function getVisualViewport()
     {
-        if (!$this->response) {
-            $this->waitForResponse();
-        }
-
-        return $this->response->getResultData('visualViewport');
+        $response = $this->responseReader->waitForResponse();
+        return $response->getResultData('visualViewport');
     }
 }
