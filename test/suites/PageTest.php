@@ -113,6 +113,7 @@ class PageTest extends BaseTestCase
 
         $page = $browser->createPage();
 
+        // Test basic functionality
         $page->setViewport(100, 300)->await();
 
         $metrics = $page->getLayoutMetrics();
@@ -127,6 +128,50 @@ class PageTest extends BaseTestCase
                 'y' => 0,
                 'width' => 100,
                 'height' => 300,
+            ],
+            $contentSize
+        );
+
+        $this->assertEquals(
+            [
+                'pageX' => 0,
+                'pageY' => 0,
+                'clientWidth' => 100,
+                'clientHeight' => 300,
+            ],
+            $layoutViewport
+        );
+
+        $this->assertEquals(
+            [
+                'offsetX' => 0,
+                'offsetY' => 0,
+                'pageX' => 0,
+                'pageY' => 0,
+                'clientWidth' => 100,
+                'clientHeight' => 300,
+                'scale' => 1,
+            ],
+            $visualViewport
+        );
+
+        // Test content larger than browser window
+        $page->navigate($this->sitePath('get-layout-metrics.html'))->waitForNavigation();
+
+        $page->setViewport(100, 300)->await();
+
+        $metrics = $page->getLayoutMetrics();
+
+        $contentSize = $metrics->getContentSize();
+        $layoutViewport = $metrics->getLayoutViewport();
+        $visualViewport = $metrics->getVisualViewport();
+
+        $this->assertEquals(
+            [
+                'x' => 0,
+                'y' => 0,
+                'width' => 1000,
+                'height' => 1000,
             ],
             $contentSize
         );
