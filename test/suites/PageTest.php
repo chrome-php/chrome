@@ -112,6 +112,7 @@ class PageTest extends BaseTestCase
         ]);
 
         $page = $browser->createPage();
+        $page->navigate($this->sitePath('bigLayout.html'))->waitForNavigation();
 
         $page->setViewport(100, 300)->await();
 
@@ -125,8 +126,8 @@ class PageTest extends BaseTestCase
             [
                 'x' => 0,
                 'y' => 0,
-                'width' => 100,
-                'height' => 300,
+                'width' => 900,
+                'height' => 1000
             ],
             $contentSize
         );
