@@ -61,9 +61,9 @@ class PageEvaluation
     /**
      * Wait for the script to evaluate and to return a valid response
      */
-    public function waitForResponse()
+    public function waitForResponse($timeout = null)
     {
-        $this->response = $this->responseReader->waitForResponse();
+        $this->response = $this->responseReader->waitForResponse($timeout);
 
         if (!$this->response->isSuccessful()) {
             throw new EvaluationFailed('Could not evaluate the script in the page.');
@@ -86,10 +86,10 @@ class PageEvaluation
      * @return mixed
      * @throws EvaluationFailed
      */
-    public function getReturnValue()
+    public function getReturnValue($timeout = null)
     {
         if (!$this->response) {
-            $this->waitForResponse();
+            $this->waitForResponse($timeout);
         }
 
         return $this->response->getResultData('result')['value'] ?? null;
@@ -100,10 +100,10 @@ class PageEvaluation
      * @return mixed
      * @throws EvaluationFailed
      */
-    public function getReturnType()
+    public function getReturnType($timeout = null)
     {
         if (!$this->response) {
-            $this->waitForResponse();
+            $this->waitForResponse($timeout);
         }
 
         return $this->response->getResultData('result')['type'] ?? null;
