@@ -142,6 +142,9 @@ class Browser
         // Network.enable
         $page->getSession()->sendMessageSync(new Message('Network.enable'));
 
+        // Runtime.enable
+        $page->getSession()->sendMessageSync(new Message('Runtime.enable'));
+
         // Page.setLifecycleEventsEnabled
         $page->getSession()->sendMessageSync(new Message('Page.setLifecycleEventsEnabled', ['enabled' => true]));
 

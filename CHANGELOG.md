@@ -11,6 +11,20 @@
 * Bug fixes:
   * none
 
+## 0.5.0
+
+> *20xx-xx-xx* (not released)
+
+> Load script on the page
+    
+* Features:
+  * Added Page::callFunction
+  * Added Page::addScriptTag
+  * Enabled runtime events for pages
+  * Enabled user gesture for Page::evaluate
+* Bug fixes:
+  * none
+
 ## 0.4.0
 
 > *2018-10-25*

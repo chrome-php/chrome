@@ -2,15 +2,15 @@ Chrome PHP
 ==========
 
 [![Build Status](https://travis-ci.org/chrome-php/headless-chromium-php.svg?branch=master)](https://travis-ci.org/chrome-php/headless-chromium-php)
-[![Test Coverage](https://codeclimate.com/github/chrome-php/headless-chromium-php/badges/coverage.svg)](https://codeclimate.com/github/chrome-php/headless-chromium-php/coverage)
 [![Latest Stable Version](https://poser.pugx.org/chrome-php/chrome/version)](https://packagist.org/packages/chrome-php/chrome)
 [![License](https://poser.pugx.org/chrome-php/chrome/license)](https://packagist.org/packages/chrome-php/chrome)
 
 This library lets you start playing with chrome/chromium in headless mode from PHP.
 
-> **/!\\** The library is currently at a very early stage. You are encouraged to play with it but keep in mind that
- it is still very young and still lacks most of the features you would expect. The library follows semver for versioning.
- That means that until version 1.0.0 a lot of changes might occur.
+> **/!\\** The library is still young and some features you need might be missing.
+We add feature as feature requests are submitted, feel free to rise an issue if you want to see a new feature to
+be supported by the library. 
+Additionally the library follows semver. That means that until version 1.0.0 a lot of changes might occur.
 
 Features
 --------
@@ -20,7 +20,8 @@ Features
 - Take screenshots
 - Evaluate javascript in the page
 - *TODO* Make PDF
-- *TODO* Emulate mouse and keyboard 
+- Emulate mouse 
+- *TODO* Emulate keyboard 
 - Always IDE friendly
 
 Happy browsing!
@@ -30,10 +31,10 @@ Requirements
 
 Requires php 7 and a chrome/chromium executable. 
 
-As of version 65 of chrome/chromium the library proved to work correctly. There are known bug prior to version 63
-that the library doesn't plan to add support for.
+As of version 65 of chrome/chromium the library proved to work correctly. 
+Please try to keep using latest version of chrome.
 
-Note that the library is only tested on linux.
+Note that the library is only tested on linux but is compatible with osX and windows.
 
 Install
 -------
@@ -75,7 +76,7 @@ to crawl websites... and almost everything that you can do with chrome as a huma
 When starting the factory will look for the environment variable ``"CHROME_PATH"`` to find the chrome executable.
 If the variable is not found then it will use ``"chrome"`` as the executable.
 
-You can use an arbitrary executable of your choice. For instance ``"chromium-browser"``:
+You can use any executable of your choice. For instance ``"chromium-browser"``:
 
 ```php
     use HeadlessChromium\BrowserFactory;
@@ -101,13 +102,11 @@ The following example adds some development-oriented features to help debugging
 ```
 
 About ``debugLogger``: this can be any of a resource string, a resource or an object implementing 
-``LoggerInterface`` from Psr\Log (such as [monolog](https://github.com/Seldaek/monolog) or [apix/log](https://github.com/apix/log)).
-
-
+``LoggerInterface`` from Psr\Log (such as [monolog](https://github.com/Seldaek/monolog) 
+or [apix/log](https://github.com/apix/log)).
 
 
 ------------------------------------------------------------------------------------------------------------------------
-
 
 
 API
@@ -238,6 +237,34 @@ Once the page has completed the navigation you can evaluate arbitrary script on 
     // wait for the value to return and get it
     $value = $evaluation->getReturnValue();
 ```
+
+#### Call a function
+
+This is an alternative to evaluate that allows to call a given function with the given arguments in the page context:
+
+```php
+    $evaluation = $page->callFunction(
+      'function(a, b) {
+          window.foo = a + b;
+       }', 
+      [1, 2]
+    );
+    
+    $value = $evaluation->getReturnValue();
+```
+
+#### Add a script tag
+
+That's useful if you want to add jQuery (or anything else) to the page:
+
+```php
+    $evaluation = $page->addScriptTag([
+        'content' => file_get_contents('path/to/jquery.js')
+    ])->getReturnValue();
+    
+    $evaluation->evaluate('$(".my.element").html()');
+```
+
 
 Sometime the script you evaluate will click a link or submit a form, in this case the page will reload and you
 will want to wait for the new page to reload.
@@ -495,11 +522,10 @@ Thanks to [puppeteer](https://github.com/GoogleChrome/puppeteer) that served as 
 
 ## Roadmap
 
-- Make screenshots
 - Make pdf
 - Create a DOM manipulation framework
 - Inspect network traces
-- Emulate hardware (mouse/keyboard)
+- Emulate keyboard
 - Adding api documentation (https://github.com/victorjonsson/PHP-Markdown-Documentation-Generator/blob/master/docs.md)
 
 ## Authors

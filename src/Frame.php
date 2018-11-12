@@ -26,6 +26,16 @@ class Frame
     protected $latestLoaderId;
 
     /**
+     * @var string
+     */
+    protected $frameId;
+
+    /**
+     * @var int
+     */
+    protected $executionContextId;
+
+    /**
      * Frame constructor.
      * @param array $frameData
      */
@@ -33,6 +43,7 @@ class Frame
     {
         $this->frameData = $frameData;
         $this->latestLoaderId = $frameData['loaderId'];
+        $this->frameId = $frameData['id'];
     }
 
     /**
@@ -44,10 +55,35 @@ class Frame
         if (self::LIFECYCLE_INIT === $params['name']) {
             $this->lifeCycleEvents = [];
             $this->latestLoaderId = $params['loaderId'];
+            $this->frameId = $params['frameId'];
         }
 
 
         $this->lifeCycleEvents[$params['name']] = $params['timestamp'];
+    }
+
+    /**
+     * @return int
+     */
+    public function getExecutionContextId(): int
+    {
+        return $this->executionContextId;
+    }
+
+    /**
+     * @param int $executionContextId
+     */
+    public function setExecutionContextId(int $executionContextId)
+    {
+        $this->executionContextId = $executionContextId;
+    }
+
+    /**
+     * @return string
+     */
+    public function getFrameId(): string
+    {
+        return $this->frameId;
     }
 
     /**

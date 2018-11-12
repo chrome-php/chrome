@@ -103,6 +103,32 @@ class PageTest extends BaseTestCase
         $this->assertEquals(null, $barValue);
     }
 
+
+    public function testCallFunction()
+    {
+        $factory = new BrowserFactory();
+
+        $browser = $factory->createBrowser();
+        $page = $browser->createPage();
+        $evaluation = $page->callFunction('function(a, b) { window.foo = a + b; return window.foo;}', [1, 2]);
+
+        $this->assertEquals(3, $evaluation->getReturnValue());
+        $this->assertEquals(3, $page->evaluate('window.foo')->getReturnValue());
+    }
+
+    public function testAddScriptTag()
+    {
+        $factory = new BrowserFactory();
+
+        $browser = $factory->createBrowser();
+        $page = $browser->createPage();
+        $page->addScriptTag([
+            'content' => 'window.foo = "bar";'
+        ])->waitForResponse();
+
+        $this->assertEquals('bar', $page->evaluate('window.foo')->getReturnValue());
+    }
+
     public function testGetLayoutMetrics()
     {
         $factory = new BrowserFactory();

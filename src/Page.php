@@ -153,11 +153,101 @@ class Page
                 [
                     'awaitPromise' => true,
                     'returnByValue' => true,
-                    'expression' => $expression
+                    'expression' => $expression,
+                    'userGesture' => true
                 ]
             )
         );
         return new PageEvaluation($reader, $currentLoaderId, $this);
+    }
+
+    /**
+     * Call a js function with the given argument in the page context
+     *
+     * Example:
+     *
+     * ```php
+     * $evaluation = $page->callFunction('function(a, b) {return a + b}', [1, 2]);
+     *
+     * echo $evaluation->getReturnValue();
+     * // 3
+     * ```
+     *
+     * @param string $functionDeclaration
+     * @param array $arguments
+     * @return PageEvaluation
+     * @throws CommunicationException
+     */
+    public function callFunction(string $functionDeclaration, array $arguments = []): PageEvaluation
+    {
+        $this->assertNotClosed();
+
+        $currentLoaderId = $this->frameManager->getMainFrame()->getLatestLoaderId();
+        $executionContextId = $this->frameManager->getMainFrame()->getExecutionContextId();
+        $reader = $this->getSession()->sendMessage(
+            new Message(
+                'Runtime.callFunctionOn',
+                [
+                    'functionDeclaration' => $functionDeclaration,
+                    'arguments' => array_map(function ($arg) {
+                        return [
+                            'value' => $arg
+                        ];
+                    }, $arguments),
+                    'executionContextId' => $executionContextId,
+                    'awaitPromise' => true,
+                    'returnByValue' => true,
+                    'userGesture' => true
+                ]
+            )
+        );
+
+        return new PageEvaluation($reader, $currentLoaderId, $this);
+    }
+
+    /**
+     * Add a script tag to the page (ie. <script>)
+     *
+     * Example:
+     *
+     * ```php
+     * $evaluation = $page->addScriptTag(['content' => file_get_content('jquery.js')]);
+     * $evaluation->waitForResponse();
+     * ```
+     *
+     * @param array $options
+     * @return PageEvaluation
+     * @throws CommunicationException
+     */
+    public function addScriptTag(array $options): PageEvaluation
+    {
+        if (isset($options['url']) && isset($options['content'])) {
+            throw new \InvalidArgumentException('addScript accepts "url" or "content" option, not both');
+        } elseif (isset($options['url'])) {
+            throw new \Exception('TODO'); // TODO
+        } elseif (isset($options['content'])) {
+            $scriptFunction = 'async function(scriptContent) {
+                var script = document.createElement("script");
+                script.type = "text/javascript";
+                script.text = scriptContent;
+                
+                let error = null;
+                script.onerror = e => {error = e};
+                
+                document.head.appendChild(script);
+                
+                if (error) {
+                    throw error;
+                }
+                
+                return script;
+            }';
+            $arguments = [$options['content']];
+        } else {
+            throw new \InvalidArgumentException('addScript requires one of "url" or "content" option');
+        }
+
+        return $this->callFunction($scriptFunction, $arguments);
     }
 
     /**
@@ -259,7 +349,7 @@ class Page
      *
      * ```php
      *     $page
- *          ->screenshot([
+     *      ->screenshot([
      *          'clip' => $page->getFullPageClip()
      *      ])
      *      ->saveToFile('/tmp/image.jpg');
