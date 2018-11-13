@@ -60,10 +60,13 @@ class PageEvaluation
 
     /**
      * Wait for the script to evaluate and to return a valid response
+     *
+     * @param $timeout int|null
+     *
      */
-    public function waitForResponse()
+    public function waitForResponse(int $timeout = null)
     {
-        $this->response = $this->responseReader->waitForResponse();
+        $this->response = $this->responseReader->waitForResponse($timeout);
 
         if (!$this->response->isSuccessful()) {
             throw new EvaluationFailed(sprintf(
@@ -86,13 +89,16 @@ class PageEvaluation
 
     /**
      * Gets the value produced when the script evaluated in the page
+     *
+     * @param $timeout int|null
+     *
      * @return mixed
      * @throws EvaluationFailed
      */
-    public function getReturnValue()
+    public function getReturnValue(int $timeout = null)
     {
         if (!$this->response) {
-            $this->waitForResponse();
+            $this->waitForResponse($timeout);
         }
 
         return $this->response->getResultData('result')['value'] ?? null;
@@ -100,13 +106,16 @@ class PageEvaluation
 
     /**
      * Gets the return type of the response from the page
+     *
+     * @param $timeout int|null
+     *
      * @return mixed
      * @throws EvaluationFailed
      */
-    public function getReturnType()
+    public function getReturnType(int $timeout = null)
     {
         if (!$this->response) {
-            $this->waitForResponse();
+            $this->waitForResponse($timeout);
         }
 
         return $this->response->getResultData('result')['type'] ?? null;
