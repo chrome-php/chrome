@@ -13,7 +13,7 @@
 
 ## 0.5.0
 
-> *20xx-xx-xx* (not released)
+> *2018-11-13*
 
 > Load script tags on the page
     
