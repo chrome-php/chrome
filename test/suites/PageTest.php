@@ -116,7 +116,7 @@ class PageTest extends BaseTestCase
         $this->assertEquals(3, $page->evaluate('window.foo')->getReturnValue());
     }
 
-    public function testAddScriptTag()
+    public function testAddScriptTagContent()
     {
         $factory = new BrowserFactory();
 
@@ -127,6 +127,28 @@ class PageTest extends BaseTestCase
         ])->waitForResponse();
 
         $this->assertEquals('bar', $page->evaluate('window.foo')->getReturnValue());
+    }
+
+    public function testAddScriptTagUrl()
+    {
+        $factory = new BrowserFactory();
+
+        $browser = $factory->createBrowser();
+        $page = $browser->createPage();
+        $page->navigate(
+            $this->sitePath('a.html')
+        )->waitForNavigation();
+
+        $page->addScriptTag([
+            'url' => $this->sitePath('jsInclude.js')
+        ])->waitForResponse();
+
+        $isIncluded = $page->evaluate('window.testJsIsIncluded')->getReturnValue();
+        $scriptSrc = $page->evaluate('document.querySelector("script").getAttribute("src")')->getReturnValue();
+
+        $this->assertEquals('isIncluded', $isIncluded);
+        $this->assertStringStartsWith('file://', $scriptSrc);
+        $this->assertStringEndsWith('/jsInclude.js', $scriptSrc);
     }
 
     public function testGetLayoutMetrics()

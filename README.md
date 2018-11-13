@@ -238,9 +238,16 @@ Once the page has completed the navigation you can evaluate arbitrary script on 
     $value = $evaluation->getReturnValue();
 ```
 
+
+Sometime the script you evaluate will click a link or submit a form, in this case the page will reload and you
+will want to wait for the new page to reload.
+
+You can achieve this by using ``$page->evaluate('some js that will reload the page')->waitForPageReload()``.
+An example is available in [form-submit.php](./examples/form-submit.php)
+
 #### Call a function
 
-This is an alternative to evaluate that allows to call a given function with the given arguments in the page context:
+This is an alternative to ``evaluate`` that allows to call a given function with the given arguments in the page context:
 
 ```php
     $evaluation = $page->callFunction(
@@ -258,19 +265,22 @@ This is an alternative to evaluate that allows to call a given function with the
 That's useful if you want to add jQuery (or anything else) to the page:
 
 ```php
-    $evaluation = $page->addScriptTag([
+    $page->addScriptTag([
         'content' => file_get_contents('path/to/jquery.js')
-    ])->getReturnValue();
+    ])->waitForResponse();
     
-    $evaluation->evaluate('$(".my.element").html()');
+    $page->evaluate('$(".my.element").html()');
 ```
 
+You can also use an url to feed the src attribute:
 
-Sometime the script you evaluate will click a link or submit a form, in this case the page will reload and you
-will want to wait for the new page to reload.
-
-You can achieve this by using ``$page->evaluate('some js that will reload the page')->waitForPageReload()``.
-An example is available in [form-submit.php](./examples/form-submit.php)
+```php
+    $page->addScriptTag([
+        'url' => 'https://code.jquery.com/jquery-3.3.1.min.js'
+    ])->waitForResponse();
+    
+    $page->evaluate('$(".my.element").html()');
+```
 
 ### Add a script to evaluate upon page navigation
 

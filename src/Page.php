@@ -232,7 +232,20 @@ class Page
         if (isset($options['url']) && isset($options['content'])) {
             throw new \InvalidArgumentException('addScript accepts "url" or "content" option, not both');
         } elseif (isset($options['url'])) {
-            throw new \Exception('TODO'); // TODO
+            $scriptFunction = 'async function(src) {
+                const script = document.createElement("script");
+                script.type = "text/javascript";
+                script.src = src;
+                
+                const promise = new Promise((res, rej) => {
+                    script.onload = res;
+                    script.onerror = rej;
+                });
+                
+                document.head.appendChild(script);
+                await promise;
+            }';
+            $arguments = [$options['url']];
         } elseif (isset($options['content'])) {
             $scriptFunction = 'async function(scriptContent) {
                 var script = document.createElement("script");
@@ -247,8 +260,6 @@ class Page
                 if (error) {
                     throw error;
                 }
-                
-                return script;
             }';
             $arguments = [$options['content']];
         } else {
