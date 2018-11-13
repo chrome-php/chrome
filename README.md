@@ -287,6 +287,12 @@ An example is available in [form-submit.php](./examples/form-submit.php)
     $page->addPreScript($script);
 ```
 
+If your script needs the dom to be fully populated before it runs then you can use the option "onLoad":
+
+```php
+    $page->addPreScript($script, ['onLoad' => true]);
+```
+
 #### Set viewport size
 
 This features allows to change the size of the viewport (emulation) for the current page without affecting the size of 

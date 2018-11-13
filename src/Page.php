@@ -58,11 +58,19 @@ class Page
      * Adds a script to be evaluated upon page navigation
      *
      * @param string $script
+     * @param array $options
+     *  - onLoad: defer script execution after page has loaded (useful for scripts that require the dom to be populated)
      * @throws CommunicationException
      * @throws NoResponseAvailable
      */
-    public function addPreScript(string $script)
+    public function addPreScript(string $script, array $options = [])
     {
+        // defer script execution
+        if (isset($options['onLoad']) && $options['onLoad']) {
+            $script = 'window.onload = () => {' . $script . '}';
+        }
+
+        // add script
         $this->getSession()->sendMessageSync(
             new Message('Page.addScriptToEvaluateOnNewDocument', ['source' => $script])
         );

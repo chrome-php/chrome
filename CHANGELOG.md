@@ -15,7 +15,7 @@
 
 > *20xx-xx-xx* (not released)
 
-> Load script on the page
+> Load script tags on the page
     
 * Features:
   * Added Page::callFunction
@@ -23,6 +23,7 @@
   * Enabled runtime events for pages
   * Enabled user gesture for Page::evaluate
   * Improved error messages from script evaluation
+  * Added option "onLoad" for Page::addPreScript
 * Bug fixes:
   * none
 
