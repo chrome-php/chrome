@@ -22,6 +22,7 @@
   * Added Page::addScriptTag
   * Enabled runtime events for pages
   * Enabled user gesture for Page::evaluate
+  * Improved error messages from script evaluation
 * Bug fixes:
   * none
 

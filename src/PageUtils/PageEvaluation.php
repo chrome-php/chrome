@@ -66,7 +66,10 @@ class PageEvaluation
         $this->response = $this->responseReader->waitForResponse();
 
         if (!$this->response->isSuccessful()) {
-            throw new EvaluationFailed('Could not evaluate the script in the page.');
+            throw new EvaluationFailed(sprintf(
+                'Could not evaluate the script in the page. Message: "%s"',
+                $this->response->getErrorMessage(true)
+            ));
         }
 
         $result = $this->response->getResultData('result');

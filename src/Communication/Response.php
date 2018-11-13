@@ -38,6 +38,11 @@ class Response implements \ArrayAccess
     public function getErrorMessage(bool $extended = true)
     {
         $message = [];
+
+        if ($extended && isset($this->data['error']['code'])) {
+            $message[] = $this->data['error']['code'];
+        }
+
         if (isset($this->data['error']['message'])) {
             $message[] = $this->data['error']['message'];
         }
@@ -47,6 +52,15 @@ class Response implements \ArrayAccess
         }
 
         return implode(' - ', $message);
+    }
+
+    /**
+     * Get the error code if set.
+     * @return string|null
+     */
+    public function getErrorCode()
+    {
+        return $this->data['error']['code'] ?? null;
     }
 
     /**
