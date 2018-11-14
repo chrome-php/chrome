@@ -7,7 +7,8 @@
 > Description
     
 * Features:
-  * Added Page::pdf | thanks @tanasecosminromeo
+  * Added Page::pdf (thanks @tanasecosminromeo)
+  * Added timeout for PageEvaluation methods (thanks @chris-ware)
 * Bug fixes:
   * none
 
