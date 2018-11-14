@@ -474,14 +474,16 @@ class Page
     }
 
     /**
-     *
-     * Example:
+     * Generate a PDF
+     * Usage:
      *
      * ```php
-     * $page->pdf()->saveToFile();
+     * $page->pdf()->saveToFile('/tmp/file.pdf');
      * ```
      *
      * @param array $options
+     *  - landscape: default false
+     *  - printBackground: default false
      * @return PagePdf
      * @throws CommunicationException
      */
@@ -491,27 +493,25 @@ class Page
 
         $pdfOptions = [];
 
-        // get landscape
+        // is landscape?
         if (array_key_exists('landscape', $options)) {
             // landscape requires type to be boolean
-            if (gettype($pdfOptions['landscape']) !== "boolean") {
+            if (!is_bool($options['landscape'])) {
                 throw new \InvalidArgumentException(
                     'Invalid options "landscape" for print to pdf. Must be true or false'
                 );
             }
-            // set landscape
             $pdfOptions['landscape'] = $options['landscape'];
         }
 
-        // get printBackground
+        // should print background?
         if (array_key_exists('printBackground', $options)) {
             // printBackground requires type to be boolean
-            if (gettype($pdfOptions['printBackground']) !== "boolean") {
+            if (!is_bool($options['printBackground'])) {
                 throw new \InvalidArgumentException(
                     'Invalid options "printBackground" for print to pdf. Must be true or false'
                 );
             }
-            // set landscape
             $pdfOptions['printBackground'] = $options['printBackground'];
         }
 

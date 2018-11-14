@@ -7,7 +7,7 @@
 > Description
     
 * Features:
-  * none
+  * Added Page::pdf | thanks @tanasecosminromeo
 * Bug fixes:
   * none
 

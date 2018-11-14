@@ -364,13 +364,33 @@ TODO ``Page.getFullPageClip();``
     $height = 100;
     $clip = new Clip($x, $y, $width, $height);
     
-    // take the screenshot
+    // take the screenshot (in memory binaries)
     $screenshot = $page->screenshot([
         'clip'  => $clip'
     ]);
     
     // save the screenshot
     $screenshot->saveToFile('/some/place/file.jpg');
+```
+
+
+#### Print as PDF
+
+```php
+    // navigate
+    $navigation = $page->navigate('http://example.com');
+        
+    // wait for the page to be loaded
+    $navigation->waitForNavigation();
+    
+    // print as pdf (in memory binaries)
+    $pdf = $page->pdf([
+        'landscape'       => true,  // default to false
+        'printBackground' => true   // default to false
+    ]);
+    
+    // save the pdf
+    $pdf->saveToFile('/some/place/file.pdf');
 ```
 
 ### Mouse API
