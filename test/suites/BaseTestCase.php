@@ -67,6 +67,6 @@ class BaseTestCase extends TestCase
 
     protected function sitePath($file)
     {
-        return 'file://' . __DIR__ . '/../resources/static-web/' . $file;
+        return 'file://' . realpath(__DIR__ . '/../resources/static-web/' . $file);
     }
 }

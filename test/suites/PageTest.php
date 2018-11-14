@@ -44,4 +44,26 @@ class PageTest extends BaseTestCase
 
         $this->assertEquals([100, 300], $response);
     }
+
+    public function testSetUserAgent()
+    {
+        $factory = new BrowserFactory();
+
+        $browser = $factory->createBrowser();
+
+        $pageFooBar = $browser->createPage();
+        $pageBarBaz = $browser->createPage();
+
+        $pageFooBar->setUserAgent('foobar')->await();
+        $pageBarBaz->setUserAgent('barbaz')->await();
+
+        $pageFooBar->navigate('http://requestbin.fullcontact.com/uhunfhuh')->waitForNavigation();
+        $pageBarBaz->navigate('http://requestbin.fullcontact.com/uhunfhuh')->waitForNavigation();
+
+        $value1 = $pageFooBar->evaluate('navigator.userAgent')->getReturnValue();
+        $value2 = $pageBarBaz->evaluate('navigator.userAgent')->getReturnValue();
+
+        $this->assertEquals('foobar', $value1);
+        $this->assertEquals('barbaz', $value2);
+    }
 }

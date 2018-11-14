@@ -127,14 +127,15 @@ API
 
 Here are the options available for the browser factory:
 
-| Option name        | Default               | Description                                                                     |
-|--------------------|-----------------------|---------------------------------------------------------------------------------|
-| connectionDelay    | 0                     | Delay to apply between each operation for debugging purposes                    |
+| Option name        | Default               | Description                                                                       |
+|--------------------|-----------------------|-----------------------------------------------------------------------------------|
+| connectionDelay    | 0                     | Delay to apply between each operation for debugging purposes                      |
 | debugLogger        | null                  | A string (e.g "php://stdout"), or resource, or PSR-3 logger instance to print debug messages |
-| enableImages       | true                  | Toggles loading of images |
-| headless           | true                  | Enable or disable headless mode                                                 |
-| userDataDir        | none                  | chrome user data dir (default: a new empty dir is generated temporarily)        |
-| startupTimeout     | 30                    | Maximum time in seconds to wait for chrome to start                             |
+| enableImages       | true                  | Toggles loading of images                                                         |
+| headless           | true                  | Enable or disable headless mode                                                   |
+| userAgent          | none                  | User agent to use for the whole browser  (see page api for alternative)           |
+| userDataDir        | none                  | chrome user data dir (default: a new empty dir is generated temporarily)          |
+| startupTimeout     | 30                    | Maximum time in seconds to wait for chrome to start                               |
 | windowSize         | -                     | Size of the window. usage: ``[$width, $height]`` - see also Page::setViewportSize |
 
 ### Browser API
@@ -298,6 +299,74 @@ The mouse API is dependent on the page instance and allows you to control the mo
     // given the last click was on a link, the next step will wait for the page to load after the link was clicked
     $page->waitForReload();
 ```
+
+### Cookie API
+
+You can set and get cookies for a page:
+
+#### Set Cookie
+
+```php
+    use HeadlessChromium\Cookies\Cookie;
+
+    $page = $browser->createPage();
+    
+    // example 1: set cookies for a given domain
+    
+    $page->setCookies([
+        Cookie::create('name', 'value', [
+            'domain' => 'example.com',
+            'expires' => time() + 3600 // expires in 1 day
+        ])
+    ])->await();
+    
+    
+    // example 2: set cookies for the current page
+    
+    $page->navigate('http://example.com')->waitForNavigation();
+    
+    $page->setCookies([
+        Cookie::create('name', 'value', ['expires'])
+    ])->await();
+    
+```
+
+#### Get Cookies
+
+```php
+    use HeadlessChromium\Cookies\Cookie;
+
+    $page = $browser->createPage();
+    
+    // example 1: get all cookies for the browser
+    
+    $cookies = $page->getAllCookies();
+    
+    // example 2: get cookies for the current page
+    
+    $page->navigate('http://example.com')->waitForNavigation();
+    $cookies = $page->getCookies();
+    
+    // filter cookies with name == 'foo'
+    $cookiesFoo = $cookies->filterBy('name', 'foo'); 
+
+    // find first cookie with name == 'bar'
+    $cookieBar = $cookies->findOneBy('name', 'bar');
+    if ($cookieBar) {
+        // do something
+    }
+    
+```
+
+### Set user agent
+
+You can set an user agent per page :
+
+```php
+$page->setUserAgent('my user agent');
+```
+
+See also BrowserFactory option ``userAgent`` to set it for the whole browser.
 
 
 ------------------------------------------------------------------------------------------------------------------------

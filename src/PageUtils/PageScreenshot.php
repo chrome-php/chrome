@@ -71,7 +71,7 @@ class PageScreenshot
         // create directory
         $dir = dirname($path);
         if (!file_exists($dir)) {
-            if (!mkdir($path, 0777, true)) {
+            if (!mkdir($dir, 0777, true)) {
                 throw new FilesystemException(
                     sprintf('Could not create the directory %s.', $dir)
                 );

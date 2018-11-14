@@ -28,6 +28,7 @@ class Browser
     {
         $this->connection = $connection;
 
+        // listen for target created
         $this->connection->on(Connection::EVENT_TARGET_CREATED, function (array $params) {
 
             // create a session for the target
@@ -40,8 +41,21 @@ class Browser
             );
         });
 
+        // listen for target info changed
+        $this->connection->on(Connection::EVENT_TARGET_INFO_CHANGED, function (array $params) {
+
+            // get target by id
+            $target = $this->getTarget($params['targetInfo']['targetId']);
+
+            if ($target) {
+                $target->targetInfoChanged($params['targetInfo']);
+            }
+        });
+
+        // listen for target destroyed
         $this->connection->on(Connection::EVENT_TARGET_DESTROYED, function (array $params) {
 
+            // get target by id
             $target = $this->getTarget($params['targetId']);
 
             if ($target) {
@@ -108,6 +122,9 @@ class Browser
 
         // Page.enable
         $page->getSession()->sendMessageSync(new Message('Page.enable'));
+
+        // Network.enable
+        $page->getSession()->sendMessageSync(new Message('Network.enable'));
 
         // Page.setLifecycleEventsEnabled
         $page->getSession()->sendMessageSync(new Message('Page.setLifecycleEventsEnabled', ['enabled' => true]));

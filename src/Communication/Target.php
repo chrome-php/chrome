@@ -64,4 +64,24 @@ class Target
     {
         return $this->destroyed;
     }
+
+    /**
+     * Get target info value by it's name or null if it does not exist
+     * @param $infoName
+     * @return mixed|null
+     */
+    public function getTargetInfo($infoName)
+    {
+        return $this->targetInfo[$infoName] ?? null;
+    }
+
+    /**
+     * To be called when Target.targetInfoChanged is triggered.
+     * @param $targetInfo
+     * @internal
+     */
+    public function targetInfoChanged($targetInfo)
+    {
+        $this->targetInfo = $targetInfo;
+    }
 }
