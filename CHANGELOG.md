@@ -12,6 +12,14 @@
 * Bug fixes:
   * none
 
+## 0.6.0
+
+> *2018-14-11*
+
+* Features:
+  * Added Page::pdf (thanks @tanasecosminromeo)
+  * Added timeout for PageEvaluation methods (thanks @chris-ware)
+
 ## 0.5.0
 
 > *2018-11-13*
@@ -25,8 +33,6 @@
   * Enabled user gesture for Page::evaluate
   * Improved error messages from script evaluation
   * Added option "onLoad" for Page::addPreScript
-* Bug fixes:
-  * none
 
 ## 0.4.0
 
