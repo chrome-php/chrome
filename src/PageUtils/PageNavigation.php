@@ -51,14 +51,23 @@ class PageNavigation
     protected $page;
 
     /**
+     * @var bool
+     */
+    protected $strict;
+
+    /**
      * PageNavigation constructor.
      * @param Page $page
      * @param string $url
+     * @param bool $strict by default this method will wait for the page to load even if a new navigation occurs
+     * (ie: a new loader replaced the initial navigation). Passing $string to true will make the navigation to fail
+     * if a new loader is generated
+     *
      * @throws Exception\CommunicationException
      * @throws Exception\CommunicationException\CannotReadResponse
      * @throws Exception\CommunicationException\InvalidResponse
      */
-    public function __construct(Page $page, string $url, ?string $preScript = NULL)
+    public function __construct(Page $page, string $url, bool $strict = false)
     {
 
         // make sure latest loaderId was pulled
@@ -66,13 +75,6 @@ class PageNavigation
 
         // get previous loaderId for the navigation watcher
         $this->previousLoaderId = $page->getFrameManager()->getMainFrame()->getLatestLoaderId();
-
-
-        if ($preScript !== NULL){
-            $page->getSession()->sendMessageSync(
-                new Message('Page.addScriptToEvaluateOnNewDocument', ['source'=>$preScript])
-            );
-        }
 
         // send navigation message
         $this->navigateResponseReader = $page->getSession()->sendMessage(
@@ -82,6 +84,7 @@ class PageNavigation
         $this->page = $page;
         $this->frame = $page->getFrameManager()->getMainFrame();
         $this->url = $url;
+        $this->strict = $strict;
     }
 
     /**
@@ -102,7 +105,7 @@ class PageNavigation
      * ```
      *
      * @param string $eventName
-     * @param int $timeout
+     * @param int $timeout time in ms to wait for the navigation to complete. Default 30000 (30 seconds)
      * @return mixed|null
      * @throws Exception\CommunicationException\CannotReadResponse
      * @throws Exception\CommunicationException\InvalidResponse
@@ -111,15 +114,19 @@ class PageNavigation
      * @throws NavigationExpired
      * @throws ResponseHasError
      */
-    public function waitForNavigation($eventName = Page::LOAD, $timeout = 30000)
+    public function waitForNavigation($eventName = Page::LOAD, int $timeout = null)
     {
+        if (null === $timeout) {
+            $timeout = 30000;
+        }
         return Utils::tryWithTimeout($timeout * 1000, $this->navigationComplete($eventName));
     }
 
     /**
      * To be used with @see Utils::tryWithTimeout
      *
-     * @param $eventName
+     * @param string $eventName
+     *
      * @return bool|\Generator
      * @throws Exception\CommunicationException\CannotReadResponse
      * @throws Exception\CommunicationException\InvalidResponse
@@ -132,6 +139,7 @@ class PageNavigation
         $delay = 500;
 
         while (true) {
+            // read the response only if it was not read already
             if (!$this->navigateResponseReader->hasResponse()) {
                 $this->navigateResponseReader->checkForResponse();
                 if ($this->navigateResponseReader->hasResponse()) {
@@ -169,9 +177,14 @@ class PageNavigation
 
             // else if a new loader is present that means that a new navigation started
             } else {
-                throw new NavigationExpired(
-                    'The page has navigated to an other page and this navigation expired'
-                );
+                // if strict then throw or else replace the old navigation with the new one
+                if ($this->strict) {
+                    throw new NavigationExpired(
+                        'The page has navigated to an other page and this navigation expired'
+                    );
+                } else {
+                    $this->currentLoaderId = $this->frame->getLatestLoaderId();
+                }
             }
 
             $this->page->getSession()->getConnection()->readData();

@@ -31,4 +31,12 @@ class ProcessAwareBrowser extends Browser
     {
         $this->browserProcess->kill();
     }
+
+    /**
+     * @return string
+     */
+    public function getSocketUri()
+    {
+        return $this->browserProcess->getSocketUri();
+    }
 }

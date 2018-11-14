@@ -64,8 +64,13 @@ class BrowserProcess implements LoggerAwareInterface
     protected $wasStarted = false;
 
     /**
+     * @var string
+     */
+    protected $wsUri;
+
+    /**
      * BrowserProcess constructor.
-     * @param LoggerInterface $logger
+     * @param LoggerInterface|null $logger
      */
     public function __construct(LoggerInterface $logger = null)
     {
@@ -122,13 +127,13 @@ class BrowserProcess implements LoggerAwareInterface
 
         // wait for start and retrieve ws uri
         $startupTimeout = $options['startupTimeout'] ?? 30;
-        $ws = $this->waitForStartup($process, $startupTimeout * 1000 * 1000);
+        $this->wsUri = $this->waitForStartup($process, $startupTimeout * 1000 * 1000);
 
         // log
-        $this->logger->debug('process: connecting using ' . $ws);
+        $this->logger->debug('process: connecting using ' . $this->wsUri);
 
         // connect to browser
-        $connection = new Connection($ws, $this->logger, $options['sendSyncDefaultTimeout'] ?? 3000);
+        $connection = new Connection($this->wsUri, $this->logger, $options['sendSyncDefaultTimeout'] ?? 3000);
         $connection->connect();
 
         // connection delay
@@ -141,9 +146,6 @@ class BrowserProcess implements LoggerAwareInterface
 
         // create browser instance
         $this->browser = new ProcessAwareBrowser($connection, $this);
-
-        // enable target discovery
-        $connection->sendMessageSync(new Message('Target.setDiscoverTargets', ['discover' => true]));
     }
 
     /**
@@ -152,6 +154,14 @@ class BrowserProcess implements LoggerAwareInterface
     public function getBrowser()
     {
         return $this->browser;
+    }
+
+    /**
+     * @return string
+     */
+    public function getSocketUri()
+    {
+        return $this->wsUri;
     }
 
     /**
@@ -319,12 +329,23 @@ class BrowserProcess implements LoggerAwareInterface
         }
 
         // sandbox mode - useful if you want to use chrome headless inside docker
-        if (array_key_exists('nosandbox', $options)) {
+        if (array_key_exists('noSandbox', $options) && $options['noSandbox']) {
             $args[] = '--no-sandbox';
         }
 
+        // user agent
         if (array_key_exists('userAgent', $options)) {
             $args[] = '--user-agent=' . escapeshellarg($options['userAgent']);
+        }
+
+        // ignore certificate errors
+        if (array_key_exists('ignoreCertificateErrors', $options) && $options['ignoreCertificateErrors']) {
+            $args[] = '--ignore-certificate-errors';
+        }
+
+        // add custom flags
+        if (array_key_exists('customFlags', $options) && is_array($options['customFlags'])) {
+            $args =  array_merge($args, $options['customFlags']);
         }
 
         // add user data dir to args

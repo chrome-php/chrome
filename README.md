@@ -2,14 +2,15 @@ Chrome PHP
 ==========
 
 [![Build Status](https://travis-ci.org/chrome-php/headless-chromium-php.svg?branch=master)](https://travis-ci.org/chrome-php/headless-chromium-php)
-[![Test Coverage](https://codeclimate.com/github/chrome-php/headless-chromium-php/badges/coverage.svg)](https://codeclimate.com/github/chrome-php/headless-chromium-php/coverage)
 [![Latest Stable Version](https://poser.pugx.org/chrome-php/chrome/version)](https://packagist.org/packages/chrome-php/chrome)
 [![License](https://poser.pugx.org/chrome-php/chrome/license)](https://packagist.org/packages/chrome-php/chrome)
 
 This library lets you start playing with chrome/chromium in headless mode from PHP.
 
-> **/!\\** The library is currently at a very early stage. You are encouraged to play with it but keep in mind that it is still very young and still lacks most of the features you would expect. The library follows semver for versioning.
-  That means that until version 1.0.0 a lot of changes might occur.
+> **/!\\** The library is still young and some features you need might be missing.
+We add feature as feature requests are submitted, feel free to rise an issue if you want to see a new feature to
+be supported by the library. 
+Additionally the library follows semver. That means that until version 1.0.0 a lot of changes might occur.
 
 Features
 --------
@@ -19,7 +20,8 @@ Features
 - Take screenshots
 - Evaluate javascript in the page
 - Make PDF
-- *TODO* Emulate mouse and keyboard 
+- Emulate mouse 
+- *TODO* Emulate keyboard 
 - Always IDE friendly
 
 Happy browsing!
@@ -29,10 +31,10 @@ Requirements
 
 Requires php 7 and a chrome/chromium executable. 
 
-As of version 65 of chrome/chromium the library proved to work correctly. There are known bug prior to version 63
-that the library doesn't plan to add support for.
+As of version 65 of chrome/chromium the library proved to work correctly. 
+Please try to keep using latest version of chrome.
 
-Note that the library is only tested on linux.
+Note that the library is only tested on linux but is compatible with osX and windows.
 
 Install
 -------
@@ -77,7 +79,7 @@ to crawl websites... and almost everything that you can do with chrome as a huma
 When starting the factory will look for the environment variable ``"CHROME_PATH"`` to find the chrome executable.
 If the variable is not found then it will use ``"chrome"`` as the executable.
 
-You can use an arbitrary executable of your choice. For instance ``"chromium-browser"``:
+You can use any executable of your choice. For instance ``"chromium-browser"``:
 
 ```php
     use HeadlessChromium\BrowserFactory;
@@ -102,13 +104,12 @@ The following example adds some development-oriented features to help debugging
     ]);
 ```
 
-About ``debugLogger``: this can be any of a resource string, a resource or an object implementing ``LoggerInterface`` from Psr\Log (such as [monolog](https://github.com/Seldaek/monolog) or [apix/log](https://github.com/apix/log)).
-
-
+About ``debugLogger``: this can be any of a resource string, a resource or an object implementing 
+``LoggerInterface`` from Psr\Log (such as [monolog](https://github.com/Seldaek/monolog) 
+or [apix/log](https://github.com/apix/log)).
 
 
 ------------------------------------------------------------------------------------------------------------------------
-
 
 
 API
@@ -130,16 +131,21 @@ API
 
 Here are the options available for the browser factory:
 
-| Option name        | Default               | Description                                                                       |
-|--------------------|-----------------------|-----------------------------------------------------------------------------------|
-| connectionDelay    | 0                     | Delay to apply between each operation for debugging purposes                      |
-| debugLogger        | null                  | A string (e.g "php://stdout"), or resource, or PSR-3 logger instance to print debug messages |
-| enableImages       | true                  | Toggles loading of images                                                         |
-| headless           | true                  | Enable or disable headless mode                                                   |
-| userAgent          | none                  | User agent to use for the whole browser  (see page api for alternative)           |
-| userDataDir        | none                  | chrome user data dir (default: a new empty dir is generated temporarily)          |
-| startupTimeout     | 30                    | Maximum time in seconds to wait for chrome to start                               |
-| windowSize         | -                     | Size of the window. usage: ``[$width, $height]`` - see also Page::setViewportSize |
+| Option name        | Default       | Description                                                                                      |
+|--------------------|---------------|--------------------------------------------------------------------------------------------------|
+| connectionDelay    | 0             | Delay to apply between each operation for debugging purposes                                     |
+| customFlags        | none          | Array of flags to pass to the command line. Eg: ``['--option1', '--option2=someValue']``         |
+| debugLogger        | null          | A string (e.g "php://stdout"), or resource, or PSR-3 logger instance to print debug messages     |
+| enableImages       | true          | Toggles loading of images                                                                        |
+| headless           | true          | Enable or disable headless mode                                                                  |
+| ignoreCertificateErrors | false    | Set chrome to ignore ssl errors                                                                  |
+| keepAlive          | true          | true to keep alive the chrome instance when the script terminates                                |
+| noSandbox          | false         | Useful to run in a docker container                                                              |
+| sendSyncDefaultTimeout | 3000      | Default timeout (ms) for sending sync messages                                                   |
+| startupTimeout     | 30            | Maximum time in seconds to wait for chrome to start                                              |
+| userAgent          | none          | User agent to use for the whole browser  (see page api for alternative)                          |
+| userDataDir        | none          | chrome user data dir (default: a new empty dir is generated temporarily)                         |
+| windowSize         | none          | Size of the window. usage: ``[$width, $height]`` - see also Page::setViewportSize                |
 
 ### Browser API
 
@@ -157,6 +163,21 @@ Here are the options available for the browser factory:
 
 ```php
     $browser->close();
+```
+
+### Set a script to evaluate before every page created by this browser will navigate
+
+```php
+    $script = 
+     '// Simulate navigator permissions;
+      const originalQuery = window.navigator.permissions.query;
+      window.navigator.permissions.query = (parameters) => (
+          parameters.name === 'notifications' ?
+              Promise.resolve({ state: Notification.permission }) :
+              originalQuery(parameters)
+      );'
+
+    $browser->setPagePreScript($script);
 ```
 
 ### Page API
@@ -220,12 +241,70 @@ Once the page has completed the navigation you can evaluate arbitrary script on 
     $value = $evaluation->getReturnValue();
 ```
 
+
 Sometime the script you evaluate will click a link or submit a form, in this case the page will reload and you
 will want to wait for the new page to reload.
 
 You can achieve this by using ``$page->evaluate('some js that will reload the page')->waitForPageReload()``.
 An example is available in [form-submit.php](./examples/form-submit.php)
 
+#### Call a function
+
+This is an alternative to ``evaluate`` that allows to call a given function with the given arguments in the page context:
+
+```php
+    $evaluation = $page->callFunction(
+      'function(a, b) {
+          window.foo = a + b;
+       }', 
+      [1, 2]
+    );
+    
+    $value = $evaluation->getReturnValue();
+```
+
+#### Add a script tag
+
+That's useful if you want to add jQuery (or anything else) to the page:
+
+```php
+    $page->addScriptTag([
+        'content' => file_get_contents('path/to/jquery.js')
+    ])->waitForResponse();
+    
+    $page->evaluate('$(".my.element").html()');
+```
+
+You can also use an url to feed the src attribute:
+
+```php
+    $page->addScriptTag([
+        'url' => 'https://code.jquery.com/jquery-3.3.1.min.js'
+    ])->waitForResponse();
+    
+    $page->evaluate('$(".my.element").html()');
+```
+
+### Add a script to evaluate upon page navigation
+
+```php
+    $script = 
+     '// Simulate navigator permissions;
+      const originalQuery = window.navigator.permissions.query;
+      window.navigator.permissions.query = (parameters) => (
+          parameters.name === 'notifications' ?
+              Promise.resolve({ state: Notification.permission }) :
+              originalQuery(parameters)
+      );'
+
+    $page->addPreScript($script);
+```
+
+If your script needs the dom to be fully populated before it runs then you can use the option "onLoad":
+
+```php
+    $page->addPreScript($script, ['onLoad' => true]);
+```
 
 #### Set viewport size
 
@@ -260,7 +339,13 @@ all the browser's pages (see also option ``"windowSize"`` of [BrowserFactory::cr
 
 **choose an area**
 
-You can use the option "clip" in order to choose an area for the screenshot.
+You can use the option "clip" in order to choose an area for the screenshot (TODO exemple)
+
+**take a full page screenshot**
+
+You can also take a screenshot for the full layout (not only the layout) using ``$page->getFullPageClip`` (TODO exemple)
+
+TODO ``Page.getFullPageClip();``
 
 ```php
 
@@ -456,11 +541,10 @@ Thanks to [puppeteer](https://github.com/GoogleChrome/puppeteer) that served as 
 
 ## Roadmap
 
-- Make screenshots
 - Make pdf
 - Create a DOM manipulation framework
 - Inspect network traces
-- Emulate hardware (mouse/keyboard)
+- Emulate keyboard
 - Adding api documentation (https://github.com/victorjonsson/PHP-Markdown-Documentation-Generator/blob/master/docs.md)
 
 ## Authors

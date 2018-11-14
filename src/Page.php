@@ -16,6 +16,7 @@ use HeadlessChromium\Exception\TargetDestroyed;
 use HeadlessChromium\Input\Mouse;
 use HeadlessChromium\PageUtils\CookiesGetter;
 use HeadlessChromium\PageUtils\PageEvaluation;
+use HeadlessChromium\PageUtils\PageLayoutMetrics;
 use HeadlessChromium\PageUtils\PageNavigation;
 use HeadlessChromium\PageUtils\PageScreenshot;
 use HeadlessChromium\PageUtils\PagePdf;
@@ -44,15 +45,60 @@ class Page
     protected $mouse;
 
     /**
-     * @var array
+     * Page constructor.
+     * @param Target $target
+     * @param array $frameTree
      */
-    protected $options = [];
-
-    public function __construct(Target $target, array $frameTree, array $options = [])
+    public function __construct(Target $target, array $frameTree)
     {
         $this->target = $target;
         $this->frameManager = new FrameManager($this, $frameTree);
-        $this->options = $options;
+    }
+
+    /**
+     * Adds a script to be evaluated upon page navigation
+     *
+     * @param string $script
+     * @param array $options
+     *  - onLoad: defer script execution after page has loaded (useful for scripts that require the dom to be populated)
+     * @throws CommunicationException
+     * @throws NoResponseAvailable
+     */
+    public function addPreScript(string $script, array $options = [])
+    {
+        // defer script execution
+        if (isset($options['onLoad']) && $options['onLoad']) {
+            $script = 'window.onload = () => {' . $script . '}';
+        }
+
+        // add script
+        $this->getSession()->sendMessageSync(
+            new Message('Page.addScriptToEvaluateOnNewDocument', ['source' => $script])
+        );
+    }
+
+    /**
+     * Retrieves layout metrics of the page
+     *
+     * Example:
+     *
+     * ```php
+     * $metrics = $page->getLayoutMetrics();
+     * $contentSize = $metrics->getContentSize();
+     * ```
+     *
+     * @return PageLayoutMetrics
+     * @throws CommunicationException
+     */
+    public function getLayoutMetrics()
+    {
+        $this->assertNotClosed();
+
+        $reader = $this->getSession()->sendMessage(
+            new Message('Page.getLayoutMetrics')
+        );
+
+        return new PageLayoutMetrics($reader);
     }
 
     /**
@@ -77,18 +123,18 @@ class Page
     }
 
     /**
-     * @param $url
+     * @param string $url
+     * @param array $options
+     *  - strict: make waitForNAvigation to fail if a new navigation is initiated. Default: false
+     *
      * @return PageNavigation
+     * @throws Exception\CommunicationException
      */
-    public function navigate($url, ?string $preScript = NULL)
+    public function navigate(string $url, array $options = [])
     {
         $this->assertNotClosed();
 
-        if (isset($this->options['preScript'])){
-            $preScript = $this->options['preScript'].$preScript;
-        }
-
-        return new PageNavigation($this, $url, $preScript);
+        return new PageNavigation($this, $url, $options['strict'] ?? false);
     }
 
     /**
@@ -116,11 +162,112 @@ class Page
                 [
                     'awaitPromise' => true,
                     'returnByValue' => true,
-                    'expression' => $expression
+                    'expression' => $expression,
+                    'userGesture' => true
                 ]
             )
         );
         return new PageEvaluation($reader, $currentLoaderId, $this);
+    }
+
+    /**
+     * Call a js function with the given argument in the page context
+     *
+     * Example:
+     *
+     * ```php
+     * $evaluation = $page->callFunction('function(a, b) {return a + b}', [1, 2]);
+     *
+     * echo $evaluation->getReturnValue();
+     * // 3
+     * ```
+     *
+     * @param string $functionDeclaration
+     * @param array $arguments
+     * @return PageEvaluation
+     * @throws CommunicationException
+     */
+    public function callFunction(string $functionDeclaration, array $arguments = []): PageEvaluation
+    {
+        $this->assertNotClosed();
+
+        $currentLoaderId = $this->frameManager->getMainFrame()->getLatestLoaderId();
+        $executionContextId = $this->frameManager->getMainFrame()->getExecutionContextId();
+        $reader = $this->getSession()->sendMessage(
+            new Message(
+                'Runtime.callFunctionOn',
+                [
+                    'functionDeclaration' => $functionDeclaration,
+                    'arguments' => array_map(function ($arg) {
+                        return [
+                            'value' => $arg
+                        ];
+                    }, $arguments),
+                    'executionContextId' => $executionContextId,
+                    'awaitPromise' => true,
+                    'returnByValue' => true,
+                    'userGesture' => true
+                ]
+            )
+        );
+
+        return new PageEvaluation($reader, $currentLoaderId, $this);
+    }
+
+    /**
+     * Add a script tag to the page (ie. <script>)
+     *
+     * Example:
+     *
+     * ```php
+     * $evaluation = $page->addScriptTag(['content' => file_get_content('jquery.js')]);
+     * $evaluation->waitForResponse();
+     * ```
+     *
+     * @param array $options
+     * @return PageEvaluation
+     * @throws CommunicationException
+     */
+    public function addScriptTag(array $options): PageEvaluation
+    {
+        if (isset($options['url']) && isset($options['content'])) {
+            throw new \InvalidArgumentException('addScript accepts "url" or "content" option, not both');
+        } elseif (isset($options['url'])) {
+            $scriptFunction = 'async function(src) {
+                const script = document.createElement("script");
+                script.type = "text/javascript";
+                script.src = src;
+                
+                const promise = new Promise((res, rej) => {
+                    script.onload = res;
+                    script.onerror = rej;
+                });
+                
+                document.head.appendChild(script);
+                await promise;
+            }';
+            $arguments = [$options['url']];
+        } elseif (isset($options['content'])) {
+            $scriptFunction = 'async function(scriptContent) {
+                var script = document.createElement("script");
+                script.type = "text/javascript";
+                script.text = scriptContent;
+                
+                let error = null;
+                script.onerror = e => {error = e};
+                
+                document.head.appendChild(script);
+                
+                if (error) {
+                    throw error;
+                }
+            }';
+            $arguments = [$options['content']];
+        } else {
+            throw new \InvalidArgumentException('addScript requires one of "url" or "content" option');
+        }
+
+        return $this->callFunction($scriptFunction, $arguments);
     }
 
     /**
@@ -214,13 +361,42 @@ class Page
     }
 
     /**
-     * Example:
+     * Get a clip that uses the full layout page, not only the viewport
+     *
+     * This method is synchronous
+     *
+     * Fullpage screenshot exemple:
      *
      * ```php
-     * $page->screenshot()->saveToFile();
+     *     $page
+     *      ->screenshot([
+     *          'clip' => $page->getFullPageClip()
+     *      ])
+     *      ->saveToFile('/tmp/image.jpg');
+     * ```
+     *
+     * @return Clip
+     */
+    public function getFullPageClip(): Clip
+    {
+        $contentSize = $this->getLayoutMetrics()->await()->getContentSize();
+        return new Clip(0, 0, $contentSize['width'], $contentSize['height']);
+    }
+
+    /**
+     * Take a screenshot
+     *
+     * Usage:
+     *
+     * ```php
+     * $page->screenshot()->saveToFile('/tmp/image.jpg');
      * ```
      *
      * @param array $options
+     *  - format: "png"|"jpg" default "png"
+     *  - quality: number from 0 to 100. Only for jpegs
+     *  - clip: instance of a Clip to choose an area for the screenshot
+     *
      * @return PageScreenshot
      * @throws CommunicationException
      */

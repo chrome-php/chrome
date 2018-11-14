@@ -11,6 +11,7 @@ use HeadlessChromium\Communication\Target;
 use HeadlessChromium\Exception\CommunicationException;
 use HeadlessChromium\Exception\NoResponseAvailable;
 use HeadlessChromium\Exception\CommunicationException\ResponseHasError;
+use HeadlessChromium\Exception\OperationTimedOut;
 
 class Browser
 {
@@ -24,6 +25,12 @@ class Browser
      */
     protected $targets = [];
 
+    /**
+     * A preScript to be automatically added on every new pages
+     * @var string|null
+     */
+    protected $pagePreScript;
+
     public function __construct(Connection $connection)
     {
         $this->connection = $connection;
@@ -31,14 +38,8 @@ class Browser
         // listen for target created
         $this->connection->on(Connection::EVENT_TARGET_CREATED, function (array $params) {
 
-            // create a session for the target
-            $session = $this->connection->createSession($params['targetInfo']['targetId']);
-
             // create and store the target
-            $this->targets[$params['targetInfo']['targetId']] = new Target(
-                $params['targetInfo'],
-                $session
-            );
+            $this->targets[$params['targetInfo']['targetId']] = new Target($params['targetInfo'], $this->connection);
         });
 
         // listen for target info changed
@@ -67,6 +68,9 @@ class Browser
                     ->debug('✘ target(' . $params['targetId'] . ') was destroyed and unreferenced.');
             }
         });
+
+        // enable target discovery
+        $connection->sendMessageSync(new Message('Target.setDiscoverTargets', ['discover' => true]));
     }
 
     /**
@@ -75,6 +79,17 @@ class Browser
     public function getConnection(): Connection
     {
         return $this->connection;
+    }
+
+    /**
+     * Set a preScript to be added on every new pages.
+     * Use null to disable it.
+     *
+     * @param string|null $script
+     */
+    public function setPagePreScript(string $script = null)
+    {
+        $this->pagePreScript = $script;
     }
 
     /**
@@ -90,9 +105,10 @@ class Browser
      * Creates a new page
      * @throws NoResponseAvailable
      * @throws CommunicationException
+     * @throws OperationTimedOut
      * @return Page
      */
-    public function createPage(array $options = []): Page
+    public function createPage(): Page
     {
 
         // page url
@@ -118,7 +134,7 @@ class Browser
         }
 
         // create page
-        $page = new Page($target, $frameTreeResponse['result']['frameTree'], $options);
+        $page = new Page($target, $frameTreeResponse['result']['frameTree']);
 
         // Page.enable
         $page->getSession()->sendMessageSync(new Message('Page.enable'));
@@ -126,8 +142,16 @@ class Browser
         // Network.enable
         $page->getSession()->sendMessageSync(new Message('Network.enable'));
 
+        // Runtime.enable
+        $page->getSession()->sendMessageSync(new Message('Runtime.enable'));
+
         // Page.setLifecycleEventsEnabled
         $page->getSession()->sendMessageSync(new Message('Page.setLifecycleEventsEnabled', ['enabled' => true]));
+
+        // add prescript
+        if ($this->pagePreScript) {
+            $page->addPreScript($this->pagePreScript);
+        }
 
         return $page;
     }
@@ -143,5 +167,13 @@ class Browser
             return null;
         }
         return $this->targets[$targetId];
+    }
+
+    /**
+     * @return Target[]
+     */
+    public function getTargets()
+    {
+        return array_values($this->targets);
     }
 }

@@ -11,6 +11,68 @@
 * Bug fixes:
   * none
 
+## 0.5.0
+
+> *2018-11-13*
+
+> Load script tags on the page
+    
+* Features:
+  * Added Page::callFunction
+  * Added Page::addScriptTag
+  * Enabled runtime events for pages
+  * Enabled user gesture for Page::evaluate
+  * Improved error messages from script evaluation
+  * Added option "onLoad" for Page::addPreScript
+* Bug fixes:
+  * none
+
+## 0.4.0
+
+> *2018-10-25*
+
+> Ability to take full page screenshots
+    
+* Features:
+  * Added ``Page::getLayoutMetrics`` that allows to take full page screenshots (#43 #44) thanks @kaero598
+  * Added ``Page::getFullPageClip`` to ease full page screenshots
+  
+## 0.3.0
+
+> *2018-10-13*
+
+> Make a crawl instance sharable among multiple scripts
+
+* Features:
+  * Added option ``keepAlive`` for browser factory.
+  * Added methods ``BrowserProcess::getSocketUri`` and ``ProcessAwareBrowser::getSocketUri``
+  * Removed unused option ``debug``
+  * Added ``BrowserFactory::connectToBrowser``
+* Bug fixes:
+  * (BC Break) Page navigation now allows by default that the initial loader is replaced with a new one #40
+
+## 0.2.4
+
+> *2018-10-04*
+    
+* Bug fixes:
+  * Fixed a race condition in target creations/destruction (thanks @choval)
+
+## 0.2.3
+
+> *2018-10-02*
+
+> Fixed usergent and added page prescript (thanks @tanasecosminromeo) and added some new options for browser factory
+    
+* Features:
+  * Added method ``Browser::setPagePreScript``
+  * Added method ``Page::addPreScript``
+  * Added option ``"nosandbox"`` for browser factory
+  * Added option ``"sendSyncDefaultTimeout"`` for browser factory
+  * Added option ``"ignoreCertificateErrors"`` for browser factory
+  * Added option ``"customFlags"`` for browser factory
+* Bug fixes:
+  * Fixed user agent string for browser factory 
 
 ## 0.2.2
 
@@ -22,10 +84,9 @@
   * Added a shortcut to get current page url: ``Page::getCurrentUrl``
   * Added ability to get and set cookies from a page: ``Page.setCookies``, ``Page.readCookies`` , ``Page.readAllCookies`` 
   * improved some error reporting
-  * fixed a bug with directory creation for screenshots
   * added ability to set custom user agent: ``Page::setUserAgent`` or via factory option ``userAgent``
 * Bug fixes:
-  * none
+  * fixed a bug with directory creation for screenshots
 
 ## 0.2.1
 
