@@ -18,7 +18,7 @@ Features
 - Create pages and navigate to pages
 - Take screenshots
 - Evaluate javascript in the page
-- *TODO* Make PDF
+- Make PDF
 - *TODO* Emulate mouse and keyboard 
 - Always IDE friendly
 
@@ -64,6 +64,9 @@ to crawl websites... and almost everything that you can do with chrome as a huma
     
     // screenshot - Say "Cheese"! 😄
     $page->screenshot()->saveToFile('/foo/bar.png');
+    
+    // pdf
+    $page->pdf(['printBackground'=>false])->saveToFile('/foo/bar.pdf');
     
     // bye
     $browser->close();
