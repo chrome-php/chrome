@@ -15,6 +15,7 @@ use HeadlessChromium\Input\Mouse;
 use HeadlessChromium\PageUtils\PageEvaluation;
 use HeadlessChromium\PageUtils\PageNavigation;
 use HeadlessChromium\PageUtils\PageScreenshot;
+use HeadlessChromium\PageUtils\PagePdf;
 use HeadlessChromium\PageUtils\ResponseWaiter;
 
 class Page
@@ -292,6 +293,55 @@ class Page
             ->sendMessage(new Message('Page.captureScreenshot', $screenshotOptions));
 
         return new PageScreenshot($responseReader);
+    }
+
+    /**
+     *
+     * Example:
+     *
+     * ```php
+     * $page->pdf()->saveToFile();
+     * ```
+     *
+     * @param array $options
+     * @return PagePdf
+     * @throws CommunicationException
+     */
+    public function pdf(array $options = []): PagePdf
+    {
+        $this->assertNotClosed();
+
+        $pdfOptions = [];
+
+        // get landscape
+        if (array_key_exists('landscape', $options)) {
+            // landscape requires type to be boolean
+            if (gettype($pdfOptions['landscape']) !== "boolean") {
+                throw new \InvalidArgumentException(
+                    'Invalid options "landscape" for print to pdf. Must be true or false'
+                );
+            }
+            // set landscape
+            $pdfOptions['landscape'] = $options['landscape'];
+        }
+
+        // get printBackground
+        if (array_key_exists('printBackground', $options)) {
+            // printBackground requires type to be boolean
+            if (gettype($pdfOptions['printBackground']) !== "boolean") {
+                throw new \InvalidArgumentException(
+                    'Invalid options "printBackground" for print to pdf. Must be true or false'
+                );
+            }
+            // set landscape
+            $pdfOptions['printBackground'] = $options['printBackground'];
+        }
+
+        // request screenshot
+        $responseReader = $this->getSession()
+            ->sendMessage(new Message('Page.printToPDF', $pdfOptions));
+
+        return new PagePdf($responseReader);
     }
 
     /**
