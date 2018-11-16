@@ -383,14 +383,33 @@ TODO ``Page.getFullPageClip();``
     // wait for the page to be loaded
     $navigation->waitForNavigation();
     
+    $options = [
+                  'landscape'       => true,  // default to false
+                  'printBackground' => true,   // default to false
+                  'displayHeaderFooter' => true, // default to false
+                  'preferCSSPageSize' => true, // default to false ( reads parameters directly from @page )
+                  'marginTop' => 0.0, // defaults to ~0.4 (must be float, value in inches)
+                  'marginBottom' => 1.4, // defaults to ~0.4 (must be float, value in inches)
+                  'marginLeft' => 5.0, // defaults to ~0.4 (must be float, value in inches)
+                  'marginRight' => 1.0 // defaults to ~0.4 (must be float, value in inches)
+               ];
+    
     // print as pdf (in memory binaries)
-    $pdf = $page->pdf([
-        'landscape'       => true,  // default to false
-        'printBackground' => true   // default to false
-    ]);
+    $pdf = $page->pdf($options);
     
     // save the pdf
     $pdf->saveToFile('/some/place/file.pdf');
+    
+    // or directly output pdf without saving
+    header('Content-Description: File Transfer');
+    header('Content-Type: application/pdf');
+    header('Content-Disposition: inline; filename=filename.pdf');
+    header('Content-Transfer-Encoding: binary');
+    header('Expires: 0');
+    header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
+    header('Pragma: public');
+    
+    echo base64_decode($pdf->getBase64());
 ```
 
 ### Mouse API

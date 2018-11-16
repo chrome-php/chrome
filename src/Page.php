@@ -514,8 +514,74 @@ class Page
             }
             $pdfOptions['printBackground'] = $options['printBackground'];
         }
-
-        // request screenshot
+    
+        // option displayHeaderFooter
+        if (array_key_exists('displayHeaderFooter', $options)) {
+            // printBackground requires type to be boolean
+            if (!is_bool($options['displayHeaderFooter'])) {
+                throw new \InvalidArgumentException(
+                    'Invalid options "displayHeaderFooter" for print to pdf. Must be true or false'
+                );
+            }
+            $pdfOptions['displayHeaderFooter'] = $options['displayHeaderFooter'];
+        }
+    
+        // option marginTop
+        if (array_key_exists('marginTop', $options)) {
+            // marginTop requires type to be float
+            if (gettype($options['marginTop']) !== 'double') {
+                throw new \InvalidArgumentException(
+                    'Invalid options "marginTop" for print to pdf. Must be float like 1.0 or 5.4'
+                );
+            }
+            $pdfOptions['marginTop'] = $options['marginTop'];
+        }
+    
+        // option marginBottom
+        if (array_key_exists('marginBottom', $options)) {
+            // marginBottom requires type to be float
+            if (gettype($options['marginBottom']) !== 'double') {
+                throw new \InvalidArgumentException(
+                    'Invalid options "marginBottom" for print to pdf. Must be float like 1.0 or 5.4'
+                );
+            }
+            $pdfOptions['marginBottom'] = $options['marginBottom'];
+        }
+    
+        // option marginLeft
+        if (array_key_exists('marginLeft', $options)) {
+            // marginBottom requires type to be float
+            if (gettype($options['marginLeft']) !== 'double') {
+                throw new \InvalidArgumentException(
+                    'Invalid options "marginLeft" for print to pdf. Must be float like 1.0 or 5.4'
+                );
+            }
+            $pdfOptions['marginLeft'] = $options['marginLeft'];
+        }
+    
+        // option marginLeft
+        if (array_key_exists('marginRight', $options)) {
+            // marginBottom requires type to be float
+            if (gettype($options['marginRight']) !== 'double') {
+                throw new \InvalidArgumentException(
+                    'Invalid options "marginRight" for print to pdf. Must be float like 1.0 or 5.4'
+                );
+            }
+            $pdfOptions['marginRight'] = $options['marginRight'];
+        }
+    
+        // option preferCSSPageSize
+        if (array_key_exists('preferCSSPageSize', $options)) {
+            // printBackground requires type to be boolean
+            if (!is_bool($options['preferCSSPageSize'])) {
+                throw new \InvalidArgumentException(
+                    'Invalid options "preferCSSPageSize" for print to pdf. Must be true or false'
+                );
+            }
+            $pdfOptions['preferCSSPageSize'] = $options['preferCSSPageSize'];
+        }
+        
+        // request pdf
         $responseReader = $this->getSession()
             ->sendMessage(new Message('Page.printToPDF', $pdfOptions));
 
