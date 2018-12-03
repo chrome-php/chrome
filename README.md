@@ -29,7 +29,7 @@ Happy browsing!
 Requirements
 ------------
 
-Requires php 7 and a chrome/chromium executable. 
+Requires php 5.6 and a chrome/chromium executable. 
 
 As of version 65 of chrome/chromium the library proved to work correctly. 
 Please try to keep using latest version of chrome.
@@ -39,9 +39,9 @@ Note that the library is only tested on linux but is compatible with osX and win
 Install
 -------
 
-The library can be installed with composer and is available on packagist under [chrome-php/chrome](https://packagist.org/packages/chrome-php/chrome)
+The library can be installed with composer and is available on packagist under [chrome-php/chrome](https://packagist.org/packages/infostars/xxxxx)
 
-``composer require chrome-php/chrome``
+``composer require infostars/xxxxx``
 
 Usage
 -----
