@@ -76,7 +76,7 @@ class BrowserProcess implements LoggerAwareInterface
     {
 
         // set or create logger
-        $this->setLogger($logger ?? new NullLogger());
+        $this->setLogger(isset($logger) ? $logger : new NullLogger());
     }
 
     /**
@@ -126,14 +126,16 @@ class BrowserProcess implements LoggerAwareInterface
         $process->start();
 
         // wait for start and retrieve ws uri
-        $startupTimeout = $options['startupTimeout'] ?? 30;
+        $startupTimeout = isset($options['startupTimeout']) ? $options['startupTimeout'] : 30;
+
+
         $this->wsUri = $this->waitForStartup($process, $startupTimeout * 1000 * 1000);
 
         // log
         $this->logger->debug('process: connecting using ' . $this->wsUri);
 
         // connect to browser
-        $connection = new Connection($this->wsUri, $this->logger, $options['sendSyncDefaultTimeout'] ?? 3000);
+        $connection = new Connection($this->wsUri, $this->logger, isset($options['sendSyncDefaultTimeout']) ? $options['sendSyncDefaultTimeout'] : 3000);
         $connection->connect();
 
         // connection delay
@@ -189,12 +191,14 @@ class BrowserProcess implements LoggerAwareInterface
                 if ($this->connection->isConnected()) {
                     // first try to close with Browser.close
                     // if Browser.close is not implemented, try to kill by closing all pages
-                    try {
+/*                    try {
                         // log
                         $this->logger->debug('process: trying to close chrome gracefully');
 
                         // TODO check browser.close on chrome 63
                         $r = $this->connection->sendMessageSync(new Message('Browser.close'));
+
+
                         if (!$r->isSuccessful()) {
                             // log
                             $this->logger->debug('process: ✗ could not close gracefully');
@@ -206,7 +210,7 @@ class BrowserProcess implements LoggerAwareInterface
 
                         // close all pages if connected
                         $this->connection->isConnected() && Utils::closeAllPage($this->connection);
-                    }
+                    }*/
 
                     // disconnect socket
                     try {
@@ -360,63 +364,58 @@ class BrowserProcess implements LoggerAwareInterface
      * @param int $timeout
      * @return mixed
      */
-    private function waitForStartup(Process $process, int $timeout)
+    private function waitForStartup(Process $process, $timeout)
     {
         // log
         $this->logger->debug('process: waiting for ' . $timeout / 1000000 . ' seconds for startup');
 
-        try {
-            $generator = function (Process $process) {
-                while (true) {
-                    if (!$process->isRunning()) {
-                        // log
-                        $this->logger->debug('process: ✗ chrome process stopped');
 
-                        // exception
-                        $message = 'Chrome process stopped before startup completed.';
-                        $error = trim($process->getErrorOutput());
-                        if (!empty($error)) {
-                            $message .= ' Additional info: ' . $error;
-                        }
-                        throw new \RuntimeException($message);
-                    }
+        while (true) {
+            if (!$process->isRunning()) {
+                // log
+                $this->logger->debug('process: ✗ chrome process stopped');
 
-                    $output = trim($process->getIncrementalErrorOutput());
-
-                    if ($output) {
-                        // log
-                        $this->logger->debug('process: chrome output:' . $output);
-
-                        $outputs = explode(PHP_EOL, $output);
-
-                        foreach ($outputs as $output) {
-                            $output = trim($output);
-
-                            // ignore empty line
-                            if (empty($output)) {
-                                continue;
-                            }
-
-                            // find socket uri
-                            if (preg_match('/DevTools listening on (ws:\/\/.*)/', $output, $matches)) {
-                                // log
-                                $this->logger->debug('process: ✓ accepted output');
-                                return $matches[1];
-                            } else {
-                                // log
-                                $this->logger->debug('process: ignoring output:' . trim($output));
-                            }
-                        }
-                    }
-
-                    // wait for 10ms
-                    yield 10 * 1000;
+                // exception
+                $message = 'Chrome process stopped before startup completed.';
+                $error = trim($process->getErrorOutput());
+                if (!empty($error)) {
+                    $message .= ' Additional info: ' . $error;
                 }
-            };
-            return Utils::tryWithTimeout($timeout, $generator($process));
-        } catch (OperationTimedOut $e) {
-            throw new \RuntimeException('Cannot start browser', 0, $e);
+                throw new \RuntimeException($message);
+            }
+
+            $output = trim($process->getIncrementalErrorOutput());
+
+            if ($output) {
+                // log
+                $this->logger->debug('process: chrome output:' . $output);
+
+                $outputs = explode(PHP_EOL, $output);
+
+                foreach ($outputs as $output) {
+                    $output = trim($output);
+
+                    // ignore empty line
+                    if (empty($output)) {
+                        continue;
+                    }
+
+                    // find socket uri
+                    if (preg_match('/DevTools listening on (ws:\/\/.*)/', $output, $matches)) {
+                        // log
+                        $this->logger->debug('process: ✓ accepted output');
+                        return $matches[1];
+                    } else {
+                        // log
+                        $this->logger->debug('process: ignoring output:' . trim($output));
+                    }
+                }
+            }
+
+            // wait for 10ms
+            usleep(10 * 1000);
         }
+
     }
 
     /**

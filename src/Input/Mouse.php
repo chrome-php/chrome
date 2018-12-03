@@ -42,7 +42,7 @@ class Mouse
      * @throws \HeadlessChromium\Exception\CommunicationException
      * @throws \HeadlessChromium\Exception\NoResponseAvailable
      */
-    public function move(int $x, int $y, array $options = null)
+    public function move($x, $y, array $options = null)
     {
         $this->page->assertNotClosed();
 
@@ -55,7 +55,7 @@ class Mouse
         $this->y = $y;
 
         // number of steps to achieve the move
-        $steps = $options['steps'] ?? 1;
+        $steps = isset($options['steps']) ? $options['steps'] : 1;
         if ($steps <= 0) {
             throw new \InvalidArgumentException('options "steps" for mouse move must be a positive integer');
         }
@@ -66,7 +66,7 @@ class Mouse
                 'x' => $originX + ($this->x - $originX) * ($i / $steps),
                 'y' => $originY + ($this->y - $originY) * ($i / $steps),
                 'type' => 'mouseMoved'
-            ]));
+            ]), 500);
         }
 
         return $this;
@@ -84,9 +84,9 @@ class Mouse
             'x' => $this->x,
             'y' => $this->y,
             'type' => 'mousePressed',
-            'button' => $options['button'] ?? self::BUTTON_LEFT,
+            'button' => isset($options['button']) ? $options['button'] : self::BUTTON_LEFT,
             'clickCount' => 1
-        ]));
+        ]), 500);
 
         return $this;
     }
@@ -103,9 +103,9 @@ class Mouse
             'x' => $this->x,
             'y' => $this->y,
             'type' => 'mouseReleased',
-            'button' => $options['button'] ?? self::BUTTON_LEFT,
+            'button' => isset($options['button']) ? $options['button'] : self::BUTTON_LEFT,
             'clickCount' => 1
-        ]));
+        ]), 500);
 
         return $this;
     }

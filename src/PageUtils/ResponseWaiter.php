@@ -39,7 +39,7 @@ class ResponseWaiter
      *
      * @return $this
      */
-    public function await(int $time = null)
+    public function await($time = null)
     {
         $this->response = $this->responseReader->waitForResponse($time);
 
@@ -58,7 +58,7 @@ class ResponseWaiter
      * @throws \HeadlessChromium\Exception\NoResponseAvailable
      * @throws \HeadlessChromium\Exception\OperationTimedOut
      */
-    protected function awaitResponse(int $time = null): Response
+    protected function awaitResponse($time = null)
     {
         if (!$this->response) {
             $this->await($time);
@@ -70,7 +70,7 @@ class ResponseWaiter
     /**
      * @return ResponseReader
      */
-    public function getResponseReader(): ResponseReader
+    public function getResponseReader()
     {
         return $this->responseReader;
     }

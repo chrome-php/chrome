@@ -59,7 +59,7 @@ class CookiesCollection implements \IteratorAggregate, \Countable
      * @param $i
      * @return Cookie
      */
-    public function getAt($i): Cookie
+    public function getAt($i)
     {
         if (!isset($this->cookies[$i])) {
             throw new \RuntimeException(sprintf('No cookie at index %s', $i));
@@ -84,7 +84,7 @@ class CookiesCollection implements \IteratorAggregate, \Countable
      * @param string $value
      * @return CookiesCollection
      */
-    public function filterBy(string $param, string $value)
+    public function filterBy($param, $value)
     {
         return new CookiesCollection(array_filter($this->cookies, function (Cookie $cookie) use ($param, $value) {
             return $cookie[$param] == $value;
@@ -109,7 +109,7 @@ class CookiesCollection implements \IteratorAggregate, \Countable
      * @param string $value
      * @return Cookie|null
      */
-    public function findOneBy(string $param, string $value)
+    public function findOneBy($param, $value)
     {
         foreach ($this->cookies as $cookie) {
             if ($cookie[$param] == $value) {

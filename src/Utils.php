@@ -3,7 +3,6 @@
  * @license see LICENSE
  */
 
-
 namespace HeadlessChromium;
 
 use HeadlessChromium\Communication\Connection;
@@ -38,55 +37,57 @@ class Utils
      *  }
      * ```
      *
-     * @param int $timeoutMicroSec
-     * @param \Generator $generator
+     * @param $timeoutMicroSec
+     * @param $generator
      * @param callable|null $onTimeout
      * @return mixed|null
      * @throws OperationTimedOut
      */
-    public static function tryWithTimeout(int $timeoutMicroSec, \Generator $generator, callable $onTimeout = null)
+    public static function tryWithTimeout($timeoutMicroSec, $generator, callable $onTimeout = null)
     {
         $waitUntilMicroSec = microtime(true) * 1000 * 1000 + $timeoutMicroSec;
-
-        foreach ($generator as $v) {
-            // if timeout reached or if time+delay exceed timeout stop the execution
-            if (microtime(true) * 1000 * 1000 + $v >= $waitUntilMicroSec) {
-                if ($onTimeout) {
-                    // if callback was set execute it
-                    return $onTimeout();
-                } else {
-                    if ($timeoutMicroSec > 1000 * 1000) {
-                        $timeoutPhrase = (int)($timeoutMicroSec / (1000 * 1000)) . 'sec';
-                    } elseif ($timeoutMicroSec > 1000) {
-                        $timeoutPhrase = (int)($timeoutMicroSec / 1000) . 'ms';
+        foreach ($generator as $k => $v) {
+            if($k === 0) {
+                if (microtime(true) * 1000 * 1000 + (is_int($generator) ? $generator : 0) >= $waitUntilMicroSec) {
+                    if ($onTimeout) {
+                        // if callback was set execute it
+                        return $onTimeout();
                     } else {
-                        $timeoutPhrase = (int)($timeoutMicroSec) . 'μs';
+                        if ($timeoutMicroSec > 1000 * 1000) {
+                            $timeoutPhrase = (int)($timeoutMicroSec / (1000 * 1000)) . 'sec';
+                        } elseif ($timeoutMicroSec > 1000) {
+                            $timeoutPhrase = (int)($timeoutMicroSec / 1000) . 'ms';
+                        } else {
+                            $timeoutPhrase = (int)($timeoutMicroSec) . 'μs';
+                        }
+                        throw new OperationTimedOut('Operation timed out (' . $timeoutPhrase . ')');
                     }
-                    throw new OperationTimedOut('Operation timed out (' . $timeoutPhrase . ')');
+                }
+                usleep($v);
+            } else {
+                if ($generator instanceof \Generator) {
+                    return $generator->current();
                 }
             }
-
-            usleep($v);
         }
-
-        return $generator->getReturn();
     }
 
     /**
      * Closes all pages for the given connection
      * @param Connection $connection
+     * @throws OperationTimedOut
      */
     public static function closeAllPage(Connection $connection)
     {
         // get targets
-        $targetsResponse = $connection->sendMessageSync(new Message('Target.getTargets'));
+        $targetsResponse = $connection->sendMessageSync(new Message('Target.getTargets'), 2000);
 
         if ($targetsResponse->isSuccessful()) {
             foreach ($targetsResponse['result']['targetInfos'] as $target) {
                 if ($target['type'] === 'page') {
                     $connection->sendMessageSync(
                         new Message('Target.closeTarget', ['targetId' => $target['targetId']])
-                    );
+                    , 500);
                 }
             }
         }

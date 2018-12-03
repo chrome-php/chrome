@@ -41,7 +41,7 @@ class Wrench implements SocketInterface, LoggerAwareInterface
     {
         $this->client = $client;
 
-        $this->setLogger($logger ?? new NullLogger());
+        $this->setLogger(isset($logger) ? $logger : new NullLogger());
 
         $this->socketId = ++self::$socketIdCounter;
     }
@@ -61,7 +61,7 @@ class Wrench implements SocketInterface, LoggerAwareInterface
     /**
      * @inheritdoc
      */
-    public function receiveData(): array
+    public function receiveData()
     {
         $playloads = $this->client->receive();
 

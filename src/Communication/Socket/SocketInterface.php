@@ -23,7 +23,7 @@ interface SocketInterface
      *
      * @return array Payload received since the last call to receive()
      */
-    public function receiveData(): array;
+    public function receiveData();
 
     /**
      * Connect to the server

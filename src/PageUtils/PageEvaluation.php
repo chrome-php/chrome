@@ -64,7 +64,7 @@ class PageEvaluation
      * @param $timeout int|null
      *
      */
-    public function waitForResponse(int $timeout = null)
+    public function waitForResponse($timeout = null)
     {
         $this->response = $this->responseReader->waitForResponse($timeout);
 
@@ -76,8 +76,7 @@ class PageEvaluation
         }
 
         $result = $this->response->getResultData('result');
-
-        $resultSubType = $result['subtype'] ?? null;
+        $resultSubType = isset($result['subtype']) ? $result['subtype'] : null;
 
         if ($resultSubType == 'error') {
             // TODO dump javascript trace
@@ -94,14 +93,15 @@ class PageEvaluation
      *
      * @return mixed
      * @throws EvaluationFailed
+     * @throws JavascriptException
      */
-    public function getReturnValue(int $timeout = null)
+    public function getReturnValue($timeout = null)
     {
         if (!$this->response) {
             $this->waitForResponse($timeout);
         }
 
-        return $this->response->getResultData('result')['value'] ?? null;
+        return isset($this->response->getResultData('result')['value']) ? $this->response->getResultData('result')['value'] : null;
     }
 
     /**
@@ -112,12 +112,12 @@ class PageEvaluation
      * @return mixed
      * @throws EvaluationFailed
      */
-    public function getReturnType(int $timeout = null)
+    public function getReturnType($timeout = null)
     {
         if (!$this->response) {
             $this->waitForResponse($timeout);
         }
 
-        return $this->response->getResultData('result')['type'] ?? null;
+        return isset($this->response->getResultData('result')['type']) ? $this->response->getResultData('result')['type'] : null;
     }
 }

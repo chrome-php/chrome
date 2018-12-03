@@ -70,13 +70,13 @@ class Browser
         });
 
         // enable target discovery
-        $connection->sendMessageSync(new Message('Target.setDiscoverTargets', ['discover' => true]));
+        $connection->sendMessageSync(new Message('Target.setDiscoverTargets', ['discover' => true]), 2000);
     }
 
     /**
      * @return Connection
      */
-    public function getConnection(): Connection
+    public function getConnection()
     {
         return $this->connection;
     }
@@ -87,7 +87,7 @@ class Browser
      *
      * @param string|null $script
      */
-    public function setPagePreScript(string $script = null)
+    public function setPagePreScript($script = null)
     {
         $this->pagePreScript = $script;
     }
@@ -108,14 +108,14 @@ class Browser
      * @throws OperationTimedOut
      * @return Page
      */
-    public function createPage(): Page
+    public function createPage()
     {
 
         // page url
         $params = ['url' => 'about:blank'];
 
         // create page and get target id
-        $response = $this->connection->sendMessageSync(new Message('Target.createTarget', $params));
+        $response = $this->connection->sendMessageSync(new Message('Target.createTarget', $params), 2000);
         $targetId = $response['result']['targetId'];
 
         // todo handle error
@@ -126,7 +126,7 @@ class Browser
         }
 
         // get initial frame tree
-        $frameTreeResponse = $target->getSession()->sendMessageSync(new Message('Page.getFrameTree'));
+        $frameTreeResponse = $target->getSession()->sendMessageSync(new Message('Page.getFrameTree'), 2000);
 
         // make sure frame tree was found
         if (!$frameTreeResponse->isSuccessful()) {

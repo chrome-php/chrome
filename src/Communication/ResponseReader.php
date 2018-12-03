@@ -23,9 +23,9 @@ class ResponseReader
     protected $connection;
 
     /**
-     * @var Response|null
+     * @var Response
      */
-    protected $response = null;
+    protected $response;
 
     /**
      * Response constructor.
@@ -51,7 +51,7 @@ class ResponseReader
      * the message to get a response for
      * @return Message
      */
-    public function getMessage(): Message
+    public function getMessage()
     {
         return $this->message;
     }
@@ -60,7 +60,7 @@ class ResponseReader
      * The connection to check messages for
      * @return Connection
      */
-    public function getConnection(): Connection
+    public function getConnection()
     {
         return $this->connection;
     }
@@ -74,7 +74,7 @@ class ResponseReader
      * @return Response
      * @throws NoResponseAvailable
      */
-    public function getResponse(): Response
+    public function getResponse()
     {
         if (!$this->response) {
             throw new NoResponseAvailable('Response is not available. Try to use the method waitForResponse instead.');
@@ -91,14 +91,14 @@ class ResponseReader
      * @throws NoResponseAvailable
      * @throws OperationTimedOut
      */
-    public function waitForResponse(int $timeout = null): Response
+    public function waitForResponse($timeout = null)
     {
         if ($this->hasResponse()) {
             return $this->getResponse();
         }
 
         // default 2000ms
-        $timeout = $timeout ?? 2000;
+        $timeout = $timeout !== null ? $timeout : 2000;
 
         return Utils::tryWithTimeout($timeout * 1000, $this->waitForResponseGenerator());
     }
@@ -114,18 +114,16 @@ class ResponseReader
         while (true) {
             // 50 microseconds between each iteration
             $tryDelay = 50;
-
             // read available response
             $hasResponse = $this->checkForResponse();
-
             // if found return it
             if ($hasResponse) {
-                return $this->getResponse();
+                break;
             }
-
             // wait before next check
-            yield $tryDelay;
+            yield 0 => $tryDelay;
         }
+        yield 1 => $this->getResponse();
     }
 
     /**

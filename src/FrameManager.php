@@ -25,7 +25,8 @@ class FrameManager
 
     /**
      * FrameManager constructor.
-     * @param $page
+     * @param Page $page
+     * @param array $frameTree
      */
     public function __construct(Page $page, array $frameTree)
     {
@@ -67,7 +68,7 @@ class FrameManager
      * @param $frameId
      * @return bool
      */
-    public function hasFrame($frameId): bool
+    public function hasFrame($frameId)
     {
         return array_key_exists($frameId, $this->frames);
     }
@@ -77,7 +78,7 @@ class FrameManager
      * @param $frameId
      * @return Frame
      */
-    public function getFrame($frameId): Frame
+    public function getFrame($frameId)
     {
         if (!isset($this->frames[$frameId])) {
             throw new \RuntimeException(sprintf('No such frame "%s"', $frameId));
@@ -90,7 +91,7 @@ class FrameManager
      * Gets the main frame
      * @return Frame
      */
-    public function getMainFrame(): Frame
+    public function getMainFrame()
     {
         return $this->mainFrame;
     }

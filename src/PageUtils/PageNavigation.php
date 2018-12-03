@@ -67,7 +67,7 @@ class PageNavigation
      * @throws Exception\CommunicationException\CannotReadResponse
      * @throws Exception\CommunicationException\InvalidResponse
      */
-    public function __construct(Page $page, string $url, bool $strict = false)
+    public function __construct(Page $page, $url, $strict = false)
     {
 
         // make sure latest loaderId was pulled
@@ -114,7 +114,7 @@ class PageNavigation
      * @throws NavigationExpired
      * @throws ResponseHasError
      */
-    public function waitForNavigation($eventName = Page::LOAD, int $timeout = null)
+    public function waitForNavigation($eventName = Page::LOAD, $timeout = null)
     {
         if (null === $timeout) {
             $timeout = 30000;
@@ -156,7 +156,7 @@ class PageNavigation
 
                     $this->currentLoaderId = $response->getResultData('loaderId');
                 } else {
-                    yield $delay;
+                    yield 0 => $delay;
                 }
             }
 
@@ -164,16 +164,16 @@ class PageNavigation
             if ($this->frame->getLatestLoaderId() === $this->currentLoaderId) {
                 // check that lifecycle event exists
                 if ($this->page->hasLifecycleEvent($eventName)) {
-                    return true;
-
+//                    return true;
+                    break;
                 // or else just wait for the new event to trigger
                 } else {
-                    yield $delay;
+                    yield 0 => $delay;
                 }
 
             // else if frame has still the previous loader, wait for the new one
             } elseif ($this->frame->getLatestLoaderId() == $this->previousLoaderId) {
-                yield $delay;
+                yield 0 => $delay;
 
             // else if a new loader is present that means that a new navigation started
             } else {
@@ -189,5 +189,7 @@ class PageNavigation
 
             $this->page->getSession()->getConnection()->readData();
         }
+
+        yield 1 => true;
     }
 }

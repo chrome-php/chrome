@@ -65,7 +65,7 @@ class Frame
     /**
      * @return int
      */
-    public function getExecutionContextId(): int
+    public function getExecutionContextId()
     {
         return $this->executionContextId;
     }
@@ -73,7 +73,7 @@ class Frame
     /**
      * @param int $executionContextId
      */
-    public function setExecutionContextId(int $executionContextId)
+    public function setExecutionContextId($executionContextId)
     {
         $this->executionContextId = $executionContextId;
     }
@@ -81,7 +81,7 @@ class Frame
     /**
      * @return string
      */
-    public function getFrameId(): string
+    public function getFrameId()
     {
         return $this->frameId;
     }
@@ -89,7 +89,7 @@ class Frame
     /**
      * @return string
      */
-    public function getLatestLoaderId(): string
+    public function getLatestLoaderId()
     {
         return $this->latestLoaderId;
     }
@@ -98,7 +98,7 @@ class Frame
      * Gets the life cycle events of the frame with the time they occurred at.
      * @return array
      */
-    public function getLifeCycle(): array
+    public function getLifeCycle()
     {
         return $this->lifeCycleEvents;
     }

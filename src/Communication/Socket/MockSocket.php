@@ -70,7 +70,7 @@ class MockSocket implements SocketInterface
     /**
      * @inheritdoc
      */
-    public function receiveData(): array
+    public function receiveData()
     {
         $data = $this->receivedData;
         $this->receivedData = [];

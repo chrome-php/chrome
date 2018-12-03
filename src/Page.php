@@ -64,7 +64,7 @@ class Page
      * @throws CommunicationException
      * @throws NoResponseAvailable
      */
-    public function addPreScript(string $script, array $options = [])
+    public function addPreScript($script, array $options = [])
     {
         // defer script execution
         if (isset($options['onLoad']) && $options['onLoad']) {
@@ -74,7 +74,7 @@ class Page
         // add script
         $this->getSession()->sendMessageSync(
             new Message('Page.addScriptToEvaluateOnNewDocument', ['source' => $script])
-        );
+        , 2000);
     }
 
     /**
@@ -104,7 +104,7 @@ class Page
     /**
      * @return FrameManager
      */
-    public function getFrameManager(): FrameManager
+    public function getFrameManager()
     {
         $this->assertNotClosed();
 
@@ -115,7 +115,7 @@ class Page
      * Get the session this page is attached to
      * @return Session
      */
-    public function getSession(): Session
+    public function getSession()
     {
         $this->assertNotClosed();
 
@@ -130,11 +130,11 @@ class Page
      * @return PageNavigation
      * @throws Exception\CommunicationException
      */
-    public function navigate(string $url, array $options = [])
+    public function navigate($url, array $options = [])
     {
         $this->assertNotClosed();
 
-        return new PageNavigation($this, $url, $options['strict'] ?? false);
+        return new PageNavigation($this, $url, isset($options['strict']) ? $options['strict'] : false);
     }
 
     /**
@@ -151,7 +151,7 @@ class Page
      * @return PageEvaluation
      * @throws Exception\CommunicationException
      */
-    public function evaluate(string $expression)
+    public function evaluate($expression)
     {
         $this->assertNotClosed();
 
@@ -187,7 +187,7 @@ class Page
      * @return PageEvaluation
      * @throws CommunicationException
      */
-    public function callFunction(string $functionDeclaration, array $arguments = []): PageEvaluation
+    public function callFunction($functionDeclaration, array $arguments = [])
     {
         $this->assertNotClosed();
 
@@ -228,7 +228,7 @@ class Page
      * @return PageEvaluation
      * @throws CommunicationException
      */
-    public function addScriptTag(array $options): PageEvaluation
+    public function addScriptTag(array $options)
     {
         if (isset($options['url']) && isset($options['content'])) {
             throw new \InvalidArgumentException('addScript accepts "url" or "content" option, not both');
@@ -301,7 +301,7 @@ class Page
      * @throws CommunicationException\CannotReadResponse
      * @throws CommunicationException\InvalidResponse
      */
-    public function hasLifecycleEvent(string $event): bool
+    public function hasLifecycleEvent($event)
     {
         $this->assertNotClosed();
 
@@ -346,18 +346,21 @@ class Page
             // make sure that the current loader is the good one
             if ($this->frameManager->getMainFrame()->getLatestLoaderId() !== $loaderId) {
                 if ($this->hasLifecycleEvent($eventName)) {
-                    return true;
+//                    return true;
+                    break;
                 }
 
-                yield $delay;
+                yield 0 => $delay;
 
                 // else if frame has still the previous loader, wait for the new one
             } else {
-                yield $delay;
+                yield 0 => $delay;
             }
 
             $this->getSession()->getConnection()->readData();
         }
+
+        yield 1 => true;
     }
 
     /**
@@ -377,7 +380,7 @@ class Page
      *
      * @return Clip
      */
-    public function getFullPageClip(): Clip
+    public function getFullPageClip()
     {
         $contentSize = $this->getLayoutMetrics()->await()->getContentSize();
         return new Clip(0, 0, $contentSize['width'], $contentSize['height']);
@@ -400,7 +403,7 @@ class Page
      * @return PageScreenshot
      * @throws CommunicationException
      */
-    public function screenshot(array $options = []): PageScreenshot
+    public function screenshot(array $options = [])
     {
         $this->assertNotClosed();
 
@@ -487,7 +490,7 @@ class Page
      * @return PagePdf
      * @throws CommunicationException
      */
-    public function pdf(array $options = []): PagePdf
+    public function pdf(array $options = [])
     {
         $this->assertNotClosed();
 
@@ -634,7 +637,7 @@ class Page
      *
      * @return ResponseWaiter
      */
-    public function setViewport(int $width, int $height)
+    public function setViewport($width, $height)
     {
         return $this->setDeviceMetricsOverride([
             'width' => $width,
@@ -779,7 +782,7 @@ class Page
      * @throws Exception\OperationTimedOut
      * @throws NoResponseAvailable
      */
-    public function getCookies(int $timeout = null)
+    public function getCookies($timeout = null)
     {
         return $this->readCookies()->await($timeout)->getCookies();
     }
@@ -797,7 +800,7 @@ class Page
      * @throws Exception\OperationTimedOut
      * @throws NoResponseAvailable
      */
-    public function getAllCookies(int $timeout = null)
+    public function getAllCookies($timeout = null)
     {
         return $this->readAllCookies()->await($timeout)->getCookies();
     }
@@ -850,7 +853,7 @@ class Page
      * @return ResponseWaiter
      * @throws CommunicationException
      */
-    public function setUserAgent(string $userAgent)
+    public function setUserAgent($userAgent)
     {
         $response = $this->getSession()
             ->sendMessage(

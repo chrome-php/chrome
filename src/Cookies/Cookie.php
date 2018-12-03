@@ -55,7 +55,7 @@ class Cookie implements \ArrayAccess
      */
     public function offsetExists($offset)
     {
-        return array_key_exists($offset, $this->data);
+        return isset($this->data[$offset]);
     }
 
     /**
@@ -63,7 +63,7 @@ class Cookie implements \ArrayAccess
      */
     public function offsetGet($offset)
     {
-        return $this->data[$offset] ?? null;
+        return isset($this->data[$offset]) ? $this->data[$offset] : null;
     }
 
     /**

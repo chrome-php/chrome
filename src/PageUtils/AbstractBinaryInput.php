@@ -27,7 +27,7 @@ abstract class AbstractBinaryInput
     /**
      * @return ResponseReader
      */
-    public function getResponseReader(): ResponseReader
+    public function getResponseReader()
     {
         return $this->responseReader;
     }
@@ -53,7 +53,7 @@ abstract class AbstractBinaryInput
      * @throws FilesystemException
      * @throws ScreenshotFailed
      */
-    public function saveToFile(string $path, int $timeout = 5000)
+    public function saveToFile($path, $timeout = 5000)
     {
         $response = $this->responseReader->waitForResponse($timeout);
 
@@ -64,7 +64,7 @@ abstract class AbstractBinaryInput
         // create directory
         $dir = dirname($path);
         if (!file_exists($dir)) {
-            if (!mkdir($dir, 0777, true)) {
+            if (!mkdir($dir, 0777, true) || !is_dir($dir)) {
                 throw new FilesystemException(
                     sprintf('Could not create the directory %s.', $dir)
                 );
@@ -96,5 +96,5 @@ abstract class AbstractBinaryInput
      * @internal
      * @return \Exception
      */
-    abstract protected function getException(string $message): \Exception;
+    abstract protected function getException($message);
 }
