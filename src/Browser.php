@@ -108,6 +108,7 @@ class Browser
      * @throws OperationTimedOut
      * @return Page
      */
+//    public function createPage($url = 'about:blank')
     public function createPage()
     {
 
@@ -144,6 +145,12 @@ class Browser
 
         // Runtime.enable
         $page->getSession()->sendMessageSync(new Message('Runtime.enable'));
+
+        // Dom.enable
+        $page->getSession()->sendMessageSync(new Message('Dom.enable'));
+
+        // Network.setCacheDisabled
+        $page->getSession()->sendMessageSync(new Message('Network.setCacheDisabled', ['cacheDisabled' => true]));
 
         // Page.setLifecycleEventsEnabled
         $page->getSession()->sendMessageSync(new Message('Page.setLifecycleEventsEnabled', ['enabled' => true]));

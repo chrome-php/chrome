@@ -15,6 +15,7 @@ use HeadlessChromium\Exception\NoResponseAvailable;
 use HeadlessChromium\Exception\TargetDestroyed;
 use HeadlessChromium\Input\Mouse;
 use HeadlessChromium\PageUtils\CookiesGetter;
+use HeadlessChromium\PageUtils\ContentGetter;
 use HeadlessChromium\PageUtils\PageEvaluation;
 use HeadlessChromium\PageUtils\PageLayoutMetrics;
 use HeadlessChromium\PageUtils\PageNavigation;
@@ -28,6 +29,12 @@ class Page
     const DOM_CONTENT_LOADED = 'DOMContentLoaded';
     const LOAD = 'load';
     const NETWORK_IDLE = 'networkIdle';
+
+    const INTERCEPTION_TYPE_DOCUMENT = 'Document';
+    const INTERCEPTION_TYPE_IMAGE = 'Image';
+    const INTERCEPTION_TYPE_MEDIA = 'Media';
+    const INTERCEPTION_TYPE_XHR = 'XHR';
+    const INTERCEPTION_TYPE_OTHER = 'Other';
 
     /**
      * @var Target
@@ -43,6 +50,20 @@ class Page
      * @var Mouse|Null
      */
     protected $mouse;
+
+    /**
+     * Interception Id
+     *
+     * @var int
+     */
+    private $interceptionId;
+
+    /**
+     * Request result
+     *
+     * @var string
+     */
+    private $result;
 
     /**
      * Page constructor.
@@ -324,7 +345,7 @@ class Page
         $this->assertNotClosed();
 
         if (!$loaderId) {
-            $loaderId = $loader = $this->frameManager->getMainFrame()->getLatestLoaderId();
+            $loaderId = $this->frameManager->getMainFrame()->getLatestLoaderId();
         }
 
         Utils::tryWithTimeout($timeout * 1000, $this->waitForReloadGenerator($eventName, $loaderId));
@@ -340,13 +361,12 @@ class Page
      */
     private function waitForReloadGenerator($eventName, $loaderId)
     {
-        $delay = 500;
+        $delay = 50;
 
         while (true) {
             // make sure that the current loader is the good one
             if ($this->frameManager->getMainFrame()->getLatestLoaderId() !== $loaderId) {
                 if ($this->hasLifecycleEvent($eventName)) {
-//                    return true;
                     break;
                 }
 
@@ -356,7 +376,6 @@ class Page
             } else {
                 yield 0 => $delay;
             }
-
             $this->getSession()->getConnection()->readData();
         }
 
@@ -379,6 +398,10 @@ class Page
      * ```
      *
      * @return Clip
+     * @throws CommunicationException
+     * @throws CommunicationException\ResponseHasError
+     * @throws Exception\OperationTimedOut
+     * @throws NoResponseAvailable
      */
     public function getFullPageClip()
     {
@@ -861,5 +884,200 @@ class Page
             );
 
         return new ResponseWaiter($response);
+    }
+
+    /**
+     * Gets page content with GET method
+     *
+     * @param $url
+     * @param null $timeout
+     * @return mixed|null
+     * @throws CommunicationException
+     * @throws CommunicationException\CannotReadResponse
+     * @throws CommunicationException\InvalidResponse
+     * @throws CommunicationException\ResponseHasError
+     * @throws Exception\NavigationExpired
+     * @throws Exception\OperationTimedOut
+     * @throws NoResponseAvailable
+     */
+    public function getContent($url, $timeout = null)
+    {
+        $result = $this->readContent($url, $timeout)->await($timeout)->getContent();
+        if($result === null || empty($result)) {
+            $result = $this->getDomDocument($timeout);
+        }
+
+        return $result;
+    }
+
+    /**
+     * Makes request to get page content
+     *
+     * @param null $timeout
+     * @return mixed
+     * @throws CommunicationException
+     * @throws NoResponseAvailable
+     */
+    public function getDomDocument($timeout = null)
+    {
+        $this->assertNotClosed();
+
+        $result = $this->getSession()->sendMessageSync(
+            new Message('DOM.getDocument'),
+            $timeout
+        );
+        if(isset($result->getResultData('root')['backendNodeId'])) {
+            $outer = $this->getSession()->sendMessageSync(
+                new Message(
+                    'DOM.getOuterHTML',
+                    [
+                        'backendNodeId' => $result->getResultData('root')['backendNodeId']
+                    ]
+                ),
+                $timeout
+            );
+
+            return $outer->getResultData('outerHTML') ?: null;
+        }
+    }
+
+    /**
+     * Makes page content getter
+     *
+     * @param $url
+     * @param null $timeout
+     * @return ContentGetter
+     * @throws CommunicationException
+     * @throws CommunicationException\CannotReadResponse
+     * @throws CommunicationException\InvalidResponse
+     * @throws CommunicationException\ResponseHasError
+     * @throws Exception\NavigationExpired
+     * @throws Exception\OperationTimedOut
+     * @throws NoResponseAvailable
+     */
+    public function readContent($url, $timeout = null)
+    {
+        $this->assertNotClosed();
+
+        $this->navigate($url)->waitForNavigation();
+
+        $currentLoaderId = $this->frameManager->getMainFrame()->getFrameId();
+        $response = $this->getSession()->sendMessage(
+            new Message(
+                'Page.getResourceContent',
+                [
+                    'url' => $this->getCurrentUrl(),
+                    'frameId' => $currentLoaderId
+                ]
+            )
+        );
+        $response->waitForResponse($timeout);
+
+        return new ContentGetter($response);
+    }
+
+    /**
+     * Gets page content with POST method
+     *
+     * @param $url
+     * @param string $eventName
+     * @param int $timeout
+     * @return ContentGetter
+     * @throws CommunicationException
+     * @throws CommunicationException\CannotReadResponse
+     * @throws CommunicationException\InvalidResponse
+     * @throws CommunicationException\ResponseHasError
+     * @throws Exception\NavigationExpired
+     * @throws Exception\OperationTimedOut
+     * @throws NoResponseAvailable
+     */
+    public function getContentPost($url, $eventName = Page::DOM_CONTENT_LOADED, $timeout = 30000, $postData = null, $headers = null)
+    {
+        $this->interceptionId = null;
+        $this->result = null;
+
+        $this->getSession()->on('method:Network.requestIntercepted', function($params) use($url, $postData, $headers) {
+            if($this->interceptionId === null && $params['interceptionId'] !== null) {
+                $this->interceptionId = $params['interceptionId'];
+                $req = $this->buildRequest($this->interceptionId, $url, $postData, $headers);
+                $this->getSession()->sendMessage(
+                    new Message('Network.continueInterceptedRequest', $req)
+                );
+            }
+        });
+
+        $this->getSession()->on('method:Network.responseReceived', function($params) use($timeout) {
+            if($this->interceptionId && $this->result === null) {
+                $result = $this->getSession()->sendMessageSync(
+                    new Message(
+                        'Network.getResponseBody',
+                        [
+                            'requestId' => $this->getFrameManager()->getrequestId()
+                        ]
+                    ),
+                    $timeout
+                );
+                if($result->getResultData('body') !== null && !empty($result->getResultData('body'))) {
+                    $this->result = $result->getResultData('body');
+                    if($result->getResultData('base64Encoded')) {
+                        $this->result = base64_decode($this->result);
+                    }
+
+                    return;
+                }
+            }
+        });
+
+        $this->getSession()->sendMessageSync(
+            new Message(
+                'Network.setRequestInterception',
+                [
+                    'patterns' => [
+                        ['resourceType' => self::INTERCEPTION_TYPE_DOCUMENT],
+                        ['urlPattern' => $url]
+                    ]
+                ]
+            )
+        );
+        $this->navigate($url)->waitForNavigation($eventName, $timeout);
+
+        return $this->result;
+    }
+
+    /**
+     * Returns request obj for POST method
+     *
+     * @param $interceptionId
+     * @param $url
+     * @param $postData
+     * @param $headers
+     * @return array
+     */
+    public function buildRequest($interceptionId, $url, $postData, $headers)
+    {
+        $request = [
+            'method' => 'POST',
+            'interceptionId' => $interceptionId,
+            'url' => $url,
+            'isDownload' => true
+        ];
+
+        if ($postData !== null) {
+            //we can receive $postData as string like key1=val2&key2=val2...
+            if (is_array($postData)) {
+                $postData = http_build_query($postData);
+            }
+            $request['postData'] = $postData;
+        }
+
+        if ($headers !== null) {
+            //we can receive $headers as string like key1=val2&key2=val2...
+            if (is_array($headers)) {
+                $headers = http_build_query($headers);
+            }
+            $request['headers'] = $headers;
+        }
+
+        return $request;
     }
 }

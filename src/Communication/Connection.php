@@ -338,9 +338,7 @@ class Connection extends EventEmitter implements LoggerAwareInterface
                     return $this->dispatchMessage($response['params']['message'], $session);
                 } else {
                     if ($session) {
-                        $this->logger->debug(
-                            'session(' . $session->getSessionId() . '): ⇶ dispatching method:' . $response['method']
-                        );
+                        $this->logger->debug('session(' . $session->getSessionId() . '): ⇶ dispatching method:' . $response['method']);
                         $session->emit('method:' . $response['method'], [$response['params']]);
                     } else {
                         $this->logger->debug('connection: ⇶ dispatching method:' . $response['method']);

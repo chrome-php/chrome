@@ -24,6 +24,11 @@ class FrameManager
     protected $mainFrame;
 
     /**
+     * @var RequestId
+     */
+    protected $requestId;
+
+    /**
      * FrameManager constructor.
      * @param Page $page
      * @param array $frameTree
@@ -56,6 +61,15 @@ class FrameManager
                 if ($this->hasFrame($params['context']['auxData']['frameId'])) {
                     $frame = $this->getFrame($params['context']['auxData']['frameId']);
                     $frame->setExecutionContextId($params['context']['id']);
+                }
+            }
+        });
+
+        // attach request id to frame
+        $this->page->getSession()->on('method:Network.requestWillBeSent', function($params) {
+            if ($this->requestId === null) {
+                if (isset($params['requestId'])) {
+                    $this->requestId = $params['requestId'];
                 }
             }
         });
@@ -94,5 +108,14 @@ class FrameManager
     public function getMainFrame()
     {
         return $this->mainFrame;
+    }
+
+    /**
+     * Gets the request id
+     * @return RequestId
+     */
+    public function getrequestId()
+    {
+        return $this->requestId;
     }
 }

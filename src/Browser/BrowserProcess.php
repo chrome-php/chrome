@@ -172,18 +172,14 @@ class BrowserProcess implements LoggerAwareInterface
      */
     public function kill()
     {
-
         // log
         $this->logger->debug('process: killing chrome');
-
         if ($this->wasKilled) {
             // log
             $this->logger->debug('process: chrome already killed, ignoring');
             return;
         }
-
         $this->wasKilled = true;
-
         if (isset($this->process)) {
             // close gracefully if connection exists
             if (isset($this->connection)) {
@@ -191,14 +187,11 @@ class BrowserProcess implements LoggerAwareInterface
                 if ($this->connection->isConnected()) {
                     // first try to close with Browser.close
                     // if Browser.close is not implemented, try to kill by closing all pages
-/*                    try {
+                    try {
                         // log
                         $this->logger->debug('process: trying to close chrome gracefully');
-
                         // TODO check browser.close on chrome 63
                         $r = $this->connection->sendMessageSync(new Message('Browser.close'));
-
-
                         if (!$r->isSuccessful()) {
                             // log
                             $this->logger->debug('process: ✗ could not close gracefully');
@@ -207,29 +200,24 @@ class BrowserProcess implements LoggerAwareInterface
                     } catch (\Exception $e) {
                         //log
                         $this->logger->debug('process: closing chrome gracefully - compatibility');
-
                         // close all pages if connected
                         $this->connection->isConnected() && Utils::closeAllPage($this->connection);
-                    }*/
-
+                    }
                     // disconnect socket
                     try {
                         $this->connection->disconnect();
                     } catch (SocketException $e) {
                         // Socket might be already disconnected
                     }
-
                     // log
                     $this->logger->debug('process: waiting for process to close');
-
                     // wait for process to close
                     $generator = function (Process $process) {
                         while ($process->isRunning()) {
-                            yield 2 * 1000; // wait for 2ms
+                            yield 0 => 2 * 1000; // wait for 2ms
                         }
                     };
                     $timeout = 8 * 1000 * 1000; // 8 seconds
-
                     try {
                         Utils::tryWithTimeout($timeout, $generator($this->process));
                     } catch (OperationTimedOut $e) {
@@ -238,26 +226,21 @@ class BrowserProcess implements LoggerAwareInterface
                     }
                 }
             }
-
             // stop process if running
             if ($this->process->isRunning()) {
                 // log
                 $this->logger->debug('process: stopping process');
-
                 // stop process
                 $exitCode = $this->process->stop();
-
                 // log
                 $this->logger->debug('process: process stopped with exit code ' . $exitCode);
             }
         }
-
         // remove data dir
         if ($this->userDataDirIsTemp && $this->userDataDir) {
             try {
                 // log
                 $this->logger->debug('process: cleaning temporary resources:' . $this->userDataDir);
-
                 // cleaning
                 $fs = new Filesystem();
                 $fs->remove($this->userDataDir);

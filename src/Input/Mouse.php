@@ -66,7 +66,7 @@ class Mouse
                 'x' => $originX + ($this->x - $originX) * ($i / $steps),
                 'y' => $originY + ($this->y - $originY) * ($i / $steps),
                 'type' => 'mouseMoved'
-            ]), 500);
+            ]), 100);
         }
 
         return $this;
