@@ -1,9 +1,9 @@
 {
-  "name": "chrome-php/chrome",
+  "name": "infostars/headless-chromium-php",
   "description": "Instrument headless chrome/chromium instances from php5.6",
   "type": "library",
   "keywords": ["chrome", "chromium", "crawl", "browser", "headless", "screenshot", "pdf"],
-  "homepage": "https://github.com/gsouf/headless-chromium-php",
+  "homepage": "https://github.com/infostars/headless-chromium-php",
   "license": "Fair",
 
   "authors": [

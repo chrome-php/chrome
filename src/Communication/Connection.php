@@ -237,9 +237,10 @@ class Connection extends EventEmitter implements LoggerAwareInterface
      */
     public function createSession($targetId)
     {
-        $message = new Message('Target.attachToTarget', ['targetId' => $targetId]);
-        $response = $this->sendMessageSync($message, 2000);
-
+        $response = $this->sendMessageSync(
+            new Message('Target.attachToTarget', ['targetId' => $targetId]),
+            200
+        );
         $sessionId = $response['result']['sessionId'];
         $session = new Session($targetId, $sessionId, $this);
 

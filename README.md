@@ -39,9 +39,9 @@ Note that the library is only tested on linux but is compatible with osX and win
 Install
 -------
 
-The library can be installed with composer and is available on packagist under [chrome-php/chrome](https://packagist.org/packages/infostars/xxxxx)
+The library can be installed with composer and is available on packagist under [infostars/headless-chromium-php](https://packagist.org/packages/infostars/headless-chromium-php)
 
-``composer require infostars/xxxxx``
+``composer require infostars/headless-chromium-php``
 
 Usage
 -----

@@ -51,7 +51,7 @@ class Target
 
         // if not already done, create a session for the target
         if (!$this->session) {
-            $this->session = $this->connection->createSession($this->getTargetInfo('targetId'));
+            $this->session = $session = $this->connection->createSession($this->getTargetInfo('targetId'));
         }
 
         return $this->session;

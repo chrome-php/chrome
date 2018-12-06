@@ -27,7 +27,7 @@ class BrowserFactory
             if ($envChromePath) {
                 $chromeBinaries = '"' . $envChromePath . '"';
             } else {
-                $chromeBinaries = 'google-chrome';
+                $chromeBinaries = 'chrome';
             }
         }
 

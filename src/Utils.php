@@ -3,6 +3,7 @@
  * @license see LICENSE
  */
 
+
 namespace HeadlessChromium;
 
 use HeadlessChromium\Communication\Connection;
@@ -75,7 +76,6 @@ class Utils
     /**
      * Closes all pages for the given connection
      * @param Connection $connection
-     * @throws OperationTimedOut
      */
     public static function closeAllPage(Connection $connection)
     {

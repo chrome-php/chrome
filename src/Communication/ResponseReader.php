@@ -23,9 +23,9 @@ class ResponseReader
     protected $connection;
 
     /**
-     * @var Response
+     * @var Response|null
      */
-    protected $response;
+    protected $response = null;
 
     /**
      * Response constructor.
@@ -98,7 +98,7 @@ class ResponseReader
         }
 
         // default 2000ms
-        $timeout = $timeout !== null ? $timeout : 2000;
+        $timeout = $timeout !== null ? $timeout : 30000;
 
         return Utils::tryWithTimeout($timeout * 1000, $this->waitForResponseGenerator());
     }
@@ -114,12 +114,15 @@ class ResponseReader
         while (true) {
             // 50 microseconds between each iteration
             $tryDelay = 50;
+
             // read available response
             $hasResponse = $this->checkForResponse();
+
             // if found return it
             if ($hasResponse) {
                 break;
             }
+
             // wait before next check
             yield 0 => $tryDelay;
         }

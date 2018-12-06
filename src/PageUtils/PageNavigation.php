@@ -114,11 +114,8 @@ class PageNavigation
      * @throws NavigationExpired
      * @throws ResponseHasError
      */
-    public function waitForNavigation($eventName = Page::LOAD, $timeout = null)
+    public function waitForNavigation($eventName = Page::LOAD, $timeout = 30000)
     {
-        if (null === $timeout) {
-            $timeout = 30000;
-        }
         return Utils::tryWithTimeout($timeout * 1000, $this->navigationComplete($eventName));
     }
 
@@ -136,7 +133,7 @@ class PageNavigation
      */
     private function navigationComplete($eventName)
     {
-        $delay = 500;
+        $delay = 50;
 
         while (true) {
             // read the response only if it was not read already
@@ -164,8 +161,8 @@ class PageNavigation
             if ($this->frame->getLatestLoaderId() === $this->currentLoaderId) {
                 // check that lifecycle event exists
                 if ($this->page->hasLifecycleEvent($eventName)) {
-//                    return true;
                     break;
+
                 // or else just wait for the new event to trigger
                 } else {
                     yield 0 => $delay;

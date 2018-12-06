@@ -64,7 +64,7 @@ abstract class AbstractBinaryInput
         // create directory
         $dir = dirname($path);
         if (!file_exists($dir)) {
-            if (!mkdir($dir, 0777, true) || !is_dir($dir)) {
+            if (!mkdir($dir, 0777, true)) {
                 throw new FilesystemException(
                     sprintf('Could not create the directory %s.', $dir)
                 );

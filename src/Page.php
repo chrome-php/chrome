@@ -340,13 +340,12 @@ class Page
      */
     private function waitForReloadGenerator($eventName, $loaderId)
     {
-        $delay = 500;
+        $delay = 100;
 
         while (true) {
             // make sure that the current loader is the good one
             if ($this->frameManager->getMainFrame()->getLatestLoaderId() !== $loaderId) {
                 if ($this->hasLifecycleEvent($eventName)) {
-//                    return true;
                     break;
                 }
 

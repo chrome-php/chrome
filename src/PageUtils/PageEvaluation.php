@@ -76,6 +76,7 @@ class PageEvaluation
         }
 
         $result = $this->response->getResultData('result');
+
         $resultSubType = isset($result['subtype']) ? $result['subtype'] : null;
 
         if ($resultSubType == 'error') {
@@ -111,6 +112,7 @@ class PageEvaluation
      *
      * @return mixed
      * @throws EvaluationFailed
+     * @throws JavascriptException
      */
     public function getReturnType($timeout = null)
     {
