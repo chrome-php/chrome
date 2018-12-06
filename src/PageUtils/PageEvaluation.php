@@ -111,6 +111,7 @@ class PageEvaluation
      *
      * @return mixed
      * @throws EvaluationFailed
+     * @throws JavascriptException
      */
     public function getReturnType($timeout = null)
     {

@@ -16,6 +16,8 @@ use Wrench\Exception\HandshakeException;
 class BrowserFactory
 {
 
+    const SOCKET_FILE = '/tmp/chrome-php-socket';
+
     protected $chromeBinaries;
 
     public function __construct($chromeBinaries = null)
@@ -27,11 +29,38 @@ class BrowserFactory
             if ($envChromePath) {
                 $chromeBinaries = '"' . $envChromePath . '"';
             } else {
-                $chromeBinaries = 'google-chrome';
+                $chromeBinaries = 'google-chrome-stable';
             }
         }
 
         $this->chromeBinaries = $chromeBinaries;
+    }
+
+    /**
+     * @param array $options
+     * @return Browser|ProcessAwareBrowser|null
+     */
+    public function getBrowser(array $options = [])
+    {
+        $browser = null;
+        if (file_exists(self::SOCKET_FILE)) {
+            $socket =  file_get_contents(self::SOCKET_FILE);
+            try {
+                $browser = self::connectToBrowser($socket, $options);
+            } catch (\HeadlessChromium\Exception\BrowserConnectionFailed $e) {
+                $logger = self::createLogger($options);
+                if($logger) {
+                    $logger->debug('Browser is closed, opening new instance ');
+                }
+            }
+        }
+        if (!$browser) {
+            $browserFactory = new BrowserFactory();
+            $browser = $browserFactory->createBrowser($options);
+            file_put_contents(self::SOCKET_FILE, $browser->getSocketUri());
+        }
+
+        return $browser;
     }
 
     /**

@@ -98,7 +98,7 @@ class ResponseReader
         }
 
         // default 2000ms
-        $timeout = $timeout !== null ? $timeout : 2000;
+        $timeout = $timeout !== null ? $timeout : 30000;
 
         return Utils::tryWithTimeout($timeout * 1000, $this->waitForResponseGenerator());
     }
