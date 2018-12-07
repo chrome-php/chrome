@@ -137,7 +137,7 @@ class BrowserFactory
         }
 
         // connect to browser
-        $connection = new Connection($uri, $logger, isset($options['sendSyncDefaultTimeout']) ? $options['sendSyncDefaultTimeout'] : 3000);
+        $connection = new Connection($uri, $logger, isset($options['sendSyncDefaultTimeout']) ? $options['sendSyncDefaultTimeout'] : 30000);
 
         // try to connect
         try {

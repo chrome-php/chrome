@@ -26,6 +26,6 @@
     "symfony/filesystem": "^3|^4",
     "psr/log": "^1.0",
     "apix/log": "^1.2",
-    "evenement/evenement": "^v2.1.0"
+    "evenement/evenement": "~v2.0.0"
   }
 }

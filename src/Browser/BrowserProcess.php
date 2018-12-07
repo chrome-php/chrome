@@ -365,61 +365,50 @@ class BrowserProcess implements LoggerAwareInterface
         // log
         $this->logger->debug('process: waiting for ' . $timeout / 1000000 . ' seconds for startup');
 
-        try {
-            $generator = function (Process $process) {
-                while (true) {
-                    if (!$process->isRunning()) {
-                        // log
-                        $this->logger->debug('process: ✗ chrome process stopped');
+        while (true) {
+            if (!$process->isRunning()) {
+                // log
+                $this->logger->debug('process: ✗ chrome process stopped');
 
-                        // exception
-                        $message = 'Chrome process stopped before startup completed.';
-                        $error = trim($process->getErrorOutput());
-                        if (!empty($error)) {
-                            $message .= ' Additional info: ' . $error;
-                        }
-                        throw new \RuntimeException($message);
+                // exception
+                $message = 'Chrome process stopped before startup completed.';
+                $error = trim($process->getErrorOutput());
+                if (!empty($error)) {
+                    $message .= ' Additional info: ' . $error;
+                }
+                throw new \RuntimeException($message);
+            }
+
+            $output = trim($process->getIncrementalErrorOutput());
+
+            if ($output) {
+                // log
+                $this->logger->debug('process: chrome output:' . $output);
+
+                $outputs = explode(PHP_EOL, $output);
+
+                foreach ($outputs as $output) {
+                    $output = trim($output);
+
+                    // ignore empty line
+                    if (empty($output)) {
+                        continue;
                     }
 
-                    $output = trim($process->getIncrementalErrorOutput());
-
-                    if ($output) {
+                    // find socket uri
+                    if (preg_match('/DevTools listening on (ws:\/\/.*)/', $output, $matches)) {
                         // log
-                        $this->logger->debug('process: chrome output:' . $output);
-
-                        $outputs = explode(PHP_EOL, $output);
-
-                        foreach ($outputs as $output) {
-                            $output = trim($output);
-
-                            // ignore empty line
-                            if (empty($output)) {
-                                continue;
-                            }
-
-                            // find socket uri
-                            if (preg_match('/DevTools listening on (ws:\/\/.*)/', $output, $matches)) {
-                                // log
-                                $this->logger->debug('process: ✓ accepted output');
-                                break;
-                            } else {
-                                // log
-                                $this->logger->debug('process: ignoring output:' . trim($output));
-                            }
-                        }
+                        $this->logger->debug('process: ✓ accepted output');
+                        return $matches[1];
+                    } else {
+                        // log
+                        $this->logger->debug('process: ignoring output:' . trim($output));
                     }
+                }
+            }
 
-                    // wait for 10ms
-                    yield 0 => 10 * 1000;
-                }
-                if(!isset($matches[1])) {
-                    throw new \RuntimeException('Cannot start browser: matches not found');
-                }
-                yield 1 => $matches[1];
-            };
-            return Utils::tryWithTimeout($timeout, $generator($process));
-        } catch (OperationTimedOut $e) {
-            throw new \RuntimeException('Cannot start browser', 0, $e);
+            // wait for 10ms
+            usleep(10 * 1000);
         }
     }
 
