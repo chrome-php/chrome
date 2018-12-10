@@ -559,7 +559,7 @@ class Page
             $pdfOptions['marginLeft'] = $options['marginLeft'];
         }
     
-        // option marginLeft
+        // option marginRight
         if (array_key_exists('marginRight', $options)) {
             // marginBottom requires type to be float
             if (gettype($options['marginRight']) !== 'double') {
