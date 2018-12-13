@@ -123,6 +123,19 @@ class Page
     }
 
     /**
+     * Sets the HTTP header necessary for basic authentication.
+     * @param string $username
+     * @param string $password
+     */
+    public function setBasicAuthHeader(string $username, string $password)
+    {
+        $header = base64_encode($username . ':' . $password);
+        $this->getSession()->sendMessage(new Message(
+            'Network.setExtraHTTPHeaders',
+            array('headers' => array('Authorization' => 'Basic ' . $header))));
+    }
+
+    /**
      * @param string $url
      * @param array $options
      *  - strict: make waitForNAvigation to fail if a new navigation is initiated. Default: false
