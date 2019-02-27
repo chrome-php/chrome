@@ -103,7 +103,6 @@ class PageTest extends BaseTestCase
         $this->assertEquals(null, $barValue);
     }
 
-
     public function testCallFunction()
     {
         $factory = new BrowserFactory();
@@ -114,6 +113,38 @@ class PageTest extends BaseTestCase
 
         $this->assertEquals(3, $evaluation->getReturnValue());
         $this->assertEquals(3, $page->evaluate('window.foo')->getReturnValue());
+    }
+
+    public function testCallFunctionPromise()
+    {
+        $factory = new BrowserFactory();
+
+        $browser = $factory->createBrowser();
+        $page = $browser->createPage();
+        $evaluation = $page->callFunction('function(a, b) {
+            return new Promise(resolve => {
+                setTimeout(() => {
+                    resolve(a + b);
+                }, 100);
+            })
+        }', [1, 2]);
+
+        $this->assertEquals(3, $evaluation->getReturnValue());
+    }
+
+    public function testEvaluatePromise()
+    {
+        $factory = new BrowserFactory();
+
+        $browser = $factory->createBrowser();
+        $page = $browser->createPage();
+        $evaluation = $page->evaluate('new Promise(resolve => {
+            setTimeout(() => {
+                resolve(11);
+            }, 100);
+        })');
+
+        $this->assertEquals(11, $evaluation->getReturnValue());
     }
 
     public function testAddScriptTagContent()
