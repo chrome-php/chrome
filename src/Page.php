@@ -123,6 +123,19 @@ class Page
     }
 
     /**
+     * Sets the HTTP header necessary for basic authentication.
+     * @param string $username
+     * @param string $password
+     */
+    public function setBasicAuthHeader(string $username, string $password)
+    {
+        $header = base64_encode($username . ':' . $password);
+        $this->getSession()->sendMessage(new Message(
+            'Network.setExtraHTTPHeaders',
+            array('headers' => array('Authorization' => 'Basic ' . $header))));
+    }
+
+    /**
      * @param string $url
      * @param array $options
      *  - strict: make waitForNAvigation to fail if a new navigation is initiated. Default: false
@@ -514,7 +527,7 @@ class Page
             }
             $pdfOptions['printBackground'] = $options['printBackground'];
         }
-    
+
         // option displayHeaderFooter
         if (array_key_exists('displayHeaderFooter', $options)) {
             // printBackground requires type to be boolean
@@ -525,7 +538,29 @@ class Page
             }
             $pdfOptions['displayHeaderFooter'] = $options['displayHeaderFooter'];
         }
-    
+
+        // option paperWidth
+        if (array_key_exists('paperWidth', $options)) {
+            // paperWidth requires type to be float
+            if (gettype($options['paperWidth']) !== 'double') {
+                throw new \InvalidArgumentException(
+                    'Invalid options "paperWidth" for print to pdf. Must be float like 1.0 or 5.4'
+                );
+            }
+            $pdfOptions['paperWidth'] = $options['paperWidth'];
+        }
+
+        // option paperHeight
+        if (array_key_exists('paperHeight', $options)) {
+            // paperHeight requires type to be float
+            if (gettype($options['paperHeight']) !== 'double') {
+                throw new \InvalidArgumentException(
+                    'Invalid options "paperHeight" for print to pdf. Must be float like 1.0 or 5.4'
+                );
+            }
+            $pdfOptions['paperHeight'] = $options['paperHeight'];
+        }
+
         // option marginTop
         if (array_key_exists('marginTop', $options)) {
             // marginTop requires type to be float
@@ -536,7 +571,7 @@ class Page
             }
             $pdfOptions['marginTop'] = $options['marginTop'];
         }
-    
+
         // option marginBottom
         if (array_key_exists('marginBottom', $options)) {
             // marginBottom requires type to be float
@@ -547,7 +582,7 @@ class Page
             }
             $pdfOptions['marginBottom'] = $options['marginBottom'];
         }
-    
+
         // option marginLeft
         if (array_key_exists('marginLeft', $options)) {
             // marginBottom requires type to be float
@@ -558,8 +593,8 @@ class Page
             }
             $pdfOptions['marginLeft'] = $options['marginLeft'];
         }
-    
-        // option marginLeft
+
+        // option marginRight
         if (array_key_exists('marginRight', $options)) {
             // marginBottom requires type to be float
             if (gettype($options['marginRight']) !== 'double') {
@@ -569,7 +604,7 @@ class Page
             }
             $pdfOptions['marginRight'] = $options['marginRight'];
         }
-    
+
         // option preferCSSPageSize
         if (array_key_exists('preferCSSPageSize', $options)) {
             // printBackground requires type to be boolean
@@ -580,7 +615,7 @@ class Page
             }
             $pdfOptions['preferCSSPageSize'] = $options['preferCSSPageSize'];
         }
-        
+
         // request pdf
         $responseReader = $this->getSession()
             ->sendMessage(new Message('Page.printToPDF', $pdfOptions));
