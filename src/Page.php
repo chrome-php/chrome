@@ -608,7 +608,7 @@ class Page
         // option preferCSSPageSize
         if (array_key_exists('preferCSSPageSize', $options)) {
             // printBackground requires type to be boolean
-            if (!is_bool($options['preferCSSPageSize'])) {
+            if (!\is_bool($options['preferCSSPageSize'])) {
                 throw new \InvalidArgumentException(
                     'Invalid options "preferCSSPageSize" for print to pdf. Must be true or false'
                 );
