@@ -616,6 +616,15 @@ class Page
             $pdfOptions['preferCSSPageSize'] = $options['preferCSSPageSize'];
         }
 
+        if (array_key_exists('scale', $options)) {
+            if (!\is_float($options['scale'])) {
+                throw new \InvalidArgumentException(
+                    'Invalid options "scale" for print to pdf. Must be float like 1.0 or 0.74'
+                );
+            }
+            $pdfOptions['scale'] = $options['scale'];
+        }
+
         // request pdf
         $responseReader = $this->getSession()
             ->sendMessage(new Message('Page.printToPDF', $pdfOptions));
