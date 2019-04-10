@@ -10,6 +10,7 @@ use HeadlessChromium\Communication\Connection;
 use HeadlessChromium\Communication\Message;
 use HeadlessChromium\Exception\OperationTimedOut;
 use HeadlessChromium\Utils;
+use function method_exists;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
 use Psr\Log\LoggerInterface;
@@ -120,7 +121,10 @@ class BrowserProcess implements LoggerAwareInterface
         $this->logger->debug('process: starting process: ' . $processString);
 
         // setup chrome process
-        $process = new Process($processString);
+        $process = method_exists(Process::class, 'fromShellCommandline')
+            ? Process::fromShellCommandline($processString)
+            : new Process($processString);
+
         $this->process = $process;
         // and start
         $process->start();
