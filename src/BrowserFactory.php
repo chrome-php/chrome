@@ -31,6 +31,15 @@ class BrowserFactory
             }
         }
 
+        // special path handling for Windows, try to use a shell-safe (quoted) path
+        if (
+            PHP_OS === 'WINNT'
+            // has no quote in the path yet
+            && strcspn($chromeBinaries, '\'"') >= strlen($chromeBinaries)
+        ) {
+            $chromeBinaries = '"' . $chromeBinaries . '"';
+        }
+
         $this->chromeBinaries = $chromeBinaries;
     }
 
