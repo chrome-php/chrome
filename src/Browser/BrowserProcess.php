@@ -205,7 +205,12 @@ class BrowserProcess implements LoggerAwareInterface
                         $this->logger->debug('process: closing chrome gracefully - compatibility');
 
                         // close all pages if connected
-                        $this->connection->isConnected() && Utils::closeAllPage($this->connection);
+                        try {
+                            $this->connection->isConnected() && Utils::closeAllPage($this->connection);
+                        } catch (OperationTimedOut $e) {
+                            // log
+                            $this->logger->debug('process: failed to close all pages');
+                        }
                     }
 
                     // disconnect socket
