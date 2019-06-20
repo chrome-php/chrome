@@ -111,16 +111,13 @@ class BrowserProcess implements LoggerAwareInterface
         $this->logger->debug('process: using directory: ' . $options['userDataDir']);
 
         // get args for command line
-        $args = $this->getArgsFromOptions($options);
-
-        // process string
-        $processString = $binary . ' ' . implode(' ', $args);
+        $args = $this->getArgsFromOptions($binary, $options);
 
         // log
-        $this->logger->debug('process: starting process: ' . $processString);
+        $this->logger->debug('process: starting process: ' . implode(' ', $args));
 
         // setup chrome process
-        $process = new Process($processString);
+        $process = new Process($args);
         $this->process = $process;
         // and start
         $process->start();
@@ -274,11 +271,13 @@ class BrowserProcess implements LoggerAwareInterface
      * @param array $options
      * @return array
      */
-    private function getArgsFromOptions(array $options)
+    private function getArgsFromOptions($binary, array $options)
     {
         // command line args to add to start chrome (inspired by puppeteer configs)
         // see https://peter.sh/experiments/chromium-command-line-switches/
         $args = [
+            $binary,
+
             // auto debug port
             '--remote-debugging-port=0',
 
