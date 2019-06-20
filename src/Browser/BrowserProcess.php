@@ -81,10 +81,10 @@ class BrowserProcess implements LoggerAwareInterface
 
     /**
      * Starts the browser
-     * @param $binaries
+     * @param $binary
      * @param $options
      */
-    public function start($binaries, $options)
+    public function start($binary, $options)
     {
         if ($this->wasStarted) {
             // cannot start twice because once started this class contains the necessary data to cleanup the browser.
@@ -114,7 +114,7 @@ class BrowserProcess implements LoggerAwareInterface
         $args = $this->getArgsFromOptions($options);
 
         // process string
-        $processString = $binaries . ' ' . implode(' ', $args);
+        $processString = $binary . ' ' . implode(' ', $args);
 
         // log
         $this->logger->debug('process: starting process: ' . $processString);
