@@ -25,7 +25,7 @@ class BrowserFactory
             $envChromePath = getenv('CHROME_PATH');
 
             if ($envChromePath) {
-                $chromeBinary = '"' . $envChromePath . '"';
+                $chromeBinary = $envChromePath;
             } else {
                 $chromeBinary = 'chrome';
             }
