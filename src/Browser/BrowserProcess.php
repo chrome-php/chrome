@@ -113,12 +113,13 @@ class BrowserProcess implements LoggerAwareInterface
         // get args for command line
         $args = $this->getArgsFromOptions($binary, $options);
 
-        // log
-        $this->logger->debug('process: starting process: ' . implode(' ', $args));
-
         // setup chrome process
         $process = new Process($args);
         $this->process = $process;
+
+        // log
+        $this->logger->debug('process: starting process: ' . $process->getCommandLine());
+
         // and start
         $process->start();
 
