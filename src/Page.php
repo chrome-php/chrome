@@ -388,11 +388,12 @@ class Page
      *      ->saveToFile('/tmp/image.jpg');
      * ```
      *
+     * @param int|null $timeout
      * @return Clip
      */
-    public function getFullPageClip(): Clip
+    public function getFullPageClip(int $timeout = null): Clip
     {
-        $contentSize = $this->getLayoutMetrics()->await()->getContentSize();
+        $contentSize = $this->getLayoutMetrics()->await($timeout)->getContentSize();
         return new Clip(0, 0, $contentSize['width'], $contentSize['height']);
     }
 
