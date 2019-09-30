@@ -86,7 +86,9 @@ class BrowserFactory
      */
     public function getChromeVersion()
     {
-        $process = new Process($this->chromeBinaries . ' --version');
+        $process = method_exists(Process::class, 'fromShellCommandline')
+            ? Process::fromShellCommandline($this->chromeBinaries . ' --version')
+            : new Process($this->chromeBinaries . ' --version');
 
         $exitCode = $process->run();
 

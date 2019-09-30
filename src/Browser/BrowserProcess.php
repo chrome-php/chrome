@@ -120,7 +120,9 @@ class BrowserProcess implements LoggerAwareInterface
         $this->logger->debug('process: starting process: ' . $processString);
 
         // setup chrome process
-        $process = new Process($processString);
+        $process = method_exists(Process::class, 'fromShellCommandline')
+            ? Process::fromShellCommandline($processString)
+            : new Process($processString);
         $this->process = $process;
         // and start
         $process->start();
