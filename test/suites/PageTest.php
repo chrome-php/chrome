@@ -253,4 +253,14 @@ class PageTest extends BaseTestCase
         $this->assertEquals(900, $clip->getWidth());
         $this->assertEquals(1000, $clip->getHeight());
     }
+
+    public function testInvalidScaleOptionThrowAnException()
+    {
+        $this->expectException(\InvalidArgumentException::class);
+
+        $factory = new BrowserFactory();
+        $browser = $factory->createBrowser();
+        $page = $browser->createPage();
+        $page->pdf(['scale' => '2px']);
+    }
 }

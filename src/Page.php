@@ -641,12 +641,21 @@ class Page
         // option preferCSSPageSize
         if (array_key_exists('preferCSSPageSize', $options)) {
             // preferCSSPageSize requires type to be boolean
-            if (!is_bool($options['preferCSSPageSize'])) {
+            if (!\is_bool($options['preferCSSPageSize'])) {
                 throw new \InvalidArgumentException(
                     'Invalid options "preferCSSPageSize" for print to pdf. Must be true or false'
                 );
             }
             $pdfOptions['preferCSSPageSize'] = $options['preferCSSPageSize'];
+        }
+
+        if (array_key_exists('scale', $options)) {
+            if (!\is_float($options['scale'])) {
+                throw new \InvalidArgumentException(
+                    'Invalid options "scale" for print to pdf. Must be float like 1.0 or 0.74'
+                );
+            }
+            $pdfOptions['scale'] = $options['scale'];
         }
 
         // request pdf
