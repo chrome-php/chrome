@@ -16,22 +16,22 @@ use Wrench\Exception\HandshakeException;
 class BrowserFactory
 {
 
-    protected $chromeBinaries;
+    protected $chromeBinary;
 
-    public function __construct(string $chromeBinaries = null)
+    public function __construct(string $chromeBinary = null)
     {
-        // auto guess chrome binaries
-        if (null === $chromeBinaries) {
+        // auto guess chrome binary
+        if (null === $chromeBinary) {
             $envChromePath = getenv('CHROME_PATH');
 
             if ($envChromePath) {
-                $chromeBinaries = '"' . $envChromePath . '"';
+                $chromeBinary = $envChromePath;
             } else {
-                $chromeBinaries = 'chrome';
+                $chromeBinary = 'chrome';
             }
         }
 
-        $this->chromeBinaries = $chromeBinaries;
+        $this->chromeBinary = $chromeBinary;
     }
 
     /**
@@ -75,7 +75,7 @@ class BrowserFactory
         }
 
         // start the browser and connect to it
-        $browserProcess->start($this->chromeBinaries, $options);
+        $browserProcess->start($this->chromeBinary, $options);
 
         return $browserProcess->getBrowser();
     }
@@ -86,13 +86,13 @@ class BrowserFactory
      */
     public function getChromeVersion()
     {
-        $process = new Process($this->chromeBinaries . ' --version');
+        $process = new Process($this->chromeBinary . ' --version');
 
         $exitCode = $process->run();
 
         if ($exitCode != 0) {
             $message = 'Cannot read chrome version, make sure you provided the correct chrome executable';
-            $message .= ' using: "' . $this->chromeBinaries . '". ';
+            $message .= ' using: "' . $this->chromeBinary . '". ';
 
             $error = trim($process->getErrorOutput());
 

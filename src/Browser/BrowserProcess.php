@@ -81,10 +81,10 @@ class BrowserProcess implements LoggerAwareInterface
 
     /**
      * Starts the browser
-     * @param $binaries
+     * @param $binary
      * @param $options
      */
-    public function start($binaries, $options)
+    public function start($binary, $options)
     {
         if ($this->wasStarted) {
             // cannot start twice because once started this class contains the necessary data to cleanup the browser.
@@ -111,17 +111,15 @@ class BrowserProcess implements LoggerAwareInterface
         $this->logger->debug('process: using directory: ' . $options['userDataDir']);
 
         // get args for command line
-        $args = $this->getArgsFromOptions($options);
-
-        // process string
-        $processString = $binaries . ' ' . implode(' ', $args);
-
-        // log
-        $this->logger->debug('process: starting process: ' . $processString);
+        $args = $this->getArgsFromOptions($binary, $options);
 
         // setup chrome process
-        $process = new Process($processString);
+        $process = new Process($args);
         $this->process = $process;
+
+        // log
+        $this->logger->debug('process: starting process: ' . $process->getCommandLine());
+
         // and start
         $process->start();
 
@@ -205,7 +203,12 @@ class BrowserProcess implements LoggerAwareInterface
                         $this->logger->debug('process: closing chrome gracefully - compatibility');
 
                         // close all pages if connected
-                        $this->connection->isConnected() && Utils::closeAllPage($this->connection);
+                        try {
+                            $this->connection->isConnected() && Utils::closeAllPage($this->connection);
+                        } catch (OperationTimedOut $e) {
+                            // log
+                            $this->logger->debug('process: failed to close all pages');
+                        }
                     }
 
                     // disconnect socket
@@ -269,11 +272,13 @@ class BrowserProcess implements LoggerAwareInterface
      * @param array $options
      * @return array
      */
-    private function getArgsFromOptions(array $options)
+    private function getArgsFromOptions($binary, array $options)
     {
         // command line args to add to start chrome (inspired by puppeteer configs)
         // see https://peter.sh/experiments/chromium-command-line-switches/
         $args = [
+            $binary,
+
             // auto debug port
             '--remote-debugging-port=0',
 
