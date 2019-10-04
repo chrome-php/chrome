@@ -20,9 +20,11 @@
     
 * Features:
   * Added Timeout for Page::getFullPageClip (thanks @ArseniyShestakov)
-  * Added options `headerTemplate` and `footerTempalte` for Page::pdf (thanks @MUGagency)
-  * Added options `headerTemplate` and `footerTempalte` for Page::pdf (thanks @MUGagency)
+  * Added options `headerTemplate` and `footerTempalte` for Page::pdf (thanks @mschwerin)
   * Added options `scale` for Page::pdf (thanks @sergiosusa)
+* Fix
+  * Handle gracefully all pages failing to close (thanks @mosiyash)
+  * Fixed deprecation from symfony (thank @mosiyash and @mschwerin)
 * Bug fixes:
   * none
 
