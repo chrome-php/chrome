@@ -12,6 +12,19 @@
 * Bug fixes:
   * none
 
+## 0.7.0
+
+> *20xx-xx-xx* (not released)
+
+> Description
+    
+* Features:
+  * Added Timeout for Page::getFullPageClip (thanks @ArseniyShestakov)
+  * Added options `headerTemplate` and `footerTempalte` for Page::pdf (thanks @MUGagency)
+  * Added options `headerTemplate` and `footerTempalte` for Page::pdf (thanks @MUGagency)
+* Bug fixes:
+  * none
+
 ## 0.6.0
 
 > *2018-14-11*
