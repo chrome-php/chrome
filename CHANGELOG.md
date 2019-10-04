@@ -22,6 +22,7 @@
   * **BC BREAK** Escaping custom flags for BrowserFactory is now automatic. 
     If you use `customFlags` option then you *must not* use escaping function for your arguments.
   * Added Timeout for Page::getFullPageClip (thanks @ArseniyShestakov)
+  * Added Timeout for method getBase64 (thanks @TimIgoe)
   * Added options `headerTemplate` and `footerTempalte` for Page::pdf (thanks @mschwerin)
   * Added options `scale` for Page::pdf (thanks @sergiosusa)
 * Fix

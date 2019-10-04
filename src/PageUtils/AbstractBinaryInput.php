@@ -36,7 +36,7 @@ abstract class AbstractBinaryInput
      * Get base64 representation of the file
      * @return mixed
      */
-    public function getBase64($timeout = null)
+    public function getBase64(int $timeout = null)
     {
         $response = $this->responseReader->waitForResponse($timeout);
 
