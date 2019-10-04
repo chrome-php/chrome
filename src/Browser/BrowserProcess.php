@@ -340,7 +340,7 @@ class BrowserProcess implements LoggerAwareInterface
 
         // user agent
         if (array_key_exists('userAgent', $options)) {
-            $args[] = '--user-agent=' . escapeshellarg($options['userAgent']);
+            $args[] = '--user-agent=' . $options['userAgent'];
         }
 
         // ignore certificate errors
