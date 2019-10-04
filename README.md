@@ -392,6 +392,10 @@ TODO ``Page.getFullPageClip();``
                   'marginBottom' => 1.4, // defaults to ~0.4 (must be float, value in inches)
                   'marginLeft' => 5.0, // defaults to ~0.4 (must be float, value in inches)
                   'marginRight' => 1.0 // defaults to ~0.4 (must be float, value in inches)
+                  'paperWidth' => 6 // defaults to 8.5 (must be float, value in inches)
+                  'paperHeight' => 6 // defaults to 8.5 (must be float, value in inches)
+                  'headerTemplate' => "<div>foo</div>", // see details bellow
+                  'footerTemplate' => "<div>foo</div>", // see details bellow
                ];
     
     // print as pdf (in memory binaries)
@@ -411,6 +415,16 @@ TODO ``Page.getFullPageClip();``
     
     echo base64_decode($pdf->getBase64());
 ```
+
+Options `headerTempalte` and `footerTempalte`: 
+
+Should be valid HTML markup with following classes used to inject printing values into them:
+- date: formatted print date
+- title: document title
+- url: document location
+- pageNumber: current page number
+- totalPages: total pages in the document
+
 
 ### Mouse API
 

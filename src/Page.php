@@ -498,6 +498,16 @@ class Page
      * @param array $options
      *  - landscape: default false
      *  - printBackground: default false
+     *  - displayHeaderFooter: default false
+     *  - headerTemplate: HTML template for the print header (see docs for details)
+     *  - footerTemplate: HTML template for the print footer (see docs for details)
+     *  - paperWidth: default 8.5 inches
+     *  - paperHeight: default 11 inches
+     *  - marginTop: default 1 cm
+     *  - marginBottom: default 1 cm
+     *  - marginLeft: default 1 cm
+     *  - marginRight: default 1 cm
+     *  - preferCSSPageSize: default false
      * @return PagePdf
      * @throws CommunicationException
      */
