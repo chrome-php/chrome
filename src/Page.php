@@ -388,11 +388,12 @@ class Page
      *      ->saveToFile('/tmp/image.jpg');
      * ```
      *
+     * @param int|null $timeout
      * @return Clip
      */
-    public function getFullPageClip(): Clip
+    public function getFullPageClip(int $timeout = null): Clip
     {
-        $contentSize = $this->getLayoutMetrics()->await()->getContentSize();
+        $contentSize = $this->getLayoutMetrics()->await($timeout)->getContentSize();
         return new Clip(0, 0, $contentSize['width'], $contentSize['height']);
     }
 
@@ -497,6 +498,17 @@ class Page
      * @param array $options
      *  - landscape: default false
      *  - printBackground: default false
+     *  - displayHeaderFooter: default false
+     *  - headerTemplate: HTML template for the print header (see docs for details)
+     *  - footerTemplate: HTML template for the print footer (see docs for details)
+     *  - paperWidth: default 8.5 inches
+     *  - paperHeight: default 11 inches
+     *  - marginTop: default 1 cm
+     *  - marginBottom: default 1 cm
+     *  - marginLeft: default 1 cm
+     *  - marginRight: default 1 cm
+     *  - preferCSSPageSize: default false
+     *  - scale: default 1
      * @return PagePdf
      * @throws CommunicationException
      */
@@ -527,7 +539,7 @@ class Page
             }
             $pdfOptions['printBackground'] = $options['printBackground'];
         }
-
+    
         // option displayHeaderFooter
         if (array_key_exists('displayHeaderFooter', $options)) {
             // displayHeaderFooter requires type to be boolean
@@ -537,6 +549,28 @@ class Page
                 );
             }
             $pdfOptions['displayHeaderFooter'] = $options['displayHeaderFooter'];
+        }
+    
+        // option headerTemplate
+        if (array_key_exists('headerTemplate', $options)) {
+            // headerTemplate requires type to be string
+            if (!is_string($options['headerTemplate'])) {
+                throw new \InvalidArgumentException(
+                    'Invalid options "headerTemplate" for print to pdf. Must be string'
+                );
+            }
+            $pdfOptions['headerTemplate'] = $options['headerTemplate'];
+        }
+    
+        // option footerTemplate
+        if (array_key_exists('footerTemplate', $options)) {
+            // footerTemplate requires type to be string
+            if (!is_string($options['footerTemplate'])) {
+                throw new \InvalidArgumentException(
+                    'Invalid options "footerTemplate" for print to pdf. Must be string'
+                );
+            }
+            $pdfOptions['footerTemplate'] = $options['footerTemplate'];
         }
 
         // option paperWidth
@@ -608,12 +642,21 @@ class Page
         // option preferCSSPageSize
         if (array_key_exists('preferCSSPageSize', $options)) {
             // preferCSSPageSize requires type to be boolean
-            if (!is_bool($options['preferCSSPageSize'])) {
+            if (!\is_bool($options['preferCSSPageSize'])) {
                 throw new \InvalidArgumentException(
                     'Invalid options "preferCSSPageSize" for print to pdf. Must be true or false'
                 );
             }
             $pdfOptions['preferCSSPageSize'] = $options['preferCSSPageSize'];
+        }
+
+        if (array_key_exists('scale', $options)) {
+            if (!\is_float($options['scale'])) {
+                throw new \InvalidArgumentException(
+                    'Invalid options "scale" for print to pdf. Must be float like 1.0 or 0.74'
+                );
+            }
+            $pdfOptions['scale'] = $options['scale'];
         }
 
         // request pdf
