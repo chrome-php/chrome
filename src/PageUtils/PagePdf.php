@@ -15,7 +15,7 @@ class PagePdf extends AbstractBinaryInput
      */
     protected function getException(string $message): \Exception
     {
-        new PdfFailed(
+        return new PdfFailed(
             sprintf('Cannot make a PDF. Reason : %s', $message)
         );
     }
