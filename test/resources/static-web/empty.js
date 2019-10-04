@@ -1,3 +1,0 @@
-(function() {
-    var a = 'a';
-})();

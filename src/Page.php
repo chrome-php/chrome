@@ -132,7 +132,8 @@ class Page
         $header = base64_encode($username . ':' . $password);
         $this->getSession()->sendMessage(new Message(
             'Network.setExtraHTTPHeaders',
-            array('headers' => array('Authorization' => 'Basic ' . $header))));
+            ['headers' => ['Authorization' => 'Basic ' . $header]]
+        ));
     }
 
     /**
