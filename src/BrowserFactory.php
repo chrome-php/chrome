@@ -86,7 +86,7 @@ class BrowserFactory
      */
     public function getChromeVersion()
     {
-        $process = new Process($this->chromeBinary . ' --version');
+        $process = new Process([$this->chromeBinary, '--version']);
 
         $exitCode = $process->run();
 

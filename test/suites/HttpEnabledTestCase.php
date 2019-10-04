@@ -17,7 +17,11 @@ class HttpEnabledTestCase extends BaseTestCase
     {
         parent::setUpBeforeClass();
 
-        self::$process = new Process('php -S localhost:8083 -t ' . __DIR__ . '/../resources/static-web');
+        self::$process = new Process([
+            'php',
+            '-S localhost:8083',
+            '-t ' . __DIR__ . '/../resources/static-web'
+        ]);
         self::$process->start();
         usleep(10000); //wait for server to get going
     }
