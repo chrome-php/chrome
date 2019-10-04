@@ -14,7 +14,7 @@
 
 ## 0.7.0
 
-> *20xx-xx-xx* (not released)
+> *2019-10-04*
 
 > Description
     
@@ -28,8 +28,6 @@
 * Fix
   * Handle gracefully all pages failing to close (thanks @mosiyash)
   * Fixed deprecation from symfony (thank @mosiyash and @mschwerin)
-* Bug fixes:
-  * none
 
 ## 0.6.0
 
