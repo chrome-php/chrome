@@ -22,6 +22,7 @@
   * Added Timeout for Page::getFullPageClip (thanks @ArseniyShestakov)
   * Added options `headerTemplate` and `footerTempalte` for Page::pdf (thanks @MUGagency)
   * Added options `headerTemplate` and `footerTempalte` for Page::pdf (thanks @MUGagency)
+  * Added options `scale` for Page::pdf (thanks @sergiosusa)
 * Bug fixes:
   * none
 

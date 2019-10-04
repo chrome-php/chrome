@@ -508,6 +508,7 @@ class Page
      *  - marginLeft: default 1 cm
      *  - marginRight: default 1 cm
      *  - preferCSSPageSize: default false
+     *  - scale: default 1
      * @return PagePdf
      * @throws CommunicationException
      */
