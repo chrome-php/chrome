@@ -230,6 +230,7 @@ class PageTest extends BaseTestCase
                 'clientWidth' => 100,
                 'clientHeight' => 300,
                 'scale' => 1,
+                'zoom'  => 1
             ],
             $visualViewport
         );

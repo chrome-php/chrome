@@ -108,12 +108,12 @@ class CookieTest extends HttpEnabledTestCase
         $this->assertInstanceOf(CookiesCollection::class, $cookies);
         $this->assertCount(2, $cookies);
 
-        $this->assertEquals($cookies->getAt(0)->getName(), 'quux');
-        $this->assertEquals($cookies->getAt(0)->getValue(), 'corge');
-        $this->assertEquals($cookies->getAt(0)->getDomain(), 'localhost');
+        $this->assertEquals($cookies->getAt(1)->getName(), 'quux');
+        $this->assertEquals($cookies->getAt(1)->getValue(), 'corge');
+        $this->assertEquals($cookies->getAt(1)->getDomain(), 'localhost');
 
-        $this->assertEquals($cookies->getAt(1)->getName(), 'baz');
-        $this->assertEquals($cookies->getAt(1)->getValue(), 'qux');
-        $this->assertEquals($cookies->getAt(1)->getDomain(), 'foo.bar');
+        $this->assertEquals($cookies->getAt(0)->getName(), 'baz');
+        $this->assertEquals($cookies->getAt(0)->getValue(), 'qux');
+        $this->assertEquals($cookies->getAt(0)->getDomain(), 'foo.bar');
     }
 }
