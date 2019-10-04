@@ -145,7 +145,7 @@ Here are the options available for the browser factory:
 | startupTimeout     | 30            | Maximum time in seconds to wait for chrome to start                                              |
 | userAgent          | none          | User agent to use for the whole browser  (see page api for alternative)                          |
 | userDataDir        | none          | chrome user data dir (default: a new empty dir is generated temporarily)                         |
-| windowSize         | none          | Size of the window. usage: ``[$width, $height]`` - see also Page::setViewportSize                |
+| windowSize         | none          | Size of the window. usage: ``[$width, $height]`` - see also Page::setViewport                    |
 
 ### Browser API
 
@@ -314,7 +314,7 @@ all the browser's pages (see also option ``"windowSize"`` of [BrowserFactory::cr
 ```php
     $width = 600;
     $height = 300;
-    $page->setViewportSize($width, $height)
+    $page->setViewport($width, $height)
         ->await(); // wait for operation to complete
 ```
 
