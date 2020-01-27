@@ -190,14 +190,7 @@ class BrowserProcess implements LoggerAwareInterface
                     try {
                         // log
                         $this->logger->debug('process: trying to close chrome gracefully');
-
-                        // TODO check browser.close on chrome 63
-                        $r = $this->connection->sendMessageSync(new Message('Browser.close'));
-                        if (!$r->isSuccessful()) {
-                            // log
-                            $this->logger->debug('process: ✗ could not close gracefully');
-                            throw new \Exception('cannot close, Browser.close not supported');
-                        }
+                        $this->browser->close();
                     } catch (\Exception $e) {
                         //log
                         $this->logger->debug('process: closing chrome gracefully - compatibility');

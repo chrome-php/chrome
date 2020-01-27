@@ -94,11 +94,18 @@ class Browser
 
     /**
      * Closes the browser
+     *
+     * @throws \Exception
      */
     public function close()
     {
-        // TODO
-        throw new \Exception('Not implemented yet, see ProcessAwareBrowser instead');
+        // TODO check browser.close on chrome 63
+        $r = $this->connection->sendMessageSync(new Message('Browser.close'));
+        if (!$r->isSuccessful()) {
+            // log
+            $this->connection->getLogger()->debug('process: ✗ could not close gracefully');
+            throw new \Exception('cannot close, Browser.close not supported');
+        }
     }
 
     /**
