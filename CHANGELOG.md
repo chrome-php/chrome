@@ -7,8 +7,20 @@
 > Description
     
 * Features:
+  * none
+* Bug fixes:
+  * none
+
+
+## 0.8.0
+
+> *2020-02-20* (not released)
+
+* Features:
   * Added Page::pdf (thanks @tanasecosminromeo)
   * Added timeout for PageEvaluation methods (thanks @chris-ware)
+  * Added support for symfony 5 (thanks @svbackend)
+  * implemented Browser::close (thanks @Alexsisukin)
 * Bug fixes:
   * none
 
