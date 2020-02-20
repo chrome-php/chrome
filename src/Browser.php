@@ -99,7 +99,15 @@ class Browser
      */
     public function close()
     {
-        // TODO check browser.close on chrome 63
+        $this->sendCloseMessage();
+    }
+
+    /**
+     * Send close message to the browser
+     * @throws OperationTimedOut
+     */
+    final public function sendCloseMessage()
+    {
         $r = $this->connection->sendMessageSync(new Message('Browser.close'));
         if (!$r->isSuccessful()) {
             // log
