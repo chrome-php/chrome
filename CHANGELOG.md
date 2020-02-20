@@ -12,9 +12,21 @@
   * none
 
 
+## 0.8.1
+
+> *2020-02-20*
+
+> Description
+
+* Bug fixes:
+  * fixed browser close
+  * fixed unit tests
+  * testing php 7.3 and 7.4
+
+
 ## 0.8.0
 
-> *2020-02-20* (not released)
+> *2020-02-20*
 
 * Features:
   * Added Page::pdf (thanks @tanasecosminromeo)
