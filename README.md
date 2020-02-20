@@ -5,12 +5,9 @@ Chrome PHP
 [![Latest Stable Version](https://poser.pugx.org/chrome-php/chrome/version)](https://packagist.org/packages/chrome-php/chrome)
 [![License](https://poser.pugx.org/chrome-php/chrome/license)](https://packagist.org/packages/chrome-php/chrome)
 
-This library lets you start playing with chrome/chromium in headless mode from PHP.
+This library lets you start playing with chrome/chromium in headless mode from PHP. 100% php - *no* nodejs required
 
-> **/!\\** The library is still young and some features you need might be missing.
-We add feature as feature requests are submitted, feel free to rise an issue if you want to see a new feature to
-be supported by the library. 
-Additionally the library follows semver. That means that until version 1.0.0 a lot of changes might occur.
+Can be used synchronously and asynchronously!
 
 Features
 --------
@@ -90,7 +87,7 @@ You can use any executable of your choice. For instance ``"chromium-browser"``:
 
 ### Debugging 
 
-The following example adds some development-oriented features to help debugging 
+The following example disables headless mode to ease debugging 
 
 ```php
     use HeadlessChromium\BrowserFactory;
@@ -99,9 +96,16 @@ The following example adds some development-oriented features to help debugging
 
     $browser = $browserFactory->createBrowser([
         'headless'        => false,         // disable headless mode
+    ]);
+```
+
+Other debug options:
+
+```php
+    [
         'connectionDelay' => 0.8,           // add 0.8 second of delay between each instruction sent to chrome,
         'debugLogger'     => 'php://stdout' // will enable verbose mode
-    ]);
+    ]
 ```
 
 About ``debugLogger``: this can be any of a resource string, a resource or an object implementing 
