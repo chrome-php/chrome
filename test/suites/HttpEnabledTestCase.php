@@ -19,11 +19,19 @@ class HttpEnabledTestCase extends BaseTestCase
 
         self::$process = new Process([
             'php',
-            '-S localhost:8083',
-            '-t ' . __DIR__ . '/../resources/static-web'
+            '-S',
+            'localhost:8083',
+            '-t',
+            __DIR__ . '/../resources/static-web'
         ]);
         self::$process->start();
-        usleep(10000); //wait for server to get going
+        usleep(80000); //wait for server to get going
+
+        // ensure it started
+        if (!self::$process->isRunning()) {
+            $message = self::$process->getErrorOutput();
+            throw new \Exception('Cannot start webserver for tests: ' . $message);
+        }
     }
 
     public static function tearDownAfterClass()

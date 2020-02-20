@@ -190,7 +190,7 @@ class BrowserProcess implements LoggerAwareInterface
                     try {
                         // log
                         $this->logger->debug('process: trying to close chrome gracefully');
-                        $this->browser->close();
+                        $this->browser->sendCloseMessage();
                     } catch (\Exception $e) {
                         //log
                         $this->logger->debug('process: closing chrome gracefully - compatibility');
