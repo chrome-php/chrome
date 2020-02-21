@@ -67,6 +67,8 @@ class BaseTestCase extends TestCase
 
     protected function sitePath($file)
     {
-        return 'file://' . realpath(__DIR__ . '/../resources/static-web/' . $file);
+        $path = realpath(__DIR__ . '/../resources/static-web/' . $file);
+        if (DIRECTORY_SEPARATOR == '\\') $path = '/' . str_replace('\\','/',$path); // Convert path to match chrome on windows
+        return 'file://' . $path;
     }
 }
