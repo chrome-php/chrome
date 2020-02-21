@@ -191,4 +191,19 @@ class Browser
     {
         return array_values($this->targets);
     }
+
+    /**
+     * Finds a target matching the type and title
+     * @param string $type Target Type
+     * @param string|null $title Target Title
+     * @return Target|null
+     */
+    public function findTarget(string $type, string $title = null) {
+      foreach ($this->targets as $targetID => $target) {
+        if ($target->getTargetInfo('type') == $type) {
+          if ($title && $target->getTargetInfo('title') == $title) return $target;
+        }
+      }
+      return null;
+    }
 }

@@ -264,4 +264,14 @@ class PageTest extends BaseTestCase
         $page = $browser->createPage();
         $page->pdf(['scale' => '2px']);
     }
+
+    public function testFindTarget() {
+        $factory = new BrowserFactory();
+        $browser = $factory->createBrowser();
+        $page = $browser->createPage();
+        $page->navigate($this->sitePath('bigLayout.html'))->waitForNavigation();
+
+        $target = $browser->findTarget('page','bigLayout.html');
+        $this->assertEquals('bigLayout.html',$target->getTargetInfo('title'));
+    }
 }
