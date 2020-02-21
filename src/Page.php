@@ -704,6 +704,21 @@ class Page
     }
 
     /**
+     * Set download path
+     *
+     * @param string $downloadPath
+     *
+     */
+    public function setDownloadPath(string $downloadPath) {
+      $this->getSession()->sendMessageSync(
+        new Message('Page.setDownloadBehavior', [
+          'behavior' => 'allow',
+          'downloadPath' => $downloadPath
+        ])
+      );
+    }
+
+    /**
      * Set viewport size
      *
      * @param int $width
