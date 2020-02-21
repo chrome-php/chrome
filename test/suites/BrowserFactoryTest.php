@@ -70,6 +70,7 @@ class BrowserFactoryTest extends BaseTestCase
 
         // update 2d browser
         $browser2->getConnection()->readData();
+        $browser2->getConnection()->readData();  // Read again...otherwise getting the target below sometimes fails
 
         // make sure 2nd browser received the new page
         $target = $browser2->getTarget($page2TargetId);
