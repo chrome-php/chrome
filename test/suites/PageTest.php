@@ -274,4 +274,15 @@ class PageTest extends BaseTestCase
         $target = $browser->findTarget('page','bigLayout.html');
         $this->assertEquals('bigLayout.html',$target->getTargetInfo('title'));
     }
+
+    public function testCreatePageFromTarget() {
+        $factory = new BrowserFactory();
+        $browser = $factory->createBrowser();
+        $page = $browser->createPage();
+        $page->navigate($this->sitePath('bigLayout.html'))->waitForNavigation();
+
+        $target = $browser->findTarget('page','bigLayout.html');
+        $page2 = $browser->createPage($target->getTargetInfo('targetId'));
+        $this->assertInstanceOf(Page::class, $page2);
+    }
 }

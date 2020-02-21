@@ -118,20 +118,22 @@ class Browser
 
     /**
      * Creates a new page
+     * @param string|null $targetId
      * @throws NoResponseAvailable
      * @throws CommunicationException
      * @throws OperationTimedOut
      * @return Page
      */
-    public function createPage(): Page
+    public function createPage($targetId = null): Page
     {
+        if (!$targetId) {
+          // page url
+          $params = ['url' => 'about:blank'];
 
-        // page url
-        $params = ['url' => 'about:blank'];
-
-        // create page and get target id
-        $response = $this->connection->sendMessageSync(new Message('Target.createTarget', $params));
-        $targetId = $response['result']['targetId'];
+          // create page and get target id
+          $response = $this->connection->sendMessageSync(new Message('Target.createTarget', $params));
+          $targetId = $response['result']['targetId'];
+        }
 
         // todo handle error
 
