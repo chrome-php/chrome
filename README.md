@@ -12,10 +12,12 @@ We add feature as feature requests are submitted, feel free to rise an issue if 
 be supported by the library. 
 Additionally the library follows semver. That means that until version 1.0.0 a lot of changes might occur.
 
-Loking for maintainers
-----------------------
+⚠️Loking for maintainers⚠️
+---------------------------
 
 Many people are showing interest in the library but I don't have much time to maintain it. I'm looking for some permanent maintainers to help with it.
+
+It can be for handling issues, adding documentation, adding new features, fixing bugs, etc...
 
 Features
 --------
