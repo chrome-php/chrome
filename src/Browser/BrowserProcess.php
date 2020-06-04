@@ -293,8 +293,6 @@ class BrowserProcess implements LoggerAwareInterface
             // automation mode
             '--enable-automation',
 
-            // password settings
-            '--password-store=basic',
             '--use-mock-keychain', // osX only
         ];
 
@@ -304,6 +302,12 @@ class BrowserProcess implements LoggerAwareInterface
             $args[] = '--disable-gpu';
             $args[] = '--hide-scrollbars';
             $args[] = '--mute-audio';
+        }
+
+        // password settings
+        if (!array_key_exists('passwordStore', $options) || $options['passwordStore'] !== false) {
+            $args[] = '--password-store='
+                . (array_key_exists('passwordStore', $options) ? $options['passwordStore'] : 'basic');
         }
 
         // disable loading of images (currently can't be done via devtools, only CLI)
@@ -323,7 +327,7 @@ class BrowserProcess implements LoggerAwareInterface
                 );
             }
 
-            $args[] = '--window-size=' . implode(',', $options['windowSize']) ;
+            $args[] = '--window-size=' . implode(',', $options['windowSize']);
         }
 
         // sandbox mode - useful if you want to use chrome headless inside docker
@@ -343,7 +347,7 @@ class BrowserProcess implements LoggerAwareInterface
 
         // add custom flags
         if (array_key_exists('customFlags', $options) && is_array($options['customFlags'])) {
-            $args =  array_merge($args, $options['customFlags']);
+            $args = array_merge($args, $options['customFlags']);
         }
 
         // add user data dir to args
