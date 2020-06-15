@@ -52,9 +52,11 @@ class BrowserFactory
      * - userDataDir: chrome user data dir (default: a new empty dir is generated temporarily)
      * - windowSize: size of the window, ex: [1920, 1080] (default: none)
      *
+     * @param array|null $envs environment variables for process execution
+     *
      * @return ProcessAwareBrowser a Browser instance to interact with the new chrome process
      */
-    public function createBrowser(array $options = []): ProcessAwareBrowser
+    public function createBrowser(array $options = [], $envs = null): ProcessAwareBrowser
     {
 
         // create logger from options
@@ -75,7 +77,7 @@ class BrowserFactory
         }
 
         // start the browser and connect to it
-        $browserProcess->start($this->chromeBinary, $options);
+        $browserProcess->start($this->chromeBinary, $options, $envs);
 
         return $browserProcess->getBrowser();
     }
