@@ -83,6 +83,6 @@ class Message
             'id'        => $this->getId(),
             'method'    => $this->getMethod(),
             'params'    => $this->getParams()
-        ]);
+        ], JSON_FORCE_OBJECT);
     }
 }
