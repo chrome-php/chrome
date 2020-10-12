@@ -82,7 +82,7 @@ class Message
         return json_encode([
             'id'        => $this->getId(),
             'method'    => $this->getMethod(),
-            'params'    => $this->getParams()
-        ], JSON_FORCE_OBJECT);
+            'params'    => empty($this->getParams())?new \stdClass():$this->getParams()
+        ]);
     }
 }
