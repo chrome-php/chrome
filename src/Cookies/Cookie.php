@@ -20,7 +20,6 @@ class Cookie implements \ArrayAccess
 
     /**
      * Cookie constructor.
-     * @param array $data
      */
     public function __construct(array $data)
     {
@@ -32,7 +31,7 @@ class Cookie implements \ArrayAccess
     }
 
     /**
-     * @return mixed|null
+     * @return mixed
      */
     public function getValue()
     {
@@ -40,7 +39,7 @@ class Cookie implements \ArrayAccess
     }
 
     /**
-     * @return mixed|null
+     * @return mixed
      */
     public function getName()
     {
@@ -48,7 +47,7 @@ class Cookie implements \ArrayAccess
     }
 
     /**
-     * @return mixed|null
+     * @return mixed
      */
     public function getDomain()
     {
@@ -88,9 +87,9 @@ class Cookie implements \ArrayAccess
     }
 
     /**
-     * @param $name
-     * @param $value
-     * @param $params
+     * @param string $name
+     * @param string $value
+     * @param array $params
      * @return Cookie
      */
     public static function create($name, $value, array $params = [])

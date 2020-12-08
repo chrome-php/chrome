@@ -21,7 +21,7 @@ class Target
     protected $targetInfo;
 
     /**
-     * @var Session
+     * @var Session|null
      */
     protected $session;
 
@@ -37,8 +37,6 @@ class Target
 
     /**
      * Target constructor.
-     * @param array $targetInfo
-     * @param Session $session
      */
     public function __construct(array $targetInfo, Connection $connection)
     {
@@ -91,8 +89,8 @@ class Target
 
     /**
      * Get target info value by it's name or null if it does not exist
-     * @param $infoName
-     * @return mixed|null
+     * @param string $infoName
+     * @return mixed
      */
     public function getTargetInfo($infoName)
     {
@@ -101,7 +99,7 @@ class Target
 
     /**
      * To be called when Target.targetInfoChanged is triggered.
-     * @param $targetInfo
+     * @param array $targetInfo
      * @internal
      */
     public function targetInfoChanged($targetInfo)

@@ -45,7 +45,7 @@ class Utils
      * @param int $timeoutMicroSec
      * @param \Generator $generator
      * @param callable|null $onTimeout
-     * @return mixed|null
+     * @return mixed
      * @throws OperationTimedOut
      */
     public static function tryWithTimeout(int $timeoutMicroSec, \Generator $generator, callable $onTimeout = null)

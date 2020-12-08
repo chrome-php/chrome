@@ -74,7 +74,7 @@ class Wrench implements SocketInterface, LoggerAwareInterface
 
         if ($playloads) {
             foreach ($playloads as $playload) {
-                /** @var $playload Payload */
+                /** @var Payload */
                 $dataString = $playload->getPayload();
                 $data[] = $dataString;
 

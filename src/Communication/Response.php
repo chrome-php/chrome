@@ -19,7 +19,6 @@ class Response implements \ArrayAccess
 
     /**
      * Response constructor.
-     * @param $data
      */
     public function __construct(array $data, Message $message)
     {
@@ -69,7 +68,7 @@ class Response implements \ArrayAccess
     }
 
     /**
-     * @param $name
+     * @param string $name
      * @return mixed
      */
     public function getResultData($name)

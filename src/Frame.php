@@ -52,7 +52,6 @@ class Frame
     }
 
     /**
-     * @param array $event
      * @internal
      */
     public function onLifecycleEvent(array $params)

@@ -78,7 +78,6 @@ class Mouse
     }
 
     /**
-     * @param $options
      * @throws \HeadlessChromium\Exception\CommunicationException
      * @throws \HeadlessChromium\Exception\NoResponseAvailable
      */
@@ -97,7 +96,6 @@ class Mouse
     }
 
     /**
-     * @param $options
      * @throws \HeadlessChromium\Exception\CommunicationException
      * @throws \HeadlessChromium\Exception\NoResponseAvailable
      */

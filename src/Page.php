@@ -351,7 +351,8 @@ class Page
     }
 
     /**
-     * @param $loaderId
+     * @param string $eventName
+     * @param string $loaderId
      * @return bool|\Generator
      * @throws CommunicationException\CannotReadResponse
      * @throws CommunicationException\InvalidResponse
@@ -680,7 +681,7 @@ class Page
      * ```
      * $page->setDeviceMetricsOverride
      * ```
-     * @param $overrides
+     * @param array $overrides
      * @throws CommunicationException
      * @throws NoResponseAvailable
      *
@@ -772,7 +773,7 @@ class Page
     /**
      * Gets the current url of the page, always in sync with the browser.
      *
-     * @return mixed|null
+     * @return mixed
      * @throws CommunicationException\CannotReadResponse
      * @throws CommunicationException\InvalidResponse
      */

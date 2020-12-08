@@ -166,7 +166,7 @@ class BrowserFactory
 
     /**
      * Create a logger instance from given options
-     * @param $options
+     * @param array $options
      * @return StreamLogger|null
      */
     private static function createLogger($options)

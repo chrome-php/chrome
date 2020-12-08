@@ -20,7 +20,6 @@ class CookiesCollection implements \IteratorAggregate, \Countable
 
     /**
      * CookiesCollection constructor.
-     * @param array|null $cookies
      */
     public function __construct(array $cookies = null)
     {
@@ -36,7 +35,6 @@ class CookiesCollection implements \IteratorAggregate, \Countable
 
     /**
      * Adds a cookie
-     * @param Cookie $cookie
      */
     public function addCookie(Cookie $cookie)
     {
@@ -61,7 +59,7 @@ class CookiesCollection implements \IteratorAggregate, \Countable
 
     /**
      * Get the cookie at the given index
-     * @param $i
+     * @param int $i
      * @return Cookie
      */
     public function getAt($i): Cookie

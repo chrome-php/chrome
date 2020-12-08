@@ -112,7 +112,7 @@ class PageNavigation
      *
      * @param string $eventName
      * @param int $timeout time in ms to wait for the navigation to complete. Default 30000 (30 seconds)
-     * @return mixed|null
+     * @return mixed
      * @throws Exception\CommunicationException\CannotReadResponse
      * @throws Exception\CommunicationException\InvalidResponse
      * @throws Exception\NoResponseAvailable

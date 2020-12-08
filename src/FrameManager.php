@@ -30,7 +30,6 @@ class FrameManager
 
     /**
      * FrameManager constructor.
-     * @param $page
      */
     public function __construct(Page $page, array $frameTree)
     {
@@ -69,7 +68,7 @@ class FrameManager
 
     /**
      * Checks if the given frame exists
-     * @param $frameId
+     * @param string $frameId
      * @return bool
      */
     public function hasFrame($frameId): bool
@@ -79,7 +78,7 @@ class FrameManager
 
     /**
      * Get a frame given its id
-     * @param $frameId
+     * @param string $frameId
      * @return Frame
      */
     public function getFrame($frameId): Frame

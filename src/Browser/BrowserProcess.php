@@ -54,7 +54,7 @@ class BrowserProcess implements LoggerAwareInterface
     protected $connection;
 
     /**
-     * @var Browser
+     * @var ProcessAwareBrowser
      */
     protected $browser;
 
@@ -86,8 +86,8 @@ class BrowserProcess implements LoggerAwareInterface
 
     /**
      * Starts the browser
-     * @param $binary
-     * @param $options
+     * @param string $binary
+     * @param array  $options
      */
     public function start($binary, $options)
     {
@@ -156,7 +156,7 @@ class BrowserProcess implements LoggerAwareInterface
     }
 
     /**
-     * @return Browser
+     * @return ProcessAwareBrowser
      */
     public function getBrowser()
     {

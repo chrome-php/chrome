@@ -84,7 +84,6 @@ class MockSocket implements SocketInterface
 
     /**
      * Add data to be returned with receiveData
-     * @param $data
      * @param bool $forNextMessage true to set the response id automatically
      * for next message (can stack for multiple messages
      */

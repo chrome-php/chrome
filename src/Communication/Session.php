@@ -29,7 +29,7 @@ class Session extends EventEmitter
     protected $targetId;
 
     /**
-     * @var Connection
+     * @var Connection|null
      */
     protected $connection;
 
@@ -62,7 +62,7 @@ class Session extends EventEmitter
             throw new TargetDestroyed('The session was destroyed.');
         }
 
-        $topResponse = $this->connection->sendMessage(new Message('Target.sendMessageToTarget', [
+        $topResponse = $this->getConnection()->sendMessage(new Message('Target.sendMessageToTarget', [
             'message' => (string) $message,
             'sessionId' => $this->getSessionId()
         ]));
@@ -81,7 +81,7 @@ class Session extends EventEmitter
     {
         $responseReader = $this->sendMessage($message);
 
-        $response = $responseReader->waitForResponse($timeout ?? $this->connection->getSendSyncDefaultTimeout());
+        $response = $responseReader->waitForResponse($timeout ?? $this->getConnection()->getSendSyncDefaultTimeout());
 
         if (!$response) {
             throw new NoResponseAvailable('No response was sent in the given timeout');

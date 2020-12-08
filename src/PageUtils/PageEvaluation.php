@@ -45,7 +45,8 @@ class PageEvaluation
 
     /**
      * PageEvaluation constructor.
-     * @param ResponseReader $responseReader
+     * @param ResponseReader $responseReader\
+     * @param string $pageLoaderId
      * @internal
      */
     public function __construct(ResponseReader $responseReader, $pageLoaderId, Page $page)
@@ -66,8 +67,7 @@ class PageEvaluation
     /**
      * Wait for the script to evaluate and to return a valid response
      *
-     * @param $timeout int|null
-     *
+     * @param int|null $timeout
      */
     public function waitForResponse(int $timeout = null)
     {
@@ -95,7 +95,7 @@ class PageEvaluation
     /**
      * Gets the value produced when the script evaluated in the page
      *
-     * @param $timeout int|null
+     * @param int|null $timeout
      *
      * @return mixed
      * @throws EvaluationFailed
@@ -112,7 +112,7 @@ class PageEvaluation
     /**
      * Gets the return type of the response from the page
      *
-     * @param $timeout int|null
+     * @param int|null $timeout
      *
      * @return mixed
      * @throws EvaluationFailed

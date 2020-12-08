@@ -115,7 +115,7 @@ class Connection extends EventEmitter implements LoggerAwareInterface
 
     /**
      * Set the delay to apply everytime before data are sent
-     * @param $delay
+     * @param int $delay
      */
     public function setConnectionDelay(int $delay)
     {
@@ -238,7 +238,7 @@ class Connection extends EventEmitter implements LoggerAwareInterface
 
     /**
      * Create a session for the given target id
-     * @param $targetId
+     * @param string $targetId
      * @return Session
      */
     public function createSession($targetId): Session
@@ -306,7 +306,6 @@ class Connection extends EventEmitter implements LoggerAwareInterface
 
     /**
      * Dispatches the message and either stores the response or emits an event
-     * @param array $response
      * @return bool
      * @throws InvalidResponse
      * @internal
@@ -375,7 +374,7 @@ class Connection extends EventEmitter implements LoggerAwareInterface
 
     /**
      * True if a response for the given id exists
-     * @param $id
+     * @param string $id
      * @return bool
      */
     public function hasResponseForId($id)
@@ -384,7 +383,7 @@ class Connection extends EventEmitter implements LoggerAwareInterface
     }
 
     /**
-     * @param $id
+     * @param string $id
      * @return array|null
      */
     public function getResponseForId($id)

@@ -21,13 +21,13 @@ class Clip
 
     /**
      * Clip constructor.
-     * @param $x
-     * @param $y
-     * @param $height
-     * @param $width
-     * @param $scale
+     * @param int   $x
+     * @param int   $y
+     * @param int   $height
+     * @param int   $width
+     * @param float $scale
      */
-    public function __construct($x, $y, $width, $height, $scale = 1)
+    public function __construct($x, $y, $width, $height, $scale = 1.0)
     {
         $this->x = $x;
         $this->y = $y;

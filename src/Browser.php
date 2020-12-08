@@ -27,7 +27,7 @@ class Browser
     protected $connection;
 
     /**
-     * @var Target[]
+     * @var array<string,Target>
      */
     protected $targets = [];
 
@@ -178,7 +178,7 @@ class Browser
     }
 
     /**
-     * @param $targetId
+     * @param string $targetId
      * @return Target|null
      */
     public function getTarget($targetId)

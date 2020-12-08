@@ -37,7 +37,7 @@ class ResponseWaiter
 
     /**
      * Chainable wait for response
-     * @param $time
+     * @param int $time
      * @throws \HeadlessChromium\Exception\NoResponseAvailable
      * @throws \HeadlessChromium\Exception\OperationTimedOut
      * @throws \HeadlessChromium\Exception\CommunicationException\ResponseHasError
