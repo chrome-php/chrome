@@ -25,14 +25,14 @@ class BrowsingTest extends BaseTestCase
      */
     public static $browser;
 
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass(): void
     {
         parent::setUpBeforeClass();
         $factory = new BrowserFactory();
         self::$browser = $factory->createBrowser();
     }
 
-    public static function tearDownAfterClass()
+    public static function tearDownAfterClass(): void
     {
         parent::tearDownAfterClass();
         self::$browser->close();
@@ -41,7 +41,7 @@ class BrowsingTest extends BaseTestCase
     private function openSitePage($file)
     {
         $page = self::$browser->createPage();
-        $page->navigate($this->sitePath($file))->waitForNavigation();
+        $page->navigate(self::sitePath($file))->waitForNavigation();
 
         return $page;
     }
@@ -58,7 +58,7 @@ class BrowsingTest extends BaseTestCase
         $this->assertEquals('foo', $title);
 
         // navigate again
-        $page->navigate($this->sitePath('a.html'))->waitForNavigation();
+        $page->navigate(self::sitePath('a.html'))->waitForNavigation();
         $title = $page->evaluate('document.title')->getReturnValue();
         $this->assertEquals('a - test', $title);
     }
@@ -86,9 +86,9 @@ class BrowsingTest extends BaseTestCase
 
         $this->assertEquals('about:blank', $page->getCurrentUrl());
 
-        $page->navigate($this->sitePath('a.html'))->waitForNavigation();
+        $page->navigate(self::sitePath('a.html'))->waitForNavigation();
 
-        $this->assertEquals($this->sitePath('a.html'), $page->getCurrentUrl());
+        $this->assertEquals(self::sitePath('a.html'), $page->getCurrentUrl());
     }
 
     public function testPageNavigationLocalNotFoundUrl()

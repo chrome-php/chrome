@@ -25,14 +25,14 @@ class MouseApiTest extends BaseTestCase
      */
     public static $browser;
 
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass(): void
     {
         parent::setUpBeforeClass();
         $factory = new BrowserFactory();
         self::$browser = $factory->createBrowser();
     }
 
-    public static function tearDownAfterClass()
+    public static function tearDownAfterClass(): void
     {
         parent::tearDownAfterClass();
         self::$browser->close();
@@ -41,7 +41,7 @@ class MouseApiTest extends BaseTestCase
     private function openSitePage($file)
     {
         $page = self::$browser->createPage();
-        $page->navigate($this->sitePath($file))->waitForNavigation();
+        $page->navigate(self::sitePath($file))->waitForNavigation();
 
         return $page;
     }
