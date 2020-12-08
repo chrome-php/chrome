@@ -2,10 +2,10 @@
 <ruleset name="gsouf">
 
     <file>./src/</file>
-    <file>./test/suites</file>
+    <file>./tests/</file>
 
-    <!--The complete PSR-2 ruleset-->
-    <rule ref="PSR2"/>
+    <!--The complete PSR-12 ruleset-->
+    <rule ref="PSR12"/>
 
     <!-- Arrays -->
     <rule ref="Generic.Arrays.DisallowLongArraySyntax"/>
@@ -13,11 +13,11 @@
 
     <!-- Long lines do no apply on test files -->
     <rule ref="Generic.Files.LineLength.TooLong">
-        <exclude-pattern>./test/*</exclude-pattern>
+        <exclude-pattern>./tests/*</exclude-pattern>
     </rule>
     <!-- When test method have weird signatures -->
     <rule ref="PEAR.Functions.ValidDefaultValue.NotAtEnd">
-        <exclude-pattern>./test/*</exclude-pattern>
+        <exclude-pattern>./tests/*</exclude-pattern>
     </rule>
 
     <!-- By default we use single quote only. Double quotes come when a variable is inside -->

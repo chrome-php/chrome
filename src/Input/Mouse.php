@@ -1,6 +1,12 @@
 <?php
-/**
- * @license see LICENSE
+
+/*
+ * This file is part of Chrome PHP.
+ *
+ * (c) Soufiane Ghzal <sghzal@gmail.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace HeadlessChromium\Input;
@@ -10,11 +16,10 @@ use HeadlessChromium\Page;
 
 class Mouse
 {
-
-    const BUTTON_LEFT = 'left';
-    const BUTTON_NONE = 'none';
-    const BUTTON_RIGHT = 'right';
-    const BUTTON_MIDDLE = 'middle';
+    public const BUTTON_LEFT = 'left';
+    public const BUTTON_NONE = 'none';
+    public const BUTTON_RIGHT = 'right';
+    public const BUTTON_MIDDLE = 'middle';
 
     /**
      * @var Page

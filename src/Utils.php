@@ -1,8 +1,13 @@
 <?php
-/**
- * @license see LICENSE
- */
 
+/*
+ * This file is part of Chrome PHP.
+ *
+ * (c) Soufiane Ghzal <sghzal@gmail.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
 
 namespace HeadlessChromium;
 
@@ -12,7 +17,6 @@ use HeadlessChromium\Exception\OperationTimedOut;
 
 class Utils
 {
-
     /**
      * Iterates on the given generator until the generator returns a value or the given timeout is reached.
      *

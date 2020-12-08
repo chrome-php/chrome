@@ -1,3 +1,4 @@
 composer.lock
+phpcs.xml
 phpunit.xml
 /vendor

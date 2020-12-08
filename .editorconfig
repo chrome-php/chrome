@@ -11,18 +11,5 @@ end_of_line = lf
 insert_final_newline = true
 trim_trailing_whitespace = true
 
-[*.md]
-trim_trailing_whitespace = false
-indent_size = 2
-
 [*.yml]
 indent_size = 2
-
-[*.css]
-indent_size = 2
-
-[*.scss]
-indent_size = 2
-
-[*.twig]
-insert_final_newline = false

@@ -1,6 +1,12 @@
 <?php
-/**
- * @license see LICENSE
+
+/*
+ * This file is part of Chrome PHP.
+ *
+ * (c) Soufiane Ghzal <sghzal@gmail.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace HeadlessChromium\Communication;
@@ -20,12 +26,11 @@ use Wrench\Client as WrenchBaseClient;
 
 class Connection extends EventEmitter implements LoggerAwareInterface
 {
-
-    const EVENT_TARGET_CREATED = 'method:Target.targetCreated';
-    const EVENT_TARGET_INFO_CHANGED = 'method:Target.targetInfoChanged';
-    const EVENT_TARGET_DESTROYED = 'method:Target.targetDestroyed';
-
     use LoggerAwareTrait;
+
+    public const EVENT_TARGET_CREATED = 'method:Target.targetCreated';
+    public const EVENT_TARGET_INFO_CHANGED = 'method:Target.targetInfoChanged';
+    public const EVENT_TARGET_DESTROYED = 'method:Target.targetDestroyed';
 
     /**
      * When strict mode is enabled communication error will result in exceptions

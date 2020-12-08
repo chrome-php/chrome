@@ -1,6 +1,12 @@
 <?php
-/**
- * @license see LICENSE
+
+/*
+ * This file is part of Chrome PHP.
+ *
+ * (c) Soufiane Ghzal <sghzal@gmail.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace HeadlessChromium;
@@ -24,10 +30,9 @@ use HeadlessChromium\PageUtils\ResponseWaiter;
 
 class Page
 {
-
-    const DOM_CONTENT_LOADED = 'DOMContentLoaded';
-    const LOAD = 'load';
-    const NETWORK_IDLE = 'networkIdle';
+    public const DOM_CONTENT_LOADED = 'DOMContentLoaded';
+    public const LOAD = 'load';
+    public const NETWORK_IDLE = 'networkIdle';
 
     /**
      * @var Target
@@ -540,7 +545,7 @@ class Page
             }
             $pdfOptions['printBackground'] = $options['printBackground'];
         }
-    
+
         // option displayHeaderFooter
         if (array_key_exists('displayHeaderFooter', $options)) {
             // displayHeaderFooter requires type to be boolean
@@ -551,7 +556,7 @@ class Page
             }
             $pdfOptions['displayHeaderFooter'] = $options['displayHeaderFooter'];
         }
-    
+
         // option headerTemplate
         if (array_key_exists('headerTemplate', $options)) {
             // headerTemplate requires type to be string
@@ -562,7 +567,7 @@ class Page
             }
             $pdfOptions['headerTemplate'] = $options['headerTemplate'];
         }
-    
+
         // option footerTemplate
         if (array_key_exists('footerTemplate', $options)) {
             // footerTemplate requires type to be string

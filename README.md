@@ -1,7 +1,6 @@
 Chrome PHP
 ==========
 
-[![Build Status](https://travis-ci.org/chrome-php/headless-chromium-php.svg?branch=master)](https://travis-ci.org/chrome-php/headless-chromium-php)
 [![Latest Stable Version](https://poser.pugx.org/chrome-php/chrome/version)](https://packagist.org/packages/chrome-php/chrome)
 [![License](https://poser.pugx.org/chrome-php/chrome/license)](https://packagist.org/packages/chrome-php/chrome)
 
@@ -598,7 +597,7 @@ You can ease the debugging by setting a delay before each operation is made:
 
 ## Contributing
 
-See [CONTRIBUTING.md](./CONTRIBUTING.md) for contribution details.
+See [CONTRIBUTING.md](.github/CONTRIBUTING.md) for contribution details.
 
 ## Credits
 
@@ -616,7 +615,7 @@ Thanks to [puppeteer](https://github.com/GoogleChrome/puppeteer) that served as 
 
 * **Soufiane Ghzal** - *Initial work* - [gsouf](https://github.com/gsouf)
 
-See also the list of [contributors](https://github.com/gsouf/headless-chromium-php/contributors) who participated in this project.
+See also the list of [contributors](https://github.com/chrome-php/headless-chromium-php/contributors) who participated in this project.
 
 ## License
 

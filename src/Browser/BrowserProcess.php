@@ -1,6 +1,12 @@
 <?php
-/**
- * @license see LICENSE
+
+/*
+ * This file is part of Chrome PHP.
+ *
+ * (c) Soufiane Ghzal <sghzal@gmail.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace HeadlessChromium\Browser;
@@ -23,7 +29,6 @@ use Wrench\Exception\SocketException;
  */
 class BrowserProcess implements LoggerAwareInterface
 {
-
     use LoggerAwareTrait;
 
     /**
@@ -317,7 +322,8 @@ class BrowserProcess implements LoggerAwareInterface
 
         // window's size
         if (array_key_exists('windowSize', $options) && $options['windowSize']) {
-            if (!is_array($options['windowSize']) ||
+            if (
+                !is_array($options['windowSize']) ||
                 count($options['windowSize']) !== 2 ||
                 !is_numeric($options['windowSize'][0]) ||
                 !is_numeric($options['windowSize'][1])
