@@ -24,8 +24,8 @@
         "wrench/wrench": "^2.0"
     },
     "require-dev":{
+        "bamarni/composer-bin-plugin": "^1.4.1",
         "phpunit/phpunit": "^6.5.14",
-        "squizlabs/php_codesniffer": "^3.5.8",
         "symfony/var-dumper": "^3.3|^4.0|^5.0"
     },
     "autoload":{

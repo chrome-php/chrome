@@ -6,6 +6,7 @@
 .gitignore          export-ignore
 CHANGELOG.md        export-ignore
 phpcs.xml.dist      export-ignore
+phpstan.neon.dist   export-ignore
 phpunit.xml.dist    export-ignore
 README.md           export-ignore
 
