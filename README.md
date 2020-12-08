@@ -4,14 +4,14 @@ Chrome PHP
 [![Latest Stable Version](https://poser.pugx.org/chrome-php/chrome/version)](https://packagist.org/packages/chrome-php/chrome)
 [![License](https://poser.pugx.org/chrome-php/chrome/license)](https://packagist.org/packages/chrome-php/chrome)
 
-This library lets you start playing with chrome/chromium in headless mode from PHP. 100% php - *no* nodejs required
+This library lets you start playing with chrome/chromium in headless mode from PHP.
 
 Can be used synchronously and asynchronously!
 
 ⚠️Looking for maintainers⚠️
 ---------------------------
 
-Many people are showing interest in the library but I don't have much time to maintain it. I'm looking for some permanent maintainers to help with it.
+We're looking for some permanent maintainers to help with maintaining this library.
 
 It can be for handling issues, adding documentation, adding new features, fixing bugs, etc...
 
@@ -44,7 +44,9 @@ Install
 
 The library can be installed with composer and is available on packagist under [chrome-php/chrome](https://packagist.org/packages/chrome-php/chrome)
 
-``composer require chrome-php/chrome``
+```bash
+$ composer require chrome-php/chrome
+```
 
 Usage
 -----
@@ -53,28 +55,30 @@ It uses a simple and understandable API to start chrome, to open pages, to take 
 to crawl websites... and almost everything that you can do with chrome as a human.
 
 ```php
-    use HeadlessChromium\BrowserFactory;
+use HeadlessChromium\BrowserFactory;
 
-    $browserFactory = new BrowserFactory();
+$browserFactory = new BrowserFactory();
 
-    // starts headless chrome
-    $browser = $browserFactory->createBrowser();
+// starts headless chrome
+$browser = $browserFactory->createBrowser();
 
+try {
     // creates a new page and navigate to an url
     $page = $browser->createPage();
     $page->navigate('http://example.com')->waitForNavigation();
-    
+
     // get page title
     $pageTitle = $page->evaluate('document.title')->getReturnValue();
-    
+
     // screenshot - Say "Cheese"! 😄
     $page->screenshot()->saveToFile('/foo/bar.png');
-    
+
     // pdf
-    $page->pdf(['printBackground'=>false])->saveToFile('/foo/bar.pdf');
-    
+    $page->pdf(['printBackground' => false])->saveToFile('/foo/bar.pdf');
+} finally {
     // bye
     $browser->close();
+}
 ```
 
 ### Using different chrome executable
@@ -85,10 +89,10 @@ If the variable is not found then it will use ``"chrome"`` as the executable.
 You can use any executable of your choice. For instance ``"chromium-browser"``:
 
 ```php
-    use HeadlessChromium\BrowserFactory;
+use HeadlessChromium\BrowserFactory;
 
-    // replace default 'chrome' with 'chromium-browser'
-    $browserFactory = new BrowserFactory('chromium-browser');
+// replace default 'chrome' with 'chromium-browser'
+$browserFactory = new BrowserFactory('chromium-browser');
 ```
 
 ### Debugging 
@@ -96,31 +100,27 @@ You can use any executable of your choice. For instance ``"chromium-browser"``:
 The following example disables headless mode to ease debugging 
 
 ```php
-    use HeadlessChromium\BrowserFactory;
+use HeadlessChromium\BrowserFactory;
 
-    $browserFactory = new BrowserFactory();
+$browserFactory = new BrowserFactory();
 
-    $browser = $browserFactory->createBrowser([
-        'headless'        => false,         // disable headless mode
-    ]);
+$browser = $browserFactory->createBrowser([
+    'headless'        => false,          // disable headless mode
+]);
 ```
 
 Other debug options:
 
 ```php
-    [
-        'connectionDelay' => 0.8,           // add 0.8 second of delay between each instruction sent to chrome,
-        'debugLogger'     => 'php://stdout' // will enable verbose mode
-    ]
+[
+    'connectionDelay' => 0.8,            // add 0.8 second of delay between each instruction sent to chrome,
+    'debugLogger'     => 'php://stdout', // will enable verbose mode
+]
 ```
 
 About ``debugLogger``: this can be any of a resource string, a resource or an object implementing 
 ``LoggerInterface`` from Psr\Log (such as [monolog](https://github.com/Seldaek/monolog) 
 or [apix/log](https://github.com/apix/log)).
-
-
-------------------------------------------------------------------------------------------------------------------------
-
 
 API
 ---
@@ -128,45 +128,45 @@ API
 ### Browser Factory
 
 ```php
-    use \HeadlessChromium\BrowserFactory;
-  
-    $browserFactory = new BrowserFactory();
-    $browser = $browserFactory->createBrowser([
-        'windowSize' => [1920, 1000],
-        'enableImages' => false
-    ]);
+use HeadlessChromium\BrowserFactory;
+
+$browserFactory = new BrowserFactory();
+$browser = $browserFactory->createBrowser([
+    'windowSize'      => [1920, 1000],
+    'enableImages'    => false,
+]);
 ```
 
 #### Options
 
 Here are the options available for the browser factory:
 
-| Option name        | Default       | Description                                                                                      |
-|--------------------|---------------|--------------------------------------------------------------------------------------------------|
-| connectionDelay    | 0             | Delay to apply between each operation for debugging purposes                                     |
-| customFlags        | none          | Array of flags to pass to the command line. Eg: ``['--option1', '--option2=someValue']``         |
-| debugLogger        | null          | A string (e.g "php://stdout"), or resource, or PSR-3 logger instance to print debug messages     |
-| enableImages       | true          | Toggles loading of images                                                                        |
-| headless           | true          | Enable or disable headless mode                                                                  |
-| ignoreCertificateErrors | false    | Set chrome to ignore ssl errors                                                                  |
-| keepAlive          | true          | true to keep alive the chrome instance when the script terminates                                |
-| noSandbox          | false         | Useful to run in a docker container                                                              |
-| sendSyncDefaultTimeout | 5000      | Default timeout (ms) for sending sync messages                                                   |
-| startupTimeout     | 30            | Maximum time in seconds to wait for chrome to start                                              |
-| userAgent          | none          | User agent to use for the whole browser  (see page api for alternative)                          |
-| userDataDir        | none          | chrome user data dir (default: a new empty dir is generated temporarily)                         |
-| windowSize         | none          | Size of the window. usage: ``[$width, $height]`` - see also Page::setViewport                    |
+| Option name               | Default | Description                                                                                  |
+|---------------------------|---------|----------------------------------------------------------------------------------------------|
+| `connectionDelay`         | `0`     | Delay to apply between each operation for debugging purposes                                 |
+| `customFlags`             | none    | Array of flags to pass to the command line. Eg: `['--option1', '--option2=someValue']`       |
+| `debugLogger`             | `null`  | A string (e.g "php://stdout"), or resource, or PSR-3 logger instance to print debug messages |
+| `enableImages`            | `true`  | Toggles loading of images                                                                    |
+| `headless`                | `true`  | Enable or disable headless mode                                                              |
+| `ignoreCertificateErrors` | `false` | Set chrome to ignore ssl errors                                                              |
+| `keepAlive`               | `true`  | true to keep alive the chrome instance when the script terminates                            |
+| `noSandbox`               | `false` | Useful to run in a docker container                                                          |
+| `sendSyncDefaultTimeout`  | `5000`  | Default timeout (ms) for sending sync messages                                               |
+| `startupTimeout`          | `30`    | Maximum time in seconds to wait for chrome to start                                          |
+| `userAgent`               | none    | User agent to use for the whole browser  (see page api for alternative)                      |
+| `userDataDir`             | none    | chrome user data dir (default: a new empty dir is generated temporarily)                     |
+| `windowSize`              | none    | Size of the window. usage: `$width, $height` - see also Page::setViewport                  |
 
 ### Browser API
 
 #### Create a new page (tab)
 
 ```php
-    $page = $browser->createPage();
-    
-    // destination can be specified
-    $uri = 'http://example.com';
-    $page = $browser->createPage($uri);
+$page = $browser->createPage();
+
+// destination can be specified
+$uri = 'http://example.com';
+$page = $browser->createPage($uri);
 ```
 
 #### Close the browser
@@ -178,16 +178,13 @@ Here are the options available for the browser factory:
 ### Set a script to evaluate before every page created by this browser will navigate
 
 ```php
-    $script = 
-     '// Simulate navigator permissions;
-      const originalQuery = window.navigator.permissions.query;
-      window.navigator.permissions.query = (parameters) => (
-          parameters.name === 'notifications' ?
-              Promise.resolve({ state: Notification.permission }) :
-              originalQuery(parameters)
-      );'
-
-    $browser->setPagePreScript($script);
+$browser->setPagePreScript('// Simulate navigator permissions;
+const originalQuery = window.navigator.permissions.query;
+window.navigator.permissions.query = (parameters) => (
+    parameters.name === 'notifications' ?
+        Promise.resolve({ state: Notification.permission }) :
+        originalQuery(parameters)
+);');
 ```
 
 ### Page API
@@ -195,19 +192,19 @@ Here are the options available for the browser factory:
 #### Navigate to an url
 
 ```php
-    // navigate
-    $navigation = $page->navigate('http://example.com');
-    
-    // wait for the page to be loaded
-    $navigation->waitForNavigation();
+// navigate
+$navigation = $page->navigate('http://example.com');
+
+// wait for the page to be loaded
+$navigation->waitForNavigation();
 ```
 
 When Using ``$navigation->waitForNavigation()`` you will wait for 30sec until the page event "loaded" is triggered.
 You can change the timeout or the event to listen for:
 
 ```php
-    // wait 10secs for the event "DOMContentLoaded" to be triggered
-    $navigation->waitForNavigation(Page::DOM_CONTENT_LOADED, 10000)
+// wait 10secs for the event "DOMContentLoaded" to be triggered
+$navigation->waitForNavigation(Page::DOM_CONTENT_LOADED, 10000);
 ```
 
 Available events (in the order they trigger):
@@ -221,16 +218,16 @@ First the page is too long to load and second the page you were waiting to be lo
 The good news is that you can handle those issues using a good old try catch:
 
 ```php
-  use HeadlessChromium\Exception\OperationTimedOut;
-  use HeadlessChromium\Exception\NavigationExpired;
+use HeadlessChromium\Exception\OperationTimedOut;
+use HeadlessChromium\Exception\NavigationExpired;
 
-  try {
+try {
     $navigation->waitForNavigation()
-  } catch (OperationTimedOut $e) {
+} catch (OperationTimedOut $e) {
     // too long to load
-  } catch (NavigationExpired $e) {
+} catch (NavigationExpired $e) {
     // An other page was loaded
-  }
+}
 ```
 
 #### Evaluate script on the page
@@ -238,17 +235,17 @@ The good news is that you can handle those issues using a good old try catch:
 Once the page has completed the navigation you can evaluate arbitrary script on this page:
 
 ```php
-    // navigate
-    $navigation = $page->navigate('http://example.com');
-        
-    // wait for the page to be loaded
-    $navigation->waitForNavigation();
+// navigate
+$navigation = $page->navigate('http://example.com');
     
-    // evaluate script in the browser
-    $evaluation = $page->evaluate('document.documentElement.innerHTML');
-    
-    // wait for the value to return and get it
-    $value = $evaluation->getReturnValue();
+// wait for the page to be loaded
+$navigation->waitForNavigation();
+
+// evaluate script in the browser
+$evaluation = $page->evaluate('document.documentElement.innerHTML');
+
+// wait for the value to return and get it
+$value = $evaluation->getReturnValue();
 ```
 
 
@@ -263,14 +260,12 @@ An example is available in [form-submit.php](./examples/form-submit.php)
 This is an alternative to ``evaluate`` that allows to call a given function with the given arguments in the page context:
 
 ```php
-    $evaluation = $page->callFunction(
-      'function(a, b) {
-          window.foo = a + b;
-       }', 
-      [1, 2]
-    );
-    
-    $value = $evaluation->getReturnValue();
+$evaluation = $page->callFunction(
+    "function(a, b) {\n    window.foo = a + b;\n}", 
+    [1, 2]
+);
+
+$value = $evaluation->getReturnValue();
 ```
 
 #### Add a script tag
@@ -278,42 +273,39 @@ This is an alternative to ``evaluate`` that allows to call a given function with
 That's useful if you want to add jQuery (or anything else) to the page:
 
 ```php
-    $page->addScriptTag([
-        'content' => file_get_contents('path/to/jquery.js')
-    ])->waitForResponse();
-    
-    $page->evaluate('$(".my.element").html()');
+$page->addScriptTag([
+    'content' => file_get_contents('path/to/jquery.js')
+])->waitForResponse();
+
+$page->evaluate('$(".my.element").html()');
 ```
 
 You can also use an url to feed the src attribute:
 
 ```php
-    $page->addScriptTag([
-        'url' => 'https://code.jquery.com/jquery-3.3.1.min.js'
-    ])->waitForResponse();
-    
-    $page->evaluate('$(".my.element").html()');
+$page->addScriptTag([
+    'url' => 'https://code.jquery.com/jquery-3.3.1.min.js'
+])->waitForResponse();
+
+$page->evaluate('$(".my.element").html()');
 ```
 
 ### Add a script to evaluate upon page navigation
 
 ```php
-    $script = 
-     '// Simulate navigator permissions;
-      const originalQuery = window.navigator.permissions.query;
-      window.navigator.permissions.query = (parameters) => (
-          parameters.name === 'notifications' ?
-              Promise.resolve({ state: Notification.permission }) :
-              originalQuery(parameters)
-      );'
-
-    $page->addPreScript($script);
+$page->addPreScript('// Simulate navigator permissions;
+const originalQuery = window.navigator.permissions.query;
+window.navigator.permissions.query = (parameters) => (
+    parameters.name === 'notifications' ?
+        Promise.resolve({ state: Notification.permission }) :
+        originalQuery(parameters)
+);');
 ```
 
 If your script needs the dom to be fully populated before it runs then you can use the option "onLoad":
 
 ```php
-    $page->addPreScript($script, ['onLoad' => true]);
+$page->addPreScript($script, ['onLoad' => true]);
 ```
 
 #### Set viewport size
@@ -322,29 +314,29 @@ This features allows to change the size of the viewport (emulation) for the curr
 all the browser's pages (see also option ``"windowSize"`` of [BrowserFactory::createBrowser](#options)).
 
 ```php
-    $width = 600;
-    $height = 300;
-    $page->setViewport($width, $height)
-        ->await(); // wait for operation to complete
+$width = 600;
+$height = 300;
+$page->setViewport($width, $height)
+    ->await(); // wait for operation to complete
 ```
 
 #### Make a screenshot
 
 ```php
-    // navigate
-    $navigation = $page->navigate('http://example.com');
-        
-    // wait for the page to be loaded
-    $navigation->waitForNavigation();
+// navigate
+$navigation = $page->navigate('http://example.com');
     
-    // take a screenshot
-    $screenshot = $page->screenshot([
-        'format'  => 'jpeg',  // default to 'png' - possible values: 'png', 'jpeg',
-        'quality' => 80       // only if format is 'jpeg' - default 100 
-    ]);
-    
-    // save the screenshot
-    $screenshot->saveToFile('/some/place/file.jpg');
+// wait for the page to be loaded
+$navigation->waitForNavigation();
+
+// take a screenshot
+$screenshot = $page->screenshot([
+    'format'  => 'jpeg',  // default to 'png' - possible values: 'png', 'jpeg',
+    'quality' => 80,      // only if format is 'jpeg' - default 100 
+]);
+
+// save the screenshot
+$screenshot->saveToFile('/some/place/file.jpg');
 ```
 
 **choose an area**
@@ -358,73 +350,71 @@ You can also take a screenshot for the full layout (not only the layout) using `
 TODO ``Page.getFullPageClip();``
 
 ```php
+use HeadlessChromium\Clip;
 
-    use HeadlessChromium\Clip;
+// navigate
+$navigation = $page->navigate('http://example.com');
+    
+// wait for the page to be loaded
+$navigation->waitForNavigation();
 
-    // navigate
-    $navigation = $page->navigate('http://example.com');
-        
-    // wait for the page to be loaded
-    $navigation->waitForNavigation();
-    
-    // create a rectangle by specifying to left corner coordinates + width and height
-    $x = 10;
-    $y = 10;
-    $width = 100;
-    $height = 100;
-    $clip = new Clip($x, $y, $width, $height);
-    
-    // take the screenshot (in memory binaries)
-    $screenshot = $page->screenshot([
-        'clip'  => $clip'
-    ]);
-    
-    // save the screenshot
-    $screenshot->saveToFile('/some/place/file.jpg');
+// create a rectangle by specifying to left corner coordinates + width and height
+$x = 10;
+$y = 10;
+$width = 100;
+$height = 100;
+$clip = new Clip($x, $y, $width, $height);
+
+// take the screenshot (in memory binaries)
+$screenshot = $page->screenshot([
+    'clip'  => $clip,
+]);
+
+// save the screenshot
+$screenshot->saveToFile('/some/place/file.jpg');
 ```
-
 
 #### Print as PDF
 
 ```php
-    // navigate
-    $navigation = $page->navigate('http://example.com');
-        
-    // wait for the page to be loaded
-    $navigation->waitForNavigation();
+// navigate
+$navigation = $page->navigate('http://example.com');
     
-    $options = [
-                  'landscape'       => true,  // default to false
-                  'printBackground' => true,   // default to false
-                  'displayHeaderFooter' => true, // default to false
-                  'preferCSSPageSize' => true, // default to false ( reads parameters directly from @page )
-                  'marginTop' => 0.0, // defaults to ~0.4 (must be float, value in inches)
-                  'marginBottom' => 1.4, // defaults to ~0.4 (must be float, value in inches)
-                  'marginLeft' => 5.0, // defaults to ~0.4 (must be float, value in inches)
-                  'marginRight' => 1.0 // defaults to ~0.4 (must be float, value in inches)
-                  'paperWidth' => 6 // defaults to 8.5 (must be float, value in inches)
-                  'paperHeight' => 6 // defaults to 8.5 (must be float, value in inches)
-                  'headerTemplate' => "<div>foo</div>", // see details bellow
-                  'footerTemplate' => "<div>foo</div>", // see details bellow
-                  'scale' => 1.2, // defaults to 1.0
-               ];
-    
-    // print as pdf (in memory binaries)
-    $pdf = $page->pdf($options);
-    
-    // save the pdf
-    $pdf->saveToFile('/some/place/file.pdf');
-    
-    // or directly output pdf without saving
-    header('Content-Description: File Transfer');
-    header('Content-Type: application/pdf');
-    header('Content-Disposition: inline; filename=filename.pdf');
-    header('Content-Transfer-Encoding: binary');
-    header('Expires: 0');
-    header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
-    header('Pragma: public');
-    
-    echo base64_decode($pdf->getBase64());
+// wait for the page to be loaded
+$navigation->waitForNavigation();
+
+$options = [
+    'landscape'           => true,             // default to false
+    'printBackground'     => true,             // default to false
+    'displayHeaderFooter' => true,             // default to false
+    'preferCSSPageSize'   => true,             // default to false ( reads parameters directly from @page )
+    'marginTop'           => 0.0,              // defaults to ~0.4 (must be float, value in inches)
+    'marginBottom'        => 1.4,              // defaults to ~0.4 (must be float, value in inches)
+    'marginLeft'          => 5.0,              // defaults to ~0.4 (must be float, value in inches)
+    'marginRight'         => 1.0,              // defaults to ~0.4 (must be float, value in inches)
+    'paperWidth'          => 6.0,              // defaults to 8.5 (must be float, value in inches)
+    'paperHeight'         => 6.0,              // defaults to 8.5 (must be float, value in inches)
+    'headerTemplate'      => '<div>foo</div>', // see details above
+    'footerTemplate'      => '<div>foo</div>', // see details above
+    'scale'               => 1.2,              // defaults to 1.0 (must be float)
+];
+
+// print as pdf (in memory binaries)
+$pdf = $page->pdf($options);
+
+// save the pdf
+$pdf->saveToFile('/some/place/file.pdf');
+
+// or directly output pdf without saving
+header('Content-Description: File Transfer');
+header('Content-Type: application/pdf');
+header('Content-Disposition: inline; filename=filename.pdf');
+header('Content-Transfer-Encoding: binary');
+header('Expires: 0');
+header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
+header('Pragma: public');
+
+echo base64_decode($pdf->getBase64());
 ```
 
 Options `headerTempalte` and `footerTempalte`: 
@@ -436,20 +426,20 @@ Should be valid HTML markup with following classes used to inject printing value
 - pageNumber: current page number
 - totalPages: total pages in the document
 
-
 ### Mouse API
 
 The mouse API is dependent on the page instance and allows you to control the mouse's moves and clicks.
 
 ```php
-    $page->mouse()
-        ->move(10, 20)                              // Moves mouse to position x=10;y=20
-        ->click()                                   // left click on position set above
-        ->move(100, 200, ['steps' => 5])            // move mouse to x=100;y=200 in 5 equal steps
-        ->click(['button' => Mouse::BUTTON_RIGHT];  // right click on position set above
-        
-    // given the last click was on a link, the next step will wait for the page to load after the link was clicked
-    $page->waitForReload();
+$page->mouse()
+    ->move(10, 20)                             // Moves mouse to position x=10;y=20
+    ->click()                                  // left click on position set above
+    ->move(100, 200, ['steps' => 5])           // move mouse to x=100;y=200 in 5 equal steps
+    ->click(['button' => Mouse::BUTTON_RIGHT]; // right click on position set above
+    
+// given the last click was on a link, the next step will wait
+// for the page to load after the link was clicked
+$page->waitForReload();
 ```
 
 ### Cookie API
@@ -459,55 +449,53 @@ You can set and get cookies for a page:
 #### Set Cookie
 
 ```php
-    use HeadlessChromium\Cookies\Cookie;
+use HeadlessChromium\Cookies\Cookie;
 
-    $page = $browser->createPage();
-    
-    // example 1: set cookies for a given domain
-    
-    $page->setCookies([
-        Cookie::create('name', 'value', [
-            'domain' => 'example.com',
-            'expires' => time() + 3600 // expires in 1 day
-        ])
-    ])->await();
-    
-    
-    // example 2: set cookies for the current page
-    
-    $page->navigate('http://example.com')->waitForNavigation();
-    
-    $page->setCookies([
-        Cookie::create('name', 'value', ['expires'])
-    ])->await();
-    
+$page = $browser->createPage();
+
+// example 1: set cookies for a given domain
+
+$page->setCookies([
+    Cookie::create('name', 'value', [
+        'domain' => 'example.com',
+        'expires' => time() + 3600 // expires in 1 day
+    ])
+])->await();
+
+
+// example 2: set cookies for the current page
+
+$page->navigate('http://example.com')->waitForNavigation();
+
+$page->setCookies([
+    Cookie::create('name', 'value', ['expires'])
+])->await();
 ```
 
 #### Get Cookies
 
 ```php
-    use HeadlessChromium\Cookies\Cookie;
+use HeadlessChromium\Cookies\Cookie;
 
-    $page = $browser->createPage();
-    
-    // example 1: get all cookies for the browser
-    
-    $cookies = $page->getAllCookies();
-    
-    // example 2: get cookies for the current page
-    
-    $page->navigate('http://example.com')->waitForNavigation();
-    $cookies = $page->getCookies();
-    
-    // filter cookies with name == 'foo'
-    $cookiesFoo = $cookies->filterBy('name', 'foo'); 
+$page = $browser->createPage();
 
-    // find first cookie with name == 'bar'
-    $cookieBar = $cookies->findOneBy('name', 'bar');
-    if ($cookieBar) {
-        // do something
-    }
-    
+// example 1: get all cookies for the browser
+
+$cookies = $page->getAllCookies();
+
+// example 2: get cookies for the current page
+
+$page->navigate('http://example.com')->waitForNavigation();
+$cookies = $page->getCookies();
+
+// filter cookies with name == 'foo'
+$cookiesFoo = $cookies->filterBy('name', 'foo'); 
+
+// find first cookie with name == 'bar'
+$cookieBar = $cookies->findOneBy('name', 'bar');
+if ($cookieBar) {
+    // do something
+}
 ```
 
 ### Set user agent
@@ -521,10 +509,6 @@ $page->setUserAgent('my user agent');
 See also BrowserFactory option ``userAgent`` to set it for the whole browser.
 
 
-------------------------------------------------------------------------------------------------------------------------
-
-
-
 Advanced usage
 --------------
 
@@ -534,40 +518,34 @@ communicate directly with chrome debug protocol.
 Example:
 
 ```php
-  use HeadlessChromium\Communication\Connection;
-  use HeadlessChromium\Communication\Message;
+use HeadlessChromium\Communication\Connection;
+use HeadlessChromium\Communication\Message;
 
-  // chrome devtools uri
-  $webSocketUri = 'ws://127.0.0.1:9222/devtools/browser/xxx';
+// chrome devtools uri
+$webSocketUri = 'ws://127.0.0.1:9222/devtools/browser/xxx';
 
-  // create a connection
-  $connection = new Connection($webSocketUri);
-  $connection->connect();
+// create a connection
+$connection = new Connection($webSocketUri);
+$connection->connect();
 
-  // send method "Target.activateTarget"
-  $responseReader = $connection->sendMessage(new Message('Target.activateTarget', ['targetId' => 'xxx']));
+// send method "Target.activateTarget"
+$responseReader = $connection->sendMessage(new Message('Target.activateTarget', ['targetId' => 'xxx']));
 
-  // wait up to 1000ms for a response
-  $response = $responseReader->waitForResponse(1000);
-
-  if ($response) {
-    // ok
-  }else {
-    // not ok
-  }
+// wait up to 1000ms for a response
+$response = $responseReader->waitForResponse(1000);
 ```
 
 ### Create a session and send message to the target
 
 ```php
-  // given a target id
-  $targetId = 'yyy';
+// given a target id
+$targetId = 'yyy';
 
-  // create a session for this target (attachToTarget)
-  $session = $connection->createSession($targetId);
+// create a session for this target (attachToTarget)
+$session = $connection->createSession($targetId);
 
-  // send message to this target (Target.sendMessageToTarget)
-  $response = $session->sendMessageSync(new Message('Page.reload'));
+// send message to this target (Target.sendMessageToTarget)
+$response = $session->sendMessageSync(new Message('Page.reload'));
 ```
 
 ### Debugging
@@ -581,18 +559,18 @@ You can ease the debugging by setting a delay before each operation is made:
 ### Browser (standalone)
 
 ```php
-    use HeadlessChromium\Communication\Connection;
-    use HeadlessChromium\Browser;
+use HeadlessChromium\Communication\Connection;
+use HeadlessChromium\Browser;
 
-    // chrome devtools uri
-    $webSocketUri = 'ws://127.0.0.1:9222/devtools/browser/xxx';
+// chrome devtools uri
+$webSocketUri = 'ws://127.0.0.1:9222/devtools/browser/xxx';
 
-    // create connection given a web socket uri
-    $connection = new Connection($webSocketUri);
-    $connection->connect();
+// create connection given a web socket uri
+$connection = new Connection($webSocketUri);
+$connection->connect();
 
-    // create browser
-    $browser = new Browser($connection);
+// create browser
+$browser = new Browser($connection);
 ```
 
 ## Contributing
@@ -603,17 +581,10 @@ See [CONTRIBUTING.md](.github/CONTRIBUTING.md) for contribution details.
 
 Thanks to [puppeteer](https://github.com/GoogleChrome/puppeteer) that served as an inspiration.
 
-## Roadmap
-
-- Make pdf
-- Create a DOM manipulation framework
-- Inspect network traces
-- Emulate keyboard
-- Adding api documentation (https://github.com/victorjonsson/PHP-Markdown-Documentation-Generator/blob/master/docs.md)
-
 ## Authors
 
 * **Soufiane Ghzal** - *Initial work* - [gsouf](https://github.com/gsouf)
+* **Graham Campbell** - *Current maintainer* - [GrahamCampbell](https://github.com/GrahamCampbell)
 
 See also the list of [contributors](https://github.com/chrome-php/headless-chromium-php/contributors) who participated in this project.
 
