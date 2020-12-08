@@ -1,8 +1,8 @@
 {
   "name": "chrome-php/chrome",
-  "description": "Instrument headless chrome/chromium instances from php",
+  "description": "Instrument headless chrome/chromium instances - 100% php - no need for nodejs or puppeteer",
   "type": "library",
-  "keywords": ["chrome", "chromium", "crawl", "browser", "headless", "screenshot", "pdf"],
+  "keywords": ["chrome", "chromium", "crawl", "browser", "headless", "screenshot", "pdf", "puppeteer"],
   "homepage": "https://github.com/gsouf/headless-chromium-php",
   "license": "Fair",
 

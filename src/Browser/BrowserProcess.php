@@ -114,7 +114,11 @@ class BrowserProcess implements LoggerAwareInterface
         $args = $this->getArgsFromOptions($binary, $options);
 
         // setup chrome process
-        $process = new Process($args);
+        if (!array_key_exists('keepAlive', $options) || !$options['keepAlive']) {
+            $process = new Process($args);
+        } else {
+            $process = new ProcessKeepAlive($args);
+        }
         $this->process = $process;
 
         // log

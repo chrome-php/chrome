@@ -12,6 +12,18 @@
   * none
 
 
+## 0.9.0
+
+> *20xx-xx-xx* (not released)
+
+> Description
+    
+* Features:
+  * none
+* Bug fixes:
+  * Fixed option keep aline
+
+
 ## 0.8.1
 
 > *2020-02-20*
