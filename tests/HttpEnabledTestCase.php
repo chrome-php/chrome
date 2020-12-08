@@ -51,7 +51,7 @@ class HttpEnabledTestCase extends BaseTestCase
         return 'localhost:8083';
     }
 
-    protected function sitePath($file)
+    protected static function sitePath(string $file): string
     {
         return 'http://localhost:8083/' . $file;
     }
