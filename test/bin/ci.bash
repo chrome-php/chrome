@@ -11,7 +11,7 @@ echo "======================"
 echo -e "= \e[1m\e[33mRunning unit tests\e[0m\e[34m ="
 echo -e "======================\e[39m"
 
-php $SCRIPTDIR/../../vendor/bin/phpunit -c "$SCRIPTDIR/../../phpunit.dist.xml"
+php $SCRIPTDIR/../../vendor/bin/phpunit -c "$SCRIPTDIR/../../phpunit.xml.dist"
 
 
 echo -e "\e[34m"
