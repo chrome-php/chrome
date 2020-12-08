@@ -28,14 +28,14 @@ class CookieTest extends HttpEnabledTestCase
      */
     public static $browser;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $factory = new BrowserFactory();
         self::$browser = $factory->createBrowser();
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         parent::tearDown();
         self::$browser->close();

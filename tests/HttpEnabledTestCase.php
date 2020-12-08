@@ -18,7 +18,7 @@ class HttpEnabledTestCase extends BaseTestCase
     /** @var Process */
     private static $process;
 
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass(): void
     {
         parent::setUpBeforeClass();
 
@@ -39,7 +39,7 @@ class HttpEnabledTestCase extends BaseTestCase
         }
     }
 
-    public static function tearDownAfterClass()
+    public static function tearDownAfterClass(): void
     {
         parent::tearDownAfterClass();
 

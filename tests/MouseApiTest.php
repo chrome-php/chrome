@@ -25,14 +25,14 @@ class MouseApiTest extends BaseTestCase
      */
     public static $browser;
 
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass(): void
     {
         parent::setUpBeforeClass();
         $factory = new BrowserFactory();
         self::$browser = $factory->createBrowser();
     }
 
-    public static function tearDownAfterClass()
+    public static function tearDownAfterClass(): void
     {
         parent::tearDownAfterClass();
         self::$browser->close();

@@ -29,7 +29,7 @@ class SessionTest extends TestCase
      */
     protected $mockSocket;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $this->mockSocket = new MockSocket();
