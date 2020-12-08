@@ -52,8 +52,8 @@ class PageTest extends BaseTestCase
         $pageFooBar->setUserAgent('foobar')->await();
         $pageBarBaz->setUserAgent('barbaz')->await();
 
-        $pageFooBar->navigate($this->sitePath('a.html'))->waitForNavigation();
-        $pageBarBaz->navigate($this->sitePath('a.html'))->waitForNavigation();
+        $pageFooBar->navigate(self::sitePath('a.html'))->waitForNavigation();
+        $pageBarBaz->navigate(self::sitePath('a.html'))->waitForNavigation();
 
         $value1 = $pageFooBar->evaluate('navigator.userAgent')->getReturnValue();
         $value2 = $pageBarBaz->evaluate('navigator.userAgent')->getReturnValue();
@@ -87,21 +87,21 @@ class PageTest extends BaseTestCase
         $page->addPreScript($preScript2);
 
         // make sure prescript evaluates
-        $page->navigate($this->sitePath('a.html'))->waitForNavigation();
+        $page->navigate(self::sitePath('a.html'))->waitForNavigation();
         $fooValue = $page->evaluate('navigator.foo')->getReturnValue();
         $barValue = $page->evaluate('navigator.bar')->getReturnValue();
         $this->assertEquals(1, $fooValue);
         $this->assertEquals(11, $barValue);
 
         // make sure prescript is not adding again and again on every requests
-        $page->navigate($this->sitePath('b.html'))->waitForNavigation();
+        $page->navigate(self::sitePath('b.html'))->waitForNavigation();
         $fooValue = $page->evaluate('navigator.foo')->getReturnValue();
         $barValue = $page->evaluate('navigator.bar')->getReturnValue();
         $this->assertEquals(1, $fooValue);
         $this->assertEquals(11, $barValue);
 
         // make sure prescript did not pollute other pages
-        $page2->navigate($this->sitePath('b.html'))->waitForNavigation();
+        $page2->navigate(self::sitePath('b.html'))->waitForNavigation();
         $fooValue = $page2->evaluate('navigator.foo')->getReturnValue();
         $barValue = $page2->evaluate('navigator.bar')->getReturnValue();
         $this->assertEquals(null, $fooValue);
@@ -172,11 +172,11 @@ class PageTest extends BaseTestCase
         $browser = $factory->createBrowser();
         $page = $browser->createPage();
         $page->navigate(
-            $this->sitePath('a.html')
+            self::sitePath('a.html')
         )->waitForNavigation();
 
         $page->addScriptTag([
-            'url' => $this->sitePath('jsInclude.js')
+            'url' => self::sitePath('jsInclude.js')
         ])->waitForResponse();
 
         $isIncluded = $page->evaluate('window.testJsIsIncluded')->getReturnValue();
@@ -196,7 +196,7 @@ class PageTest extends BaseTestCase
         ]);
 
         $page = $browser->createPage();
-        $page->navigate($this->sitePath('bigLayout.html'))->waitForNavigation();
+        $page->navigate(self::sitePath('bigLayout.html'))->waitForNavigation();
 
         $page->setViewport(100, 300)->await();
 
@@ -250,7 +250,7 @@ class PageTest extends BaseTestCase
         ]);
 
         $page = $browser->createPage();
-        $page->navigate($this->sitePath('bigLayout.html'))->waitForNavigation();
+        $page->navigate(self::sitePath('bigLayout.html'))->waitForNavigation();
 
         $clip = $page->getFullPageClip();
 

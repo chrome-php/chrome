@@ -44,7 +44,7 @@ class CookieTest extends HttpEnabledTestCase
     private function openSitePage($file)
     {
         $page = self::$browser->createPage();
-        $page->navigate($this->sitePath($file))->waitForNavigation();
+        $page->navigate(self::sitePath($file))->waitForNavigation();
 
         return $page;
     }
@@ -102,7 +102,7 @@ class CookieTest extends HttpEnabledTestCase
 
 
         // Set cookie for current page
-        $page->navigate($this->sitePath('a.html'))->waitForNavigation();
+        $page->navigate(self::sitePath('a.html'))->waitForNavigation();
 
         $page->setCookies([
             Cookie::create('quux', 'corge')

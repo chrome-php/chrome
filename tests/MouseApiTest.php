@@ -41,7 +41,7 @@ class MouseApiTest extends BaseTestCase
     private function openSitePage($file)
     {
         $page = self::$browser->createPage();
-        $page->navigate($this->sitePath($file))->waitForNavigation();
+        $page->navigate(self::sitePath($file))->waitForNavigation();
 
         return $page;
     }
