@@ -140,7 +140,7 @@ class BrowserProcess implements LoggerAwareInterface
         $this->logger->debug('process: connecting using ' . $this->wsUri);
 
         // connect to browser
-        $connection = new Connection($this->wsUri, $this->logger, $options['sendSyncDefaultTimeout'] ?? 3000);
+        $connection = new Connection($this->wsUri, $this->logger, $options['sendSyncDefaultTimeout'] ?? 5000);
         $connection->connect();
 
         // connection delay

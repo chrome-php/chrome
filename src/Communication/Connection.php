@@ -91,7 +91,7 @@ class Connection extends EventEmitter implements LoggerAwareInterface
         $this->setLogger($logger ?? new NullLogger());
 
         // set timeout
-        $this->sendSyncDefaultTimeout = $sendSyncDefaultTimeout ?? 3000;
+        $this->sendSyncDefaultTimeout = $sendSyncDefaultTimeout ?? 5000;
 
         // create socket client
         if (is_string($socketClient)) {

@@ -41,7 +41,7 @@ class BrowserFactory
      * - ignoreCertificateErrors: set chrome to ignore ssl errors
      * - keepAlive: true to keep alive the chrome instance when the script terminates (default: false)
      * - noSandbox: enable no sandbox mode (default: false)
-     * - sendSyncDefaultTimeout: maximum time in ms to wait for synchronous messages to send (default 3000 ms)
+     * - sendSyncDefaultTimeout: maximum time in ms to wait for synchronous messages to send (default 5000 ms)
      * - startupTimeout: maximum time in seconds to wait for chrome to start (default: 30 sec)
      * - userAgent: user agent to use for the browser
      * - userDataDir: chrome user data dir (default: a new empty dir is generated temporarily)
@@ -118,7 +118,7 @@ class BrowserFactory
      * @param array $options options when creating the connection to the browser:
      *  - connectionDelay: amount of time in seconds to slows down connection for debugging purposes (default: none)
      *  - debugLogger: resource string ("php://stdout"), resource or psr-3 logger instance (default: none)
-     *  - sendSyncDefaultTimeout: maximum time in ms to wait for synchronous messages to send (default 3000 ms)
+     *  - sendSyncDefaultTimeout: maximum time in ms to wait for synchronous messages to send (default 5000 ms)
      *
      * @return Browser
      * @throws BrowserConnectionFailed
@@ -132,7 +132,7 @@ class BrowserFactory
         }
 
         // connect to browser
-        $connection = new Connection($uri, $logger, $options['sendSyncDefaultTimeout'] ?? 3000);
+        $connection = new Connection($uri, $logger, $options['sendSyncDefaultTimeout'] ?? 5000);
 
         // try to connect
         try {

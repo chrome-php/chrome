@@ -151,7 +151,7 @@ Here are the options available for the browser factory:
 | ignoreCertificateErrors | false    | Set chrome to ignore ssl errors                                                                  |
 | keepAlive          | true          | true to keep alive the chrome instance when the script terminates                                |
 | noSandbox          | false         | Useful to run in a docker container                                                              |
-| sendSyncDefaultTimeout | 3000      | Default timeout (ms) for sending sync messages                                                   |
+| sendSyncDefaultTimeout | 5000      | Default timeout (ms) for sending sync messages                                                   |
 | startupTimeout     | 30            | Maximum time in seconds to wait for chrome to start                                              |
 | userAgent          | none          | User agent to use for the whole browser  (see page api for alternative)                          |
 | userDataDir        | none          | chrome user data dir (default: a new empty dir is generated temporarily)                         |
