@@ -98,6 +98,8 @@ class Wrench implements SocketInterface, LoggerAwareInterface
             // log
             $this->logger->debug('socket(' . $this->socketId . '): ✗ could not connect');
         }
+
+        return $connected;
     }
 
     /**
@@ -125,6 +127,7 @@ class Wrench implements SocketInterface, LoggerAwareInterface
             // log
             $this->logger->debug('socket(' . $this->socketId . '): ✗ could not disconnect');
         }
+
         return $disconnected;
     }
 }
