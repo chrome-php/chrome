@@ -26,7 +26,7 @@ class CookiesGetter extends ResponseWaiter
     public function getCookies()
     {
         return new CookiesCollection(
-            $this->responseReader->getResponse()->getResultData('cookies') ?? null()
+            $this->responseReader->getResponse()->getResultData('cookies')
         );
     }
 }
