@@ -7,7 +7,7 @@ on:
 jobs:
   tests:
     name: PHP ${{ matrix.php }}
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-18.04
 
     strategy:
       matrix:
@@ -27,21 +27,21 @@ jobs:
       - name: Setup Problem Matchers
         run: echo "::add-matcher::${{ runner.tool_cache }}/phpunit.json"
 
-      - name: Install Latest Dependencies
+      - name: Install PHP 7 Dependencies
         uses: nick-invision/retry@v1
         with:
           timeout_minutes: 5
           max_attempts: 5
           command: composer update --no-interaction --no-progress
-        if: "matrix.php < 8.0"
+        if: "matrix.php < 8"
 
-      - name: Install PHP 8.0 Dependencies
+      - name: Install PHP 8 Dependencies
         uses: nick-invision/retry@v1
         with:
           timeout_minutes: 5
           max_attempts: 5
           command: composer update --no-interaction --no-progress --ignore-platform-req=php
-        if: "matrix.php >= 8.0"
+        if: "matrix.php >= 8"
 
       - name: Execute PHPUnit
         run: vendor/bin/phpunit
