@@ -26,17 +26,7 @@ class BrowserFactory
     public function __construct(string $chromeBinary = null)
     {
         // auto guess chrome binary
-        if (null === $chromeBinary) {
-            $envChromePath = getenv('CHROME_PATH');
-
-            if ($envChromePath) {
-                $chromeBinary = $envChromePath;
-            } else {
-                $chromeBinary = 'chrome';
-            }
-        }
-
-        $this->chromeBinary = $chromeBinary;
+        $this->chromeBinary = $chromeBinary ?? ($_SERVER['CHROME_PATH'] ?? 'chrome');
     }
 
     /**
