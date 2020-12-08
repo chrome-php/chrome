@@ -8,7 +8,7 @@ This library lets you start playing with chrome/chromium in headless mode from P
 
 Can be used synchronously and asynchronously!
 
-⚠️Loking for maintainers⚠️
+⚠️Looking for maintainers⚠️
 ---------------------------
 
 Many people are showing interest in the library but I don't have much time to maintain it. I'm looking for some permanent maintainers to help with it.
