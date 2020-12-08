@@ -18,6 +18,7 @@ use HeadlessChromium\Exception\CommunicationException;
 use HeadlessChromium\Exception\CommunicationException\InvalidResponse;
 use HeadlessChromium\Exception\CommunicationException\CannotReadResponse;
 use HeadlessChromium\Exception\OperationTimedOut;
+use HeadlessChromium\Exception\TargetDestroyed;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
 use Psr\Log\LoggerInterface;
@@ -245,6 +246,8 @@ class Connection extends EventEmitter implements LoggerAwareInterface
         $response = $this->sendMessageSync(
             new Message('Target.attachToTarget', ['targetId' => $targetId])
         );
+        if (empty($response['result']))
+			throw new TargetDestroyed('The target was destroyed.');
         $sessionId = $response['result']['sessionId'];
         $session = new Session($targetId, $sessionId, $this);
 
