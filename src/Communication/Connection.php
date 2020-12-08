@@ -246,8 +246,9 @@ class Connection extends EventEmitter implements LoggerAwareInterface
         $response = $this->sendMessageSync(
             new Message('Target.attachToTarget', ['targetId' => $targetId])
         );
-        if (empty($response['result']))
-			throw new TargetDestroyed('The target was destroyed.');
+        if (empty($response['result'])) {
+            throw new TargetDestroyed('The target was destroyed.');
+        }
         $sessionId = $response['result']['sessionId'];
         $session = new Session($targetId, $sessionId, $this);
 
