@@ -406,7 +406,7 @@ TODO ``Page.getFullPageClip();``
                   'paperHeight' => 6 // defaults to 8.5 (must be float, value in inches)
                   'headerTemplate' => "<div>foo</div>", // see details bellow
                   'footerTemplate' => "<div>foo</div>", // see details bellow
-                  'scale' => 1.2, // defaults to 1
+                  'scale' => 1.2, // defaults to 1.0
                ];
     
     // print as pdf (in memory binaries)
