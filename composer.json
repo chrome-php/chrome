@@ -35,7 +35,7 @@
     },
     "autoload-dev":{
         "psr-4" : {
-          "HeadlessChromium\\Test\\": "test/suites"
+          "HeadlessChromium\\Test\\": "tests/"
         }
     },
     "scripts": {
@@ -49,5 +49,10 @@
     },
     "config": {
         "preferred-install": "dist"
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "0.9-dev"
+        }
     }
 }
