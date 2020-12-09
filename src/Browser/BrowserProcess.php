@@ -311,6 +311,7 @@ class BrowserProcess implements LoggerAwareInterface
         if (!array_key_exists('headless', $options) || $options['headless']) {
             $args[] = '--headless';
             $args[] = '--disable-gpu';
+            $args[] = '--font-render-hinting=none';
             $args[] = '--hide-scrollbars';
             $args[] = '--mute-audio';
         }
