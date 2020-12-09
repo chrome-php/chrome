@@ -1,28 +1,22 @@
 # CHANGELOG
 
-## x.x.x
-
-> *20xx-xx-xx* (not released)
-
-> Description
-    
-* Features:
-  * none
-* Bug fixes:
-  * none
-
 
 ## 0.9.0
 
-> *20xx-xx-xx* (not released)
+> *2020-12-09*
 
 > Description
     
 * Features:
-  * none
+  * Support PHP 8
+  * Increase default sync timeout to 5 seconds
+  * Set --font-render-hinting=none in headless mode
 * Bug fixes:
-  * Fixed option keep aline
-
+  * Fixed keep alive option
+  * Fixed various phpdoc issues
+  * Fixed sending params to newer Chrome
+  * Fixed Wrench::connect() return value
+  * Avoid non-thread-safe getenv function
 
 ## 0.8.1
 
