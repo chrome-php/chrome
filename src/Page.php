@@ -20,6 +20,7 @@ use HeadlessChromium\Exception\CommunicationException;
 use HeadlessChromium\Exception\NoResponseAvailable;
 use HeadlessChromium\Exception\TargetDestroyed;
 use HeadlessChromium\Input\Mouse;
+use HeadlessChromium\Input\Keyboard;
 use HeadlessChromium\PageUtils\CookiesGetter;
 use HeadlessChromium\PageUtils\PageEvaluation;
 use HeadlessChromium\PageUtils\PageLayoutMetrics;
@@ -48,6 +49,11 @@ class Page
      * @var Mouse|Null
      */
     protected $mouse;
+
+    /**
+     * @var Keyboard|Null
+     */
+    protected $keyboard;
 
     /**
      * Page constructor.
@@ -738,6 +744,19 @@ class Page
         }
 
         return $this->mouse;
+    }
+
+    /**
+     * Get keyboard object to play with
+     * @return Keyboard
+     */
+    public function keyboard()
+    {
+        if (!$this->keyboard) {
+            $this->keyboard = new Keyboard($this);
+        }
+
+        return $this->keyboard;
     }
 
     /**
