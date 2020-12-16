@@ -269,7 +269,7 @@ class PageTest extends BaseTestCase
         $page = $browser->createPage();
         $page->pdf(['scale' => '2px']);
     }
-    
+
     public function testGetHtml()
     {
         $factory = new BrowserFactory();

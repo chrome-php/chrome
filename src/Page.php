@@ -791,7 +791,7 @@ class Page
 
     /**
      * Gets the raw html of the current page.
-     * 
+     *
      * @return String
      * @throws Exception\CommunicationException
      */
