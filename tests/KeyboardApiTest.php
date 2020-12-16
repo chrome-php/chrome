@@ -112,7 +112,7 @@ class KeyboardApiTest extends BaseTestCase
 
         $millisecondsElapsed = round(microtime(true) * 1000) - $start;
 
-        // if the keys take less then 300ms (3 keys x 100ms) to run, setKeyInterval is not working
+        // if this test takes less than 300ms to run (3 keys x 100ms), setKeyInterval is not working
         $this->assertGreaterThan(300, $millisecondsElapsed);
     }
 }
