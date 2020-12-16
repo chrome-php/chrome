@@ -290,9 +290,9 @@ $page->addScriptTag([
 $page->evaluate('$(".my.element").html()');
 ```
 
-#### Get the page html
+#### Get the page HTML
 
-You can get the page html as a string using the ```getHtml``` method.
+You can get the page HTML as a string using the ```getHtml``` method.
 
 ```php
 $html = $page->getHtml();
