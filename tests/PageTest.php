@@ -269,4 +269,16 @@ class PageTest extends BaseTestCase
         $page = $browser->createPage();
         $page->pdf(['scale' => '2px']);
     }
+    
+    public function testGetHtml()
+    {
+        $factory = new BrowserFactory();
+
+        $browser = $factory->createBrowser();
+        $page = $browser->createPage();
+
+        $page->navigate(self::sitePath('index.html'))->waitForNavigation();
+
+        $this->assertStringContainsString('<h1>bar</h1>', $page->getHtml());
+    }
 }

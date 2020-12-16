@@ -790,6 +790,17 @@ class Page
     }
 
     /**
+     * Gets the raw html of the current page.
+     * 
+     * @return String
+     * @throws Exception\CommunicationException
+     */
+    public function getHtml()
+    {
+        return $this->evaluate('document.documentElement.outerHTML')->getReturnValue();
+    }
+
+    /**
      * Read cookies for the current page
      *
      * usage:
