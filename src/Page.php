@@ -792,7 +792,7 @@ class Page
     /**
      * Gets the raw html of the current page.
      *
-     * @return String
+     * @return string
      * @throws Exception\CommunicationException
      */
     public function getHtml()
