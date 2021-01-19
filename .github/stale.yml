@@ -1,0 +1,8 @@
+daysUntilStale: 120
+daysUntilClose: 30
+staleLabel: stale
+markComment: >
+  This issue has been automatically marked as stale because there has been no
+  recent activity. It will be closed after 30 days if no further activity
+  occurs. Thank you for your contributions.
+closeComment: false
