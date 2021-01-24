@@ -24,7 +24,7 @@ Features
 - Evaluate javascript in the page
 - Make PDF
 - Emulate mouse 
-- *TODO* Emulate keyboard 
+- Emulate keyboard 
 - Always IDE friendly
 
 Happy browsing!
@@ -448,6 +448,22 @@ $page->mouse()
 // given the last click was on a link, the next step will wait
 // for the page to load after the link was clicked
 $page->waitForReload();
+```
+
+### Keyboard API
+
+The keyboard API is dependent on the page instance and allows you to type like a real user.
+
+```php
+$page->keyboard()
+    ->typeRawKey('Tab') // type a raw key, such as Tab
+    ->typeText('bar');  // type the text "bar"
+```
+
+To impersonate a real user you may want to add a delay between each keystroke using the ```setKeyInterval``` method:
+
+```php
+$page->keyboard()->setKeyInterval(10); // sets a delay of 10 miliseconds between keystrokes
 ```
 
 ### Cookie API
