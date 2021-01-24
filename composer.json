@@ -49,10 +49,5 @@
     },
     "config": {
         "preferred-install": "dist"
-    },
-    "extra": {
-        "branch-alias": {
-            "dev-master": "0.10-dev"
-        }
     }
 }
