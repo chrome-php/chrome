@@ -74,11 +74,11 @@ class MouseApiTest extends BaseTestCase
     {
         // initial navigation
         $page = $this->openSitePage('bigLayout.html');
-        usleep(100000);
+        usleep(200000);
 
         // scroll 100px down
         $page->mouse()->scrollDown(100);
-        usleep(100000);
+        usleep(200000);
 
         $windowScrollY = $page->evaluate('window.scrollY')->getReturnValue();
 
@@ -86,7 +86,7 @@ class MouseApiTest extends BaseTestCase
 
         // scrolling 100px up should revert the last action
         $page->mouse()->scrollUp(100);
-        usleep(100000);
+        usleep(200000);
 
         $windowScrollY = $page->evaluate('window.scrollY')->getReturnValue();
 
