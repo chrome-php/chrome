@@ -455,11 +455,7 @@ You can emulate the mouse wheel to scroll up and down in a page, frame or elemen
 ```php
 $page->mouse()
     ->scrollDown(100) // scroll down 100px
-    ->scrollUp(50);   // scroll up 50px 
-
-// scrolling doesn't happen instantly like mouse moves
-// the browser may need some time to complete the action
-sleep(1);
+    ->scrollUp(50);   // scroll up 50px
 ```
 
 ### Keyboard API
