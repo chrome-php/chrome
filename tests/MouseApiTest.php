@@ -79,7 +79,7 @@ class MouseApiTest extends BaseTestCase
         $page->mouse()->scrollDown(100);
 
         // the scrolling takes some time to complete
-        usleep(1000000);
+        usleep(10000000);
 
         $windowScrollY = $page->evaluate('window.scrollY')->getReturnValue();
 
@@ -88,7 +88,7 @@ class MouseApiTest extends BaseTestCase
         // scrolling 100px up should revert the last action
         $page->mouse()->scrollUp(100);
 
-        usleep(1000000);
+        usleep(10000000);
 
         $windowScrollY = $page->evaluate('window.scrollY')->getReturnValue();
 
