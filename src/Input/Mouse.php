@@ -125,4 +125,60 @@ class Mouse
 
         return $this;
     }
+
+    /**
+     * Scroll up using the mouse wheel
+     *
+     * @param int $distance Distance in pixels
+     * @return $this
+     * @throws \HeadlessChromium\Exception\CommunicationException
+     * @throws \HeadlessChromium\Exception\NoResponseAvailable
+     */
+    public function scrollUp(int $distance)
+    {
+        return $this->scroll((-1 * abs($distance)));
+    }
+
+    /**
+     * Scroll down using the mouse wheel
+     *
+     * @param int $distance Distance in pixels
+     * @return $this
+     * @throws \HeadlessChromium\Exception\CommunicationException
+     * @throws \HeadlessChromium\Exception\NoResponseAvailable
+     */
+    public function scrollDown(int $distance)
+    {
+        return $this->scroll(abs($distance));
+    }
+
+    /**
+     * Scroll a positive or negative distance using the mouseWheel event type
+     *
+     * @param int $distance Distance in pixels
+     * @return $this
+     * @throws \HeadlessChromium\Exception\CommunicationException
+     * @throws \HeadlessChromium\Exception\NoResponseAvailable
+     */
+    private function scroll(int $distance)
+    {
+        $this->page->assertNotClosed();
+
+        // make sure the mouse is on the screen
+        $this->move($this->x, $this->y);
+
+        // scroll
+        $this->page->getSession()->sendMessageSync(new Message('Input.dispatchMouseEvent', [
+            'type'   => 'mouseWheel',
+            'x'      => $this->x,
+            'y'      => $this->y,
+            'deltaX' => 0,
+            'deltaY' => $distance
+        ]));
+
+        // set new position after move
+        $this->y += $distance;
+
+        return $this;
+    }
 }

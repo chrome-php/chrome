@@ -436,7 +436,7 @@ Should be valid HTML markup with following classes used to inject printing value
 
 ### Mouse API
 
-The mouse API is dependent on the page instance and allows you to control the mouse's moves and clicks.
+The mouse API is dependent on the page instance and allows you to control the mouse's moves, clicks and scroll.
 
 ```php
 $page->mouse()
@@ -448,6 +448,14 @@ $page->mouse()
 // given the last click was on a link, the next step will wait
 // for the page to load after the link was clicked
 $page->waitForReload();
+```
+
+You can emulate the mouse wheel to scroll up and down in a page, frame or element.
+
+```php
+$page->mouse()
+    ->scrollDown(100) // scroll down 100px
+    ->scrollUp(50);   // scroll up 50px
 ```
 
 ### Keyboard API
