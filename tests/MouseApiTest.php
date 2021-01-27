@@ -65,4 +65,33 @@ class MouseApiTest extends BaseTestCase
 
         $this->assertEquals('a - test', $title);
     }
+
+    /**
+     * @throws \HeadlessChromium\Exception\CommunicationException
+     * @throws \HeadlessChromium\Exception\NoResponseAvailable
+     */
+    public function testScroll()
+    {
+        // initial navigation
+        $page = $this->openSitePage('bigLayout.html');
+
+        // scroll 100px down
+        $page->mouse()->scrollDown(100);
+
+        // the scrolling takes some time to complete
+        usleep(1000000);
+
+        $windowScrollY = $page->evaluate('window.scrollY')->getReturnValue();
+
+        $this->assertEquals(100, $windowScrollY);
+
+        // scrolling 100px up should revert the last action
+        $page->mouse()->scrollUp(100);
+
+        usleep(1000000);
+
+        $windowScrollY = $page->evaluate('window.scrollY')->getReturnValue();
+
+        $this->assertEquals(0, $windowScrollY);
+    }
 }
