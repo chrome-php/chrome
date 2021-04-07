@@ -436,8 +436,8 @@ class Page
 
         if (array_key_exists('captureBeyondViewport', $options)) {
             $screenshotOptions['captureBeyondViewport'] = $options['captureBeyondViewport'];
-        }        
-        
+        }
+
         // get format
         if (array_key_exists('format', $options)) {
             $screenshotOptions['format'] = $options['format'];
