@@ -25,27 +25,20 @@ class BrowserFactory
 
     public function __construct(string $chromeBinary = null)
     {
-        $this->setChromeBinary($chromeBinary);
+        $this->chromeBinary = $chromeBinary ?? $this->getDefaultChromeBinaryPath();
     }
 
-    private function setChromeBinary(?string $chromeBinary): void
+    private function getDefaultChromeBinaryPath(): string
     {
-        if ($chromeBinary !== null) {
-            $this->chromeBinary = $chromeBinary;
-            return;
-        }
-
         if (array_key_exists('CHROME_PATH', $_SERVER)) {
-            $this->chromeBinary = $_SERVER['CHROME_PATH'];
-            return;
+            return $_SERVER['CHROME_PATH'];
         }
 
-        if (PHP_OS_FAMILY === 'Darwin') {
-            $this->chromeBinary = '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
-            return;
+        if (PHP_OS === 'Darwin') {
+            return '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
         }
 
-        $this->chromeBinary = 'chrome';
+        return 'chrome';
     }
 
     /**
