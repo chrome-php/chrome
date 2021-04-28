@@ -25,10 +25,10 @@ class BrowserFactory
 
     public function __construct(string $chromeBinary = null)
     {
-        $this->chromeBinary = $chromeBinary ?? $this->getDefaultChromeBinaryPath();
+        $this->chromeBinary = $chromeBinary ?? self::getDefaultChromeBinaryPath();
     }
 
-    private function getDefaultChromeBinaryPath(): string
+    private static function getDefaultChromeBinaryPath(): string
     {
         if (array_key_exists('CHROME_PATH', $_SERVER)) {
             return $_SERVER['CHROME_PATH'];
