@@ -18,11 +18,24 @@ use HeadlessChromium\AutoDiscover;
  */
 class AutoDiscoverTest extends BaseTestCase
 {
+    private $originalEnvPath = null;
+
     protected function setUp(): void
     {
+        $this->originalEnvPath ??= $_SERVER['CHROME_PATH'];
+
         unset($_SERVER['CHROME_PATH']);
 
         parent::setUp();
+    }
+
+    protected function tearDown(): void
+    {
+        unset($_SERVER['CHROME_PATH']);
+
+        if ($this->originalEnvPath !== null) $_SERVER['CHROME_PATH'] = $this->originalEnvPath;
+
+        parent::tearDown();
     }
 
     public function testExplicitEnv(): void
