@@ -22,7 +22,7 @@ class AutoDiscoverTest extends BaseTestCase
 
     protected function setUp(): void
     {
-        $this->originalEnvPath ??= $_SERVER['CHROME_PATH'];
+        $this->originalEnvPath = null ?? $_SERVER['CHROME_PATH'];
 
         unset($_SERVER['CHROME_PATH']);
 
@@ -33,7 +33,9 @@ class AutoDiscoverTest extends BaseTestCase
     {
         unset($_SERVER['CHROME_PATH']);
 
-        if ($this->originalEnvPath !== null) $_SERVER['CHROME_PATH'] = $this->originalEnvPath;
+        if ($this->originalEnvPath !== null) {
+            $_SERVER['CHROME_PATH'] = $this->originalEnvPath;
+        }
 
         parent::tearDown();
     }
