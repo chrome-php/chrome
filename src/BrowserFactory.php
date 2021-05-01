@@ -25,20 +25,7 @@ class BrowserFactory
 
     public function __construct(string $chromeBinary = null)
     {
-        $this->chromeBinary = $chromeBinary ?? self::getDefaultChromeBinaryPath();
-    }
-
-    private static function getDefaultChromeBinaryPath(): string
-    {
-        if (array_key_exists('CHROME_PATH', $_SERVER)) {
-            return $_SERVER['CHROME_PATH'];
-        }
-
-        if (PHP_OS === 'Darwin') {
-            return '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
-        }
-
-        return 'chrome';
+        $this->chromeBinary = $chromeBinary ?? (new AutoDiscover())->getChromeBinaryPath();
     }
 
     /**

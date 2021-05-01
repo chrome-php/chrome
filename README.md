@@ -83,10 +83,10 @@ try {
 
 ### Using different chrome executable
 
-When starting the factory will look for the environment variable ``"CHROME_PATH"`` to find the chrome executable.
-If the variable is not found then it will use ``"chrome"`` as the executable.
+When starting, the factory will look for the environment variable ``"CHROME_PATH"`` to use as the chrome executable.
+If the variable is not found, it will try to guess the correct executable path according to your OS or use ``"chrome"`` as the default.
 
-You can use any executable of your choice. For instance ``"chromium-browser"``:
+You also explicitly set any executable of your choice when creating a new object. For instance ``"chromium-browser"``:
 
 ```php
 use HeadlessChromium\BrowserFactory;
