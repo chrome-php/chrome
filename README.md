@@ -23,8 +23,8 @@ Features
 - Take screenshots
 - Evaluate javascript in the page
 - Make PDF
-- Emulate mouse 
-- Emulate keyboard 
+- Emulate mouse
+- Emulate keyboard
 - Always IDE friendly
 
 Happy browsing!
@@ -32,9 +32,9 @@ Happy browsing!
 Requirements
 ------------
 
-Requires PHP 7.1+ and a chrome/chromium executable. 
+Requires PHP 7.1+ and a chrome/chromium executable.
 
-As of version 65 of chrome/chromium the library proved to work correctly. 
+As of version 65 of chrome/chromium the library proved to work correctly.
 Please try to keep using latest version of chrome.
 
 Note that the library is only tested on linux but is compatible with osX and windows.
@@ -51,7 +51,7 @@ $ composer require chrome-php/chrome
 Usage
 -----
 
-It uses a simple and understandable API to start chrome, to open pages, to take screenshots, 
+It uses a simple and understandable API to start chrome, to open pages, to take screenshots,
 to crawl websites... and almost everything that you can do with chrome as a human.
 
 ```php
@@ -95,9 +95,9 @@ use HeadlessChromium\BrowserFactory;
 $browserFactory = new BrowserFactory('chromium-browser');
 ```
 
-### Debugging 
+### Debugging
 
-The following example disables headless mode to ease debugging 
+The following example disables headless mode to ease debugging
 
 ```php
 use HeadlessChromium\BrowserFactory;
@@ -118,8 +118,8 @@ Other debug options:
 ]
 ```
 
-About ``debugLogger``: this can be any of a resource string, a resource or an object implementing 
-``LoggerInterface`` from Psr\Log (such as [monolog](https://github.com/Seldaek/monolog) 
+About ``debugLogger``: this can be any of a resource string, a resource or an object implementing
+``LoggerInterface`` from Psr\Log (such as [monolog](https://github.com/Seldaek/monolog)
 or [apix/log](https://github.com/apix/log)).
 
 API
@@ -213,7 +213,7 @@ Available events (in the order they trigger):
 - ``Page::LOAD``: (default) page and all resources are loaded
 - ``Page::NETWORK_IDLE``: page has loaded, and no network activity has occurred for at least 500ms
 
-When you want to wait for the page to navigate there are 2 main issues that may occur. 
+When you want to wait for the page to navigate there are 2 main issues that may occur.
 First the page is too long to load and second the page you were waiting to be loaded has been replaced.
 The good news is that you can handle those issues using a good old try catch:
 
@@ -237,7 +237,7 @@ Once the page has completed the navigation you can evaluate arbitrary script on 
 ```php
 // navigate
 $navigation = $page->navigate('http://example.com');
-    
+
 // wait for the page to be loaded
 $navigation->waitForNavigation();
 
@@ -261,7 +261,7 @@ This is an alternative to ``evaluate`` that allows to call a given function with
 
 ```php
 $evaluation = $page->callFunction(
-    "function(a, b) {\n    window.foo = a + b;\n}", 
+    "function(a, b) {\n    window.foo = a + b;\n}",
     [1, 2]
 );
 
@@ -318,7 +318,7 @@ $page->addPreScript($script, ['onLoad' => true]);
 
 #### Set viewport size
 
-This features allows to change the size of the viewport (emulation) for the current page without affecting the size of 
+This features allows to change the size of the viewport (emulation) for the current page without affecting the size of
 all the browser's pages (see also option ``"windowSize"`` of [BrowserFactory::createBrowser](#options)).
 
 ```php
@@ -333,14 +333,14 @@ $page->setViewport($width, $height)
 ```php
 // navigate
 $navigation = $page->navigate('http://example.com');
-    
+
 // wait for the page to be loaded
 $navigation->waitForNavigation();
 
 // take a screenshot
 $screenshot = $page->screenshot([
     'format'  => 'jpeg',  // default to 'png' - possible values: 'png', 'jpeg',
-    'quality' => 80,      // only if format is 'jpeg' - default 100 
+    'quality' => 80,      // only if format is 'jpeg' - default 100
 ]);
 
 // save the screenshot
@@ -362,7 +362,7 @@ use HeadlessChromium\Clip;
 
 // navigate
 $navigation = $page->navigate('http://example.com');
-    
+
 // wait for the page to be loaded
 $navigation->waitForNavigation();
 
@@ -387,7 +387,7 @@ $screenshot->saveToFile('/some/place/file.jpg');
 ```php
 // navigate
 $navigation = $page->navigate('http://example.com');
-    
+
 // wait for the page to be loaded
 $navigation->waitForNavigation();
 
@@ -425,7 +425,7 @@ header('Pragma: public');
 echo base64_decode($pdf->getBase64());
 ```
 
-Options `headerTempalte` and `footerTempalte`: 
+Options `headerTempalte` and `footerTempalte`:
 
 Should be valid HTML markup with following classes used to inject printing values into them:
 - date: formatted print date
@@ -444,7 +444,7 @@ $page->mouse()
     ->click()                                  // left click on position set above
     ->move(100, 200, ['steps' => 5])           // move mouse to x=100;y=200 in 5 equal steps
     ->click(['button' => Mouse::BUTTON_RIGHT]; // right click on position set above
-    
+
 // given the last click was on a link, the next step will wait
 // for the page to load after the link was clicked
 $page->waitForReload();
@@ -521,7 +521,7 @@ $page->navigate('http://example.com')->waitForNavigation();
 $cookies = $page->getCookies();
 
 // filter cookies with name == 'foo'
-$cookiesFoo = $cookies->filterBy('name', 'foo'); 
+$cookiesFoo = $cookies->filterBy('name', 'foo');
 
 // find first cookie with name == 'bar'
 $cookieBar = $cookies->findOneBy('name', 'bar');
