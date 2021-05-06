@@ -434,6 +434,15 @@ Should be valid HTML markup with following classes used to inject printing value
 - pageNumber: current page number
 - totalPages: total pages in the document
 
+### Save downloads
+
+You can set a path to save downloaded files (send with "Content-Disposition: attachment" header) to a folder.
+
+```php
+// After creating a page.
+$page->setDownloadPath('/path/to/save/downloaded/files');
+```
+
 ### Mouse API
 
 The mouse API is dependent on the page instance and allows you to control the mouse's moves, clicks and scroll.
