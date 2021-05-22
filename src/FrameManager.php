@@ -46,7 +46,7 @@ class FrameManager
         // TODO listen for frame events
 
         // update frame on init
-        $this->page->getSession()->on('method:Page.lifecycleEvent', function (array $params) {
+        $this->page->getSession()->on('method:Page.lifecycleEvent', function (array $params): void {
             if (isset($this->frames[$params['frameId']])) {
                 $frame = $this->frames[$params['frameId']];
                 $frame->onLifecycleEvent($params);
@@ -54,7 +54,7 @@ class FrameManager
         });
 
         // attach context id to frame
-        $this->page->getSession()->on('method:Runtime.executionContextCreated', function (array $params) {
+        $this->page->getSession()->on('method:Runtime.executionContextCreated', function (array $params): void {
             if (isset($params['context']['auxData']['frameId']) && $params['context']['auxData']['isDefault']) {
                 if ($this->hasFrame($params['context']['auxData']['frameId'])) {
                     $frame = $this->getFrame($params['context']['auxData']['frameId']);
@@ -67,31 +67,36 @@ class FrameManager
     }
 
     /**
-     * Checks if the given frame exists
+     * Checks if the given frame exists.
+     *
      * @param string $frameId
+     *
      * @return bool
      */
     public function hasFrame($frameId): bool
     {
-        return array_key_exists($frameId, $this->frames);
+        return \array_key_exists($frameId, $this->frames);
     }
 
     /**
-     * Get a frame given its id
+     * Get a frame given its id.
+     *
      * @param string $frameId
+     *
      * @return Frame
      */
     public function getFrame($frameId): Frame
     {
         if (!isset($this->frames[$frameId])) {
-            throw new \RuntimeException(sprintf('No such frame "%s"', $frameId));
+            throw new \RuntimeException(\sprintf('No such frame "%s"', $frameId));
         }
 
         return $this->frames[$frameId];
     }
 
     /**
-     * Gets the main frame
+     * Gets the main frame.
+     *
      * @return Frame
      */
     public function getMainFrame(): Frame

@@ -12,43 +12,44 @@
 namespace HeadlessChromium\Communication\Socket;
 
 /**
- * A simplified interface to wrap a socket client
+ * A simplified interface to wrap a socket client.
  */
 interface SocketInterface
 {
     /**
-     * Sends data to the socket
+     * Sends data to the socket.
      *
      * @return bool whether the data were sent
      */
     public function sendData($data);
 
     /**
-     * Receives data sent by the server
+     * Receives data sent by the server.
      *
      * @return array Payload received since the last call to receive()
      */
     public function receiveData(): array;
 
     /**
-     * Connect to the server
+     * Connect to the server.
      *
      * @return bool Whether a new connection was made
      */
     public function connect();
 
     /**
-     * Whether the client is currently connected
+     * Whether the client is currently connected.
      *
-     * @return boolean
+     * @return bool
      */
     public function isConnected();
 
     /**
-     * Disconnects the underlying socket, and marks the client as disconnected
+     * Disconnects the underlying socket, and marks the client as disconnected.
      *
      * @param int $reason see http://tools.ietf.org/html/rfc6455#section-7.4
-     * @return boolean
+     *
+     * @return bool
      */
     public function disconnect($reason = 1000);
 }

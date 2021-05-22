@@ -13,5 +13,4 @@ namespace HeadlessChromium\Exception;
 
 class ScreenshotFailed extends \Exception
 {
-
 }

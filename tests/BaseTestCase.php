@@ -17,6 +17,6 @@ class BaseTestCase extends TestCase
 {
     protected static function sitePath(string $file): string
     {
-        return 'file://' . realpath(__DIR__ . '/resources/static-web/' . $file);
+        return 'file://'.\realpath(__DIR__.'/resources/static-web/'.$file);
     }
 }

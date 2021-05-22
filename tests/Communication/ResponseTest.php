@@ -20,7 +20,7 @@ use PHPUnit\Framework\TestCase;
  */
 class ResponseTest extends TestCase
 {
-    public function testMessage()
+    public function testMessage(): void
     {
         $message = new Message('foo', ['bar' => 'baz']);
         $response = new Response(['id' => $message->getId(), 'bar' => 'foo'], $message);
@@ -32,7 +32,7 @@ class ResponseTest extends TestCase
         $this->assertEquals(['id' => $message->getId(), 'bar' => 'foo'], $response->getData());
     }
 
-    public function testIsNotSuccessful()
+    public function testIsNotSuccessful(): void
     {
         $message = new Message('foo', ['bar' => 'baz']);
         $response = new Response(['id' => $message->getId(), 'error' => 'foo'], $message);

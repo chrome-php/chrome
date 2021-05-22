@@ -37,7 +37,7 @@ class ConnectionTest extends TestCase
         $this->mocSocket = new MockSocket();
     }
 
-    public function testIsStrict()
+    public function testIsStrict(): void
     {
         $connection = new Connection($this->mocSocket);
         $this->assertTrue($connection->isStrict());
@@ -45,7 +45,7 @@ class ConnectionTest extends TestCase
         $this->assertFalse($connection->isStrict());
     }
 
-    public function testConnectDisconnect()
+    public function testConnectDisconnect(): void
     {
         $connection = new Connection($this->mocSocket);
         $connection->connect();
@@ -57,12 +57,12 @@ class ConnectionTest extends TestCase
         $this->assertFalse($this->mocSocket->isConnected());
     }
 
-    public function testCreateSession()
+    public function testCreateSession(): void
     {
         $connection = new Connection($this->mocSocket);
         $connection->connect();
 
-        $this->mocSocket->addReceivedData(json_encode(['result' => ['sessionId' => 'foo-bar']]), true);
+        $this->mocSocket->addReceivedData(\json_encode(['result' => ['sessionId' => 'foo-bar']]), true);
 
         $session = $connection->createSession('baz-qux');
 
@@ -72,7 +72,7 @@ class ConnectionTest extends TestCase
         $this->assertSame($connection, $session->getConnection());
     }
 
-    public function testSendMessage()
+    public function testSendMessage(): void
     {
         $connection = new Connection($this->mocSocket);
         $connection->connect();
@@ -87,20 +87,20 @@ class ConnectionTest extends TestCase
 
         $this->assertEquals(
             [
-                json_encode([
+                \json_encode([
                     'id' => $message->getId(),
                     'method' => 'foo',
-                    'params' => ['bar' => 'baz']
-                ])
+                    'params' => ['bar' => 'baz'],
+                ]),
             ],
             $this->mocSocket->getSentData()
         );
     }
 
     /**
-     * This test asserts that data are sent when a delay is set. It does not test that the delay works
+     * This test asserts that data are sent when a delay is set. It does not test that the delay works.
      */
-    public function testSendMessageWorksWithDelay()
+    public function testSendMessageWorksWithDelay(): void
     {
         $connection = new Connection($this->mocSocket);
         $connection->connect();
@@ -113,33 +113,33 @@ class ConnectionTest extends TestCase
 
         $this->assertEquals(
             [
-                json_encode(
+                \json_encode(
                     [
                         'id' => $message->getId(),
                         'method' => 'foo',
-                        'params' => ['bar' => 'baz']
+                        'params' => ['bar' => 'baz'],
                     ]
                 ),
-                json_encode(
+                \json_encode(
                     [
                         'id' => $message->getId(),
                         'method' => 'foo',
-                        'params' => ['bar' => 'baz']
+                        'params' => ['bar' => 'baz'],
                     ]
-                )
+                ),
             ],
             $this->mocSocket->getSentData()
         );
     }
 
-    public function testSendMessageSync()
+    public function testSendMessageSync(): void
     {
         $connection = new Connection($this->mocSocket);
         $connection->connect();
 
         $message = new Message('foo', ['bar' => 'baz']);
 
-        $this->mocSocket->addReceivedData(json_encode(['id' => $message->getId(), 'bar' => 'foo']));
+        $this->mocSocket->addReceivedData(\json_encode(['id' => $message->getId(), 'bar' => 'foo']));
 
         $response = $connection->sendMessageSync($message, 2);
 
@@ -147,7 +147,7 @@ class ConnectionTest extends TestCase
         $this->assertEquals(['id' => $message->getId(), 'bar' => 'foo'], $response->getData());
     }
 
-    public function testSendMessageSyncException()
+    public function testSendMessageSyncException(): void
     {
         $connection = new Connection($this->mocSocket);
         $connection->connect();
@@ -159,16 +159,16 @@ class ConnectionTest extends TestCase
         $connection->sendMessageSync($message, 2);
     }
 
-    public function testReadData()
+    public function testReadData(): void
     {
         $connection = new Connection($this->mocSocket);
         $connection->connect();
 
         $this->assertFalse($connection->readData());
 
-        $this->mocSocket->addReceivedData(json_encode([
-            'id'  => 1,
-            'foo' => 'bar'
+        $this->mocSocket->addReceivedData(\json_encode([
+            'id' => 1,
+            'foo' => 'bar',
         ]));
 
         $this->assertTrue($connection->readData());
@@ -181,15 +181,15 @@ class ConnectionTest extends TestCase
         $data = $connection->getResponseForId(1);
         $this->assertEquals(
             [
-                'id'  => 1,
-                'foo' => 'bar'
+                'id' => 1,
+                'foo' => 'bar',
             ],
             $data
         );
         $this->assertFalse($connection->hasResponseForId(1));
     }
 
-    public function testExceptionInvalideJson()
+    public function testExceptionInvalideJson(): void
     {
         $this->expectException(CannotReadResponse::class);
 
@@ -202,7 +202,7 @@ class ConnectionTest extends TestCase
         $connection->readData();
     }
 
-    public function testExceptionInvalideArrayResponse()
+    public function testExceptionInvalideArrayResponse(): void
     {
         $this->expectException(CannotReadResponse::class);
 
@@ -215,7 +215,7 @@ class ConnectionTest extends TestCase
         $connection->readData();
     }
 
-    public function testInvalidResponseId()
+    public function testInvalidResponseId(): void
     {
         $this->expectException(InvalidResponse::class);
 

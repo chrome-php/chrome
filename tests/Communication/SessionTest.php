@@ -35,7 +35,7 @@ class SessionTest extends TestCase
         $this->mockSocket = new MockSocket();
     }
 
-    public function testSession()
+    public function testSession(): void
     {
         $connection = new Connection($this->mockSocket);
         $session = new Session('foo', 'bar', $connection);
@@ -45,7 +45,7 @@ class SessionTest extends TestCase
         $this->assertSame($connection, $session->getConnection());
     }
 
-    public function testSendMessage()
+    public function testSendMessage(): void
     {
         $connection = new Connection($this->mockSocket);
         $connection->connect();
@@ -58,25 +58,24 @@ class SessionTest extends TestCase
         $this->assertInstanceOf(ResponseReader::class, $responseReader);
         $this->assertEquals(
             [
-                json_encode([
+                \json_encode([
                     'id' => $responseReader->getTopResponseReader()->getMessage()->getId(),
                     'method' => 'Target.sendMessageToTarget',
                     'params' => [
-                        'message' => json_encode([
+                        'message' => \json_encode([
                             'id' => $message->getId(),
                             'method' => 'baz',
-                            'params' => ['qux' => 'quux']
+                            'params' => ['qux' => 'quux'],
                         ]),
-                        'sessionId' => 'bar'
-                    ]
-
-                ])
+                        'sessionId' => 'bar',
+                    ],
+                ]),
             ],
             $this->mockSocket->getSentData()
         );
     }
 
-    public function testSendMessageSync()
+    public function testSendMessageSync(): void
     {
         $connection = new Connection($this->mockSocket);
         $connection->connect();
@@ -84,27 +83,26 @@ class SessionTest extends TestCase
 
         $message = new Message('baz', ['qux' => 'quux']);
 
-        $this->mockSocket->addReceivedData(json_encode(['corge' => 'grault']), true);
-        $this->mockSocket->addReceivedData(json_encode(['id' => $message->getId(), 'garply' => 'thud']));
+        $this->mockSocket->addReceivedData(\json_encode(['corge' => 'grault']), true);
+        $this->mockSocket->addReceivedData(\json_encode(['id' => $message->getId(), 'garply' => 'thud']));
 
         $response = $session->sendMessageSync($message);
 
         $this->assertInstanceOf(Response::class, $response);
         $this->assertEquals(
             [
-                json_encode([
+                \json_encode([
                     'id' => $message->getId() + 1,
                     'method' => 'Target.sendMessageToTarget',
                     'params' => [
-                        'message' => json_encode([
+                        'message' => \json_encode([
                             'id' => $message->getId(),
                             'method' => 'baz',
-                            'params' => ['qux' => 'quux']
+                            'params' => ['qux' => 'quux'],
                         ]),
-                        'sessionId' => 'bar'
-                    ]
-
-                ])
+                        'sessionId' => 'bar',
+                    ],
+                ]),
             ],
             $this->mockSocket->getSentData()
         );

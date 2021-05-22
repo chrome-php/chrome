@@ -23,7 +23,8 @@ class Wrench implements SocketInterface, LoggerAwareInterface
     use LoggerAwareTrait;
 
     /**
-     * An auto incremented counter to uniquely identify each socket instance
+     * An auto incremented counter to uniquely identify each socket instance.
+     *
      * @var int
      */
     private static $socketIdCounter = 0;
@@ -34,7 +35,8 @@ class Wrench implements SocketInterface, LoggerAwareInterface
     protected $client;
 
     /**
-     * Id of this socket generated from self::$socketIdCounter
+     * Id of this socket generated from self::$socketIdCounter.
+     *
      * @var int
      */
     protected $socketId = 0;
@@ -52,19 +54,19 @@ class Wrench implements SocketInterface, LoggerAwareInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function sendData($data)
     {
         // log
-        $this->logger->debug('socket(' . $this->socketId . '): → sending data:' . $data);
+        $this->logger->debug('socket('.$this->socketId.'): → sending data:'.$data);
 
         // send data
         return $this->client->sendData($data);
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function receiveData(): array
     {
@@ -79,7 +81,7 @@ class Wrench implements SocketInterface, LoggerAwareInterface
                 $data[] = $dataString;
 
                 // log
-                $this->logger->debug('socket(' . $this->socketId . '): ← receiving data:' . $dataString);
+                $this->logger->debug('socket('.$this->socketId.'): ← receiving data:'.$dataString);
             }
         }
 
@@ -87,28 +89,28 @@ class Wrench implements SocketInterface, LoggerAwareInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function connect()
     {
         // log
-        $this->logger->debug('socket(' . $this->socketId . '): connecting');
+        $this->logger->debug('socket('.$this->socketId.'): connecting');
 
         $connected = $this->client->connect();
 
         if ($connected) {
             // log
-            $this->logger->debug('socket(' . $this->socketId . '): ✓ connected');
+            $this->logger->debug('socket('.$this->socketId.'): ✓ connected');
         } else {
             // log
-            $this->logger->debug('socket(' . $this->socketId . '): ✗ could not connect');
+            $this->logger->debug('socket('.$this->socketId.'): ✗ could not connect');
         }
 
         return $connected;
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function isConnected()
     {
@@ -116,21 +118,21 @@ class Wrench implements SocketInterface, LoggerAwareInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function disconnect($reason = 1000)
     {
         // log
-        $this->logger->debug('socket(' . $this->socketId . '): disconnecting');
+        $this->logger->debug('socket('.$this->socketId.'): disconnecting');
 
         $disconnected = $this->client->disconnect($reason);
 
         if ($disconnected) {
             // log
-            $this->logger->debug('socket(' . $this->socketId . '): ✓ disconnected');
+            $this->logger->debug('socket('.$this->socketId.'): ✓ disconnected');
         } else {
             // log
-            $this->logger->debug('socket(' . $this->socketId . '): ✗ could not disconnect');
+            $this->logger->debug('socket('.$this->socketId.'): ✗ could not disconnect');
         }
 
         return $disconnected;

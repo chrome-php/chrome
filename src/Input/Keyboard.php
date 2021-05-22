@@ -35,17 +35,18 @@ class Keyboard
     }
 
     /**
-     * Type a text string, char by char
+     * Type a text string, char by char.
      *
-     * @return $this
      * @throws \HeadlessChromium\Exception\CommunicationException
      * @throws \HeadlessChromium\Exception\NoResponseAvailable
+     *
+     * @return $this
      */
     public function typeText(string $text)
     {
         $this->page->assertNotClosed();
 
-        $length = strlen($text);
+        $length = \strlen($text);
 
         // apparently the first character doesn't work
         $this->page->getSession()->sendMessageSync(new Message('Input.dispatchKeyEvent', [
@@ -53,20 +54,20 @@ class Keyboard
             'text' => '',
         ]));
 
-        for ($i = 0; $i < $length; $i++) {
+        for ($i = 0; $i < $length; ++$i) {
             $this->page->getSession()->sendMessageSync(new Message('Input.dispatchKeyEvent', [
                 'type' => 'char',
                 'text' => $text[$i],
             ]));
 
-            usleep($this->sleep);
+            \usleep($this->sleep);
         }
 
         return $this;
     }
 
     /**
-     * Type a single raw key wich rawKeyDown
+     * Type a single raw key wich rawKeyDown.
      *
      * Example:
      *
@@ -74,9 +75,10 @@ class Keyboard
      * $page->keyboard()->typeRawKey('Tab');
      * ```
      *
-     * @return $this
      * @throws \HeadlessChromium\Exception\CommunicationException
      * @throws \HeadlessChromium\Exception\NoResponseAvailable
+     *
+     * @return $this
      */
     public function typeRawKey(string $key)
     {
@@ -87,13 +89,13 @@ class Keyboard
             'key' => $key,
         ]));
 
-        usleep($this->sleep);
+        \usleep($this->sleep);
 
         return $this;
     }
 
     /**
-     * Sets the time interval between key strokes in milliseconds
+     * Sets the time interval between key strokes in milliseconds.
      *
      * @param int $milliseconds
      *

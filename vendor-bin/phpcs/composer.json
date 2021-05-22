@@ -1,8 +1,0 @@
-{
-    "require": {
-        "squizlabs/php_codesniffer": "3.5.8"
-    },
-    "config": {
-        "preferred-install": "dist"
-    }
-}
