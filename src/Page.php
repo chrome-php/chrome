@@ -435,6 +435,7 @@ class Page
      *  - format: "png"|"jpg" default "png"
      *  - quality: number from 0 to 100. Only for jpegs
      *  - clip: instance of a Clip to choose an area for the screenshot
+     *  - captureBeyondViewport: whether to capture the screenshot beyond the viewport. Defaults to false
      *
      * @return PageScreenshot
      * @throws CommunicationException
@@ -444,6 +445,10 @@ class Page
         $this->assertNotClosed();
 
         $screenshotOptions = [];
+
+        if (array_key_exists('captureBeyondViewport', $options)) {
+            $screenshotOptions['captureBeyondViewport'] = $options['captureBeyondViewport'];
+        }
 
         // get format
         if (array_key_exists('format', $options)) {
