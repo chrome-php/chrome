@@ -25,7 +25,7 @@ use PHPUnit\Framework\TestCase;
  */
 class ResponseReaderTest extends TestCase
 {
-    public function testMessage()
+    public function testMessage(): void
     {
         $message = new Message('foo', ['bar' => 'baz']);
         $mockSocket = new MockSocket();
@@ -49,7 +49,7 @@ class ResponseReaderTest extends TestCase
         $this->assertFalse($responseReader->checkForResponse());
 
         // add response
-        $mockSocket->addReceivedData(json_encode(['id' => $message->getId(), 'foo' => 'qux']));
+        $mockSocket->addReceivedData(\json_encode(['id' => $message->getId(), 'foo' => 'qux']));
 
         $this->assertTrue($responseReader->checkForResponse());
         $this->assertTrue($responseReader->hasResponse());
@@ -59,7 +59,7 @@ class ResponseReaderTest extends TestCase
         $this->assertEquals(['id' => $message->getId(), 'foo' => 'qux'], $responseReader->getResponse()->getData());
     }
 
-    public function testWaitForResponse()
+    public function testWaitForResponse(): void
     {
         $message = new Message('foo', ['bar' => 'baz']);
         $mockSocket = new MockSocket();
@@ -75,7 +75,7 @@ class ResponseReaderTest extends TestCase
         }
 
         // receive data
-        $mockSocket->addReceivedData(json_encode(['id' => $message->getId(), 'foo' => 'qux']));
+        $mockSocket->addReceivedData(\json_encode(['id' => $message->getId(), 'foo' => 'qux']));
 
         // timeout should not be reached and response should be get immediately
         $response = $responseReader->waitForResponse(0);
@@ -89,10 +89,11 @@ class ResponseReaderTest extends TestCase
 
     /**
      * Tests that waitForResponse will stop dispatching data once it got the response for its message.
+     *
      * @throws NoResponseAvailable
      * @throws OperationTimedOut
      */
-    public function testWaitForResponseIsAtomic()
+    public function testWaitForResponseIsAtomic(): void
     {
         $message = new Message('foo', ['bar' => 'baz']);
         $mockSocket = new MockSocket();
@@ -101,15 +102,15 @@ class ResponseReaderTest extends TestCase
         $emitWatcher = new \stdClass();
         $emitWatcher->emittedCount = 0;
 
-        $connection->on('method:qux.quux', function () use ($emitWatcher) {
-            $emitWatcher->emittedCount++;
+        $connection->on('method:qux.quux', function () use ($emitWatcher): void {
+            ++$emitWatcher->emittedCount;
         });
 
         $responseReader = new ResponseReader($message, $connection);
 
         // receive data
-        $mockSocket->addReceivedData(json_encode(['id' => $message->getId(), 'foo' => 'qux']));
-        $mockSocket->addReceivedData(json_encode(['method' => 'qux.quux', 'params' => []]));
+        $mockSocket->addReceivedData(\json_encode(['id' => $message->getId(), 'foo' => 'qux']));
+        $mockSocket->addReceivedData(\json_encode(['method' => 'qux.quux', 'params' => []]));
 
         // wait for response should not read the second message (method:qux.quux)
         $response = $responseReader->waitForResponse(1);
@@ -121,7 +122,7 @@ class ResponseReaderTest extends TestCase
         $this->assertEquals(1, $emitWatcher->emittedCount);
     }
 
-    public function testExceptionNoResponse()
+    public function testExceptionNoResponse(): void
     {
         $message = new Message('foo', ['bar' => 'baz']);
         $mockSocket = new MockSocket();

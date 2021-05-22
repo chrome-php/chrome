@@ -15,5 +15,4 @@ use HeadlessChromium\Exception\CommunicationException;
 
 class ResponseHasError extends CommunicationException
 {
-
 }

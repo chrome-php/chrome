@@ -12,23 +12,18 @@
 namespace HeadlessChromium\Test;
 
 use HeadlessChromium\BrowserFactory;
-use HeadlessChromium\Communication\Connection;
-use HeadlessChromium\Communication\Session;
-use HeadlessChromium\Communication\Socket\MockSocket;
-use HeadlessChromium\Communication\Target;
-use HeadlessChromium\Page;
 
 /**
  * @covers \HeadlessChromium\Page
  */
 class PageTest extends BaseTestCase
 {
-    public function testSetViewport()
+    public function testSetViewport(): void
     {
         $factory = new BrowserFactory();
 
         $browser = $factory->createBrowser([
-            'windowSize' => [500, 500]
+            'windowSize' => [500, 500],
         ]);
 
         $page = $browser->createPage();
@@ -40,7 +35,7 @@ class PageTest extends BaseTestCase
         $this->assertEquals([100, 300], $response);
     }
 
-    public function testSetUserAgent()
+    public function testSetUserAgent(): void
     {
         $factory = new BrowserFactory();
 
@@ -62,8 +57,7 @@ class PageTest extends BaseTestCase
         $this->assertEquals('barbaz', $value2);
     }
 
-
-    public function testPreScriptOption()
+    public function testPreScriptOption(): void
     {
         $factory = new BrowserFactory();
 
@@ -108,7 +102,7 @@ class PageTest extends BaseTestCase
         $this->assertEquals(null, $barValue);
     }
 
-    public function testCallFunction()
+    public function testCallFunction(): void
     {
         $factory = new BrowserFactory();
 
@@ -120,7 +114,7 @@ class PageTest extends BaseTestCase
         $this->assertEquals(3, $page->evaluate('window.foo')->getReturnValue());
     }
 
-    public function testCallFunctionPromise()
+    public function testCallFunctionPromise(): void
     {
         $factory = new BrowserFactory();
 
@@ -137,7 +131,7 @@ class PageTest extends BaseTestCase
         $this->assertEquals(3, $evaluation->getReturnValue());
     }
 
-    public function testEvaluatePromise()
+    public function testEvaluatePromise(): void
     {
         $factory = new BrowserFactory();
 
@@ -152,20 +146,20 @@ class PageTest extends BaseTestCase
         $this->assertEquals(11, $evaluation->getReturnValue());
     }
 
-    public function testAddScriptTagContent()
+    public function testAddScriptTagContent(): void
     {
         $factory = new BrowserFactory();
 
         $browser = $factory->createBrowser();
         $page = $browser->createPage();
         $page->addScriptTag([
-            'content' => 'window.foo = "bar";'
+            'content' => 'window.foo = "bar";',
         ])->waitForResponse();
 
         $this->assertEquals('bar', $page->evaluate('window.foo')->getReturnValue());
     }
 
-    public function testAddScriptTagUrl()
+    public function testAddScriptTagUrl(): void
     {
         $factory = new BrowserFactory();
 
@@ -176,7 +170,7 @@ class PageTest extends BaseTestCase
         )->waitForNavigation();
 
         $page->addScriptTag([
-            'url' => self::sitePath('jsInclude.js')
+            'url' => self::sitePath('jsInclude.js'),
         ])->waitForResponse();
 
         $isIncluded = $page->evaluate('window.testJsIsIncluded')->getReturnValue();
@@ -187,12 +181,12 @@ class PageTest extends BaseTestCase
         $this->assertStringEndsWith('/jsInclude.js', $scriptSrc);
     }
 
-    public function testGetLayoutMetrics()
+    public function testGetLayoutMetrics(): void
     {
         $factory = new BrowserFactory();
 
         $browser = $factory->createBrowser([
-            'windowSize' => [500, 500]
+            'windowSize' => [500, 500],
         ]);
 
         $page = $browser->createPage();
@@ -211,7 +205,7 @@ class PageTest extends BaseTestCase
                 'x' => 0,
                 'y' => 0,
                 'width' => 900,
-                'height' => 1000
+                'height' => 1000,
             ],
             $contentSize
         );
@@ -235,18 +229,18 @@ class PageTest extends BaseTestCase
                 'clientWidth' => 100,
                 'clientHeight' => 300,
                 'scale' => 1,
-                'zoom'  => 1
+                'zoom' => 1,
             ],
             $visualViewport
         );
     }
 
-    public function testGetFullPageClip()
+    public function testGetFullPageClip(): void
     {
         $factory = new BrowserFactory();
 
         $browser = $factory->createBrowser([
-            'windowSize' => [500, 500]
+            'windowSize' => [500, 500],
         ]);
 
         $page = $browser->createPage();
@@ -260,7 +254,7 @@ class PageTest extends BaseTestCase
         $this->assertEquals(1000, $clip->getHeight());
     }
 
-    public function testInvalidScaleOptionThrowAnException()
+    public function testInvalidScaleOptionThrowAnException(): void
     {
         $this->expectException(\InvalidArgumentException::class);
 
@@ -270,7 +264,7 @@ class PageTest extends BaseTestCase
         $page->pdf(['scale' => '2px']);
     }
 
-    public function testGetHtml()
+    public function testGetHtml(): void
     {
         $factory = new BrowserFactory();
 

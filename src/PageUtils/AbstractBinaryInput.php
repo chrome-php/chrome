@@ -39,7 +39,8 @@ abstract class AbstractBinaryInput
     }
 
     /**
-     * Get base64 representation of the file
+     * Get base64 representation of the file.
+     *
      * @return mixed
      */
     public function getBase64(int $timeout = null)
@@ -54,12 +55,14 @@ abstract class AbstractBinaryInput
     }
 
     /**
-     * Save data to the given file
+     * Save data to the given file.
+     *
      * @param string $path
+     *
      * @throws FilesystemException
      * @throws ScreenshotFailed
      */
-    public function saveToFile(string $path, int $timeout = 5000)
+    public function saveToFile(string $path, int $timeout = 5000): void
     {
         $response = $this->responseReader->waitForResponse($timeout);
 
@@ -68,38 +71,33 @@ abstract class AbstractBinaryInput
         }
 
         // create directory
-        $dir = dirname($path);
-        if (!file_exists($dir)) {
-            if (!mkdir($dir, 0777, true)) {
-                throw new FilesystemException(
-                    sprintf('Could not create the directory %s.', $dir)
-                );
+        $dir = \dirname($path);
+        if (!\file_exists($dir)) {
+            if (!\mkdir($dir, 0777, true)) {
+                throw new FilesystemException(\sprintf('Could not create the directory %s.', $dir));
             }
         }
 
         // save
-        if (file_exists($path)) {
-            if (!is_writable($path)) {
-                throw new FilesystemException(
-                    sprintf('The file %s is not writable.', $path)
-                );
+        if (\file_exists($path)) {
+            if (!\is_writable($path)) {
+                throw new FilesystemException(\sprintf('The file %s is not writable.', $path));
             }
         } else {
-            if (!touch($path)) {
-                throw new FilesystemException(
-                    sprintf('The file %s could not be created.', $path)
-                );
+            if (!\touch($path)) {
+                throw new FilesystemException(\sprintf('The file %s could not be created.', $path));
             }
         }
 
-        $file = fopen($path, 'wb');
-        stream_filter_append($file, 'convert.base64-decode');
-        fwrite($file, $response->getResultData('data'));
-        fclose($file);
+        $file = \fopen($path, 'w');
+        \stream_filter_append($file, 'convert.base64-decode');
+        \fwrite($file, $response->getResultData('data'));
+        \fclose($file);
     }
 
     /**
      * @internal
+     *
      * @return \Exception
      */
     abstract protected function getException(string $message): \Exception;

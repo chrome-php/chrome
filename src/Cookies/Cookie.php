@@ -23,8 +23,8 @@ class Cookie implements \ArrayAccess
      */
     public function __construct(array $data)
     {
-        if (isset($data['expires'])  && is_string($data['expires']) && !is_numeric($data['expires'])) {
-            $data['expires'] = strtotime($data['expires']);
+        if (isset($data['expires']) && \is_string($data['expires']) && !\is_numeric($data['expires'])) {
+            $data['expires'] = \strtotime($data['expires']);
         }
 
         $this->data = $data;
@@ -55,15 +55,15 @@ class Cookie implements \ArrayAccess
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function offsetExists($offset)
     {
-        return array_key_exists($offset, $this->data);
+        return \array_key_exists($offset, $this->data);
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function offsetGet($offset)
     {
@@ -71,17 +71,17 @@ class Cookie implements \ArrayAccess
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
-    public function offsetSet($offset, $value)
+    public function offsetSet($offset, $value): void
     {
         throw new \RuntimeException('Cannot set cookie values');
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
-    public function offsetUnset($offset)
+    public function offsetUnset($offset): void
     {
         throw new \RuntimeException('Cannot unset cookie values');
     }
@@ -89,13 +89,15 @@ class Cookie implements \ArrayAccess
     /**
      * @param string $name
      * @param string $value
-     * @param array $params
+     * @param array  $params
+     *
      * @return Cookie
      */
     public static function create($name, $value, array $params = [])
     {
         $params['name'] = $name;
         $params['value'] = $value;
-        return new Cookie($params);
+
+        return new self($params);
     }
 }

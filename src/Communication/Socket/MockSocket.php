@@ -12,7 +12,7 @@
 namespace HeadlessChromium\Communication\Socket;
 
 /**
- * A mock adapter for unit tests
+ * A mock adapter for unit tests.
  */
 class MockSocket implements SocketInterface
 {
@@ -25,9 +25,8 @@ class MockSocket implements SocketInterface
 
     protected $shouldConnect = true;
 
-
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function sendData($data)
     {
@@ -38,17 +37,17 @@ class MockSocket implements SocketInterface
         $this->sentData[] = $data;
 
         if (!empty($this->receivedDataForNextMessage)) {
-            $data = json_decode($data, true);
+            $data = \json_decode($data, true);
 
             if ($data['id']) {
-                $next = array_shift($this->receivedDataForNextMessage);
-                $next = json_decode($next, true);
+                $next = \array_shift($this->receivedDataForNextMessage);
+                $next = \json_decode($next, true);
                 $next['id'] = $data['id'];
-                $this->receivedData[] = json_encode($next);
+                $this->receivedData[] = \json_encode($next);
 
-                if (isset($data['method']) && $data['method'] == 'Target.sendMessageToTarget') {
-                    $next['id']--;
-                    $this->receivedData[] = json_encode($next);
+                if (isset($data['method']) && 'Target.sendMessageToTarget' == $data['method']) {
+                    --$next['id'];
+                    $this->receivedData[] = \json_encode($next);
                 }
             }
         }
@@ -57,15 +56,15 @@ class MockSocket implements SocketInterface
     }
 
     /**
-     * resets the data stored with sendData
+     * resets the data stored with sendData.
      */
-    public function flushData()
+    public function flushData(): void
     {
         $this->sentData = [];
     }
 
     /**
-     * gets the data stored with sendData
+     * gets the data stored with sendData.
      */
     public function getSentData()
     {
@@ -73,21 +72,23 @@ class MockSocket implements SocketInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function receiveData(): array
     {
         $data = $this->receivedData;
         $this->receivedData = [];
+
         return $data;
     }
 
     /**
-     * Add data to be returned with receiveData
+     * Add data to be returned with receiveData.
+     *
      * @param bool $forNextMessage true to set the response id automatically
-     * for next message (can stack for multiple messages
+     *                             for next message (can stack for multiple messages
      */
-    public function addReceivedData($data, $forNextMessage = false)
+    public function addReceivedData($data, $forNextMessage = false): void
     {
         if ($forNextMessage) {
             $this->receivedDataForNextMessage[] = $data;
@@ -97,16 +98,17 @@ class MockSocket implements SocketInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function connect()
     {
         $this->isConnected = $this->shouldConnect;
+
         return $this->isConnected;
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function isConnected()
     {
@@ -114,11 +116,12 @@ class MockSocket implements SocketInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function disconnect($reason = 1000)
     {
         $this->isConnected = false;
+
         return true;
     }
 }

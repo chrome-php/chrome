@@ -33,7 +33,7 @@ class AutoDiscoverTest extends BaseTestCase
     {
         unset($_SERVER['CHROME_PATH']);
 
-        if ($this->originalEnvPath !== null) {
+        if (null !== $this->originalEnvPath) {
             $_SERVER['CHROME_PATH'] = $this->originalEnvPath;
         }
 

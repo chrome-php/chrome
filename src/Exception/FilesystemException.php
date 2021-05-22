@@ -13,5 +13,4 @@ namespace HeadlessChromium\Exception;
 
 class FilesystemException extends \Exception
 {
-
 }

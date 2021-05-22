@@ -19,7 +19,7 @@ use PHPUnit\Framework\TestCase;
  */
 class MessageTest extends TestCase
 {
-    public function testMessage()
+    public function testMessage(): void
     {
         $message = new Message('foo', ['bar' => 'baz']);
         $this->assertEquals(Message::getLastMessageId(), $message->getId());
@@ -27,7 +27,7 @@ class MessageTest extends TestCase
         $this->assertEquals(['bar' => 'baz'], $message->getParams());
 
         $this->assertEquals(
-            json_encode(['id' => $message->getId(), 'method' => 'foo', 'params' => ['bar' => 'baz']]),
+            \json_encode(['id' => $message->getId(), 'method' => 'foo', 'params' => ['bar' => 'baz']]),
             (string) $message
         );
 

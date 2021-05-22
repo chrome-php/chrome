@@ -20,7 +20,7 @@ use HeadlessChromium\Communication\Target;
  */
 class BrowserFactoryTest extends BaseTestCase
 {
-    public function testBrowserFactory()
+    public function testBrowserFactory(): void
     {
         $factory = new BrowserFactory();
 
@@ -29,12 +29,12 @@ class BrowserFactoryTest extends BaseTestCase
         $this->assertRegExp('#^ws://#', $browser->getSocketUri());
     }
 
-    public function testWindowSizeOption()
+    public function testWindowSizeOption(): void
     {
         $factory = new BrowserFactory();
 
         $browser = $factory->createBrowser([
-            'windowSize' => [1212, 333]
+            'windowSize' => [1212, 333],
         ]);
 
         $page = $browser->createPage();
@@ -44,12 +44,12 @@ class BrowserFactoryTest extends BaseTestCase
         $this->assertEquals([333, 1212], $response);
     }
 
-    public function testUserAgentOption()
+    public function testUserAgentOption(): void
     {
         $factory = new BrowserFactory();
 
         $browser = $factory->createBrowser([
-            'userAgent' => 'foo bar baz'
+            'userAgent' => 'foo bar baz',
         ]);
 
         $page = $browser->createPage();
@@ -59,7 +59,7 @@ class BrowserFactoryTest extends BaseTestCase
         $this->assertEquals('foo bar baz', $response);
     }
 
-    public function testConnectToBrowser()
+    public function testConnectToBrowser(): void
     {
         // create a browser
         $factory = new BrowserFactory();
