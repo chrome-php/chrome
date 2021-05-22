@@ -1,0 +1,9 @@
+risky: true
+enabled:
+  - const_visibility_required
+  - modernize_types_casting
+  - no_superfluous_phpdoc_tags_symfony
+  - phpdoc_trim_consecutive_blank_line_separation
+  - ternary_to_null_coalescing
+  - void_return
+  - yoda_style
