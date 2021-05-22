@@ -27,16 +27,18 @@ class Response implements \ArrayAccess
     }
 
     /**
-     * True if the response is error free
+     * True if the response is error free.
+     *
      * @return bool
      */
     public function isSuccessful()
     {
-        return !array_key_exists('error', $this->data);
+        return !\array_key_exists('error', $this->data);
     }
 
     /**
      * Get the error message if set.
+     *
      * @return string|null
      */
     public function getErrorMessage(bool $extended = true)
@@ -51,15 +53,16 @@ class Response implements \ArrayAccess
             $message[] = $this->data['error']['message'];
         }
 
-        if ($extended && isset($this->data['error']['data']) && is_string($this->data['error']['data'])) {
+        if ($extended && isset($this->data['error']['data']) && \is_string($this->data['error']['data'])) {
             $message[] = $this->data['error']['data'];
         }
 
-        return implode(' - ', $message);
+        return \implode(' - ', $message);
     }
 
     /**
      * Get the error code if set.
+     *
      * @return string|null
      */
     public function getErrorCode()
@@ -69,6 +72,7 @@ class Response implements \ArrayAccess
 
     /**
      * @param string $name
+     *
      * @return mixed
      */
     public function getResultData($name)
@@ -85,7 +89,8 @@ class Response implements \ArrayAccess
     }
 
     /**
-     * The data returned by chrome dev tools
+     * The data returned by chrome dev tools.
+     *
      * @return array
      */
     public function getData(): array
@@ -94,15 +99,15 @@ class Response implements \ArrayAccess
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function offsetExists($offset)
     {
-        return array_key_exists($offset, $this->data);
+        return \array_key_exists($offset, $this->data);
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function offsetGet($offset)
     {
@@ -110,17 +115,17 @@ class Response implements \ArrayAccess
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
-    public function offsetSet($offset, $value)
+    public function offsetSet($offset, $value): void
     {
         throw new \Exception('Responses are immutable');
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
-    public function offsetUnset($offset)
+    public function offsetUnset($offset): void
     {
         throw new \Exception('Responses are immutable');
     }

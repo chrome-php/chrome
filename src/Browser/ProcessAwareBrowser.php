@@ -13,7 +13,6 @@ namespace HeadlessChromium\Browser;
 
 use HeadlessChromium\Browser;
 use HeadlessChromium\Communication\Connection;
-use Symfony\Component\Process\Process;
 
 class ProcessAwareBrowser extends Browser
 {
@@ -30,9 +29,9 @@ class ProcessAwareBrowser extends Browser
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
-    public function close()
+    public function close(): void
     {
         $this->browserProcess->kill();
     }

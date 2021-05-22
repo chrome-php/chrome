@@ -16,13 +16,14 @@ use HeadlessChromium\Exception\PdfFailed;
 class PagePdf extends AbstractBinaryInput
 {
     /**
-     * @inheritdoc
+     * {@inheritdoc}
+     *
      * @internal
      */
     protected function getException(string $message): \Exception
     {
         return new PdfFailed(
-            sprintf('Cannot make a PDF. Reason : %s', $message)
+            \sprintf('Cannot make a PDF. Reason : %s', $message)
         );
     }
 }

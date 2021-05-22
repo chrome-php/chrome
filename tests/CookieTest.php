@@ -49,7 +49,7 @@ class CookieTest extends HttpEnabledTestCase
         return $page;
     }
 
-    public function testReadCookies()
+    public function testReadCookies(): void
     {
         // initial navigation
         $page = $this->openSitePage('cookie.html');
@@ -63,7 +63,7 @@ class CookieTest extends HttpEnabledTestCase
         $this->assertEquals($cookies->getAt(0)->getValue(), 'bar');
     }
 
-    public function testGetAllCookies()
+    public function testGetAllCookies(): void
     {
         // initial navigation
         $page = $this->openSitePage('cookie.html');
@@ -77,7 +77,7 @@ class CookieTest extends HttpEnabledTestCase
         $this->assertEquals($cookies->getAt(0)->getValue(), 'bar');
     }
 
-    public function testSetCookies()
+    public function testSetCookies(): void
     {
         // initial navigation
         $page = self::$browser->createPage();
@@ -85,9 +85,9 @@ class CookieTest extends HttpEnabledTestCase
         // set cookie for arbitrary host
         $page->setCookies([
             Cookie::create('baz', 'qux', [
-                'domain'    => 'foo.bar',
-                'expires'   => time() + 3600
-            ])
+                'domain' => 'foo.bar',
+                'expires' => \time() + 3600,
+            ]),
         ])->await();
 
         $cookies = $page->getAllCookies();
@@ -99,13 +99,11 @@ class CookieTest extends HttpEnabledTestCase
         $this->assertEquals($cookies->getAt(0)->getValue(), 'qux');
         $this->assertEquals($cookies->getAt(0)->getDomain(), 'foo.bar');
 
-
-
         // Set cookie for current page
         $page->navigate(self::sitePath('a.html'))->waitForNavigation();
 
         $page->setCookies([
-            Cookie::create('quux', 'corge')
+            Cookie::create('quux', 'corge'),
         ])->await();
 
         $cookies = $page->getAllCookies();
