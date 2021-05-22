@@ -436,7 +436,7 @@ Should be valid HTML markup with following classes used to inject printing value
 
 ### Save downloads
 
-You can set a path to save downloaded files.
+You can set the path to save downloaded files.
 
 ```php
 // After creating a page.
