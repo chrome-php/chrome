@@ -7,7 +7,6 @@ enabled:
   - alpha_ordered_imports
   - array_indentation
   - const_visibility_required
-  - declare_strict_types
   - native_constant_invocation
   - native_function_invocation
   - phpdoc_order
