@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Chrome PHP.
  *
@@ -14,14 +16,15 @@ namespace HeadlessChromium\PageUtils;
 use HeadlessChromium\Communication\Message;
 use HeadlessChromium\Communication\ResponseReader;
 use HeadlessChromium\Exception;
+use HeadlessChromium\Exception\CommunicationException\ResponseHasError;
 use HeadlessChromium\Exception\NavigationExpired;
 use HeadlessChromium\Frame;
 use HeadlessChromium\Page;
 use HeadlessChromium\Utils;
-use HeadlessChromium\Exception\CommunicationException\ResponseHasError;
 
 /**
- * A class that is aimed to be used withing the method Page::navigate
+ * A class that is aimed to be used withing the method Page::navigate.
+ *
  * @internal
  */
 class PageNavigation
@@ -63,11 +66,12 @@ class PageNavigation
 
     /**
      * PageNavigation constructor.
-     * @param Page $page
+     *
+     * @param Page   $page
      * @param string $url
-     * @param bool $strict by default this method will wait for the page to load even if a new navigation occurs
-     * (ie: a new loader replaced the initial navigation). Passing $string to true will make the navigation to fail
-     * if a new loader is generated
+     * @param bool   $strict by default this method will wait for the page to load even if a new navigation occurs
+     *                       (ie: a new loader replaced the initial navigation). Passing $string to true will make the navigation to fail
+     *                       if a new loader is generated
      *
      * @throws Exception\CommunicationException
      * @throws Exception\CommunicationException\CannotReadResponse
@@ -75,7 +79,6 @@ class PageNavigation
      */
     public function __construct(Page $page, string $url, bool $strict = false)
     {
-
         // make sure latest loaderId was pulled
         $page->getSession()->getConnection()->readData();
 
@@ -94,7 +97,7 @@ class PageNavigation
     }
 
     /**
-     * Wait until the page loads
+     * Wait until the page loads.
      *
      * Usage:
      *
@@ -111,34 +114,38 @@ class PageNavigation
      * ```
      *
      * @param string $eventName
-     * @param int $timeout time in ms to wait for the navigation to complete. Default 30000 (30 seconds)
-     * @return mixed
+     * @param int    $timeout   time in ms to wait for the navigation to complete. Default 30000 (30 seconds)
+     *
      * @throws Exception\CommunicationException\CannotReadResponse
      * @throws Exception\CommunicationException\InvalidResponse
      * @throws Exception\NoResponseAvailable
      * @throws Exception\OperationTimedOut
      * @throws NavigationExpired
      * @throws ResponseHasError
+     *
+     * @return mixed
      */
     public function waitForNavigation($eventName = Page::LOAD, int $timeout = null)
     {
         if (null === $timeout) {
             $timeout = 30000;
         }
+
         return Utils::tryWithTimeout($timeout * 1000, $this->navigationComplete($eventName));
     }
 
     /**
-     * To be used with @see Utils::tryWithTimeout
+     * To be used with @see Utils::tryWithTimeout.
      *
      * @param string $eventName
      *
-     * @return bool|\Generator
      * @throws Exception\CommunicationException\CannotReadResponse
      * @throws Exception\CommunicationException\InvalidResponse
      * @throws Exception\NoResponseAvailable
      * @throws NavigationExpired
      * @throws ResponseHasError
+     *
+     * @return bool|\Generator
      */
     private function navigationComplete($eventName)
     {
@@ -151,13 +158,7 @@ class PageNavigation
                 if ($this->navigateResponseReader->hasResponse()) {
                     $response = $this->navigateResponseReader->getResponse();
                     if (!$response->isSuccessful()) {
-                        throw new ResponseHasError(
-                            sprintf(
-                                'Cannot load page for url: "%s". Reason: %s',
-                                $this->url,
-                                $response->getErrorMessage()
-                            )
-                        );
+                        throw new ResponseHasError(\sprintf('Cannot load page for url: "%s". Reason: %s', $this->url, $response->getErrorMessage()));
                     }
 
                     $this->currentLoaderId = $response->getResultData('loaderId');
@@ -177,7 +178,7 @@ class PageNavigation
                     yield $delay;
                 }
 
-            // else if frame has still the previous loader, wait for the new one
+                // else if frame has still the previous loader, wait for the new one
             } elseif ($this->frame->getLatestLoaderId() == $this->previousLoaderId) {
                 yield $delay;
 
@@ -185,9 +186,7 @@ class PageNavigation
             } else {
                 // if strict then throw or else replace the old navigation with the new one
                 if ($this->strict) {
-                    throw new NavigationExpired(
-                        'The page has navigated to an other page and this navigation expired'
-                    );
+                    throw new NavigationExpired('The page has navigated to an other page and this navigation expired');
                 } else {
                     $this->currentLoaderId = $this->frame->getLatestLoaderId();
                 }

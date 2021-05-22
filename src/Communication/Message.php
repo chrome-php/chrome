@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Chrome PHP.
  *
@@ -15,10 +17,10 @@ class Message
 {
     /**
      * global message id auto incremented for each message sent.
+     *
      * @var int
      */
     private static $messageId = 0;
-
 
     /**
      * @var int
@@ -36,7 +38,8 @@ class Message
     protected $params;
 
     /**
-     * get the last generated message id
+     * get the last generated message id.
+     *
      * @return int
      */
     public static function getLastMessageId()
@@ -46,7 +49,7 @@ class Message
 
     /**
      * @param string $method
-     * @param array $params
+     * @param array  $params
      */
     public function __construct(string $method, array $params = [])
     {
@@ -79,15 +82,12 @@ class Message
         return $this->params;
     }
 
-    /**
-     * @inheritdoc
-     */
     public function __toString(): string
     {
-        return json_encode([
-            'id'        => $this->getId(),
-            'method'    => $this->getMethod(),
-            'params'    => (object) $this->getParams()
+        return \json_encode([
+            'id' => $this->getId(),
+            'method' => $this->getMethod(),
+            'params' => (object) $this->getParams(),
         ]);
     }
 }

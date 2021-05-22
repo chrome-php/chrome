@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Chrome PHP.
  *
@@ -15,5 +17,4 @@ use HeadlessChromium\Exception\CommunicationException;
 
 class CannotReadResponse extends CommunicationException
 {
-
 }

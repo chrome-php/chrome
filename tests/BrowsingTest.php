@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Chrome PHP.
  *
@@ -50,7 +52,7 @@ class BrowsingTest extends BaseTestCase
      * @throws \HeadlessChromium\Exception\CommunicationException
      * @throws \HeadlessChromium\Exception\NoResponseAvailable
      */
-    public function testPageNavigateEvaluate()
+    public function testPageNavigateEvaluate(): void
     {
         // initial navigation
         $page = $this->openSitePage('index.html');
@@ -63,7 +65,7 @@ class BrowsingTest extends BaseTestCase
         $this->assertEquals('a - test', $title);
     }
 
-    public function testFormSubmission()
+    public function testFormSubmission(): void
     {
         // initial navigation
         $page = $this->openSitePage('form.html');
@@ -78,7 +80,7 @@ class BrowsingTest extends BaseTestCase
         $this->assertEquals('hello', $page->evaluate('document.querySelector("#value").innerHTML')->getReturnValue());
     }
 
-    public function testGetCurrentUrl()
+    public function testGetCurrentUrl(): void
     {
         $page = self::$browser->createPage();
 
@@ -91,7 +93,7 @@ class BrowsingTest extends BaseTestCase
         $this->assertEquals(self::sitePath('a.html'), $page->getCurrentUrl());
     }
 
-    public function testPageNavigationLocalNotFoundUrl()
+    public function testPageNavigationLocalNotFoundUrl(): void
     {
         $factory = new BrowserFactory();
         $browser = $factory->createBrowser();

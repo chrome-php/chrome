@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Chrome PHP.
  *
@@ -15,8 +17,8 @@ use Evenement\EventEmitter;
 use HeadlessChromium\Communication\Socket\SocketInterface;
 use HeadlessChromium\Communication\Socket\Wrench;
 use HeadlessChromium\Exception\CommunicationException;
-use HeadlessChromium\Exception\CommunicationException\InvalidResponse;
 use HeadlessChromium\Exception\CommunicationException\CannotReadResponse;
+use HeadlessChromium\Exception\CommunicationException\InvalidResponse;
 use HeadlessChromium\Exception\OperationTimedOut;
 use HeadlessChromium\Exception\TargetDestroyed;
 use Psr\Log\LoggerAwareInterface;
@@ -34,21 +36,24 @@ class Connection extends EventEmitter implements LoggerAwareInterface
     public const EVENT_TARGET_DESTROYED = 'method:Target.targetDestroyed';
 
     /**
-     * When strict mode is enabled communication error will result in exceptions
+     * When strict mode is enabled communication error will result in exceptions.
+     *
      * @var bool
      */
     protected $strict = true;
 
     /**
      * time in ms to wait between each message to be sent
-     * That helps to see what is happening when debugging
+     * That helps to see what is happening when debugging.
+     *
      * @var int
      */
     protected $delay;
 
     /**
      * time in ms when the previous message was sent. Used to know how long to wait for before send next message
-     * (only when $delay is set)
+     * (only when $delay is set).
+     *
      * @var int
      */
     private $lastMessageSentTime;
@@ -59,13 +64,15 @@ class Connection extends EventEmitter implements LoggerAwareInterface
     protected $wsClient;
 
     /**
-     * List of response sent from the remote host and that are waiting to be read
+     * List of response sent from the remote host and that are waiting to be read.
+     *
      * @var array
      */
     protected $responseBuffer = [];
 
     /**
-     * Default timeout for send sync in ms
+     * Default timeout for send sync in ms.
+     *
      * @var int
      */
     protected $sendSyncDefaultTimeout;
@@ -82,8 +89,9 @@ class Connection extends EventEmitter implements LoggerAwareInterface
 
     /**
      * CommunicationChannel constructor.
+     *
      * @param SocketInterface|string $socketClient
-     * @param int|null $sendSyncDefaultTimeout
+     * @param int|null               $sendSyncDefaultTimeout
      */
     public function __construct($socketClient, LoggerInterface $logger = null, int $sendSyncDefaultTimeout = null)
     {
@@ -94,12 +102,10 @@ class Connection extends EventEmitter implements LoggerAwareInterface
         $this->sendSyncDefaultTimeout = $sendSyncDefaultTimeout ?? 5000;
 
         // create socket client
-        if (is_string($socketClient)) {
+        if (\is_string($socketClient)) {
             $socketClient = new Wrench(new WrenchBaseClient($socketClient, 'http://127.0.0.1'), $this->logger);
-        } elseif (!is_object($socketClient) && !$socketClient instanceof SocketInterface) {
-            throw new \InvalidArgumentException(
-                '$socketClient param should be either a SockInterface instance or a web socket uri string'
-            );
+        } elseif (!\is_object($socketClient) && !$socketClient instanceof SocketInterface) {
+            throw new \InvalidArgumentException('$socketClient param should be either a SockInterface instance or a web socket uri string');
         }
 
         $this->wsClient = $socketClient;
@@ -114,16 +120,18 @@ class Connection extends EventEmitter implements LoggerAwareInterface
     }
 
     /**
-     * Set the delay to apply everytime before data are sent
+     * Set the delay to apply everytime before data are sent.
+     *
      * @param int $delay
      */
-    public function setConnectionDelay(int $delay)
+    public function setConnectionDelay(int $delay): void
     {
         $this->delay = $delay;
     }
 
     /**
-     * Gets the default timeout used when sending a message synchronously
+     * Gets the default timeout used when sending a message synchronously.
+     *
      * @return int
      */
     public function getSendSyncDefaultTimeout(): int
@@ -142,13 +150,14 @@ class Connection extends EventEmitter implements LoggerAwareInterface
     /**
      * @param bool $strict
      */
-    public function setStrict(bool $strict)
+    public function setStrict(bool $strict): void
     {
         $this->strict = $strict;
     }
 
     /**
-     * Connects to the server
+     * Connects to the server.
+     *
      * @return bool Whether a new connection was made
      */
     public function connect()
@@ -157,7 +166,8 @@ class Connection extends EventEmitter implements LoggerAwareInterface
     }
 
     /**
-     * Disconnects the underlying socket, and marks the client as disconnected
+     * Disconnects the underlying socket, and marks the client as disconnected.
+     *
      * @return bool
      */
     public function disconnect()
@@ -166,7 +176,8 @@ class Connection extends EventEmitter implements LoggerAwareInterface
     }
 
     /**
-     * Returns whether the client is currently connected
+     * Returns whether the client is currently connected.
+     *
      * @return bool true if connected
      */
     public function isConnected()
@@ -175,37 +186,39 @@ class Connection extends EventEmitter implements LoggerAwareInterface
     }
 
     /**
-     * Wait before sending next message
+     * Wait before sending next message.
      */
-    private function waitForDelay()
+    private function waitForDelay(): void
     {
         if ($this->lastMessageSentTime) {
-            $currentTime = (int) (microtime(true) * 1000);
+            $currentTime = (int) (\microtime(true) * 1000);
             // if not enough time was spent until last message was sent, wait
             if ($this->lastMessageSentTime + $this->delay > $currentTime) {
                 $timeToWait = ($this->lastMessageSentTime + $this->delay) - $currentTime;
-                usleep($timeToWait * 1000);
+                \usleep($timeToWait * 1000);
             }
         }
 
-        $this->lastMessageSentTime = (int) (microtime(true) * 1000);
+        $this->lastMessageSentTime = (int) (\microtime(true) * 1000);
     }
 
     /**
-     * Sends the given message and returns a response reader
+     * Sends the given message and returns a response reader.
+     *
      * @param Message $message
+     *
      * @throws CommunicationException
+     *
      * @return ResponseReader
      */
     public function sendMessage(Message $message): ResponseReader
     {
-
         // if delay enabled wait before sending message
         if ($this->delay > 0) {
             $this->waitForDelay();
         }
 
-        $sent = $this->wsClient->sendData((string)$message);
+        $sent = $this->wsClient->sendData((string) $message);
 
         if (!$sent) {
             $message = 'Message could not be sent.';
@@ -223,9 +236,11 @@ class Connection extends EventEmitter implements LoggerAwareInterface
     }
 
     /**
-     * @param Message $message
+     * @param Message  $message
      * @param int|null $timeout
+     *
      * @throws OperationTimedOut
+     *
      * @return Response
      */
     public function sendMessageSync(Message $message, int $timeout = null): Response
@@ -237,8 +252,10 @@ class Connection extends EventEmitter implements LoggerAwareInterface
     }
 
     /**
-     * Create a session for the given target id
+     * Create a session for the given target id.
+     *
      * @param string $targetId
+     *
      * @return Session
      */
     public function createSession($targetId): Session
@@ -254,8 +271,8 @@ class Connection extends EventEmitter implements LoggerAwareInterface
 
         $this->sessions[$sessionId] = $session;
 
-        $session->on('destroyed', function () use ($sessionId) {
-            $this->logger->debug('✘ session(' . $sessionId . ') was destroyed and unreferenced.');
+        $session->on('destroyed', function () use ($sessionId): void {
+            $this->logger->debug('✘ session('.$sessionId.') was destroyed and unreferenced.');
             unset($this->sessions[$sessionId]);
         });
 
@@ -263,19 +280,20 @@ class Connection extends EventEmitter implements LoggerAwareInterface
     }
 
     /**
-     * Receive and stack data from the socket
+     * Receive and stack data from the socket.
      */
-    private function receiveData()
+    private function receiveData(): void
     {
-        $this->receivedData = array_merge($this->receivedData, $this->wsClient->receiveData());
+        $this->receivedData = \array_merge($this->receivedData, $this->wsClient->receiveData());
     }
 
     /**
-     * Read data from CRI and store messages
+     * Read data from CRI and store messages.
      *
-     * @return bool true if data were received
      * @throws CannotReadResponse
      * @throws InvalidResponse
+     *
+     * @return bool true if data were received
      */
     public function readData()
     {
@@ -296,7 +314,7 @@ class Connection extends EventEmitter implements LoggerAwareInterface
         }
 
         // dispatch first line of buffer
-        $datum = array_shift($this->receivedData);
+        $datum = \array_shift($this->receivedData);
         if ($datum) {
             return $this->dispatchMessage($datum);
         }
@@ -305,64 +323,64 @@ class Connection extends EventEmitter implements LoggerAwareInterface
     }
 
     /**
-     * Dispatches the message and either stores the response or emits an event
-     * @return bool
+     * Dispatches the message and either stores the response or emits an event.
+     *
      * @throws InvalidResponse
+     *
+     * @return bool
+     *
      * @internal
      */
     private function dispatchMessage(string $message, Session $session = null)
     {
-
         // responses come as json string
-        $response = json_decode($message, true);
+        $response = \json_decode($message, true);
 
         // if json not valid throw exception
-        $jsonError = json_last_error();
-        if ($jsonError !== JSON_ERROR_NONE) {
+        $jsonError = \json_last_error();
+        if (\JSON_ERROR_NONE !== $jsonError) {
             if ($this->isStrict()) {
-                throw new CannotReadResponse(
-                    sprintf(
-                        'Response from chrome remote interface is not a valid json response. JSON error: %s',
-                        $jsonError
-                    )
-                );
+                throw new CannotReadResponse(\sprintf('Response from chrome remote interface is not a valid json response. JSON error: %s', $jsonError));
             }
+
             return false;
         }
 
         // response must be array
-        if (!is_array($response)) {
+        if (!\is_array($response)) {
             if ($this->isStrict()) {
                 throw new CannotReadResponse('Response from chrome remote interface was not a valid array');
             }
+
             return false;
         }
 
         // id is required to identify the response
         if (!isset($response['id'])) {
             if (isset($response['method'])) {
-                if ($response['method'] == 'Target.receivedMessageFromTarget') {
+                if ('Target.receivedMessageFromTarget' == $response['method']) {
                     $session = $this->sessions[$response['params']['sessionId']];
+
                     return $this->dispatchMessage($response['params']['message'], $session);
                 } else {
                     if ($session) {
                         $this->logger->debug(
-                            'session(' . $session->getSessionId() . '): ⇶ dispatching method:' . $response['method']
+                            'session('.$session->getSessionId().'): ⇶ dispatching method:'.$response['method']
                         );
-                        $session->emit('method:' . $response['method'], [$response['params']]);
+                        $session->emit('method:'.$response['method'], [$response['params']]);
                     } else {
-                        $this->logger->debug('connection: ⇶ dispatching method:' . $response['method']);
-                        $this->emit('method:' . $response['method'], [$response['params']]);
+                        $this->logger->debug('connection: ⇶ dispatching method:'.$response['method']);
+                        $this->emit('method:'.$response['method'], [$response['params']]);
                     }
                 }
+
                 return false;
             }
 
             if ($this->isStrict()) {
-                throw new InvalidResponse(
-                    'Response from chrome remote interface did not provide a valid message id'
-                );
+                throw new InvalidResponse('Response from chrome remote interface did not provide a valid message id');
             }
+
             return false;
         }
 
@@ -373,24 +391,28 @@ class Connection extends EventEmitter implements LoggerAwareInterface
     }
 
     /**
-     * True if a response for the given id exists
+     * True if a response for the given id exists.
+     *
      * @param string $id
+     *
      * @return bool
      */
     public function hasResponseForId($id)
     {
-        return array_key_exists($id, $this->responseBuffer);
+        return \array_key_exists($id, $this->responseBuffer);
     }
 
     /**
      * @param string $id
+     *
      * @return array|null
      */
     public function getResponseForId($id)
     {
-        if (array_key_exists($id, $this->responseBuffer)) {
+        if (\array_key_exists($id, $this->responseBuffer)) {
             $data = $this->responseBuffer[$id];
             unset($this->responseBuffer[$id]);
+
             return $data;
         }
 

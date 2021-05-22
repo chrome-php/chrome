@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Chrome PHP.
  *
@@ -40,21 +42,24 @@ class Session extends EventEmitter
 
     /**
      * Session constructor.
-     * @param string $targetId
-     * @param string $sessionId
+     *
+     * @param string     $targetId
+     * @param string     $sessionId
      * @param Connection $connection
      */
     public function __construct(string $targetId, string $sessionId, Connection $connection)
     {
-        $this->sessionId  = $sessionId;
-        $this->targetId   = $targetId;
+        $this->sessionId = $sessionId;
+        $this->targetId = $targetId;
         $this->connection = $connection;
     }
 
     /**
      * @param Message $message
-     * @return SessionResponseReader
+     *
      * @throws CommunicationException
+     *
+     * @return SessionResponseReader
      */
     public function sendMessage(Message $message): SessionResponseReader
     {
@@ -64,7 +69,7 @@ class Session extends EventEmitter
 
         $topResponse = $this->getConnection()->sendMessage(new Message('Target.sendMessageToTarget', [
             'message' => (string) $message,
-            'sessionId' => $this->getSessionId()
+            'sessionId' => $this->getSessionId(),
         ]));
 
         return new SessionResponseReader($topResponse, $message);
@@ -72,10 +77,12 @@ class Session extends EventEmitter
 
     /**
      * @param Message $message
-     * @param int $timeout
-     * @return Response
+     * @param int     $timeout
+     *
      * @throws NoResponseAvailable
      * @throws CommunicationException
+     *
+     * @return Response
      */
     public function sendMessageSync(Message $message, int $timeout = null): Response
     {
@@ -114,14 +121,16 @@ class Session extends EventEmitter
         if ($this->destroyed) {
             throw new TargetDestroyed('The session was destroyed.');
         }
+
         return $this->connection;
     }
 
     /**
-     * Marks the session as destroyed
+     * Marks the session as destroyed.
+     *
      * @internal
      */
-    public function destroy()
+    public function destroy(): void
     {
         if ($this->destroyed) {
             throw new TargetDestroyed('The session was already destroyed.');

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Chrome PHP.
  *
@@ -50,7 +52,7 @@ class KeyboardApiTest extends BaseTestCase
      * @throws \HeadlessChromium\Exception\CommunicationException
      * @throws \HeadlessChromium\Exception\NoResponseAvailable
      */
-    public function testTypeText()
+    public function testTypeText(): void
     {
         // initial navigation
         $page = $this->openSitePage('form.html');
@@ -71,7 +73,7 @@ class KeyboardApiTest extends BaseTestCase
      * @throws \HeadlessChromium\Exception\CommunicationException
      * @throws \HeadlessChromium\Exception\NoResponseAvailable
      */
-    public function testTypeRawKey()
+    public function testTypeRawKey(): void
     {
         // initial navigation
         $page = $this->openSitePage('form.html');
@@ -98,19 +100,19 @@ class KeyboardApiTest extends BaseTestCase
      * @throws \HeadlessChromium\Exception\CommunicationException
      * @throws \HeadlessChromium\Exception\NoResponseAvailable
      */
-    public function testKeyInterval()
+    public function testKeyInterval(): void
     {
         // initial navigation
         $page = $this->openSitePage('form.html');
 
-        $start = round(microtime(true) * 1000);
+        $start = \round(\microtime(true) * 1000);
 
         $page->keyboard()
             ->setKeyInterval(100)
             ->typeRawKey('Tab')
             ->typeText('bar');
 
-        $millisecondsElapsed = round(microtime(true) * 1000) - $start;
+        $millisecondsElapsed = \round(\microtime(true) * 1000) - $start;
 
         // if this test takes less than 300ms to run (3 keys x 100ms), setKeyInterval is not working
         $this->assertGreaterThan(300, $millisecondsElapsed);

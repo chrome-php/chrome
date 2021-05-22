@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Chrome PHP.
  *
@@ -15,7 +17,7 @@ class AutoDiscover
 {
     public function getChromeBinaryPath(): string
     {
-        if (array_key_exists('CHROME_PATH', $_SERVER)) {
+        if (\array_key_exists('CHROME_PATH', $_SERVER)) {
             return $_SERVER['CHROME_PATH'];
         }
 
@@ -37,11 +39,11 @@ class AutoDiscover
     {
         try {
             // accessing the registry can be costly, but this specific key is likely to be already cached in memory
-            $registryKey = shell_exec(
+            $registryKey = \shell_exec(
                 'reg query "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths\chrome.exe" /ve'
             );
 
-            preg_match('/.:(?!.*:).*/', $registryKey, $matches);
+            \preg_match('/.:(?!.*:).*/', $registryKey, $matches);
 
             return $matches[0];
         } catch (\Throwable $e) {
@@ -52,6 +54,6 @@ class AutoDiscover
 
     public function getOS(): string
     {
-        return PHP_OS;
+        return \PHP_OS;
     }
 }

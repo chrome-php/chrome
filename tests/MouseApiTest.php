@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Chrome PHP.
  *
@@ -50,7 +52,7 @@ class MouseApiTest extends BaseTestCase
      * @throws \HeadlessChromium\Exception\CommunicationException
      * @throws \HeadlessChromium\Exception\NoResponseAvailable
      */
-    public function testClickLink()
+    public function testClickLink(): void
     {
         // initial navigation
         $page = $this->openSitePage('b.html');
@@ -70,15 +72,15 @@ class MouseApiTest extends BaseTestCase
      * @throws \HeadlessChromium\Exception\CommunicationException
      * @throws \HeadlessChromium\Exception\NoResponseAvailable
      */
-    public function testScroll()
+    public function testScroll(): void
     {
         // initial navigation
         $page = $this->openSitePage('bigLayout.html');
-        usleep(200000);
+        \usleep(200000);
 
         // scroll 100px down
         $page->mouse()->scrollDown(100);
-        usleep(200000);
+        \usleep(200000);
 
         $windowScrollY = $page->evaluate('window.scrollY')->getReturnValue();
 
@@ -86,7 +88,7 @@ class MouseApiTest extends BaseTestCase
 
         // scrolling 100px up should revert the last action
         $page->mouse()->scrollUp(100);
-        usleep(200000);
+        \usleep(200000);
 
         $windowScrollY = $page->evaluate('window.scrollY')->getReturnValue();
 

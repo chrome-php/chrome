@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This exemple shows how to share a single instance of chrome for multiple scripts.
  *
@@ -10,7 +12,7 @@
  * of creating a new one. If chrome was closed or crashed, a new instance is started again.
  */
 
-require(__DIR__ . '/../vendor/autoload.php');
+require __DIR__.'/../vendor/autoload.php';
 
 // path to the file to store websocket's uri
 $socketFile = '/tmp/chrome-php-demo-socket';
@@ -19,12 +21,12 @@ $socketFile = '/tmp/chrome-php-demo-socket';
 $browser = null;
 
 // try to connect to chrome instance if it exists
-if (file_exists($socketFile)) {
-    $socket =  file_get_contents($socketFile);
+if (\file_exists($socketFile)) {
+    $socket = \file_get_contents($socketFile);
 
     try {
         $browser = \HeadlessChromium\BrowserFactory::connectToBrowser($socket, [
-            'debugLogger' => 'php://stdout'
+            'debugLogger' => 'php://stdout',
         ]);
     } catch (\HeadlessChromium\Exception\BrowserConnectionFailed $e) {
         // The browser was probably closed
@@ -37,11 +39,11 @@ if (!$browser) {
     $factory = new \HeadlessChromium\BrowserFactory();
     $browser = $factory->createBrowser([
         'headless' => false,
-        'keepAlive' => true
+        'keepAlive' => true,
     ]);
 
     // save the uri to be able to connect again to browser
-    file_put_contents($socketFile, $browser->getSocketUri());
+    \file_put_contents($socketFile, $browser->getSocketUri());
 }
 
 // do something with the browser

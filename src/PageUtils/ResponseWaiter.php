@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Chrome PHP.
  *
@@ -36,8 +38,10 @@ class ResponseWaiter
     }
 
     /**
-     * Chainable wait for response
+     * Chainable wait for response.
+     *
      * @param int $time
+     *
      * @throws \HeadlessChromium\Exception\NoResponseAvailable
      * @throws \HeadlessChromium\Exception\OperationTimedOut
      * @throws \HeadlessChromium\Exception\CommunicationException\ResponseHasError
@@ -56,12 +60,15 @@ class ResponseWaiter
     }
 
     /**
-     * Waits for response and return it
+     * Waits for response and return it.
+     *
      * @param int|null $time
-     * @return Response
+     *
      * @throws ResponseHasError
      * @throws \HeadlessChromium\Exception\NoResponseAvailable
      * @throws \HeadlessChromium\Exception\OperationTimedOut
+     *
+     * @return Response
      */
     protected function awaitResponse(int $time = null): Response
     {

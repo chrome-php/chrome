@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Chrome PHP.
  *
@@ -16,13 +18,14 @@ use HeadlessChromium\Exception\PdfFailed;
 class PagePdf extends AbstractBinaryInput
 {
     /**
-     * @inheritdoc
+     * {@inheritdoc}
+     *
      * @internal
      */
     protected function getException(string $message): \Exception
     {
         return new PdfFailed(
-            sprintf('Cannot make a PDF. Reason : %s', $message)
+            \sprintf('Cannot make a PDF. Reason : %s', $message)
         );
     }
 }

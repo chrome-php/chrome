@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Chrome PHP.
  *
@@ -21,9 +23,8 @@ use PHPUnit\Framework\TestCase;
  */
 class CookiesCollectionTest extends TestCase
 {
-    public function testFilterBy()
+    public function testFilterBy(): void
     {
-
         $cookies = new CookiesCollection([
             Cookie::create('foo', 'bar'),
             Cookie::create('foo', 'baz'),
@@ -37,10 +38,8 @@ class CookiesCollectionTest extends TestCase
         $this->assertEquals('baz', $newCookies->getAt(1)->getValue());
     }
 
-
-    public function testFindOneBy()
+    public function testFindOneBy(): void
     {
-
         $cookies = new CookiesCollection([
             Cookie::create('foo', 'bar'),
             Cookie::create('foo', 'baz'),

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Chrome PHP.
  *
@@ -21,6 +23,7 @@ class Clip
 
     /**
      * Clip constructor.
+     *
      * @param int   $x
      * @param int   $y
      * @param int   $height
@@ -79,7 +82,7 @@ class Clip
     /**
      * @param mixed $x
      */
-    public function setX($x)
+    public function setX($x): void
     {
         $this->x = $x;
     }
@@ -87,7 +90,7 @@ class Clip
     /**
      * @param mixed $y
      */
-    public function setY($y)
+    public function setY($y): void
     {
         $this->y = $y;
     }
@@ -95,7 +98,7 @@ class Clip
     /**
      * @param mixed $height
      */
-    public function setHeight($height)
+    public function setHeight($height): void
     {
         $this->height = $height;
     }
@@ -103,7 +106,7 @@ class Clip
     /**
      * @param mixed $width
      */
-    public function setWidth($width)
+    public function setWidth($width): void
     {
         $this->width = $width;
     }
@@ -111,7 +114,7 @@ class Clip
     /**
      * @param mixed $scale
      */
-    public function setScale($scale)
+    public function setScale($scale): void
     {
         $this->scale = $scale;
     }

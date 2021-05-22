@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Chrome PHP.
  *
@@ -19,9 +21,11 @@ use HeadlessChromium\Cookies\CookiesCollection;
 class CookiesGetter extends ResponseWaiter
 {
     /**
-     * Gets the cookies collection
-     * @return CookiesCollection
+     * Gets the cookies collection.
+     *
      * @throws \HeadlessChromium\Exception\NoResponseAvailable
+     *
+     * @return CookiesCollection
      */
     public function getCookies()
     {

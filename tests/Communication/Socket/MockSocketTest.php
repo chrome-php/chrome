@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Chrome PHP.
  *
@@ -19,7 +21,7 @@ use PHPUnit\Framework\TestCase;
  */
 class MockSocketTest extends TestCase
 {
-    public function testMockSocket()
+    public function testMockSocket(): void
     {
         $mock = new MockSocket();
 
@@ -28,7 +30,6 @@ class MockSocketTest extends TestCase
         $this->assertFalse($mock->sendData('foo'));
         $this->assertEmpty($mock->getSentData());
         $this->assertEmpty($mock->receiveData());
-
 
         // connected
         $mock->connect();
@@ -39,11 +40,9 @@ class MockSocketTest extends TestCase
         $this->assertEquals(['foo'], $mock->getSentData()); // not empty until flush
         $this->assertEmpty($mock->receiveData());
 
-
         // flush sent data
         $mock->flushData();
         $this->assertEmpty($mock->getSentData());
-
 
         // with received data
         $mock->addReceivedData('bar');
@@ -51,25 +50,24 @@ class MockSocketTest extends TestCase
         $this->assertEquals(['bar'], $mock->receiveData());
         $this->assertEmpty($mock->receiveData());
 
-
         // disconnected
         $mock->disconnect();
         $this->assertFalse($mock->isConnected());
     }
 
-    public function testReceivedDateForNextMessage()
+    public function testReceivedDateForNextMessage(): void
     {
         $mock = new MockSocket();
 
         // connected
         $mock->connect();
 
-        $mock->addReceivedData(json_encode(['foo' => 'bar']), true);
+        $mock->addReceivedData(\json_encode(['foo' => 'bar']), true);
 
         $this->assertEmpty($mock->receiveData());
 
-        $mock->sendData(json_encode(['id' => 1]));
+        $mock->sendData(\json_encode(['id' => 1]));
 
-        $this->assertEquals([json_encode(['foo' => 'bar', 'id' => 1])], $mock->receiveData());
+        $this->assertEquals([\json_encode(['foo' => 'bar', 'id' => 1])], $mock->receiveData());
     }
 }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Chrome PHP.
  *
@@ -18,7 +20,8 @@ use HeadlessChromium\Exception\JavascriptException;
 use HeadlessChromium\Page;
 
 /**
- * Used to read data from page evaluation response
+ * Used to read data from page evaluation response.
+ *
  * @internal
  */
 class PageEvaluation
@@ -45,8 +48,10 @@ class PageEvaluation
 
     /**
      * PageEvaluation constructor.
+     *
      * @param ResponseReader $responseReader\
-     * @param string $pageLoaderId
+     * @param string         $pageLoaderId
+     *
      * @internal
      */
     public function __construct(ResponseReader $responseReader, $pageLoaderId, Page $page)
@@ -57,15 +62,15 @@ class PageEvaluation
     }
 
     /**
-     * If the script requested a page reload this method will help to wait for the page to be fully reloaded
+     * If the script requested a page reload this method will help to wait for the page to be fully reloaded.
      */
-    public function waitForPageReload($eventName = Page::LOAD, $timeout = 30000)
+    public function waitForPageReload($eventName = Page::LOAD, $timeout = 30000): void
     {
         $this->page->waitForReload($eventName, $timeout, $this->pageLoaderId);
     }
 
     /**
-     * Wait for the script to evaluate and to return a valid response
+     * Wait for the script to evaluate and to return a valid response.
      *
      * @param int|null $timeout
      */
@@ -74,31 +79,29 @@ class PageEvaluation
         $this->response = $this->responseReader->waitForResponse($timeout);
 
         if (!$this->response->isSuccessful()) {
-            throw new EvaluationFailed(sprintf(
-                'Could not evaluate the script in the page. Message: "%s"',
-                $this->response->getErrorMessage(true)
-            ));
+            throw new EvaluationFailed(\sprintf('Could not evaluate the script in the page. Message: "%s"', $this->response->getErrorMessage(true)));
         }
 
         $result = $this->response->getResultData('result');
 
         $resultSubType = $result['subtype'] ?? null;
 
-        if ($resultSubType == 'error') {
+        if ('error' == $resultSubType) {
             // TODO dump javascript trace
-            throw new JavascriptException('Error during javascript evaluation: ' . $result['description']);
+            throw new JavascriptException('Error during javascript evaluation: '.$result['description']);
         }
 
         return $this;
     }
 
     /**
-     * Gets the value produced when the script evaluated in the page
+     * Gets the value produced when the script evaluated in the page.
      *
      * @param int|null $timeout
      *
-     * @return mixed
      * @throws EvaluationFailed
+     *
+     * @return mixed
      */
     public function getReturnValue(int $timeout = null)
     {
@@ -110,12 +113,13 @@ class PageEvaluation
     }
 
     /**
-     * Gets the return type of the response from the page
+     * Gets the return type of the response from the page.
      *
      * @param int|null $timeout
      *
-     * @return mixed
      * @throws EvaluationFailed
+     *
+     * @return mixed
      */
     public function getReturnType(int $timeout = null)
     {

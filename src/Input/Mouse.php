@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Chrome PHP.
  *
@@ -40,12 +42,14 @@ class Mouse
     }
 
     /**
-     * @param int $x
-     * @param int $y
+     * @param int        $x
+     * @param int        $y
      * @param array|null $options
-     * @return $this
+     *
      * @throws \HeadlessChromium\Exception\CommunicationException
      * @throws \HeadlessChromium\Exception\NoResponseAvailable
+     *
+     * @return $this
      */
     public function move(int $x, int $y, array $options = null)
     {
@@ -66,11 +70,11 @@ class Mouse
         }
 
         // move
-        for ($i = 1; $i <= $steps; $i++) {
+        for ($i = 1; $i <= $steps; ++$i) {
             $this->page->getSession()->sendMessageSync(new Message('Input.dispatchMouseEvent', [
                 'x' => $originX + ($this->x - $originX) * ($i / $steps),
                 'y' => $originY + ($this->y - $originY) * ($i / $steps),
-                'type' => 'mouseMoved'
+                'type' => 'mouseMoved',
             ]));
         }
 
@@ -89,7 +93,7 @@ class Mouse
             'y' => $this->y,
             'type' => 'mousePressed',
             'button' => $options['button'] ?? self::BUTTON_LEFT,
-            'clickCount' => 1
+            'clickCount' => 1,
         ]));
 
         return $this;
@@ -107,7 +111,7 @@ class Mouse
             'y' => $this->y,
             'type' => 'mouseReleased',
             'button' => $options['button'] ?? self::BUTTON_LEFT,
-            'clickCount' => 1
+            'clickCount' => 1,
         ]));
 
         return $this;
@@ -115,6 +119,7 @@ class Mouse
 
     /**
      * @param array|null $options
+     *
      * @throws \HeadlessChromium\Exception\CommunicationException
      * @throws \HeadlessChromium\Exception\NoResponseAvailable
      */
@@ -127,38 +132,44 @@ class Mouse
     }
 
     /**
-     * Scroll up using the mouse wheel
+     * Scroll up using the mouse wheel.
      *
      * @param int $distance Distance in pixels
-     * @return $this
+     *
      * @throws \HeadlessChromium\Exception\CommunicationException
      * @throws \HeadlessChromium\Exception\NoResponseAvailable
+     *
+     * @return $this
      */
     public function scrollUp(int $distance)
     {
-        return $this->scroll((-1 * abs($distance)));
+        return $this->scroll((-1 * \abs($distance)));
     }
 
     /**
-     * Scroll down using the mouse wheel
+     * Scroll down using the mouse wheel.
      *
      * @param int $distance Distance in pixels
-     * @return $this
+     *
      * @throws \HeadlessChromium\Exception\CommunicationException
      * @throws \HeadlessChromium\Exception\NoResponseAvailable
+     *
+     * @return $this
      */
     public function scrollDown(int $distance)
     {
-        return $this->scroll(abs($distance));
+        return $this->scroll(\abs($distance));
     }
 
     /**
-     * Scroll a positive or negative distance using the mouseWheel event type
+     * Scroll a positive or negative distance using the mouseWheel event type.
      *
      * @param int $distance Distance in pixels
-     * @return $this
+     *
      * @throws \HeadlessChromium\Exception\CommunicationException
      * @throws \HeadlessChromium\Exception\NoResponseAvailable
+     *
+     * @return $this
      */
     private function scroll(int $distance)
     {
@@ -169,11 +180,11 @@ class Mouse
 
         // scroll
         $this->page->getSession()->sendMessageSync(new Message('Input.dispatchMouseEvent', [
-            'type'   => 'mouseWheel',
-            'x'      => $this->x,
-            'y'      => $this->y,
+            'type' => 'mouseWheel',
+            'x' => $this->x,
+            'y' => $this->y,
             'deltaX' => 0,
-            'deltaY' => $distance
+            'deltaY' => $distance,
         ]));
 
         // set new position after move

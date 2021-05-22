@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Chrome PHP.
  *
@@ -33,7 +35,7 @@ class AutoDiscoverTest extends BaseTestCase
     {
         unset($_SERVER['CHROME_PATH']);
 
-        if ($this->originalEnvPath !== null) {
+        if (null !== $this->originalEnvPath) {
             $_SERVER['CHROME_PATH'] = $this->originalEnvPath;
         }
 

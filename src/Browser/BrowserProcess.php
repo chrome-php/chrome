@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Chrome PHP.
  *
@@ -13,7 +15,6 @@ namespace HeadlessChromium\Browser;
 
 use HeadlessChromium\Browser;
 use HeadlessChromium\Communication\Connection;
-use HeadlessChromium\Communication\Message;
 use HeadlessChromium\Exception\OperationTimedOut;
 use HeadlessChromium\Utils;
 use Psr\Log\LoggerAwareInterface;
@@ -25,14 +26,15 @@ use Symfony\Component\Process\Process;
 use Wrench\Exception\SocketException;
 
 /**
- * A browser process starter. Don't use directly, use BrowserFactory instead
+ * A browser process starter. Don't use directly, use BrowserFactory instead.
  */
 class BrowserProcess implements LoggerAwareInterface
 {
     use LoggerAwareTrait;
 
     /**
-     * chrome instance's user data data
+     * chrome instance's user data data.
+     *
      * @var string
      */
     protected $userDataDir;
@@ -43,7 +45,8 @@ class BrowserProcess implements LoggerAwareInterface
     protected $process;
 
     /**
-     * True if the user data dir is temporary and should be deleted on process closes
+     * True if the user data dir is temporary and should be deleted on process closes.
+     *
      * @var bool
      */
     protected $userDataDirIsTemp;
@@ -75,21 +78,22 @@ class BrowserProcess implements LoggerAwareInterface
 
     /**
      * BrowserProcess constructor.
+     *
      * @param LoggerInterface|null $logger
      */
     public function __construct(LoggerInterface $logger = null)
     {
-
         // set or create logger
         $this->setLogger($logger ?? new NullLogger());
     }
 
     /**
-     * Starts the browser
+     * Starts the browser.
+     *
      * @param string $binary
      * @param array  $options
      */
-    public function start($binary, $options)
+    public function start($binary, $options): void
     {
         if ($this->wasStarted) {
             // cannot start twice because once started this class contains the necessary data to cleanup the browser.
@@ -103,7 +107,7 @@ class BrowserProcess implements LoggerAwareInterface
         $this->logger->debug('process: initializing');
 
         // user data dir
-        if (!array_key_exists('userDataDir', $options) || !$options['userDataDir']) {
+        if (!\array_key_exists('userDataDir', $options) || !$options['userDataDir']) {
             // if no data dir specified create it
             $options['userDataDir'] = $this->createTempDir();
 
@@ -113,13 +117,13 @@ class BrowserProcess implements LoggerAwareInterface
         $this->userDataDir = $options['userDataDir'];
 
         // log
-        $this->logger->debug('process: using directory: ' . $options['userDataDir']);
+        $this->logger->debug('process: using directory: '.$options['userDataDir']);
 
         // get args for command line
         $args = $this->getArgsFromOptions($binary, $options);
 
         // setup chrome process
-        if (!array_key_exists('keepAlive', $options) || !$options['keepAlive']) {
+        if (!\array_key_exists('keepAlive', $options) || !$options['keepAlive']) {
             $process = new Process($args);
         } else {
             $process = new ProcessKeepAlive($args);
@@ -127,7 +131,7 @@ class BrowserProcess implements LoggerAwareInterface
         $this->process = $process;
 
         // log
-        $this->logger->debug('process: starting process: ' . $process->getCommandLine());
+        $this->logger->debug('process: starting process: '.$process->getCommandLine());
 
         // and start
         $process->start();
@@ -137,14 +141,14 @@ class BrowserProcess implements LoggerAwareInterface
         $this->wsUri = $this->waitForStartup($process, $startupTimeout * 1000 * 1000);
 
         // log
-        $this->logger->debug('process: connecting using ' . $this->wsUri);
+        $this->logger->debug('process: connecting using '.$this->wsUri);
 
         // connect to browser
         $connection = new Connection($this->wsUri, $this->logger, $options['sendSyncDefaultTimeout'] ?? 5000);
         $connection->connect();
 
         // connection delay
-        if (array_key_exists('connectionDelay', $options)) {
+        if (\array_key_exists('connectionDelay', $options)) {
             $connection->setConnectionDelay($options['connectionDelay']);
         }
 
@@ -172,18 +176,19 @@ class BrowserProcess implements LoggerAwareInterface
     }
 
     /**
-     * Kills the process and clean temporary files
+     * Kills the process and clean temporary files.
+     *
      * @throws OperationTimedOut
      */
-    public function kill()
+    public function kill(): void
     {
-
         // log
         $this->logger->debug('process: killing chrome');
 
         if ($this->wasKilled) {
             // log
             $this->logger->debug('process: chrome already killed, ignoring');
+
             return;
         }
 
@@ -249,7 +254,7 @@ class BrowserProcess implements LoggerAwareInterface
                 $exitCode = $this->process->stop();
 
                 // log
-                $this->logger->debug('process: process stopped with exit code ' . $exitCode);
+                $this->logger->debug('process: process stopped with exit code '.$exitCode);
             }
         }
 
@@ -257,7 +262,7 @@ class BrowserProcess implements LoggerAwareInterface
         if ($this->userDataDirIsTemp && $this->userDataDir) {
             try {
                 // log
-                $this->logger->debug('process: cleaning temporary resources:' . $this->userDataDir);
+                $this->logger->debug('process: cleaning temporary resources:'.$this->userDataDir);
 
                 // cleaning
                 $fs = new Filesystem();
@@ -270,8 +275,10 @@ class BrowserProcess implements LoggerAwareInterface
     }
 
     /**
-     * Get args for creating chrome's startup command
+     * Get args for creating chrome's startup command.
+     *
      * @param array $options
+     *
      * @return array
      */
     private function getArgsFromOptions($binary, array $options)
@@ -308,7 +315,7 @@ class BrowserProcess implements LoggerAwareInterface
         ];
 
         // enable headless mode
-        if (!array_key_exists('headless', $options) || $options['headless']) {
+        if (!\array_key_exists('headless', $options) || $options['headless']) {
             $args[] = '--headless';
             $args[] = '--disable-gpu';
             $args[] = '--font-render-hinting=none';
@@ -317,62 +324,62 @@ class BrowserProcess implements LoggerAwareInterface
         }
 
         // disable loading of images (currently can't be done via devtools, only CLI)
-        if (array_key_exists('enableImages', $options) && ($options['enableImages'] === false)) {
+        if (\array_key_exists('enableImages', $options) && (false === $options['enableImages'])) {
             $args[] = '--blink-settings=imagesEnabled=false';
         }
 
         // window's size
-        if (array_key_exists('windowSize', $options) && $options['windowSize']) {
+        if (\array_key_exists('windowSize', $options) && $options['windowSize']) {
             if (
-                !is_array($options['windowSize']) ||
-                count($options['windowSize']) !== 2 ||
-                !is_numeric($options['windowSize'][0]) ||
-                !is_numeric($options['windowSize'][1])
+                !\is_array($options['windowSize']) ||
+                2 !== \count($options['windowSize']) ||
+                !\is_numeric($options['windowSize'][0]) ||
+                !\is_numeric($options['windowSize'][1])
             ) {
-                throw new \InvalidArgumentException(
-                    'Option "windowSize" must be an array of dimensions (eg: [1000, 1200])'
-                );
+                throw new \InvalidArgumentException('Option "windowSize" must be an array of dimensions (eg: [1000, 1200])');
             }
 
-            $args[] = '--window-size=' . implode(',', $options['windowSize']) ;
+            $args[] = '--window-size='.\implode(',', $options['windowSize']);
         }
 
         // sandbox mode - useful if you want to use chrome headless inside docker
-        if (array_key_exists('noSandbox', $options) && $options['noSandbox']) {
+        if (\array_key_exists('noSandbox', $options) && $options['noSandbox']) {
             $args[] = '--no-sandbox';
         }
 
         // user agent
-        if (array_key_exists('userAgent', $options)) {
-            $args[] = '--user-agent=' . $options['userAgent'];
+        if (\array_key_exists('userAgent', $options)) {
+            $args[] = '--user-agent='.$options['userAgent'];
         }
 
         // ignore certificate errors
-        if (array_key_exists('ignoreCertificateErrors', $options) && $options['ignoreCertificateErrors']) {
+        if (\array_key_exists('ignoreCertificateErrors', $options) && $options['ignoreCertificateErrors']) {
             $args[] = '--ignore-certificate-errors';
         }
 
         // add custom flags
-        if (array_key_exists('customFlags', $options) && is_array($options['customFlags'])) {
-            $args =  array_merge($args, $options['customFlags']);
+        if (\array_key_exists('customFlags', $options) && \is_array($options['customFlags'])) {
+            $args = \array_merge($args, $options['customFlags']);
         }
 
         // add user data dir to args
-        $args[] = '--user-data-dir=' . $options['userDataDir'];
+        $args[] = '--user-data-dir='.$options['userDataDir'];
 
         return $args;
     }
 
     /**
-     * Wait for chrome to startup (given a process) and return the ws uri to connect to
+     * Wait for chrome to startup (given a process) and return the ws uri to connect to.
+     *
      * @param Process $process
-     * @param int $timeout
+     * @param int     $timeout
+     *
      * @return mixed
      */
     private function waitForStartup(Process $process, int $timeout)
     {
         // log
-        $this->logger->debug('process: waiting for ' . $timeout / 1000000 . ' seconds for startup');
+        $this->logger->debug('process: waiting for '.$timeout / 1000000 .' seconds for startup');
 
         try {
             $generator = function (Process $process) {
@@ -383,23 +390,23 @@ class BrowserProcess implements LoggerAwareInterface
 
                         // exception
                         $message = 'Chrome process stopped before startup completed.';
-                        $error = trim($process->getErrorOutput());
+                        $error = \trim($process->getErrorOutput());
                         if (!empty($error)) {
-                            $message .= ' Additional info: ' . $error;
+                            $message .= ' Additional info: '.$error;
                         }
                         throw new \RuntimeException($message);
                     }
 
-                    $output = trim($process->getIncrementalErrorOutput());
+                    $output = \trim($process->getIncrementalErrorOutput());
 
                     if ($output) {
                         // log
-                        $this->logger->debug('process: chrome output:' . $output);
+                        $this->logger->debug('process: chrome output:'.$output);
 
-                        $outputs = explode(PHP_EOL, $output);
+                        $outputs = \explode(\PHP_EOL, $output);
 
                         foreach ($outputs as $output) {
-                            $output = trim($output);
+                            $output = \trim($output);
 
                             // ignore empty line
                             if (empty($output)) {
@@ -407,13 +414,14 @@ class BrowserProcess implements LoggerAwareInterface
                             }
 
                             // find socket uri
-                            if (preg_match('/DevTools listening on (ws:\/\/.*)/', $output, $matches)) {
+                            if (\preg_match('/DevTools listening on (ws:\/\/.*)/', $output, $matches)) {
                                 // log
                                 $this->logger->debug('process: ✓ accepted output');
+
                                 return $matches[1];
                             } else {
                                 // log
-                                $this->logger->debug('process: ignoring output:' . trim($output));
+                                $this->logger->debug('process: ignoring output:'.\trim($output));
                             }
                         }
                     }
@@ -422,6 +430,7 @@ class BrowserProcess implements LoggerAwareInterface
                     yield 10 * 1000;
                 }
             };
+
             return Utils::tryWithTimeout($timeout, $generator($process));
         } catch (OperationTimedOut $e) {
             throw new \RuntimeException('Cannot start browser', 0, $e);
@@ -429,15 +438,16 @@ class BrowserProcess implements LoggerAwareInterface
     }
 
     /**
-     * Creates a temp directory for the app
+     * Creates a temp directory for the app.
+     *
      * @return string path to the new temp directory
      */
     private function createTempDir()
     {
-        $tmpFile = tempnam(sys_get_temp_dir(), 'chromium-php-');
+        $tmpFile = \tempnam(\sys_get_temp_dir(), 'chromium-php-');
 
-        unlink($tmpFile);
-        mkdir($tmpFile);
+        \unlink($tmpFile);
+        \mkdir($tmpFile);
 
         return $tmpFile;
     }
