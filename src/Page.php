@@ -148,6 +148,18 @@ class Page
     }
 
     /**
+     * Sets the path to save downloaded files.
+     * @param string $path
+     */
+    public function setDownloadPath(string $path)
+    {
+        $this->getSession()->sendMessage(new Message(
+            'Page.setDownloadBehavior',
+            ['behavior' => 'allow', 'downloadPath' => $path]
+        ));
+    }
+
+    /**
      * @param string $url
      * @param array $options
      *  - strict: make waitForNAvigation to fail if a new navigation is initiated. Default: false
@@ -262,12 +274,12 @@ class Page
                 const script = document.createElement("script");
                 script.type = "text/javascript";
                 script.src = src;
-                
+
                 const promise = new Promise((res, rej) => {
                     script.onload = res;
                     script.onerror = rej;
                 });
-                
+
                 document.head.appendChild(script);
                 await promise;
             }';
@@ -277,12 +289,12 @@ class Page
                 var script = document.createElement("script");
                 script.type = "text/javascript";
                 script.text = scriptContent;
-                
+
                 let error = null;
                 script.onerror = e => {error = e};
-                
+
                 document.head.appendChild(script);
-                
+
                 if (error) {
                     throw error;
                 }
