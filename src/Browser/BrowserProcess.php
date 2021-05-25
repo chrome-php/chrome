@@ -122,9 +122,9 @@ class BrowserProcess implements LoggerAwareInterface
 
         // setup chrome process
         if (!\array_key_exists('keepAlive', $options) || !$options['keepAlive']) {
-            $process = new Process($args, null, $options['envVariables']??null);
+            $process = new Process($args, null, $options['envVariables'] ?? null);
         } else {
-            $process = new ProcessKeepAlive($args, null, $options['envVariables']??null);
+            $process = new ProcessKeepAlive($args, null, $options['envVariables'] ?? null);
         }
         $this->process = $process;
 
