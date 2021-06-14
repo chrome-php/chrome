@@ -21,11 +21,18 @@ use Wrench\Exception\HandshakeException;
 
 class BrowserFactory
 {
+    /**
+     * @var AutoDiscover
+     */
+    private $autoDiscover;
+
     protected $chromeBinary;
 
     public function __construct(string $chromeBinary = null)
     {
-        $this->chromeBinary = $chromeBinary ?? (new AutoDiscover())->getChromeBinaryPath();
+        $this->autoDiscover = new AutoDiscover();
+
+        $this->chromeBinary = $chromeBinary ?? $this->autoDiscover->getChromeBinaryPath();
     }
 
     /**
@@ -80,6 +87,18 @@ class BrowserFactory
      */
     public function getChromeVersion()
     {
+        if ($this->autoDiscover->isWindows() === true) {
+            $validWindowsPath = \str_ireplace('\\', '\\\\', $this->chromeBinary);
+
+            $version = \trim(\shell_exec('wmic datafile where name="' . $validWindowsPath . '" get Version /value'));
+
+            if (\stripos($version, 'Version') === false) {
+                throw new \RuntimeException('Cannot get chrome version from windows binary using "' . $this->chromeBinary . '"');
+            }
+
+            return \str_ireplace('Version=', '', $version);
+        }
+
         $process = new Process([$this->chromeBinary, '--version']);
 
         $exitCode = $process->run();

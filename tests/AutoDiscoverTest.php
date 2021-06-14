@@ -60,6 +60,7 @@ class AutoDiscoverTest extends BaseTestCase
     {
         $autoDiscover = $this->getMock('Darwin');
 
+        $this->assertTrue($autoDiscover->isMac());
         $this->assertStringContainsString('.app', $autoDiscover->getChromeBinaryPath());
     }
 
@@ -70,6 +71,7 @@ class AutoDiscoverTest extends BaseTestCase
     {
         $autoDiscover = $this->getMock($phpOS);
 
+        $this->assertTrue($autoDiscover->isWindows());
         $this->assertStringContainsString('.exe', $autoDiscover->getChromeBinaryPath());
     }
 

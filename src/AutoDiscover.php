@@ -19,15 +19,12 @@ class AutoDiscover
             return $_SERVER['CHROME_PATH'];
         }
 
-        switch ($this->getOS()) {
-            case 'Darwin':
-                return '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
-            break;
-            case 'WIN32':
-            case 'WINNT':
-            case 'Windows':
-                return self::windows();
-            break;
+        if ($this->isMac() === true) {
+            return '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
+        }
+
+        if ($this->isWindows() === true) {
+            return self::windows();
         }
 
         return 'chrome';
@@ -48,6 +45,27 @@ class AutoDiscover
             // try to guess the correct path in case the reg query fails
             return '%ProgramFiles(x86)%\Google\Chrome\Application\chrome.exe';
         }
+    }
+
+    public function isMac(): bool
+    {
+        if ($this->getOS() === 'Darwin') {
+            return true;
+        }
+
+        return false;
+    }
+
+    public function isWindows(): bool
+    {
+        switch ($this->getOS()) {
+            case 'WIN32':
+            case 'WINNT':
+            case 'Windows':
+                return true;
+        }
+
+        return false;
     }
 
     public function getOS(): string
