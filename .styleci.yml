@@ -1,0 +1,20 @@
+preset: symfony
+
+risky: true
+
+enabled:
+  - align_phpdoc
+  - alpha_ordered_imports
+  - array_indentation
+  - const_visibility_required
+  - native_constant_invocation
+  - native_function_invocation
+  - phpdoc_order
+  - void_return
+
+disabled:
+  - native_constant_invocation_symfony
+  - native_function_invocation_symfony
+  - no_superfluous_phpdoc_tags_symfony
+  - phpdoc_to_comment
+  - phpdoc_var_without_name

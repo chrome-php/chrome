@@ -42,6 +42,7 @@ class Frame
 
     /**
      * Frame constructor.
+     *
      * @param array $frameData
      */
     public function __construct(array $frameData)
@@ -54,14 +55,13 @@ class Frame
     /**
      * @internal
      */
-    public function onLifecycleEvent(array $params)
+    public function onLifecycleEvent(array $params): void
     {
         if (self::LIFECYCLE_INIT === $params['name']) {
             $this->lifeCycleEvents = [];
             $this->latestLoaderId = $params['loaderId'];
             $this->frameId = $params['frameId'];
         }
-
 
         $this->lifeCycleEvents[$params['name']] = $params['timestamp'];
     }
@@ -77,7 +77,7 @@ class Frame
     /**
      * @param int $executionContextId
      */
-    public function setExecutionContextId(int $executionContextId)
+    public function setExecutionContextId(int $executionContextId): void
     {
         $this->executionContextId = $executionContextId;
     }
@@ -100,6 +100,7 @@ class Frame
 
     /**
      * Gets the life cycle events of the frame with the time they occurred at.
+     *
      * @return array
      */
     public function getLifeCycle(): array

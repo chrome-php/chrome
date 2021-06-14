@@ -19,14 +19,14 @@ use HeadlessChromium\Cookies\CookiesCollection;
 use HeadlessChromium\Exception\CommunicationException;
 use HeadlessChromium\Exception\NoResponseAvailable;
 use HeadlessChromium\Exception\TargetDestroyed;
-use HeadlessChromium\Input\Mouse;
 use HeadlessChromium\Input\Keyboard;
+use HeadlessChromium\Input\Mouse;
 use HeadlessChromium\PageUtils\CookiesGetter;
 use HeadlessChromium\PageUtils\PageEvaluation;
 use HeadlessChromium\PageUtils\PageLayoutMetrics;
 use HeadlessChromium\PageUtils\PageNavigation;
-use HeadlessChromium\PageUtils\PageScreenshot;
 use HeadlessChromium\PageUtils\PagePdf;
+use HeadlessChromium\PageUtils\PageScreenshot;
 use HeadlessChromium\PageUtils\ResponseWaiter;
 
 class Page
@@ -46,19 +46,20 @@ class Page
     protected $frameManager;
 
     /**
-     * @var Mouse|Null
+     * @var Mouse|null
      */
     protected $mouse;
 
     /**
-     * @var Keyboard|Null
+     * @var Keyboard|null
      */
     protected $keyboard;
 
     /**
      * Page constructor.
+     *
      * @param Target $target
-     * @param array $frameTree
+     * @param array  $frameTree
      */
     public function __construct(Target $target, array $frameTree)
     {
@@ -67,19 +68,20 @@ class Page
     }
 
     /**
-     * Adds a script to be evaluated upon page navigation
+     * Adds a script to be evaluated upon page navigation.
      *
      * @param string $script
-     * @param array $options
-     *  - onLoad: defer script execution after page has loaded (useful for scripts that require the dom to be populated)
+     * @param array  $options
+     *                        - onLoad: defer script execution after page has loaded (useful for scripts that require the dom to be populated)
+     *
      * @throws CommunicationException
      * @throws NoResponseAvailable
      */
-    public function addPreScript(string $script, array $options = [])
+    public function addPreScript(string $script, array $options = []): void
     {
         // defer script execution
         if (isset($options['onLoad']) && $options['onLoad']) {
-            $script = 'window.onload = () => {' . $script . '}';
+            $script = 'window.onload = () => {'.$script.'}';
         }
 
         // add script
@@ -89,7 +91,7 @@ class Page
     }
 
     /**
-     * Retrieves layout metrics of the page
+     * Retrieves layout metrics of the page.
      *
      * Example:
      *
@@ -98,8 +100,9 @@ class Page
      * $contentSize = $metrics->getContentSize();
      * ```
      *
-     * @return PageLayoutMetrics
      * @throws CommunicationException
+     *
+     * @return PageLayoutMetrics
      */
     public function getLayoutMetrics()
     {
@@ -123,7 +126,8 @@ class Page
     }
 
     /**
-     * Get the session this page is attached to
+     * Get the session this page is attached to.
+     *
      * @return Session
      */
     public function getSession(): Session
@@ -135,25 +139,40 @@ class Page
 
     /**
      * Sets the HTTP header necessary for basic authentication.
+     *
      * @param string $username
      * @param string $password
      */
-    public function setBasicAuthHeader(string $username, string $password)
+    public function setBasicAuthHeader(string $username, string $password): void
     {
-        $header = base64_encode($username . ':' . $password);
+        $header = \base64_encode($username.':'.$password);
         $this->getSession()->sendMessage(new Message(
             'Network.setExtraHTTPHeaders',
-            ['headers' => ['Authorization' => 'Basic ' . $header]]
+            ['headers' => ['Authorization' => 'Basic '.$header]]
+        ));
+    }
+
+    /**
+     * Sets the path to save downloaded files.
+     *
+     * @param string $path
+     */
+    public function setDownloadPath(string $path): void
+    {
+        $this->getSession()->sendMessage(new Message(
+            'Page.setDownloadBehavior',
+            ['behavior' => 'allow', 'downloadPath' => $path]
         ));
     }
 
     /**
      * @param string $url
-     * @param array $options
-     *  - strict: make waitForNAvigation to fail if a new navigation is initiated. Default: false
+     * @param array  $options
+     *                        - strict: make waitForNAvigation to fail if a new navigation is initiated. Default: false
+     *
+     * @throws Exception\CommunicationException
      *
      * @return PageNavigation
-     * @throws Exception\CommunicationException
      */
     public function navigate(string $url, array $options = [])
     {
@@ -163,7 +182,7 @@ class Page
     }
 
     /**
-     * Evaluates the given string in the page context
+     * Evaluates the given string in the page context.
      *
      * Example:
      *
@@ -173,8 +192,10 @@ class Page
      * ```
      *
      * @param string $expression
-     * @return PageEvaluation
+     *
      * @throws Exception\CommunicationException
+     *
+     * @return PageEvaluation
      */
     public function evaluate(string $expression)
     {
@@ -188,15 +209,16 @@ class Page
                     'awaitPromise' => true,
                     'returnByValue' => true,
                     'expression' => $expression,
-                    'userGesture' => true
+                    'userGesture' => true,
                 ]
             )
         );
+
         return new PageEvaluation($reader, $currentLoaderId, $this);
     }
 
     /**
-     * Call a js function with the given argument in the page context
+     * Call a js function with the given argument in the page context.
      *
      * Example:
      *
@@ -208,9 +230,11 @@ class Page
      * ```
      *
      * @param string $functionDeclaration
-     * @param array $arguments
-     * @return PageEvaluation
+     * @param array  $arguments
+     *
      * @throws CommunicationException
+     *
+     * @return PageEvaluation
      */
     public function callFunction(string $functionDeclaration, array $arguments = []): PageEvaluation
     {
@@ -223,15 +247,15 @@ class Page
                 'Runtime.callFunctionOn',
                 [
                     'functionDeclaration' => $functionDeclaration,
-                    'arguments' => array_map(function ($arg) {
+                    'arguments' => \array_map(function ($arg) {
                         return [
-                            'value' => $arg
+                            'value' => $arg,
                         ];
                     }, $arguments),
                     'executionContextId' => $executionContextId,
                     'awaitPromise' => true,
                     'returnByValue' => true,
-                    'userGesture' => true
+                    'userGesture' => true,
                 ]
             )
         );
@@ -240,7 +264,7 @@ class Page
     }
 
     /**
-     * Add a script tag to the page (ie. <script>)
+     * Add a script tag to the page (ie. <script>).
      *
      * Example:
      *
@@ -250,8 +274,10 @@ class Page
      * ```
      *
      * @param array $options
-     * @return PageEvaluation
+     *
      * @throws CommunicationException
+     *
+     * @return PageEvaluation
      */
     public function addScriptTag(array $options): PageEvaluation
     {
@@ -262,12 +288,12 @@ class Page
                 const script = document.createElement("script");
                 script.type = "text/javascript";
                 script.src = src;
-                
+
                 const promise = new Promise((res, rej) => {
                     script.onload = res;
                     script.onerror = rej;
                 });
-                
+
                 document.head.appendChild(script);
                 await promise;
             }';
@@ -277,12 +303,12 @@ class Page
                 var script = document.createElement("script");
                 script.type = "text/javascript";
                 script.text = scriptContent;
-                
+
                 let error = null;
                 script.onerror = e => {error = e};
-                
+
                 document.head.appendChild(script);
-                
+
                 if (error) {
                     throw error;
                 }
@@ -300,20 +326,22 @@ class Page
      *
      * Events come as an associative array with event name as keys and time they occurred at in values.
      *
-     * @return array
      * @throws CommunicationException\CannotReadResponse
      * @throws CommunicationException\InvalidResponse
+     *
+     * @return array
      */
     public function getCurrentLifecycle()
     {
         $this->assertNotClosed();
 
         $this->getSession()->getConnection()->readData();
+
         return $this->frameManager->getMainFrame()->getLifeCycle();
     }
 
     /**
-     * Check if the lifecycle event was reached
+     * Check if the lifecycle event was reached.
      *
      * Example:
      *
@@ -322,29 +350,33 @@ class Page
      * ```
      *
      * @param string $event
-     * @return bool
+     *
      * @throws CommunicationException\CannotReadResponse
      * @throws CommunicationException\InvalidResponse
+     *
+     * @return bool
      */
     public function hasLifecycleEvent(string $event): bool
     {
         $this->assertNotClosed();
 
-        return array_key_exists($event, $this->getCurrentLifecycle());
+        return \array_key_exists($event, $this->getCurrentLifecycle());
     }
 
     /**
-     * Wait for the page to unload
+     * Wait for the page to unload.
      *
      * @param string $eventName
-     * @param int $timeout
-     * @param null $loaderId
-     * @return $this
+     * @param int    $timeout
+     * @param null   $loaderId
+     *
      * @throws CommunicationException\CannotReadResponse
      * @throws CommunicationException\InvalidResponse
      * @throws Exception\OperationTimedOut
+     *
+     * @return $this
      */
-    public function waitForReload($eventName = Page::LOAD, $timeout = 30000, $loaderId = null)
+    public function waitForReload($eventName = self::LOAD, $timeout = 30000, $loaderId = null)
     {
         $this->assertNotClosed();
 
@@ -353,15 +385,19 @@ class Page
         }
 
         Utils::tryWithTimeout($timeout * 1000, $this->waitForReloadGenerator($eventName, $loaderId));
+
         return $this;
     }
 
     /**
      * @param string $eventName
      * @param string $loaderId
-     * @return bool|\Generator
+     *
      * @throws CommunicationException\CannotReadResponse
      * @throws CommunicationException\InvalidResponse
+     *
+     * @return bool|\Generator
+     *
      * @internal
      */
     private function waitForReloadGenerator($eventName, $loaderId)
@@ -377,7 +413,7 @@ class Page
 
                 yield $delay;
 
-                // else if frame has still the previous loader, wait for the new one
+            // else if frame has still the previous loader, wait for the new one
             } else {
                 yield $delay;
             }
@@ -387,7 +423,7 @@ class Page
     }
 
     /**
-     * Get a clip that uses the full layout page, not only the viewport
+     * Get a clip that uses the full layout page, not only the viewport.
      *
      * This method is synchronous
      *
@@ -402,16 +438,18 @@ class Page
      * ```
      *
      * @param int|null $timeout
+     *
      * @return Clip
      */
     public function getFullPageClip(int $timeout = null): Clip
     {
         $contentSize = $this->getLayoutMetrics()->await($timeout)->getContentSize();
+
         return new Clip(0, 0, $contentSize['width'], $contentSize['height']);
     }
 
     /**
-     * Take a screenshot
+     * Take a screenshot.
      *
      * Usage:
      *
@@ -420,12 +458,14 @@ class Page
      * ```
      *
      * @param array $options
-     *  - format: "png"|"jpg" default "png"
-     *  - quality: number from 0 to 100. Only for jpegs
-     *  - clip: instance of a Clip to choose an area for the screenshot
+     *                       - format: "png"|"jpg" default "png"
+     *                       - quality: number from 0 to 100. Only for jpegs
+     *                       - clip: instance of a Clip to choose an area for the screenshot
+     *                       - captureBeyondViewport: whether to capture the screenshot beyond the viewport. Defaults to false
+     *
+     * @throws CommunicationException
      *
      * @return PageScreenshot
-     * @throws CommunicationException
      */
     public function screenshot(array $options = []): PageScreenshot
     {
@@ -433,41 +473,37 @@ class Page
 
         $screenshotOptions = [];
 
+        if (\array_key_exists('captureBeyondViewport', $options)) {
+            $screenshotOptions['captureBeyondViewport'] = $options['captureBeyondViewport'];
+        }
+
         // get format
-        if (array_key_exists('format', $options)) {
+        if (\array_key_exists('format', $options)) {
             $screenshotOptions['format'] = $options['format'];
         } else {
             $screenshotOptions['format'] = 'png';
         }
 
         // make sure format is valid
-        if (!in_array($screenshotOptions['format'], ['png', 'jpeg'])) {
-            throw new \InvalidArgumentException(
-                'Invalid options "format" for page screenshot. Format must be "png" or "jpeg".'
-            );
+        if (!\in_array($screenshotOptions['format'], ['png', 'jpeg'])) {
+            throw new \InvalidArgumentException('Invalid options "format" for page screenshot. Format must be "png" or "jpeg".');
         }
 
         // get quality
-        if (array_key_exists('quality', $options)) {
+        if (\array_key_exists('quality', $options)) {
             // quality requires type to be jpeg
-            if ($screenshotOptions['format'] !== 'jpeg') {
-                throw new \InvalidArgumentException(
-                    'Invalid options "quality" for page screenshot. Quality requires the image format to be "jpeg".'
-                );
+            if ('jpeg' !== $screenshotOptions['format']) {
+                throw new \InvalidArgumentException('Invalid options "quality" for page screenshot. Quality requires the image format to be "jpeg".');
             }
 
             // quality must be an integer
-            if (!is_int($options['quality'])) {
-                throw new \InvalidArgumentException(
-                    'Invalid options "quality" for page screenshot. Quality must be an integer value.'
-                );
+            if (!\is_int($options['quality'])) {
+                throw new \InvalidArgumentException('Invalid options "quality" for page screenshot. Quality must be an integer value.');
             }
 
             // quality must be between 0 and 100
             if ($options['quality'] < 0 || $options['quality'] > 100) {
-                throw new \InvalidArgumentException(
-                    'Invalid options "quality" for page screenshot. Quality must be comprised between 0 and 100.'
-                );
+                throw new \InvalidArgumentException('Invalid options "quality" for page screenshot. Quality must be comprised between 0 and 100.');
             }
 
             // set quality
@@ -475,12 +511,10 @@ class Page
         }
 
         // clip
-        if (array_key_exists('clip', $options)) {
+        if (\array_key_exists('clip', $options)) {
             // make sure it's a Clip instance
             if (!($options['clip'] instanceof Clip)) {
-                throw new \InvalidArgumentException(
-                    sprintf('Invalid options "clip" for page screenshot, it must be a %s instance.', Clip::class)
-                );
+                throw new \InvalidArgumentException(\sprintf('Invalid options "clip" for page screenshot, it must be a %s instance.', Clip::class));
             }
 
             // add to params
@@ -489,7 +523,7 @@ class Page
                 'y' => $options['clip']->getY(),
                 'width' => $options['clip']->getWidth(),
                 'height' => $options['clip']->getHeight(),
-                'scale' => $options['clip']->getScale()
+                'scale' => $options['clip']->getScale(),
             ];
         }
 
@@ -502,28 +536,30 @@ class Page
 
     /**
      * Generate a PDF
-     * Usage:
+     * Usage:.
      *
      * ```php
      * $page->pdf()->saveToFile('/tmp/file.pdf');
      * ```
      *
      * @param array $options
-     *  - landscape: default false
-     *  - printBackground: default false
-     *  - displayHeaderFooter: default false
-     *  - headerTemplate: HTML template for the print header (see docs for details)
-     *  - footerTemplate: HTML template for the print footer (see docs for details)
-     *  - paperWidth: default 8.5 inches
-     *  - paperHeight: default 11 inches
-     *  - marginTop: default 1 cm
-     *  - marginBottom: default 1 cm
-     *  - marginLeft: default 1 cm
-     *  - marginRight: default 1 cm
-     *  - preferCSSPageSize: default false
-     *  - scale: default 1
-     * @return PagePdf
+     *                       - landscape: default false
+     *                       - printBackground: default false
+     *                       - displayHeaderFooter: default false
+     *                       - headerTemplate: HTML template for the print header (see docs for details)
+     *                       - footerTemplate: HTML template for the print footer (see docs for details)
+     *                       - paperWidth: default 8.5 inches
+     *                       - paperHeight: default 11 inches
+     *                       - marginTop: default 1 cm
+     *                       - marginBottom: default 1 cm
+     *                       - marginLeft: default 1 cm
+     *                       - marginRight: default 1 cm
+     *                       - preferCSSPageSize: default false
+     *                       - scale: default 1
+     *
      * @throws CommunicationException
+     *
+     * @return PagePdf
      */
     public function pdf(array $options = []): PagePdf
     {
@@ -532,142 +568,116 @@ class Page
         $pdfOptions = [];
 
         // is landscape?
-        if (array_key_exists('landscape', $options)) {
+        if (\array_key_exists('landscape', $options)) {
             // landscape requires type to be boolean
-            if (!is_bool($options['landscape'])) {
-                throw new \InvalidArgumentException(
-                    'Invalid options "landscape" for print to pdf. Must be true or false'
-                );
+            if (!\is_bool($options['landscape'])) {
+                throw new \InvalidArgumentException('Invalid options "landscape" for print to pdf. Must be true or false');
             }
             $pdfOptions['landscape'] = $options['landscape'];
         }
 
         // should print background?
-        if (array_key_exists('printBackground', $options)) {
+        if (\array_key_exists('printBackground', $options)) {
             // printBackground requires type to be boolean
-            if (!is_bool($options['printBackground'])) {
-                throw new \InvalidArgumentException(
-                    'Invalid options "printBackground" for print to pdf. Must be true or false'
-                );
+            if (!\is_bool($options['printBackground'])) {
+                throw new \InvalidArgumentException('Invalid options "printBackground" for print to pdf. Must be true or false');
             }
             $pdfOptions['printBackground'] = $options['printBackground'];
         }
 
         // option displayHeaderFooter
-        if (array_key_exists('displayHeaderFooter', $options)) {
+        if (\array_key_exists('displayHeaderFooter', $options)) {
             // displayHeaderFooter requires type to be boolean
-            if (!is_bool($options['displayHeaderFooter'])) {
-                throw new \InvalidArgumentException(
-                    'Invalid options "displayHeaderFooter" for print to pdf. Must be true or false'
-                );
+            if (!\is_bool($options['displayHeaderFooter'])) {
+                throw new \InvalidArgumentException('Invalid options "displayHeaderFooter" for print to pdf. Must be true or false');
             }
             $pdfOptions['displayHeaderFooter'] = $options['displayHeaderFooter'];
         }
 
         // option headerTemplate
-        if (array_key_exists('headerTemplate', $options)) {
+        if (\array_key_exists('headerTemplate', $options)) {
             // headerTemplate requires type to be string
-            if (!is_string($options['headerTemplate'])) {
-                throw new \InvalidArgumentException(
-                    'Invalid options "headerTemplate" for print to pdf. Must be string'
-                );
+            if (!\is_string($options['headerTemplate'])) {
+                throw new \InvalidArgumentException('Invalid options "headerTemplate" for print to pdf. Must be string');
             }
             $pdfOptions['headerTemplate'] = $options['headerTemplate'];
         }
 
         // option footerTemplate
-        if (array_key_exists('footerTemplate', $options)) {
+        if (\array_key_exists('footerTemplate', $options)) {
             // footerTemplate requires type to be string
-            if (!is_string($options['footerTemplate'])) {
-                throw new \InvalidArgumentException(
-                    'Invalid options "footerTemplate" for print to pdf. Must be string'
-                );
+            if (!\is_string($options['footerTemplate'])) {
+                throw new \InvalidArgumentException('Invalid options "footerTemplate" for print to pdf. Must be string');
             }
             $pdfOptions['footerTemplate'] = $options['footerTemplate'];
         }
 
         // option paperWidth
-        if (array_key_exists('paperWidth', $options)) {
+        if (\array_key_exists('paperWidth', $options)) {
             // paperWidth requires type to be float
-            if (gettype($options['paperWidth']) !== 'double') {
-                throw new \InvalidArgumentException(
-                    'Invalid options "paperWidth" for print to pdf. Must be float like 1.0 or 5.4'
-                );
+            if ('double' !== \gettype($options['paperWidth'])) {
+                throw new \InvalidArgumentException('Invalid options "paperWidth" for print to pdf. Must be float like 1.0 or 5.4');
             }
             $pdfOptions['paperWidth'] = $options['paperWidth'];
         }
 
         // option paperHeight
-        if (array_key_exists('paperHeight', $options)) {
+        if (\array_key_exists('paperHeight', $options)) {
             // paperHeight requires type to be float
-            if (gettype($options['paperHeight']) !== 'double') {
-                throw new \InvalidArgumentException(
-                    'Invalid options "paperHeight" for print to pdf. Must be float like 1.0 or 5.4'
-                );
+            if ('double' !== \gettype($options['paperHeight'])) {
+                throw new \InvalidArgumentException('Invalid options "paperHeight" for print to pdf. Must be float like 1.0 or 5.4');
             }
             $pdfOptions['paperHeight'] = $options['paperHeight'];
         }
 
         // option marginTop
-        if (array_key_exists('marginTop', $options)) {
+        if (\array_key_exists('marginTop', $options)) {
             // marginTop requires type to be float
-            if (gettype($options['marginTop']) !== 'double') {
-                throw new \InvalidArgumentException(
-                    'Invalid options "marginTop" for print to pdf. Must be float like 1.0 or 5.4'
-                );
+            if ('double' !== \gettype($options['marginTop'])) {
+                throw new \InvalidArgumentException('Invalid options "marginTop" for print to pdf. Must be float like 1.0 or 5.4');
             }
             $pdfOptions['marginTop'] = $options['marginTop'];
         }
 
         // option marginBottom
-        if (array_key_exists('marginBottom', $options)) {
+        if (\array_key_exists('marginBottom', $options)) {
             // marginBottom requires type to be float
-            if (gettype($options['marginBottom']) !== 'double') {
-                throw new \InvalidArgumentException(
-                    'Invalid options "marginBottom" for print to pdf. Must be float like 1.0 or 5.4'
-                );
+            if ('double' !== \gettype($options['marginBottom'])) {
+                throw new \InvalidArgumentException('Invalid options "marginBottom" for print to pdf. Must be float like 1.0 or 5.4');
             }
             $pdfOptions['marginBottom'] = $options['marginBottom'];
         }
 
         // option marginLeft
-        if (array_key_exists('marginLeft', $options)) {
+        if (\array_key_exists('marginLeft', $options)) {
             // marginLeft requires type to be float
-            if (gettype($options['marginLeft']) !== 'double') {
-                throw new \InvalidArgumentException(
-                    'Invalid options "marginLeft" for print to pdf. Must be float like 1.0 or 5.4'
-                );
+            if ('double' !== \gettype($options['marginLeft'])) {
+                throw new \InvalidArgumentException('Invalid options "marginLeft" for print to pdf. Must be float like 1.0 or 5.4');
             }
             $pdfOptions['marginLeft'] = $options['marginLeft'];
         }
 
         // option marginRight
-        if (array_key_exists('marginRight', $options)) {
+        if (\array_key_exists('marginRight', $options)) {
             // marginRight requires type to be float
-            if (gettype($options['marginRight']) !== 'double') {
-                throw new \InvalidArgumentException(
-                    'Invalid options "marginRight" for print to pdf. Must be float like 1.0 or 5.4'
-                );
+            if ('double' !== \gettype($options['marginRight'])) {
+                throw new \InvalidArgumentException('Invalid options "marginRight" for print to pdf. Must be float like 1.0 or 5.4');
             }
             $pdfOptions['marginRight'] = $options['marginRight'];
         }
 
         // option preferCSSPageSize
-        if (array_key_exists('preferCSSPageSize', $options)) {
+        if (\array_key_exists('preferCSSPageSize', $options)) {
             // preferCSSPageSize requires type to be boolean
             if (!\is_bool($options['preferCSSPageSize'])) {
-                throw new \InvalidArgumentException(
-                    'Invalid options "preferCSSPageSize" for print to pdf. Must be true or false'
-                );
+                throw new \InvalidArgumentException('Invalid options "preferCSSPageSize" for print to pdf. Must be true or false');
             }
             $pdfOptions['preferCSSPageSize'] = $options['preferCSSPageSize'];
         }
 
-        if (array_key_exists('scale', $options)) {
+        if (\array_key_exists('scale', $options)) {
             if (!\is_float($options['scale'])) {
-                throw new \InvalidArgumentException(
-                    'Invalid options "scale" for print to pdf. Must be float like 1.0 or 0.74'
-                );
+                throw new \InvalidArgumentException('Invalid options "scale" for print to pdf. Must be float like 1.0 or 0.74');
             }
             $pdfOptions['scale'] = $options['scale'];
         }
@@ -680,46 +690,49 @@ class Page
     }
 
     /**
-     * Allows to change viewport size, enabling mobile mode, or changing the scale factor
+     * Allows to change viewport size, enabling mobile mode, or changing the scale factor.
      *
      * usage:
      *
      * ```
      * $page->setDeviceMetricsOverride
      * ```
+     *
      * @param array $overrides
+     *
      * @throws CommunicationException
      * @throws NoResponseAvailable
      *
      * @return ResponseWaiter
-     *
      */
     public function setDeviceMetricsOverride(array $overrides)
     {
-        if (!array_key_exists('width', $overrides)) {
+        if (!\array_key_exists('width', $overrides)) {
             $overrides['width'] = 0;
         }
-        if (!array_key_exists('height', $overrides)) {
+        if (!\array_key_exists('height', $overrides)) {
             $overrides['height'] = 0;
         }
-        if (!array_key_exists('deviceScaleFactor', $overrides)) {
+        if (!\array_key_exists('deviceScaleFactor', $overrides)) {
             $overrides['deviceScaleFactor'] = 0;
         }
-        if (!array_key_exists('mobile', $overrides)) {
+        if (!\array_key_exists('mobile', $overrides)) {
             $overrides['mobile'] = false;
         }
 
         $this->assertNotClosed();
+
         return new ResponseWaiter($this->getSession()->sendMessage(
             new Message('Emulation.setDeviceMetricsOverride', $overrides)
         ));
     }
 
     /**
-     * Set viewport size
+     * Set viewport size.
      *
      * @param int $width
      * @param int $height
+     *
      * @throws CommunicationException
      * @throws NoResponseAvailable
      *
@@ -729,12 +742,13 @@ class Page
     {
         return $this->setDeviceMetricsOverride([
             'width' => $width,
-            'height' => $height
+            'height' => $height,
         ]);
     }
 
     /**
-     * Get mouse object to play with
+     * Get mouse object to play with.
+     *
      * @return Mouse
      */
     public function mouse()
@@ -747,7 +761,8 @@ class Page
     }
 
     /**
-     * Get keyboard object to play with
+     * Get keyboard object to play with.
+     *
      * @return Keyboard
      */
     public function keyboard()
@@ -760,10 +775,11 @@ class Page
     }
 
     /**
-     * Request to close the page
+     * Request to close the page.
+     *
      * @throws CommunicationException
      */
-    public function close()
+    public function close(): void
     {
         $this->assertNotClosed();
 
@@ -780,9 +796,9 @@ class Page
     }
 
     /**
-     * Throws if the page was closed
+     * Throws if the page was closed.
      */
-    public function assertNotClosed()
+    public function assertNotClosed(): void
     {
         if ($this->target->isDestroyed()) {
             throw new TargetDestroyed('The page was closed and is not available anymore.');
@@ -792,9 +808,10 @@ class Page
     /**
      * Gets the current url of the page, always in sync with the browser.
      *
-     * @return mixed
      * @throws CommunicationException\CannotReadResponse
      * @throws CommunicationException\InvalidResponse
+     *
+     * @return mixed
      */
     public function getCurrentUrl()
     {
@@ -811,8 +828,9 @@ class Page
     /**
      * Gets the raw html of the current page.
      *
-     * @return string
      * @throws Exception\CommunicationException
+     *
+     * @return string
      */
     public function getHtml()
     {
@@ -820,7 +838,7 @@ class Page
     }
 
     /**
-     * Read cookies for the current page
+     * Read cookies for the current page.
      *
      * usage:
      *
@@ -832,10 +850,11 @@ class Page
      * @see readAllCookies
      * @see getAllCookies
      *
-     * @return CookiesGetter
      * @throws CommunicationException
      * @throws CommunicationException\CannotReadResponse
      * @throws CommunicationException\InvalidResponse
+     *
+     * @return CookiesGetter
      */
     public function readCookies()
     {
@@ -847,7 +866,7 @@ class Page
             new Message(
                 'Network.getCookies',
                 [
-                    'urls' => [$this->getCurrentUrl()]
+                    'urls' => [$this->getCurrentUrl()],
                 ]
             )
         );
@@ -857,7 +876,7 @@ class Page
     }
 
     /**
-     * Read all cookies in the browser
+     * Read all cookies in the browser.
      *
      * @see getCookies
      * @see readCookies
@@ -866,8 +885,10 @@ class Page
      * ```
      *   $page->readCookies()->await()->getCookies();
      * ```
-     * @return CookiesGetter
+     *
      * @throws CommunicationException
+     *
+     * @return CookiesGetter
      */
     public function readAllCookies()
     {
@@ -882,17 +903,19 @@ class Page
     }
 
     /**
-     * Get cookies for the current page synchronously
+     * Get cookies for the current page synchronously.
      *
      * @see readCookies
      * @see readAllCookies
      * @see getAllCookies
      *
      * @param int|null $timeout
-     * @return CookiesCollection
+     *
      * @throws CommunicationException
      * @throws Exception\OperationTimedOut
      * @throws NoResponseAvailable
+     *
+     * @return CookiesCollection
      */
     public function getCookies(int $timeout = null)
     {
@@ -900,17 +923,19 @@ class Page
     }
 
     /**
-     * Get all browser cookies synchronously
+     * Get all browser cookies synchronously.
      *
      * @see getCookies
      * @see readAllCookies
      * @see readCookies
      *
      * @param int|null $timeout
-     * @return CookiesCollection
+     *
      * @throws CommunicationException
      * @throws Exception\OperationTimedOut
      * @throws NoResponseAvailable
+     *
+     * @return CookiesCollection
      */
     public function getAllCookies(int $timeout = null)
     {
@@ -943,7 +968,7 @@ class Page
 
             // set domain from current page
             if (!isset($browserCookie['domain'])) {
-                $browserCookie['domain'] = parse_url($this->getCurrentUrl(), PHP_URL_HOST);
+                $browserCookie['domain'] = \parse_url($this->getCurrentUrl(), \PHP_URL_HOST);
             }
 
             $browserCookies[] = $browserCookie;
@@ -960,10 +985,13 @@ class Page
     }
 
     /**
-     * Set user agent for the current page
+     * Set user agent for the current page.
+     *
      * @param string $userAgent
-     * @return ResponseWaiter
+     *
      * @throws CommunicationException
+     *
+     * @return ResponseWaiter
      */
     public function setUserAgent(string $userAgent)
     {

@@ -42,52 +42,55 @@ class Utils
      *  }
      * ```
      *
-     * @param int $timeoutMicroSec
-     * @param \Generator $generator
+     * @param int           $timeoutMicroSec
+     * @param \Generator    $generator
      * @param callable|null $onTimeout
-     * @return mixed
+     *
      * @throws OperationTimedOut
+     *
+     * @return mixed
      */
     public static function tryWithTimeout(int $timeoutMicroSec, \Generator $generator, callable $onTimeout = null)
     {
-        $waitUntilMicroSec = microtime(true) * 1000 * 1000 + $timeoutMicroSec;
+        $waitUntilMicroSec = \microtime(true) * 1000 * 1000 + $timeoutMicroSec;
 
         foreach ($generator as $v) {
             // if timeout reached or if time+delay exceed timeout stop the execution
-            if (microtime(true) * 1000 * 1000 + $v >= $waitUntilMicroSec) {
+            if (\microtime(true) * 1000 * 1000 + $v >= $waitUntilMicroSec) {
                 if ($onTimeout) {
                     // if callback was set execute it
                     return $onTimeout();
                 } else {
                     if ($timeoutMicroSec > 1000 * 1000) {
-                        $timeoutPhrase = (int)($timeoutMicroSec / (1000 * 1000)) . 'sec';
+                        $timeoutPhrase = (int) ($timeoutMicroSec / (1000 * 1000)).'sec';
                     } elseif ($timeoutMicroSec > 1000) {
-                        $timeoutPhrase = (int)($timeoutMicroSec / 1000) . 'ms';
+                        $timeoutPhrase = (int) ($timeoutMicroSec / 1000).'ms';
                     } else {
-                        $timeoutPhrase = (int)($timeoutMicroSec) . 'μs';
+                        $timeoutPhrase = (int) ($timeoutMicroSec).'μs';
                     }
-                    throw new OperationTimedOut('Operation timed out (' . $timeoutPhrase . ')');
+                    throw new OperationTimedOut('Operation timed out ('.$timeoutPhrase.')');
                 }
             }
 
-            usleep($v);
+            \usleep($v);
         }
 
         return $generator->getReturn();
     }
 
     /**
-     * Closes all pages for the given connection
+     * Closes all pages for the given connection.
+     *
      * @param Connection $connection
      */
-    public static function closeAllPage(Connection $connection)
+    public static function closeAllPage(Connection $connection): void
     {
         // get targets
         $targetsResponse = $connection->sendMessageSync(new Message('Target.getTargets'));
 
         if ($targetsResponse->isSuccessful()) {
             foreach ($targetsResponse['result']['targetInfos'] as $target) {
-                if ($target['type'] === 'page') {
+                if ('page' === $target['type']) {
                     $connection->sendMessageSync(
                         new Message('Target.closeTarget', ['targetId' => $target['targetId']])
                     );
