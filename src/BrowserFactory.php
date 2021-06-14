@@ -87,13 +87,13 @@ class BrowserFactory
      */
     public function getChromeVersion()
     {
-        if ($this->autoDiscover->isWindows() === true) {
+        if (true === $this->autoDiscover->isWindows()) {
             $validWindowsPath = \str_ireplace('\\', '\\\\', $this->chromeBinary);
 
-            $version = \trim(\shell_exec('wmic datafile where name="' . $validWindowsPath . '" get Version /value'));
+            $version = \trim(\shell_exec('wmic datafile where name="'.$validWindowsPath.'" get Version /value'));
 
-            if (\stripos($version, 'Version') === false) {
-                throw new \RuntimeException('Cannot get chrome version from windows binary using "' . $this->chromeBinary . '"');
+            if (false === \stripos($version, 'Version')) {
+                throw new \RuntimeException('Cannot get chrome version from windows binary using "'.$this->chromeBinary.'"');
             }
 
             return \str_ireplace('Version=', '', $version);

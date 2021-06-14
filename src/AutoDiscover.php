@@ -19,11 +19,11 @@ class AutoDiscover
             return $_SERVER['CHROME_PATH'];
         }
 
-        if ($this->isMac() === true) {
+        if (true === $this->isMac()) {
             return '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
         }
 
-        if ($this->isWindows() === true) {
+        if (true === $this->isWindows()) {
             return self::windows();
         }
 
@@ -49,7 +49,7 @@ class AutoDiscover
 
     public function isMac(): bool
     {
-        if ($this->getOS() === 'Darwin') {
+        if ('Darwin' === $this->getOS()) {
             return true;
         }
 
