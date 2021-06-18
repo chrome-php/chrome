@@ -45,7 +45,7 @@ class BrowserFactory
      *                       - userAgent: user agent to use for the browser
      *                       - userDataDir: chrome user data dir (default: a new empty dir is generated temporarily)
      *                       - windowSize: size of the window, ex: [1920, 1080] (default: none)
-     *
+     *                       - proxyServer: a proxy server, ex: 127.0.0.1:8080 (default: none)
      * @return ProcessAwareBrowser a Browser instance to interact with the new chrome process
      */
     public function createBrowser(array $options = []): ProcessAwareBrowser

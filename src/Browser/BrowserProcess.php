@@ -355,6 +355,11 @@ class BrowserProcess implements LoggerAwareInterface
             $args[] = '--ignore-certificate-errors';
         }
 
+        // proxy server
+        if (array_key_exists('proxyServer', $options)) {
+            $args[] = '--proxy-server=' . $options['proxyServer'];
+        }
+
         // add custom flags
         if (\array_key_exists('customFlags', $options) && \is_array($options['customFlags'])) {
             $args = \array_merge($args, $options['customFlags']);
