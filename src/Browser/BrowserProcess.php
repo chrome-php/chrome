@@ -357,7 +357,7 @@ class BrowserProcess implements LoggerAwareInterface
 
         // proxy server
         if (\array_key_exists('proxyServer', $options)) {
-            $args[] = '--proxy-server=' . $options['proxyServer'];
+            $args[] = '--proxy-server='.$options['proxyServer'];
         }
 
         // add custom flags
