@@ -50,15 +50,3 @@ Writting documentation
 ----------------------
 
 We encourage anyone to improve the documentation by adding new example or by fixing current one that would be wrong or outdated.
-
-Conding Standards
------------------
-
-The code follows the PSR-2 coding standards
-
-Tools
------
-
-- Run test suit: ``composer test``
-- Check Coding standards: ``composer cscheck``
-- Auto fix standards: ``.composer csfix``
