@@ -10,7 +10,7 @@
         }
     ],
     "require": {
-        "php": "^7.3 || ^8.0",
+        "php": "^7.4 || ^8.0",
         "apix/log": "^1.2",
         "evenement/evenement": "^3.0.1",
         "psr/log": "^1.1",
