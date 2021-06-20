@@ -24,7 +24,7 @@ Happy browsing!
 
 ## Requirements
 
-Requires PHP 7.3+ and a chrome/chromium executable.
+Requires PHP 7.4 or 8.0 and a chrome/chromium executable.
 
 As of version 65 of chrome/chromium the library proved to work correctly.
 Please try to keep using latest version of chrome.
