@@ -19,6 +19,10 @@ use HeadlessChromium\Exception\BrowserConnectionFailed;
 use Symfony\Component\Process\Process;
 use Wrench\Exception\HandshakeException;
 
+class PersistentProcess extends Process {
+    public function __destruct() {}
+  }
+  
 class BrowserFactory
 {
     protected $chromeBinary;
@@ -80,7 +84,7 @@ class BrowserFactory
      */
     public function getChromeVersion()
     {
-        $process = new Process([$this->chromeBinary, '--version']);
+        $process = new PersistentProcess([$this->chromeBinary, '--version']);
 
         $exitCode = $process->run();
 
