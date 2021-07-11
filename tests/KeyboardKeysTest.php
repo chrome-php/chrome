@@ -27,8 +27,8 @@ class KeyboardKeysTest extends BaseTestCase
     {
         return [
             // Key,   expectedKey
-            ['a',     'A'  ],
-            ['A',     'A'  ],
+            ['a',     'A'],
+            ['A',     'A'],
             ['key',   'Key'],
             [' KEY ', 'KEY'],
         ];
@@ -74,13 +74,13 @@ class KeyboardKeysTest extends BaseTestCase
 
         $this->assertEquals($expectedKey, $this->keyboard->getCurrentKey());
         $this->assertEquals(0, $this->keyboard->getModifiers());
-        $this->assertEquals(1, count($this->keyboard->getPressedKeys()));
+        $this->assertEquals(1, \count($this->keyboard->getPressedKeys()));
         $this->assertTrue($this->keyboard->isKeyPressed());
 
         $this->keyboard->onKeyRelease($key);
 
         $this->assertEquals($expectedKey, $this->keyboard->getCurrentKey());
-        $this->assertEquals(0, count($this->keyboard->getPressedKeys()));
+        $this->assertEquals(0, \count($this->keyboard->getPressedKeys()));
         $this->assertEquals(0, $this->keyboard->getModifiers());
         $this->assertFalse($this->keyboard->isKeyPressed());
     }

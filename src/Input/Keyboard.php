@@ -39,7 +39,7 @@ class Keyboard
     /**
      * Type a text string, char by char, without applying modifiers.
      *
-     * @param string $text text string to be typed.
+     * @param string $text text string to be typed
      *
      * @throws \HeadlessChromium\Exception\CommunicationException
      * @throws \HeadlessChromium\Exception\NoResponseAvailable
@@ -74,7 +74,7 @@ class Keyboard
      * $page->keyboard()->typeRawKey('Tab');
      * ```
      *
-     * @param string $key single raw key to be typed.
+     * @param string $key single raw key to be typed
      *
      * @throws \HeadlessChromium\Exception\CommunicationException
      * @throws \HeadlessChromium\Exception\NoResponseAvailable
@@ -108,7 +108,7 @@ class Keyboard
      * $page->keyboard()->type('a');
      * ```
      *
-     * @param string $key single key to be typed.
+     * @param string $key single key to be typed
      *
      * @throws \HeadlessChromium\Exception\CommunicationException
      * @throws \HeadlessChromium\Exception\NoResponseAvailable
@@ -132,7 +132,7 @@ class Keyboard
      * $page->keyboard()->press('Control')->press('c'); // press ctrl + c
      * ```
      *
-     * @param string $key single key to be pressed.
+     * @param string $key single key to be pressed
      *
      * @throws \HeadlessChromium\Exception\CommunicationException
      * @throws \HeadlessChromium\Exception\NoResponseAvailable
@@ -171,7 +171,7 @@ class Keyboard
      * $page->keyboard()->release(); // release all
      * ```
      *
-     * @param string $key (optional) single key to be released.
+     * @param string $key (optional) single key to be released
      *
      * @throws \HeadlessChromium\Exception\CommunicationException
      * @throws \HeadlessChromium\Exception\NoResponseAvailable
@@ -182,8 +182,9 @@ class Keyboard
     {
         $this->page->assertNotClosed();
 
-        if ($key === null) {
+        if (null === $key) {
             $this->releaseAll();
+
             return $this;
         }
 
@@ -207,7 +208,7 @@ class Keyboard
     private function releaseAll(): self
     {
         foreach ($this->pressedKeys as $key => $value) {
-            if ($value === true) {
+            if (true === $value) {
                 $this->release($key);
             }
         }

@@ -18,9 +18,9 @@ namespace HeadlessChromium\Input;
  */
 abstract class Key
 {
-    public const ALT     = 1;
+    public const ALT = 1;
     public const CONTROL = 2;
-    public const META    = 4;
-    public const SHIFT   = 8;
+    public const META = 4;
+    public const SHIFT = 8;
     public const COMMAND = self::META;
 }

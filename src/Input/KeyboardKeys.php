@@ -19,7 +19,7 @@ namespace HeadlessChromium\Input;
 trait KeyboardKeys
 {
     /**
-     * Array of currently pressed keys (keyDown events)
+     * Array of currently pressed keys (keyDown events).
      *
      * The elements of this array should be unique. A real keyboard can create several keyDown events
      * by holding down a key, but only one keyUp event will be sent when the key is released.
@@ -39,7 +39,7 @@ trait KeyboardKeys
     protected $modifiers = 0;
 
     /**
-     * Aliases for modifier keys, in lowercase
+     * Aliases for modifier keys, in lowercase.
      */
     protected $keyAliases = [
         Key::ALT => [
@@ -59,13 +59,13 @@ trait KeyboardKeys
         ],
         Key::SHIFT => [
             'shift',
-        ]
+        ],
     ];
 
     /**
      * Register a pressed key and apply modifiers.
      *
-     * @param string $key pressed key.
+     * @param string $key pressed key
      *
      * @return void
      */
@@ -73,7 +73,7 @@ trait KeyboardKeys
     {
         $this->setCurrentKey($key);
 
-        if ($this->isKeyPressed() === true) {
+        if (true === $this->isKeyPressed()) {
             return;
         }
 
@@ -85,7 +85,7 @@ trait KeyboardKeys
     /**
      * Register a released key and remove modifiers.
      *
-     * @param string $key released key.
+     * @param string $key released key
      *
      * @return void
      */
@@ -93,7 +93,7 @@ trait KeyboardKeys
     {
         $this->setCurrentKey($key);
 
-        if ($this->isKeyPressed() === false) {
+        if (false === $this->isKeyPressed()) {
             return;
         }
 
@@ -113,10 +113,10 @@ trait KeyboardKeys
      */
     protected function toggleModifierFromKey(): void
     {
-        $key = strtolower($this->currentKey);
+        $key = \strtolower($this->currentKey);
 
         foreach ($this->keyAliases as $modifier => $aliases) {
-            if (\in_array($key, $aliases) === true) {
+            if (true === \in_array($key, $aliases)) {
                 $this->toggleModifier($modifier);
                 break;
             }
@@ -135,7 +135,7 @@ trait KeyboardKeys
      *   0101
      * & 0100
      * = 0100
-
+     *
      *   0101
      * & 0010
      * = 0000
@@ -148,6 +148,7 @@ trait KeyboardKeys
     {
         if (($this->modifiers & $bit) === $bit) {
             $this->modifiers &= ~$bit;
+
             return;
         }
 
@@ -157,7 +158,7 @@ trait KeyboardKeys
     /**
      * Check if the current key was pressed and not released yet.
      *
-     * @return boolean true if they key is listed as pressed.
+     * @return bool true if they key is listed as pressed
      */
     protected function isKeyPressed(): bool
     {
@@ -167,7 +168,7 @@ trait KeyboardKeys
     /**
      * Return the current key code.
      *
-     * @return integer the key code.
+     * @return int the key code
      */
     public function getKeyCode(): int
     {
@@ -178,7 +179,7 @@ trait KeyboardKeys
      * Return the current bit modifier.
      * The browser expects to receive this value as int.
      *
-     * @return integer current bit modifier
+     * @return int current bit modifier
      */
     public function getModifiers(): int
     {
@@ -188,7 +189,7 @@ trait KeyboardKeys
     /**
      * Return the current key being processed.
      *
-     * @return string the current key.
+     * @return string the current key
      */
     public function getCurrentKey(): string
     {
@@ -198,7 +199,7 @@ trait KeyboardKeys
     /**
      * Return the list of unique pressed keys that were not released yet.
      *
-     * @return array list of pressed keys.
+     * @return array list of pressed keys
      */
     public function getPressedKeys(): array
     {
@@ -211,7 +212,7 @@ trait KeyboardKeys
      * Single character keys must be in uppercase, otherwhie things like ctrl + v won't work.
      * Triming the string will also prevent future mistakes during normal usage.
      *
-     * @param string $key key to be set as current.
+     * @param string $key key to be set as current
      *
      * @return void
      */

@@ -145,7 +145,7 @@ class KeyboardApiTest extends BaseTestCase
             ->press('b')
             ->release();
 
-        $this->assertEquals(0, count($page->keyboard()->getPressedKeys()));
+        $this->assertEquals(0, \count($page->keyboard()->getPressedKeys()));
     }
 
     /**
