@@ -12,6 +12,18 @@ jobs:
     strategy:
       matrix:
         php: ['7.1', '7.2', '7.3', '7.4', '8.0']
+        symfony: ['3', '4', '5', '6']
+        exclude:
+          - php: '7.1'
+            symfony: '5'
+          - php: '7.1'
+            symfony: '6'
+          - php: '7.2'
+            symfony: '6'
+          - php: '7.3'
+            symfony: '6'
+          - php: '7.4'
+            symfony: '6'
 
     steps:
       - name: Checkout Code
@@ -26,6 +38,38 @@ jobs:
 
       - name: Setup Problem Matchers
         run: echo "::add-matcher::${{ runner.tool_cache }}/phpunit.json"
+
+      - name: Select Symfony 3
+        uses: nick-invision/retry@v1
+        with:
+          timeout_minutes: 5
+          max_attempts: 5
+          command: composer require "symfony/filesystem:^3.3" "symfony/process:^3.3" "symfony/var-dumper:^3.3" --dev --no-update --no-interaction
+        if: "matrix.symfony == '3'"
+
+      - name: Select Symfony 4
+        uses: nick-invision/retry@v1
+        with:
+          timeout_minutes: 5
+          max_attempts: 5
+          command: composer require "symfony/filesystem:^4.0" "symfony/process:^4.0" "symfony/var-dumper:^4.0" --dev --no-update --no-interaction
+        if: "matrix.symfony == '4'"
+
+      - name: Select Symfony 5
+        uses: nick-invision/retry@v1
+        with:
+          timeout_minutes: 5
+          max_attempts: 5
+          command: composer require "symfony/filesystem:^5.0" "symfony/process:^5.0" "symfony/var-dumper:^5.0" --dev --no-update --no-interaction
+        if: "matrix.symfony == '5'"
+
+      - name: Select Symfony 6
+        uses: nick-invision/retry@v1
+        with:
+          timeout_minutes: 5
+          max_attempts: 5
+          command: composer require "symfony/filesystem:^6.0@dev" "symfony/process:^6.0@dev" "symfony/var-dumper:^6.0@dev" --dev --no-update --no-interaction
+        if: "matrix.symfony == '6'"
 
       - name: Install Dependencies
         uses: nick-invision/retry@v1
