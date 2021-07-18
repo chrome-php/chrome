@@ -135,7 +135,7 @@ $browser = $browserFactory->createBrowser([
 Here are the options available for the browser factory:
 
 | Option name               | Default | Description                                                                                  |
-|---------------------------|---------|----------------------------------------------------------------------------------------------|
+| ------------------------- | ------- | -------------------------------------------------------------------------------------------- |
 | `connectionDelay`         | `0`     | Delay to apply between each operation for debugging purposes                                 |
 | `customFlags`             | none    | Array of flags to pass to the command line. Eg: `['--option1', '--option2=someValue']`       |
 | `debugLogger`             | `null`  | A string (e.g "php://stdout"), or resource, or PSR-3 logger instance to print debug messages |
@@ -148,7 +148,7 @@ Here are the options available for the browser factory:
 | `startupTimeout`          | `30`    | Maximum time in seconds to wait for chrome to start                                          |
 | `userAgent`               | none    | User agent to use for the whole browser  (see page api for alternative)                      |
 | `userDataDir`             | none    | chrome user data dir (default: a new empty dir is generated temporarily)                     |
-| `windowSize`              | none    | Size of the window. usage: `$width, $height` - see also Page::setViewport                  |
+| `windowSize`              | none    | Size of the window. usage: `$width, $height` - see also Page::setViewport                    |
 
 ### Browser API
 
@@ -475,6 +475,36 @@ To impersonate a real user you may want to add a delay between each keystroke us
 ```php
 $page->keyboard()->setKeyInterval(10); // sets a delay of 10 miliseconds between keystrokes
 ```
+
+#### Key combinations
+
+The methods `press`, `type` and `release` can be used to send key combinations such as `ctrl + v`.
+
+```php
+// ctrl + a to select all text
+$page->keyboard()
+    ->press(' control ') // key names are case insensitive and trimmed
+        ->type('a') // press and release
+    ->release('Control');
+
+// ctrl + c to copy and ctrl + v to paste it twice
+$page->keyboard()
+    ->press('Ctrl') // alias for Control
+        ->type('c')
+        ->type('V') // upper and lower case should behave the same way
+    ->release(); // release all
+```
+
+You can press the same key several times in sequence, this is equivalent of a user pressing and holding the key. The release event, however, will be sent only once per key.
+
+#### Key aliases
+
+| Key     | Aliases                  |
+| :------ | :----------------------- |
+| Control | `Control`, `Ctrl`, `Ctr` |
+| Alt     | `Alt`, `AltGr`, `Alt Gr` |
+| Meta    | `Meta`, `Command`, `Cmd` |
+| Shift   | `Shift`                  |
 
 ### Cookie API
 

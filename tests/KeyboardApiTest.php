@@ -15,8 +15,7 @@ use HeadlessChromium\Browser;
 use HeadlessChromium\BrowserFactory;
 
 /**
- * @covers \HeadlessChromium\Browser
- * @covers \HeadlessChromium\Page
+ * @covers \HeadlessChromium\Input\Keyboard
  */
 class KeyboardApiTest extends BaseTestCase
 {
@@ -56,7 +55,7 @@ class KeyboardApiTest extends BaseTestCase
         $page = $this->openSitePage('form.html');
 
         $page->keyboard()
-            ->typeRawKey('Tab')
+            ->type('Tab')
             ->typeText('bar');
 
         $value = $page
@@ -92,6 +91,61 @@ class KeyboardApiTest extends BaseTestCase
             ->getReturnValue();
 
         $this->assertTrue($value);
+    }
+
+    /**
+     * @throws \HeadlessChromium\Exception\CommunicationException
+     * @throws \HeadlessChromium\Exception\NoResponseAvailable
+     */
+    public function testTypeKeyCombinations(): void
+    {
+        // initial navigation
+        $page = $this->openSitePage('form.html');
+
+        $text = 'bar';
+
+        // select an input and type a random text
+        $page->keyboard()
+            ->typeRawKey('Tab')
+            ->typeText($text);
+
+        // select all the text using ctrl + a
+        $page->keyboard()
+            ->press(' control ') // key names should be case insensitive and trimmed
+                ->type('a')
+            ->release('Control');
+
+        // type ctrl + c to copy the selected text and paste it twice with ctrl + v
+        $page->keyboard()
+            ->press('Ctrl') // aliases sould work
+                ->type('c')
+                ->type('V') // upper and lower case should behave the same way
+                ->type('v')
+            ->release();
+
+        $value = $page
+            ->evaluate('document.querySelector("#myinput").value;')
+            ->getReturnValue();
+
+        // check if the input contains the typed text twice
+        $this->assertEquals($text.$text, $value);
+    }
+
+    /**
+     * @throws \HeadlessChromium\Exception\CommunicationException
+     * @throws \HeadlessChromium\Exception\NoResponseAvailable
+     */
+    public function testReleaseAll(): void
+    {
+        // initial navigation
+        $page = $this->openSitePage('form.html');
+
+        $page->keyboard()
+            ->press('a')
+            ->press('b')
+            ->release();
+
+        $this->assertEquals(0, \count($page->keyboard()->getPressedKeys()));
     }
 
     /**
