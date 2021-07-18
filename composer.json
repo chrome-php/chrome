@@ -10,7 +10,7 @@
         }
     ],
     "require": {
-        "php": "^7.4 || ^8.0",
+        "php": "^7.3 || ^8.0",
         "apix/log": "^1.2",
         "chrome-php/wrench": "^1.0@dev",
         "evenement/evenement": "^3.0.1",
