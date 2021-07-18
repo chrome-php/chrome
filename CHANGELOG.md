@@ -1,11 +1,12 @@
 # CHANGELOG
 
 
-## 0.11.0 (2020-12-09)
+## 0.11.0 (2021-07-18)
 
 * Added support for proxy servers as a direct option
 * Added support for passing environment variables
 * Added support for Symfony 6
+* Removed broken `getChromeVersion` function
 
 
 ## 0.10.0 (2021-05-22)
