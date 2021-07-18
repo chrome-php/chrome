@@ -36,17 +36,17 @@ class BrowserFactory
      *                       - customFlags: array of custom flag to flags to pass to the command line
      *                       - debugLogger: resource string ("php://stdout"), resource or psr-3 logger instance (default: none)
      *                       - enableImages: toggle the loading of images (default: true)
+     *                       - envVariables: array of environment variables to pass to the process (example DISPLAY variable)
      *                       - headless: whether chrome should be started headless (default: true)
      *                       - ignoreCertificateErrors: set chrome to ignore ssl errors
      *                       - keepAlive: true to keep alive the chrome instance when the script terminates (default: false)
      *                       - noSandbox: enable no sandbox mode (default: false)
+     *                       - proxyServer: a proxy server, ex: 127.0.0.1:8080 (default: none)
      *                       - sendSyncDefaultTimeout: maximum time in ms to wait for synchronous messages to send (default 5000 ms)
      *                       - startupTimeout: maximum time in seconds to wait for chrome to start (default: 30 sec)
      *                       - userAgent: user agent to use for the browser
      *                       - userDataDir: chrome user data dir (default: a new empty dir is generated temporarily)
      *                       - windowSize: size of the window, ex: [1920, 1080] (default: none)
-     *                       - proxyServer: a proxy server, ex: 127.0.0.1:8080 (default: none)
-     *                       - envVariables: array of environment variables to pass to the process (example DISPLAY variable)
      *
      * @return ProcessAwareBrowser a Browser instance to interact with the new chrome process
      */
