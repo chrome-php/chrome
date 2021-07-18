@@ -24,13 +24,9 @@ Happy browsing!
 
 ## Requirements
 
-Requires PHP 7.4 or 8.0 and a chrome/chromium executable.
+Requires PHP 7.4 or 8.0 and a chrome/chromium 65+ executable.
 
-As of version 65 of chrome/chromium the library proved to work correctly.
-Please try to keep using latest version of chrome.
-
-Note that the library is only tested on linux but is compatible with both
-macOS and Windows.
+Note that the library is only tested on Linux but is compatible with MacOS and Windows.
 
 
 ## Installation
@@ -41,6 +37,7 @@ The library can be installed with Composer and is available on packagist under
 ```bash
 $ composer require chrome-php/chrome
 ```
+
 
 ## Usage
 
