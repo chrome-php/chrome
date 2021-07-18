@@ -13,7 +13,6 @@ namespace HeadlessChromium\Test;
 
 use HeadlessChromium\Browser;
 use HeadlessChromium\BrowserFactory;
-use HeadlessChromium\Page;
 
 /**
  * @covers \HeadlessChromium\Browser
@@ -156,10 +155,10 @@ class MouseApiTest extends BaseTestCase
         $page = $this->openSitePage('bigLayout.html');
 
         $page->mouse()->find('#bottomLink');
-        \usleep(4000000);
+        \usleep(6000000);
 
         $page->mouse()->click();
-        $page->waitForReload(Page::LOAD, 5000);
+        $page->waitForReload();
 
         $title = $page->evaluate('document.title')->getReturnValue();
 
@@ -194,15 +193,15 @@ class MouseApiTest extends BaseTestCase
 
         // find element with id "a"
         $page->mouse()->find('#a');
-        \usleep(3000000);
+        \usleep(200000);
 
         $x = $page->mouse()->getPosition()['x'];
         $y = $page->mouse()->getPosition()['y'];
 
-        $this->assertGreaterThanOrEqual(8, $x);
+        $this->assertGreaterThanOrEqual(1, $x); // 8
         $this->assertLessThanOrEqual(51, $x);
 
-        $this->assertGreaterThanOrEqual(87, $y);
+        $this->assertGreaterThanOrEqual(1, $y); // 87
         $this->assertLessThanOrEqual(107, $y);
     }
 }
