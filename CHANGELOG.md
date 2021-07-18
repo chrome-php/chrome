@@ -40,8 +40,8 @@
 
 ## 0.8.1 (2020-02-20)
 
-* Fixed issued with `Browser::close`
-* Tested on PHP 7.3 and 7.4
+* Fixed issues with `Browser::close`
+* Support PHP 7.3 and 7.4
 
 
 ## 0.8.0 (2020-02-20)
