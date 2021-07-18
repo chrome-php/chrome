@@ -32,12 +32,9 @@ Happy browsing!
 Requirements
 ------------
 
-Requires PHP 7.1+ and a chrome/chromium executable.
+Requires PHP 7.1+ and a chrome/chromium 65+ executable.
 
-As of version 65 of chrome/chromium the library proved to work correctly.
-Please try to keep using latest version of chrome.
-
-Note that the library is only tested on linux but is compatible with osX and windows.
+Note that the library is only tested on Linux but is compatible with MacOS and Windows.
 
 Install
 -------
