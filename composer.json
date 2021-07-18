@@ -21,7 +21,7 @@
         "psr/log": "^1.0",
         "symfony/filesystem": "^3.3|^4.0|^5.0|^6.0",
         "symfony/process": "^3.3|^4.0|^5.0|^6.0",
-        "wrench/wrench": "^2.0"
+        "wrench/wrench": "^2.0.11"
     },
     "require-dev":{
         "bamarni/composer-bin-plugin": "^1.4.1",

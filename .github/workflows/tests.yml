@@ -6,7 +6,7 @@ on:
 
 jobs:
   tests:
-    name: PHP ${{ matrix.php }}
+    name: PHP ${{ matrix.php }}; Symfony ${{ matrix.symfony }}
     runs-on: ubuntu-20.04
 
     strategy:
