@@ -155,7 +155,8 @@ Here are the options available for the browser factory:
 | `startupTimeout`          | `30`    | Maximum time in seconds to wait for chrome to start                                          |
 | `userAgent`               | none    | User agent to use for the whole browser  (see page api for alternative)                      |
 | `userDataDir`             | none    | chrome user data dir (default: a new empty dir is generated temporarily)                     |
-| `windowSize`              | none    | Size of the window. usage: `$width, $height` - see also Page::setViewport                  |
+| `windowSize`              | none    | Size of the window. usage: `$width, $height` - see also Page::setViewport                    |
+| `proxyServer`             | none    | Proxy server to use. usage: `127.0.0.1:8080` (authorisation with credentials does not work)  |
 
 ### Browser API
 
