@@ -13,6 +13,7 @@ namespace HeadlessChromium\Test;
 
 use HeadlessChromium\Browser;
 use HeadlessChromium\BrowserFactory;
+use HeadlessChromium\Page;
 
 /**
  * @covers \HeadlessChromium\Browser
@@ -88,5 +89,118 @@ class MouseApiTest extends BaseTestCase
         $windowScrollY = $page->evaluate('window.scrollY')->getReturnValue();
 
         $this->assertEquals(0, $windowScrollY);
+    }
+
+    /**
+     * @throws \HeadlessChromium\Exception\CommunicationException
+     * @throws \HeadlessChromium\Exception\NoResponseAvailable
+     */
+    public function testFind_withSingleElement(): void
+    {
+        // initial navigation
+        $page = $this->openSitePage('b.html');
+
+        $page->mouse()->find('#a')->click();
+        $page->waitForReload();
+
+        $title = $page->evaluate('document.title')->getReturnValue();
+
+        $this->assertEquals('a - test', $title);
+    }
+
+    /**
+     * @throws \HeadlessChromium\Exception\CommunicationException
+     * @throws \HeadlessChromium\Exception\NoResponseAvailable
+     */
+    public function testFind_withMultipleElements(): void
+    {
+        // initial navigation
+        $page = $this->openSitePage('b.html');
+
+        // click on the second element with class "a"
+        $page->mouse()->find('.a', 1)->click();
+        $page->waitForReload();
+
+        $title = $page->evaluate('document.title')->getReturnValue();
+
+        $this->assertEquals('a - test', $title);
+    }
+
+    /**
+     * @throws \HeadlessChromium\Exception\CommunicationException
+     * @throws \HeadlessChromium\Exception\NoResponseAvailable
+    */
+    public function testFind_withPositionOutOfBounds(): void
+    {
+        // initial navigation
+        $page = $this->openSitePage('b.html');
+
+        // click on last element with class "a"
+        $page->mouse()->find('.a', 999)->click();
+        $page->waitForReload();
+
+        $title = $page->evaluate('document.title')->getReturnValue();
+
+        $this->assertEquals('a - test', $title);
+    }
+
+    /**
+     * @throws \HeadlessChromium\Exception\CommunicationException
+     * @throws \HeadlessChromium\Exception\NoResponseAvailable
+     */
+    public function testFind_withScrolling(): void
+    {
+        // initial navigation
+        $page = $this->openSitePage('bigLayout.html');
+
+        $page->mouse()->find('#bottomLink');
+        \usleep(1000000);
+
+        $page->mouse()->click();
+        $page->waitForReload(Page::LOAD, 5000);
+
+        $title = $page->evaluate('document.title')->getReturnValue();
+
+        $this->assertEquals('a - test', $title);
+    }
+
+    /**
+     * @throws \HeadlessChromium\Exception\CommunicationException
+     * @throws \HeadlessChromium\Exception\NoResponseAvailable
+     * @throws \HeadlessChromium\Exception\ElementNotFoundException
+    */
+    public function testFind_withMissingElement(): void
+    {
+        $this->expectException(\HeadlessChromium\Exception\ElementNotFoundException::class);
+
+        // initial navigation
+        $page = $this->openSitePage('b.html');
+
+        $page->mouse()->find('#missing');
+    }
+
+    /**
+     * @throws \HeadlessChromium\Exception\CommunicationException
+     * @throws \HeadlessChromium\Exception\NoResponseAvailable
+    */
+    public function testGetPosition(): void
+    {
+        // initial navigation
+        $page = $this->openSitePage('b.html');
+
+        $this->assertEquals(['x' => 0, 'y' => 0], $page->mouse()->getPosition());
+
+        // find element with id "a"
+        $page->mouse()->find('#a');
+        \usleep(400000);
+
+        $x = $page->mouse()->getPosition()['x'];
+        $y = $page->mouse()->getPosition()['y'];
+
+        $this->assertGreaterThanOrEqual(8, $x);
+        $this->assertLessThanOrEqual(51, $x);
+
+        $this->assertGreaterThanOrEqual(87, $y);
+        $this->assertLessThanOrEqual(107, $y);
     }
 }

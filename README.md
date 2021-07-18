@@ -459,6 +459,22 @@ $page->mouse()
     ->scrollUp(50);   // scroll up 50px
 ```
 
+#### Finding elements
+
+The `find` method will search for elements using [querySelector](https://developer.mozilla.org/docs/Web/API/Document/querySelector) and move the cursor to a random position over it.
+
+```php
+try {
+    $page->mouse()->find('#a')->click(); // find and click on element with id "a"
+
+    $page->mouse()->find('.a', 10); // find the 10th or last element with class "a"
+} catch (ElementNotFoundException $exception) {
+    // element not found
+}
+```
+
+This method will attempt scroll right and down to bring the element to the visible screen. If the element is inside an internal scrollable section, try moving the mouse to inside that section first.
+
 ### Keyboard API
 
 The keyboard API is dependent on the page instance and allows you to type like a real user.
