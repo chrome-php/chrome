@@ -57,7 +57,6 @@ class AutoDiscover
                 return $matches[0];
             }
         } catch (\Throwable $e) {
-            //
         }
 
         return null;
