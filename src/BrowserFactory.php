@@ -55,12 +55,6 @@ class BrowserFactory
         // create logger from options
         $logger = self::createLogger($options);
 
-        // log chrome version
-        if ($logger) {
-            $chromeVersion = $this->getChromeVersion();
-            $logger->debug('Factory: chrome version: '.$chromeVersion);
-        }
-
         // create browser process
         $browserProcess = new BrowserProcess($logger);
 
@@ -73,32 +67,6 @@ class BrowserFactory
         $browserProcess->start($this->chromeBinary, $options);
 
         return $browserProcess->getBrowser();
-    }
-
-    /**
-     * Get chrome version.
-     *
-     * @return string
-     */
-    public function getChromeVersion()
-    {
-        $process = new Process([$this->chromeBinary, '--version']);
-
-        $exitCode = $process->run();
-
-        if (0 != $exitCode) {
-            $message = 'Cannot read chrome version, make sure you provided the correct chrome executable';
-            $message .= ' using: "'.$this->chromeBinary.'". ';
-
-            $error = \trim($process->getErrorOutput());
-
-            if (!empty($error)) {
-                $message .= 'Additional info: '.$error;
-            }
-            throw new \RuntimeException($message);
-        }
-
-        return \trim($process->getOutput());
     }
 
     /**
