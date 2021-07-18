@@ -122,9 +122,9 @@ class BrowserProcess implements LoggerAwareInterface
 
         // setup chrome process
         if (!\array_key_exists('keepAlive', $options) || !$options['keepAlive']) {
-            $process = new Process($args);
+            $process = new Process($args, null, $options['envVariables'] ?? null);
         } else {
-            $process = new ProcessKeepAlive($args);
+            $process = new ProcessKeepAlive($args, null, $options['envVariables'] ?? null);
         }
         $this->process = $process;
 
@@ -353,6 +353,11 @@ class BrowserProcess implements LoggerAwareInterface
         // ignore certificate errors
         if (\array_key_exists('ignoreCertificateErrors', $options) && $options['ignoreCertificateErrors']) {
             $args[] = '--ignore-certificate-errors';
+        }
+
+        // proxy server
+        if (\array_key_exists('proxyServer', $options)) {
+            $args[] = '--proxy-server='.$options['proxyServer'];
         }
 
         // add custom flags

@@ -25,7 +25,7 @@ class BrowserFactory
 
     public function __construct(string $chromeBinary = null)
     {
-        $this->chromeBinary = $chromeBinary ?? (new AutoDiscover())->getChromeBinaryPath();
+        $this->chromeBinary = $chromeBinary ?? (new AutoDiscover())->guessChromeBinaryPath();
     }
 
     /**
@@ -45,6 +45,8 @@ class BrowserFactory
      *                       - userAgent: user agent to use for the browser
      *                       - userDataDir: chrome user data dir (default: a new empty dir is generated temporarily)
      *                       - windowSize: size of the window, ex: [1920, 1080] (default: none)
+     *                       - proxyServer: a proxy server, ex: 127.0.0.1:8080 (default: none)
+     *                       - envVariables: array of environment variables to pass to the process (example DISPLAY variable)
      *
      * @return ProcessAwareBrowser a Browser instance to interact with the new chrome process
      */
@@ -52,12 +54,6 @@ class BrowserFactory
     {
         // create logger from options
         $logger = self::createLogger($options);
-
-        // log chrome version
-        if ($logger) {
-            $chromeVersion = $this->getChromeVersion();
-            $logger->debug('Factory: chrome version: '.$chromeVersion);
-        }
 
         // create browser process
         $browserProcess = new BrowserProcess($logger);
@@ -71,32 +67,6 @@ class BrowserFactory
         $browserProcess->start($this->chromeBinary, $options);
 
         return $browserProcess->getBrowser();
-    }
-
-    /**
-     * Get chrome version.
-     *
-     * @return string
-     */
-    public function getChromeVersion()
-    {
-        $process = new Process([$this->chromeBinary, '--version']);
-
-        $exitCode = $process->run();
-
-        if (0 != $exitCode) {
-            $message = 'Cannot read chrome version, make sure you provided the correct chrome executable';
-            $message .= ' using: "'.$this->chromeBinary.'". ';
-
-            $error = \trim($process->getErrorOutput());
-
-            if (!empty($error)) {
-                $message .= 'Additional info: '.$error;
-            }
-            throw new \RuntimeException($message);
-        }
-
-        return \trim($process->getOutput());
     }
 
     /**

@@ -1,215 +1,63 @@
 # CHANGELOG
 
 
-## 0.9.0
+## 1.0.0 (UPCOMING)
 
-> *2020-12-09*
-
-> Description
-    
-* Features:
-  * Support PHP 8
-  * Increase default sync timeout to 5 seconds
-  * Set --font-render-hinting=none in headless mode
-* Bug fixes:
-  * Fixed keep alive option
-  * Fixed various phpdoc issues
-  * Fixed sending params to newer Chrome
-  * Fixed Wrench::connect() return value
-  * Avoid non-thread-safe getenv function
-
-## 0.8.1
-
-> *2020-02-20*
-
-> Description
-
-* Bug fixes:
-  * fixed browser close
-  * fixed unit tests
-  * testing php 7.3 and 7.4
+* Switched over to `chrome-php/wrench`
+* Add support for keyboard key combinations
 
 
-## 0.8.0
+## 0.11.0 (2021-07-18)
 
-> *2020-02-20*
-
-* Features:
-  * Added Page::pdf (thanks @tanasecosminromeo)
-  * Added timeout for PageEvaluation methods (thanks @chris-ware)
-  * Added support for symfony 5 (thanks @svbackend)
-  * implemented Browser::close (thanks @Alexsisukin)
-* Bug fixes:
-  * none
-
-## 0.7.0
-
-> *2019-10-04*
-
-> Description
-    
-* Features:
-  * **BC BREAK** Escaping custom flags for BrowserFactory is now automatic. 
-    If you use `customFlags` option then you *must not* use escaping function for your arguments.
-  * Added Timeout for Page::getFullPageClip (thanks @ArseniyShestakov)
-  * Added Timeout for method getBase64 (thanks @TimIgoe)
-  * Added options `headerTemplate` and `footerTempalte` for Page::pdf (thanks @mschwerin)
-  * Added options `scale` for Page::pdf (thanks @sergiosusa)
-* Fix
-  * Handle gracefully all pages failing to close (thanks @mosiyash)
-  * Fixed deprecation from symfony (thank @mosiyash and @mschwerin)
-
-## 0.6.0
-
-> *2018-14-11*
-
-* Features:
-  * Added Page::pdf (thanks @tanasecosminromeo)
-  * Added timeout for PageEvaluation methods (thanks @chris-ware)
-
-## 0.5.0
-
-> *2018-11-13*
-
-> Load script tags on the page
-    
-* Features:
-  * Added Page::callFunction
-  * Added Page::addScriptTag
-  * Enabled runtime events for pages
-  * Enabled user gesture for Page::evaluate
-  * Improved error messages from script evaluation
-  * Added option "onLoad" for Page::addPreScript
-
-## 0.4.0
-
-> *2018-10-25*
-
-> Ability to take full page screenshots
-    
-* Features:
-  * Added ``Page::getLayoutMetrics`` that allows to take full page screenshots (#43 #44) thanks @kaero598
-  * Added ``Page::getFullPageClip`` to ease full page screenshots
-  
-## 0.3.0
-
-> *2018-10-13*
-
-> Make a crawl instance sharable among multiple scripts
-
-* Features:
-  * Added option ``keepAlive`` for browser factory.
-  * Added methods ``BrowserProcess::getSocketUri`` and ``ProcessAwareBrowser::getSocketUri``
-  * Removed unused option ``debug``
-  * Added ``BrowserFactory::connectToBrowser``
-* Bug fixes:
-  * (BC Break) Page navigation now allows by default that the initial loader is replaced with a new one #40
-
-## 0.2.4
-
-> *2018-10-04*
-    
-* Bug fixes:
-  * Fixed a race condition in target creations/destruction (thanks @choval)
-
-## 0.2.3
-
-> *2018-10-02*
-
-> Fixed usergent and added page prescript (thanks @tanasecosminromeo) and added some new options for browser factory
-    
-* Features:
-  * Added method ``Browser::setPagePreScript``
-  * Added method ``Page::addPreScript``
-  * Added option ``"nosandbox"`` for browser factory
-  * Added option ``"sendSyncDefaultTimeout"`` for browser factory
-  * Added option ``"ignoreCertificateErrors"`` for browser factory
-  * Added option ``"customFlags"`` for browser factory
-* Bug fixes:
-  * Fixed user agent string for browser factory 
-
-## 0.2.2
-
-> *2018-08-28*
-    
-* Features:
-  * Added mouse api (move, click)
-  * Page info are now in sync with the browser
-  * Added a shortcut to get current page url: ``Page::getCurrentUrl``
-  * Added ability to get and set cookies from a page: ``Page.setCookies``, ``Page.readCookies`` , ``Page.readAllCookies`` 
-  * improved some error reporting
-  * added ability to set custom user agent: ``Page::setUserAgent`` or via factory option ``userAgent``
-* Bug fixes:
-  * fixed a bug with directory creation for screenshots
-
-## 0.2.1
-
-> *2018-06-20*
-
-> Make viewport and window's size customizable
-    
-* Features:
-  * Added option ``windowSize`` in BrowserFactory
-  * Added methods ``Page::setViewportSize`` and ``Page::setDeviceMetricsOverride``
-
-## 0.2.0
-
-> *2018-06-15*
-
-> Description
-    
-* Features:
-  * Add constant Page::NETWORK_IDLE
-* Bug fixes:
-  * Make connection reader to be more atomic in order to read messages and events in the order they come in
-  * Make Page::navigate()->waitForNavigation (#20)
-  
---------------
-
-## 0.1.4
-
-> *2018-04-27*
-
-> Description
-
-* Features:
-  * Add Page::close
-
---------------
-
-## 0.1.3
-
-> *2018-04-26*
-
-> Description
-    
-* Features:
-  * Add PageEvaluation::waitForPageReload
-  
---------------
+* Added support for proxy servers as a direct option
+* Added support for passing environment variables
+* Added support for Symfony 6
+* Removed broken `getChromeVersion` function
+* Implemented more robust auto-discovery
 
 
-## 0.1.2
+## 0.10.0 (2021-05-22)
 
-> *2018-04-26*
+* Added `Page::getHtml`
+* Added keyboard API
+* Added mouse scrolling
+* Attempt to auto-detect chrome binary path
+* Added support for `setDownloadPath`
+* Added support for `captureBeyondViewport`
 
-> Description
-    
-* Features:
-  * Improved startup error message
-* Bug fixes:
-  * Fixed bugs on shutdown
-  * Fixed unit tests
-  * Allow CHROME_PATH to have spaces in the path
-  
---------------
 
-## 0.1.1
+## 0.9.0 (2020-12-09)
 
-> *2018-04-25*
+* Support PHP 8.0
+* Increase default sync timeout to 5 seconds
+* Set `--font-render-hinting=none` in headless mode
+* Fixed keep alive option
+* Fixed various phpdoc issues
+* Fixed sending params to newer Chrome
+* Fixed `Wrench::connect()` return value
+* Avoid non-thread-safe getenv function
 
-> Description
-    
-* Features:
-  * **BC BREAK** try to start chrome using env variable ``CHROME_PATH`` before using default ``"chrome"``.
 
+## 0.8.1 (2020-02-20)
+
+* Fixed issued with `Browser::close`
+* Tested on PHP 7.3 and 7.4
+
+
+## 0.8.0 (2020-02-20)
+
+* Added `Page::pdf`
+* Added timeout for PageEvaluation methods
+* Added support for Symfony 5
+* Added `Browser::close`
+
+
+## 0.7.0 (2019-10-04)
+
+* Escaping custom flags for `BrowserFactory` is now automatic
+* Added timeout for `Page::getFullPageClip`
+* Added timeout for method `getBase64`
+* Added options `headerTemplate` and `footerTempalte` for `Page::pdf`
+* Added options `scale` for Page::pdf
+* Handle gracefully all pages failing to close
+* Fixed deprecation from Symfony
