@@ -7,6 +7,7 @@
 * Added support for passing environment variables
 * Added support for Symfony 6
 * Removed broken `getChromeVersion` function
+* Implemented more robust auto-discovery
 
 
 ## 0.10.0 (2021-05-22)

@@ -20,6 +20,7 @@
         "evenement/evenement": "^3.0.1",
         "psr/log": "^1.0",
         "symfony/filesystem": "^3.3|^4.0|^5.0|^6.0",
+        "symfony/polyfill-php72": "^1.22",
         "symfony/process": "^3.3|^4.0|^5.0|^6.0",
         "wrench/wrench": "^2.0.11"
     },
