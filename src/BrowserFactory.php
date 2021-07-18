@@ -46,6 +46,7 @@ class BrowserFactory
      *                       - userDataDir: chrome user data dir (default: a new empty dir is generated temporarily)
      *                       - windowSize: size of the window, ex: [1920, 1080] (default: none)
      *                       - proxyServer: a proxy server, ex: 127.0.0.1:8080 (default: none)
+     *                       - envVariables: array of environment variables to pass to the process (example DISPLAY variable)
      *
      * @return ProcessAwareBrowser a Browser instance to interact with the new chrome process
      */

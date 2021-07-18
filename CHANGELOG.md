@@ -4,6 +4,7 @@
 ## 0.11.0 (2020-12-09)
 
 * Added support for proxy servers as a direct option
+* Added support for passing environment variables
 * Added support for Symfony 6
 
 
