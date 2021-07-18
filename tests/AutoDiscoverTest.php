@@ -67,7 +67,7 @@ class AutoDiscoverTest extends BaseTestCase
         $this->assertStringContainsString('.app', $autoDiscover->guessChromeBinaryPath());
     }
 
-    public function testWindows($phpOS): void
+    public function testWindows(): void
     {
         $autoDiscover = new AutoDiscover(function (): string {
             return 'Windows';
