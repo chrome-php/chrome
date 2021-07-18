@@ -215,8 +215,9 @@ class Mouse
      * This method currently scrolls only to right and bottom. If the desired element is outside the visible screen
      * to the left or top, thie method will not work. Its visibility will stay private until it works for both cases.
      *
-     * @param integer $right The element right boundary
-     * @param integer $bottom The element bottom boundary
+     * @param int $right  The element right boundary
+     * @param int $bottom The element bottom boundary
+     *
      * @return self
      */
     private function scrollToBoundary(int $right, int $bottom): self
@@ -250,7 +251,7 @@ class Mouse
      * @see https://developer.mozilla.org/docs/Web/API/Document/querySelector
      *
      * @param string $selectors selectors to use with document.querySelector
-     * @param int $position (optional) which element of the result set should be used
+     * @param int    $position  (optional) which element of the result set should be used
      *
      * @throws \HeadlessChromium\Exception\CommunicationException
      * @throws \HeadlessChromium\Exception\NoResponseAvailable

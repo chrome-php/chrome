@@ -129,7 +129,7 @@ class MouseApiTest extends BaseTestCase
     /**
      * @throws \HeadlessChromium\Exception\CommunicationException
      * @throws \HeadlessChromium\Exception\NoResponseAvailable
-    */
+     */
     public function testFind_withPositionOutOfBounds(): void
     {
         // initial navigation
@@ -168,7 +168,7 @@ class MouseApiTest extends BaseTestCase
      * @throws \HeadlessChromium\Exception\CommunicationException
      * @throws \HeadlessChromium\Exception\NoResponseAvailable
      * @throws \HeadlessChromium\Exception\ElementNotFoundException
-    */
+     */
     public function testFind_withMissingElement(): void
     {
         $this->expectException(\HeadlessChromium\Exception\ElementNotFoundException::class);
@@ -182,7 +182,7 @@ class MouseApiTest extends BaseTestCase
     /**
      * @throws \HeadlessChromium\Exception\CommunicationException
      * @throws \HeadlessChromium\Exception\NoResponseAvailable
-    */
+     */
     public function testGetPosition(): void
     {
         // initial navigation
@@ -192,7 +192,7 @@ class MouseApiTest extends BaseTestCase
 
         // find element with id "a"
         $page->mouse()->find('#a');
-        \usleep(400000);
+        \usleep(800000);
 
         $x = $page->mouse()->getPosition()['x'];
         $y = $page->mouse()->getPosition()['y'];
