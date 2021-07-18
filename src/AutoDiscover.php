@@ -13,45 +13,53 @@ namespace HeadlessChromium;
 
 class AutoDiscover
 {
-    public function getChromeBinaryPath(): string
+    /**
+     * @var callable(): string
+     */
+    private $osFamily;
+
+    /**
+     * @param (callable(): string)|null $osFamily
+     */
+    public function __construct(?callable $osFamily = null)
+    {
+        $this->osFamily = $osFamily ?? function () {
+            return \PHP_OS_FAMILY;
+        };
+    }
+
+    public function guessChromeBinaryPath(): string
     {
         if (\array_key_exists('CHROME_PATH', $_SERVER)) {
             return $_SERVER['CHROME_PATH'];
         }
 
-        switch ($this->getOS()) {
+        switch (($this->$osFamily)()) {
             case 'Darwin':
                 return '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
-            break;
-            case 'WIN32':
-            case 'WINNT':
             case 'Windows':
-                return self::windows();
-            break;
+                return self::getFromRegistry() ?? '%ProgramFiles(x86)%\Google\Chrome\Application\chrome.exe';
+            default:
+                return 'chrome';
         }
-
-        return 'chrome';
     }
 
-    private static function windows(): string
+    private static function getFromRegistry(): ?string
     {
         try {
-            // accessing the registry can be costly, but this specific key is likely to be already cached in memory
             $registryKey = \shell_exec(
                 'reg query "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths\chrome.exe" /ve'
             );
 
             \preg_match('/.:(?!.*:).*/', $registryKey, $matches);
 
-            return $matches[0];
+            if (isset($matches[0])) {
+                return $matches[0];
+            }
         } catch (\Throwable $e) {
-            // try to guess the correct path in case the reg query fails
-            return '%ProgramFiles(x86)%\Google\Chrome\Application\chrome.exe';
+            //
         }
-    }
 
-    public function getOS(): string
-    {
-        return \PHP_OS;
+        return null;
     }
 }
