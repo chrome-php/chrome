@@ -135,7 +135,7 @@ $browser = $browserFactory->createBrowser([
 Here are the options available for the browser factory:
 
 | Option name               | Default | Description                                                                                  |
-| ------------------------- | ------- | -------------------------------------------------------------------------------------------- |
+|---------------------------|---------|----------------------------------------------------------------------------------------------|
 | `connectionDelay`         | `0`     | Delay to apply between each operation for debugging purposes                                 |
 | `customFlags`             | none    | Array of flags to pass to the command line. Eg: `['--option1', '--option2=someValue']`       |
 | `debugLogger`             | `null`  | A string (e.g "php://stdout"), or resource, or PSR-3 logger instance to print debug messages |
@@ -502,7 +502,7 @@ You can press the same key several times in sequence, this is equivalent of a us
 #### Key aliases
 
 | Key     | Aliases                  |
-| :------ | :----------------------- |
+|---------|--------------------------|
 | Control | `Control`, `Ctrl`, `Ctr` |
 | Alt     | `Alt`, `AltGr`, `Alt Gr` |
 | Meta    | `Meta`, `Command`, `Cmd` |
