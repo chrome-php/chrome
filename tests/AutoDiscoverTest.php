@@ -51,7 +51,7 @@ class AutoDiscoverTest extends BaseTestCase
 
     public function testLinux(): void
     {
-        $autoDiscover = new AutoDiscover(function () => {
+        $autoDiscover = new AutoDiscover(function (): string {
             return 'Linux';
         });
 
@@ -60,7 +60,7 @@ class AutoDiscoverTest extends BaseTestCase
 
     public function testMac(): void
     {
-        $autoDiscover = new AutoDiscover(function () => {
+        $autoDiscover = new AutoDiscover(function (): string {
             return 'Darwin';
         });
 
@@ -69,7 +69,7 @@ class AutoDiscoverTest extends BaseTestCase
 
     public function testWindows($phpOS): void
     {
-        $autoDiscover = new AutoDiscover(function () => {
+        $autoDiscover = new AutoDiscover(function (): string {
             return 'Windows';
         });
 

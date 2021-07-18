@@ -23,7 +23,7 @@ class AutoDiscover
      */
     public function __construct(?callable $osFamily = null)
     {
-        $this->osFamily = $osFamily ?? function () {
+        $this->osFamily = $osFamily ?? function (): string {
             return \PHP_OS_FAMILY;
         };
     }
@@ -34,7 +34,7 @@ class AutoDiscover
             return $_SERVER['CHROME_PATH'];
         }
 
-        switch (($this->$osFamily)()) {
+        switch (($this->osFamily)()) {
             case 'Darwin':
                 return '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
             case 'Windows':
