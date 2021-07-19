@@ -234,6 +234,10 @@ class Mouse
     /**
      * Wait for the browser to process the scroll command.
      *
+     * Return the number of microseconds to wait before trying again or true in case of success.
+     *
+     * @see \HeadlessChromium\Utils::tryWithTimeout
+     *
      * @param int $targetX
      * @param int $targetY
      *
