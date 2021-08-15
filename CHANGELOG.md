@@ -7,6 +7,11 @@
 * Add support for keyboard key combinations
 
 
+## 0.11.1 (2021-08-15)
+
+* Fix scroll method returning prematurely
+
+
 ## 0.11.0 (2021-07-18)
 
 * Added support for proxy servers as a direct option
