@@ -1,7 +1,7 @@
 # CHANGELOG
 
 
-## 1.0.0 (UPCOMING)
+## 1.0.0 (2021-08-15)
 
 * Switched over to `chrome-php/wrench`
 * Add support for keyboard key combinations
