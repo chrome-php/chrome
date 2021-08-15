@@ -28,7 +28,7 @@ if (\file_exists($socketFile)) {
         ]);
     } catch (\HeadlessChromium\Exception\BrowserConnectionFailed $e) {
         // The browser was probably closed
-        // Keep $browser null and start it again bellow
+        // Keep $browser null and start it again below
     }
 }
 
