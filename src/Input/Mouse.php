@@ -12,6 +12,8 @@
 namespace HeadlessChromium\Input;
 
 use HeadlessChromium\Communication\Message;
+use HeadlessChromium\Exception\ElementNotFoundException;
+use HeadlessChromium\Exception\JavascriptException;
 use HeadlessChromium\Page;
 use HeadlessChromium\Utils;
 
@@ -208,6 +210,95 @@ class Mouse
     }
 
     /**
+     * Scroll in both X and Y axis until the given boundaries fit in the screen.
+     *
+     * This method currently scrolls only to right and bottom. If the desired element is outside the visible screen
+     * to the left or top, thie method will not work. Its visibility will stay private until it works for both cases.
+     *
+     * @param int $right  The element right boundary
+     * @param int $bottom The element bottom boundary
+     *
+     * @return self
+     */
+    private function scrollToBoundary(int $right, int $bottom): self
+    {
+        $visibleArea = $this->page->getLayoutMetrics()->getLayoutViewport();
+
+        $distanceX = $distanceY = 0;
+
+        if ($right > $visibleArea['clientWidth']) {
+            $distanceX = $right - $visibleArea['clientWidth'];
+        }
+
+        if ($bottom > $visibleArea['clientHeight']) {
+            $distanceY = $bottom - $visibleArea['clientHeight'];
+        }
+
+        return $this->scroll($distanceY, $distanceX);
+    }
+
+    /**
+     * Find an element and move the mouse to a random position over it.
+     *
+     * The search could result in several elements. The $position param can be used to select a specific element.
+     * The given position can only be between 1 and the maximum number or elements. It will be adjusted to the
+     * minimum and maximum values if needed.
+     *
+     * Example:
+     * $page->mouse()->find('#a'):
+     * $page->mouse()->find('.a', 2);
+     *
+     * @see https://developer.mozilla.org/docs/Web/API/Document/querySelector
+     *
+     * @param string $selectors selectors to use with document.querySelector
+     * @param int    $position  (optional) which element of the result set should be used
+     *
+     * @throws \HeadlessChromium\Exception\CommunicationException
+     * @throws \HeadlessChromium\Exception\NoResponseAvailable
+     * @throws \HeadlessChromium\Exception\ElementNotFoundException
+     *
+     * @return $this
+     */
+    public function find(string $selectors, int $position = 1): self
+    {
+        $this->page->assertNotClosed();
+
+        --$position;
+
+        try {
+            $elementList = $this->page
+                ->evaluate('JSON.parse(JSON.stringify(document.querySelectorAll("'.$selectors.'")));')
+                ->getReturnValue();
+
+            $position = \max(0, (\count($elementList) - 1));
+
+            $element = $this->page
+                ->evaluate('JSON.parse(JSON.stringify(document.querySelectorAll("'.$selectors.'")['.$position.'].getBoundingClientRect()));')
+                ->getReturnValue();
+        } catch (JavascriptException $exception) {
+            throw new ElementNotFoundException('The search for "'.$selectors.'" returned no elements.');
+        }
+
+        if (false === \array_key_exists('x', $element)) {
+            throw new ElementNotFoundException('The search for "'.$selectors.'" returned an element with no position.');
+        }
+
+        $rightBoundary = \floor($element['right']);
+        $bottomBoundary = \floor($element['bottom']);
+
+        $positionX = \mt_rand(\ceil($element['left']), $rightBoundary);
+        $positionY = \mt_rand(\ceil($element['top']), $bottomBoundary);
+
+        $this->scrollToBoundary($rightBoundary, $bottomBoundary)
+            ->move(
+                ($positionX - $this->x),
+                ($positionY - $this->y)
+            );
+
+        return $this;
+    }
+
+    /**
      * Get the maximum distance to scroll a page.
      *
      * @param int $distance Distance to scroll, positive or negative
@@ -256,5 +347,18 @@ class Mouse
 
             yield 1000;
         }
+    }
+
+    /**
+     * Get the current mouse position.
+     *
+     * @return array [x, y]
+     */
+    public function getPosition(): array
+    {
+        return [
+            'x' => $this->x,
+            'y' => $this->y,
+        ];
     }
 }
