@@ -32,12 +32,9 @@ Happy browsing!
 Requirements
 ------------
 
-Requires PHP 7.1+ and a chrome/chromium executable.
+Requires PHP 7.1-8.0 and a chrome/chromium 65+ executable.
 
-As of version 65 of chrome/chromium the library proved to work correctly.
-Please try to keep using latest version of chrome.
-
-Note that the library is only tested on linux but is compatible with osX and windows.
+Note that the library is only tested on Linux but is compatible with MacOS and Windows.
 
 Install
 -------
@@ -147,15 +144,17 @@ Here are the options available for the browser factory:
 | `customFlags`             | none    | Array of flags to pass to the command line. Eg: `['--option1', '--option2=someValue']`       |
 | `debugLogger`             | `null`  | A string (e.g "php://stdout"), or resource, or PSR-3 logger instance to print debug messages |
 | `enableImages`            | `true`  | Toggles loading of images                                                                    |
+| `envVariables`            | none    | Array of environment variables to pass to the process (example DISPLAY variable)             |
 | `headless`                | `true`  | Enable or disable headless mode                                                              |
 | `ignoreCertificateErrors` | `false` | Set chrome to ignore ssl errors                                                              |
-| `keepAlive`               | `false` | true to keep alive the chrome instance when the script terminates                            |
+| `keepAlive`               | `false` | Set to `true` to keep alive the chrome instance when the script terminates                   |
 | `noSandbox`               | `false` | Useful to run in a docker container                                                          |
+| `proxyServer`             | none    | Proxy server to use. usage: `127.0.0.1:8080` (authorisation with credentials does not work)  |
 | `sendSyncDefaultTimeout`  | `5000`  | Default timeout (ms) for sending sync messages                                               |
 | `startupTimeout`          | `30`    | Maximum time in seconds to wait for chrome to start                                          |
-| `userAgent`               | none    | User agent to use for the whole browser  (see page api for alternative)                      |
-| `userDataDir`             | none    | chrome user data dir (default: a new empty dir is generated temporarily)                     |
-| `windowSize`              | none    | Size of the window. usage: `$width, $height` - see also Page::setViewport                  |
+| `userAgent`               | none    | User agent to use for the whole browser (see page api for alternative)                       |
+| `userDataDir`             | none    | Chrome user data dir (default: a new empty dir is generated temporarily)                     |
+| `windowSize`              | none    | Size of the window. usage: `$width, $height` - see also Page::setViewport                    |
 
 ### Browser API
 

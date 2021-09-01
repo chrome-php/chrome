@@ -25,7 +25,7 @@ class BrowserFactory
 
     public function __construct(string $chromeBinary = null)
     {
-        $this->chromeBinary = $chromeBinary ?? (new AutoDiscover())->getChromeBinaryPath();
+        $this->chromeBinary = $chromeBinary ?? (new AutoDiscover())->guessChromeBinaryPath();
     }
 
     /**
@@ -36,10 +36,12 @@ class BrowserFactory
      *                       - customFlags: array of custom flag to flags to pass to the command line
      *                       - debugLogger: resource string ("php://stdout"), resource or psr-3 logger instance (default: none)
      *                       - enableImages: toggle the loading of images (default: true)
+     *                       - envVariables: array of environment variables to pass to the process (example DISPLAY variable)
      *                       - headless: whether chrome should be started headless (default: true)
      *                       - ignoreCertificateErrors: set chrome to ignore ssl errors
      *                       - keepAlive: true to keep alive the chrome instance when the script terminates (default: false)
      *                       - noSandbox: enable no sandbox mode (default: false)
+     *                       - proxyServer: a proxy server, ex: 127.0.0.1:8080 (default: none)
      *                       - sendSyncDefaultTimeout: maximum time in ms to wait for synchronous messages to send (default 5000 ms)
      *                       - startupTimeout: maximum time in seconds to wait for chrome to start (default: 30 sec)
      *                       - userAgent: user agent to use for the browser
@@ -53,12 +55,6 @@ class BrowserFactory
         // create logger from options
         $logger = self::createLogger($options);
 
-        // log chrome version
-        if ($logger) {
-            $chromeVersion = $this->getChromeVersion();
-            $logger->debug('Factory: chrome version: '.$chromeVersion);
-        }
-
         // create browser process
         $browserProcess = new BrowserProcess($logger);
 
@@ -71,32 +67,6 @@ class BrowserFactory
         $browserProcess->start($this->chromeBinary, $options);
 
         return $browserProcess->getBrowser();
-    }
-
-    /**
-     * Get chrome version.
-     *
-     * @return string
-     */
-    public function getChromeVersion()
-    {
-        $process = new Process([$this->chromeBinary, '--version']);
-
-        $exitCode = $process->run();
-
-        if (0 != $exitCode) {
-            $message = 'Cannot read chrome version, make sure you provided the correct chrome executable';
-            $message .= ' using: "'.$this->chromeBinary.'". ';
-
-            $error = \trim($process->getErrorOutput());
-
-            if (!empty($error)) {
-                $message .= 'Additional info: '.$error;
-            }
-            throw new \RuntimeException($message);
-        }
-
-        return \trim($process->getOutput());
     }
 
     /**

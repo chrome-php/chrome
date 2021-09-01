@@ -46,52 +46,33 @@ class AutoDiscoverTest extends BaseTestCase
 
         $_SERVER['CHROME_PATH'] = 'test-path';
 
-        $this->assertSame($_SERVER['CHROME_PATH'], $autoDiscover->getChromeBinaryPath());
+        $this->assertSame($_SERVER['CHROME_PATH'], $autoDiscover->guessChromeBinaryPath());
     }
 
     public function testLinux(): void
     {
-        $autoDiscover = $this->getMock('Linux');
+        $autoDiscover = new AutoDiscover(function (): string {
+            return 'Linux';
+        });
 
-        $this->assertSame('chrome', $autoDiscover->getChromeBinaryPath());
+        $this->assertSame('chrome', $autoDiscover->guessChromeBinaryPath());
     }
 
     public function testMac(): void
     {
-        $autoDiscover = $this->getMock('Darwin');
+        $autoDiscover = new AutoDiscover(function (): string {
+            return 'Darwin';
+        });
 
-        $this->assertStringContainsString('.app', $autoDiscover->getChromeBinaryPath());
+        $this->assertStringContainsString('.app', $autoDiscover->guessChromeBinaryPath());
     }
 
-    /**
-     * @dataProvider windowsNameProvider
-     */
-    public function testWindows($phpOS): void
+    public function testWindows(): void
     {
-        $autoDiscover = $this->getMock($phpOS);
+        $autoDiscover = new AutoDiscover(function (): string {
+            return 'Windows';
+        });
 
-        $this->assertStringContainsString('.exe', $autoDiscover->getChromeBinaryPath());
-    }
-
-    public function windowsNameProvider(): array
-    {
-        return [
-            ['WIN32'],
-            ['WINNT'],
-            ['Windows'],
-        ];
-    }
-
-    private function getMock($os = 'Linux'): AutoDiscover
-    {
-        /** @var AutoDiscover&\PHPUnit\Framework\MockObject\MockObject $autoDiscover */
-        $autoDiscover = $this->createPartialMock(
-            AutoDiscover::class,
-            ['getOS']
-        );
-
-        $autoDiscover->expects($this->any())->method('getOS')->willReturn($os);
-
-        return $autoDiscover;
+        $this->assertStringContainsString('.exe', $autoDiscover->guessChromeBinaryPath());
     }
 }
