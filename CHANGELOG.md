@@ -1,7 +1,7 @@
 # CHANGELOG
 
 
-## 0.11.2 (UPCOMING)
+## 0.11.2 (2021-09-01)
 
 * Fix mouse scroll maximum distance
 
