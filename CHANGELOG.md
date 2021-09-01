@@ -1,6 +1,11 @@
 # CHANGELOG
 
 
+## 0.11.2 (UPCOMING)
+
+* Fix mouse scroll maximum distance
+
+
 ## 0.11.1 (2021-08-15)
 
 * Fix scroll method returning prematurely
