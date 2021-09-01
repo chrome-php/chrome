@@ -181,8 +181,8 @@ class Mouse
         $scollableArea = $this->page->getLayoutMetrics()->getContentSize();
         $visibleArea = $this->page->getLayoutMetrics()->getVisualViewport();
 
-        $distanceX = $this->getMaximumDistance($distanceX, $visibleArea['pageX'], $scollableArea['height']);
-        $distanceY = $this->getMaximumDistance($distanceY, $visibleArea['pageY'], $scollableArea['width']);
+        $distanceX = $this->getMaximumDistance($distanceX, $visibleArea['pageX'], $scollableArea['width']);
+        $distanceY = $this->getMaximumDistance($distanceY, $visibleArea['pageY'], $scollableArea['height']);
 
         $targetX = $visibleArea['pageX'] + $distanceX;
         $targetY = $visibleArea['pageY'] + $distanceY;
