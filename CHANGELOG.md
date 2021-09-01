@@ -1,6 +1,11 @@
 # CHANGELOG
 
 
+## 1.0.1 (UPCOMING)
+
+* Fix mouse scroll maximum distance
+
+
 ## 1.0.0 (2021-08-15)
 
 * Switched over to `chrome-php/wrench`
