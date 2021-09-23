@@ -28,6 +28,7 @@ use HeadlessChromium\PageUtils\PageNavigation;
 use HeadlessChromium\PageUtils\PagePdf;
 use HeadlessChromium\PageUtils\PageScreenshot;
 use HeadlessChromium\PageUtils\ResponseWaiter;
+use HeadlessChromium\Dom\Dom;
 
 class Page
 {
@@ -288,12 +289,10 @@ class Page
                 const script = document.createElement("script");
                 script.type = "text/javascript";
                 script.src = src;
-
                 const promise = new Promise((res, rej) => {
                     script.onload = res;
                     script.onerror = rej;
                 });
-
                 document.head.appendChild(script);
                 await promise;
             }';
@@ -303,12 +302,9 @@ class Page
                 var script = document.createElement("script");
                 script.type = "text/javascript";
                 script.text = scriptContent;
-
                 let error = null;
                 script.onerror = e => {error = e};
-
                 document.head.appendChild(script);
-
                 if (error) {
                     throw error;
                 }
@@ -413,7 +409,7 @@ class Page
 
                 yield $delay;
 
-            // else if frame has still the previous loader, wait for the new one
+                // else if frame has still the previous loader, wait for the new one
             } else {
                 yield $delay;
             }
@@ -772,6 +768,13 @@ class Page
         }
 
         return $this->keyboard;
+    }
+
+    /**
+     * @return Dom
+     */
+    public function dom(){
+        return new Dom($this);
     }
 
     /**
