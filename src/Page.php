@@ -16,6 +16,7 @@ use HeadlessChromium\Communication\Session;
 use HeadlessChromium\Communication\Target;
 use HeadlessChromium\Cookies\Cookie;
 use HeadlessChromium\Cookies\CookiesCollection;
+use HeadlessChromium\Dom\Dom;
 use HeadlessChromium\Exception\CommunicationException;
 use HeadlessChromium\Exception\NoResponseAvailable;
 use HeadlessChromium\Exception\TargetDestroyed;
@@ -28,7 +29,6 @@ use HeadlessChromium\PageUtils\PageNavigation;
 use HeadlessChromium\PageUtils\PagePdf;
 use HeadlessChromium\PageUtils\PageScreenshot;
 use HeadlessChromium\PageUtils\ResponseWaiter;
-use HeadlessChromium\Dom\Dom;
 
 class Page
 {
@@ -60,7 +60,7 @@ class Page
      * Page constructor.
      *
      * @param Target $target
-     * @param array  $frameTree
+     * @param array $frameTree
      */
     public function __construct(Target $target, array $frameTree)
     {
@@ -72,7 +72,7 @@ class Page
      * Adds a script to be evaluated upon page navigation.
      *
      * @param string $script
-     * @param array  $options
+     * @param array $options
      *                        - onLoad: defer script execution after page has loaded (useful for scripts that require the dom to be populated)
      *
      * @throws CommunicationException
@@ -82,7 +82,7 @@ class Page
     {
         // defer script execution
         if (isset($options['onLoad']) && $options['onLoad']) {
-            $script = 'window.onload = () => {'.$script.'}';
+            $script = 'window.onload = () => {' . $script . '}';
         }
 
         // add script
@@ -101,9 +101,9 @@ class Page
      * $contentSize = $metrics->getContentSize();
      * ```
      *
+     * @return PageLayoutMetrics
      * @throws CommunicationException
      *
-     * @return PageLayoutMetrics
      */
     public function getLayoutMetrics()
     {
@@ -146,10 +146,10 @@ class Page
      */
     public function setBasicAuthHeader(string $username, string $password): void
     {
-        $header = \base64_encode($username.':'.$password);
+        $header = \base64_encode($username . ':' . $password);
         $this->getSession()->sendMessage(new Message(
             'Network.setExtraHTTPHeaders',
-            ['headers' => ['Authorization' => 'Basic '.$header]]
+            ['headers' => ['Authorization' => 'Basic ' . $header]]
         ));
     }
 
@@ -168,12 +168,12 @@ class Page
 
     /**
      * @param string $url
-     * @param array  $options
+     * @param array $options
      *                        - strict: make waitForNAvigation to fail if a new navigation is initiated. Default: false
      *
+     * @return PageNavigation
      * @throws Exception\CommunicationException
      *
-     * @return PageNavigation
      */
     public function navigate(string $url, array $options = [])
     {
@@ -194,9 +194,9 @@ class Page
      *
      * @param string $expression
      *
+     * @return PageEvaluation
      * @throws Exception\CommunicationException
      *
-     * @return PageEvaluation
      */
     public function evaluate(string $expression)
     {
@@ -231,11 +231,11 @@ class Page
      * ```
      *
      * @param string $functionDeclaration
-     * @param array  $arguments
-     *
-     * @throws CommunicationException
+     * @param array $arguments
      *
      * @return PageEvaluation
+     * @throws CommunicationException
+     *
      */
     public function callFunction(string $functionDeclaration, array $arguments = []): PageEvaluation
     {
@@ -276,9 +276,9 @@ class Page
      *
      * @param array $options
      *
+     * @return PageEvaluation
      * @throws CommunicationException
      *
-     * @return PageEvaluation
      */
     public function addScriptTag(array $options): PageEvaluation
     {
@@ -322,10 +322,10 @@ class Page
      *
      * Events come as an associative array with event name as keys and time they occurred at in values.
      *
-     * @throws CommunicationException\CannotReadResponse
+     * @return array
      * @throws CommunicationException\InvalidResponse
      *
-     * @return array
+     * @throws CommunicationException\CannotReadResponse
      */
     public function getCurrentLifecycle()
     {
@@ -347,10 +347,10 @@ class Page
      *
      * @param string $event
      *
-     * @throws CommunicationException\CannotReadResponse
+     * @return bool
      * @throws CommunicationException\InvalidResponse
      *
-     * @return bool
+     * @throws CommunicationException\CannotReadResponse
      */
     public function hasLifecycleEvent(string $event): bool
     {
@@ -363,14 +363,14 @@ class Page
      * Wait for the page to unload.
      *
      * @param string $eventName
-     * @param int    $timeout
-     * @param null   $loaderId
+     * @param int $timeout
+     * @param null $loaderId
      *
-     * @throws CommunicationException\CannotReadResponse
+     * @return $this
      * @throws CommunicationException\InvalidResponse
      * @throws Exception\OperationTimedOut
      *
-     * @return $this
+     * @throws CommunicationException\CannotReadResponse
      */
     public function waitForReload($eventName = self::LOAD, $timeout = 30000, $loaderId = null)
     {
@@ -389,11 +389,11 @@ class Page
      * @param string $eventName
      * @param string $loaderId
      *
-     * @throws CommunicationException\CannotReadResponse
-     * @throws CommunicationException\InvalidResponse
-     *
      * @return bool|\Generator
      *
+     * @throws CommunicationException\InvalidResponse
+     *
+     * @throws CommunicationException\CannotReadResponse
      * @internal
      */
     private function waitForReloadGenerator($eventName, $loaderId)
@@ -459,9 +459,9 @@ class Page
      *                       - clip: instance of a Clip to choose an area for the screenshot
      *                       - captureBeyondViewport: whether to capture the screenshot beyond the viewport. Defaults to false
      *
+     * @return PageScreenshot
      * @throws CommunicationException
      *
-     * @return PageScreenshot
      */
     public function screenshot(array $options = []): PageScreenshot
     {
@@ -553,9 +553,9 @@ class Page
      *                       - preferCSSPageSize: default false
      *                       - scale: default 1
      *
+     * @return PagePdf
      * @throws CommunicationException
      *
-     * @return PagePdf
      */
     public function pdf(array $options = []): PagePdf
     {
@@ -696,10 +696,10 @@ class Page
      *
      * @param array $overrides
      *
-     * @throws CommunicationException
+     * @return ResponseWaiter
      * @throws NoResponseAvailable
      *
-     * @return ResponseWaiter
+     * @throws CommunicationException
      */
     public function setDeviceMetricsOverride(array $overrides)
     {
@@ -729,10 +729,10 @@ class Page
      * @param int $width
      * @param int $height
      *
-     * @throws CommunicationException
+     * @return ResponseWaiter
      * @throws NoResponseAvailable
      *
-     * @return ResponseWaiter
+     * @throws CommunicationException
      */
     public function setViewport(int $width, int $height)
     {
@@ -773,7 +773,8 @@ class Page
     /**
      * @return Dom
      */
-    public function dom(){
+    public function dom()
+    {
         return new Dom($this);
     }
 
@@ -811,10 +812,10 @@ class Page
     /**
      * Gets the current url of the page, always in sync with the browser.
      *
-     * @throws CommunicationException\CannotReadResponse
+     * @return mixed
      * @throws CommunicationException\InvalidResponse
      *
-     * @return mixed
+     * @throws CommunicationException\CannotReadResponse
      */
     public function getCurrentUrl()
     {
@@ -831,9 +832,9 @@ class Page
     /**
      * Gets the raw html of the current page.
      *
+     * @return string
      * @throws Exception\CommunicationException
      *
-     * @return string
      */
     public function getHtml()
     {
@@ -849,15 +850,15 @@ class Page
      *   $page->readCookies()->await()->getCookies();
      * ```
      *
-     * @see getCookies
-     * @see readAllCookies
-     * @see getAllCookies
-     *
-     * @throws CommunicationException
+     * @return CookiesGetter
      * @throws CommunicationException\CannotReadResponse
      * @throws CommunicationException\InvalidResponse
      *
-     * @return CookiesGetter
+     * @throws CommunicationException
+     * @see readAllCookies
+     * @see getAllCookies
+     *
+     * @see getCookies
      */
     public function readCookies()
     {
@@ -881,17 +882,17 @@ class Page
     /**
      * Read all cookies in the browser.
      *
-     * @see getCookies
-     * @see readCookies
+     * @return CookiesGetter
+     * @throws CommunicationException
+     *
      * @see getAllCookies
      *
      * ```
      *   $page->readCookies()->await()->getCookies();
      * ```
      *
-     * @throws CommunicationException
-     *
-     * @return CookiesGetter
+     * @see getCookies
+     * @see readCookies
      */
     public function readAllCookies()
     {
@@ -908,17 +909,17 @@ class Page
     /**
      * Get cookies for the current page synchronously.
      *
-     * @see readCookies
-     * @see readAllCookies
-     * @see getAllCookies
-     *
      * @param int|null $timeout
      *
-     * @throws CommunicationException
+     * @return CookiesCollection
      * @throws Exception\OperationTimedOut
      * @throws NoResponseAvailable
      *
-     * @return CookiesCollection
+     * @throws CommunicationException
+     * @see getAllCookies
+     *
+     * @see readCookies
+     * @see readAllCookies
      */
     public function getCookies(int $timeout = null)
     {
@@ -928,17 +929,17 @@ class Page
     /**
      * Get all browser cookies synchronously.
      *
-     * @see getCookies
-     * @see readAllCookies
-     * @see readCookies
-     *
      * @param int|null $timeout
      *
-     * @throws CommunicationException
+     * @return CookiesCollection
      * @throws Exception\OperationTimedOut
      * @throws NoResponseAvailable
      *
-     * @return CookiesCollection
+     * @throws CommunicationException
+     * @see readCookies
+     *
+     * @see getCookies
+     * @see readAllCookies
      */
     public function getAllCookies(int $timeout = null)
     {
@@ -992,9 +993,9 @@ class Page
      *
      * @param string $userAgent
      *
+     * @return ResponseWaiter
      * @throws CommunicationException
      *
-     * @return ResponseWaiter
      */
     public function setUserAgent(string $userAgent)
     {

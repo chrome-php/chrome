@@ -25,7 +25,7 @@ class Node
 
     /**
      * @param Page $page
-     * @param int $nodeId
+     * @param int  $nodeId
      */
     public function __construct($page, $nodeId)
     {
@@ -52,13 +52,14 @@ class Node
 
     /**
      * @param string $selector
+     *
      * @return Node|void
      */
     public function querySelector($selector)
     {
         $message = new Message('DOM.querySelector', [
             'nodeId' => $this->nodeId,
-            'selector' => $selector
+            'selector' => $selector,
         ]);
         $response = $this->page->getSession()->sendMessageSync($message);
         $this->assertNotError($response);
@@ -66,20 +67,21 @@ class Node
         $nodeId = $response->getResultData('nodeId');
 
         if (null !== $nodeId) {
-            return new Node($this->page, $nodeId);
+            return new self($this->page, $nodeId);
         }
     }
 
 
     /**
      * @param string $selector
+     *
      * @return array
      */
     public function querySelectorAll($selector)
     {
         $message = new Message('DOM.querySelectorAll', [
             'nodeId' => $this->nodeId,
-            'selector' => $selector
+            'selector' => $selector,
         ]);
         $response = $this->page->getSession()->sendMessageSync($message);
 
@@ -88,7 +90,7 @@ class Node
         $nodes = [];
         $nodeIds = $response->getResultData('nodeIds');
         foreach ($nodeIds as $nodeId) {
-            $nodes[] = new Node($this->page, $nodeId);
+            $nodes[] = new self($this->page, $nodeId);
         }
 
         return $nodes;
@@ -97,7 +99,7 @@ class Node
     /**
      * @return void
      */
-    public function focus()
+    public function focus(): void
     {
         $message = new Message('DOM.focus', [
             'nodeId' => $this->nodeId,
@@ -109,7 +111,7 @@ class Node
 
     /**
      * @param string $name
-     * @return string |null
+     * @return string|null
      */
     public function getAttribute($name)
     {
@@ -130,7 +132,7 @@ class Node
 
         $points = $response->getResultData('model')['content'];
 
-        if ($points !== null) {
+        if (null !== $points) {
             return new NodePosition($points);
         } else {
             return null;
@@ -165,13 +167,13 @@ class Node
      */
     public function getText()
     {
-        return strip_tags($this->getHTML());
+        return \strip_tags($this->getHTML());
     }
 
     /**
      * @return void
      */
-    public function scrollIntoView()
+    public function scrollIntoView(): void
     {
         $message = new Message('DOM.scrollIntoViewIfNeeded', [
             'nodeId' => $this->nodeId,
@@ -183,9 +185,10 @@ class Node
 
     /**
      * @return void
+     *
      * @throws DomException
      */
-    public function click()
+    public function click(): void
     {
         if (false === $this->hasPosition()) {
             throw new DomException('Failed to click element without position');
@@ -199,9 +202,10 @@ class Node
 
     /**
      * @param string $text
+     *
      * @return void
      */
-    public function sendKeys($text)
+    public function sendKeys($text): void
     {
         $this->scrollIntoView();
         $this->focus();
@@ -213,7 +217,7 @@ class Node
      * @param $filePath
      * @return void
      */
-    public function sendFile($filePath)
+    public function sendFile($filePath): void
     {
         $message = new Message('DOM.setFileInputFiles', [
             'files' => [$filePath],
@@ -224,7 +228,8 @@ class Node
         $this->assertNotError($response);
     }
 
-    public function assertNotError($response){
+    public function assertNotError($response): void
+    {
         if(!$response->isSuccessful()){
             throw new DOMException($response->getErrorMessage());
         }

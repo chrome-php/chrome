@@ -34,22 +34,22 @@ class NodePosition
 
     public function getX()
     {
-        return (int)$this->x;
+        return (int) $this->x;
     }
 
     public function getY()
     {
-        return (int)$this->y;
+        return (int) $this->y;
     }
 
     public function getWidth()
     {
-        return (int)$this->width;
+        return (int) $this->width;
     }
 
     public function getHeight()
     {
-        return (int)$this->height;
+        return (int) $this->height;
     }
 
     public function getCenterX(): int

@@ -8,7 +8,7 @@ use HeadlessChromium\Communication\Message;
 use HeadlessChromium\Page;
 
 /**
- * Class Dom
+ * Class Dom.
  */
 class Dom extends Node
 {
@@ -26,32 +26,32 @@ class Dom extends Node
 
         parent::__construct($page, $rootNodeId);
     }
-    
+
     public function search($selector)
     {
         $message = new Message('DOM.performSearch', [
-            'query' => $selector
+            'query' => $selector,
         ]);
         $response = $this->page->getSession()->sendMessageSync($message);
 
         $this->assertNotError($response);
-        
-        $searchId = $response->getResultData('searchId');
-        $count =  $response->getResultData('resultCount');
 
-        if($count === 0){
+        $searchId = $response->getResultData('searchId');
+        $count = $response->getResultData('resultCount');
+
+        if(0 === $count){
             return [];
         }
         $message = new Message('DOM.getSearchResults', [
             'searchId' => $searchId,
             'fromIndex' => 0,
-            'toIndex' => $count
+            'toIndex' => $count,
         ]);
 
         $response = $this->page->getSession()->sendMessageSync($message);
 
         $this->assertNotError($response);
-        
+
         $nodes = [];
         $nodeIds = $response->getResultData('nodeIds');
         foreach ($nodeIds as $nodeId) {
@@ -60,5 +60,4 @@ class Dom extends Node
 
         return $nodes;
     }
-
 }
