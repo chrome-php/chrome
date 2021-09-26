@@ -1,7 +1,7 @@
 # CHANGELOG
 
 
-## 1.1.0 (UPCOMING)
+## 1.1.0 (2021-09-26)
 
 * Add DOM element locator
 
