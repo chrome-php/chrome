@@ -7,16 +7,13 @@ namespace HeadlessChromium\Dom;
 use HeadlessChromium\Communication\Message;
 use HeadlessChromium\Page;
 
-/**
- * Class Dom.
- */
 class Dom extends Node
 {
 
     /**
-     * @param Page $page
+     * Dom constructor.
      */
-    public function __construct($page)
+    public function __construct(Page $page)
     {
         $message = new Message('DOM.getDocument');
         $stream = $page->getSession()->sendMessage($message);
@@ -27,6 +24,11 @@ class Dom extends Node
         parent::__construct($page, $rootNodeId);
     }
 
+    /**
+     * @param string $selector
+     *
+     * @return array
+     */
     public function search($selector)
     {
         $message = new Message('DOM.performSearch', [
@@ -39,7 +41,7 @@ class Dom extends Node
         $searchId = $response->getResultData('searchId');
         $count = $response->getResultData('resultCount');
 
-        if(0 === $count){
+        if (0 === $count) {
             return [];
         }
         $message = new Message('DOM.getSearchResults', [

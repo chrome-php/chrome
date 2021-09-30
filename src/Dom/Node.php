@@ -5,12 +5,10 @@ declare(strict_types=1);
 namespace HeadlessChromium\Dom;
 
 use HeadlessChromium\Communication\Message;
+use HeadlessChromium\Communication\Response;
 use HeadlessChromium\Exception\DomException;
 use HeadlessChromium\Page;
 
-/**
- * Class Node
- */
 class Node
 {
     /**
@@ -24,10 +22,9 @@ class Node
     protected $nodeId;
 
     /**
-     * @param Page $page
-     * @param int  $nodeId
+     * Node constructor.
      */
-    public function __construct($page, $nodeId)
+    public function __construct(Page $page, int $nodeId)
     {
         $this->page = $page;
         $this->nodeId = $nodeId;
@@ -53,7 +50,7 @@ class Node
     /**
      * @param string $selector
      *
-     * @return Node|void
+     * @return Node|null
      */
     public function querySelector($selector)
     {
@@ -69,6 +66,8 @@ class Node
         if (null !== $nodeId) {
             return new self($this->page, $nodeId);
         }
+
+        return null;
     }
 
 
@@ -110,7 +109,8 @@ class Node
     }
 
     /**
-     * @param string $name
+     * @param  string $name
+     *
      * @return string|null
      */
     public function getAttribute($name)
@@ -184,9 +184,9 @@ class Node
     }
 
     /**
-     * @return void
-     *
      * @throws DomException
+     *
+     * @return void
      */
     public function click(): void
     {
@@ -214,7 +214,8 @@ class Node
     }
 
     /**
-     * @param $filePath
+     * @param string $filePath
+     *
      * @return void
      */
     public function sendFile($filePath): void
@@ -228,9 +229,16 @@ class Node
         $this->assertNotError($response);
     }
 
+    /**
+     * @param Response $response
+     *
+     * @return void
+     *
+     * @throws DomException
+     */
     public function assertNotError($response): void
     {
-        if(!$response->isSuccessful()){
+        if (!$response->isSuccessful()) {
             throw new DOMException($response->getErrorMessage());
         }
     }
