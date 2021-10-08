@@ -34,7 +34,7 @@ class NodeAttributes
      *
      * @return bool
      */
-    public function has($name): bool
+    public function has(string $name): bool
     {
         return isset($this->attributes[$name]);
     }
@@ -44,7 +44,7 @@ class NodeAttributes
      *
      * @return string|null
      */
-    public function get($name): ?string
+    public function get(string $name): ?string
     {
         return $this->attributes[$name] ?? null;
     }

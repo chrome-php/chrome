@@ -28,7 +28,7 @@ class Dom extends Node
      *
      * @return array
      */
-    public function search($selector): array
+    public function search(string $selector): array
     {
         $message = new Message('DOM.performSearch', [
             'query' => $selector,

@@ -52,7 +52,7 @@ class Node
      *
      * @return Node|null
      */
-    public function querySelector($selector): ?self
+    public function querySelector(string $selector): ?self
     {
         $message = new Message('DOM.querySelector', [
             'nodeId' => $this->nodeId,
@@ -75,7 +75,7 @@ class Node
      *
      * @return array
      */
-    public function querySelectorAll($selector): array
+    public function querySelectorAll(string $selector): array
     {
         $message = new Message('DOM.querySelectorAll', [
             'nodeId' => $this->nodeId,
@@ -112,7 +112,7 @@ class Node
      *
      * @return string|null
      */
-    public function getAttribute($name): ?string
+    public function getAttribute(string $name): ?string
     {
         return $this->getAttributes()->get($name);
     }
@@ -147,9 +147,9 @@ class Node
     }
 
     /**
-     * @return mixed
+     * @return string
      */
-    public function getHTML()
+    public function getHTML(): string
     {
         $message = new Message('DOM.getOuterHTML', [
             'nodeId' => $this->nodeId,
@@ -164,7 +164,7 @@ class Node
     /**
      * @return string
      */
-    public function getText()
+    public function getText(): string
     {
         return \strip_tags($this->getHTML());
     }
@@ -204,7 +204,7 @@ class Node
      *
      * @return void
      */
-    public function sendKeys($text): void
+    public function sendKeys(string $text): void
     {
         $this->scrollIntoView();
         $this->focus();
@@ -217,7 +217,7 @@ class Node
      *
      * @return void
      */
-    public function sendFile($filePath): void
+    public function sendFile(string $filePath): void
     {
         $message = new Message('DOM.setFileInputFiles', [
             'files' => [$filePath],
@@ -235,7 +235,7 @@ class Node
      *
      * @return void
      */
-    public function assertNotError($response): void
+    public function assertNotError(Response $response): void
     {
         if (!$response->isSuccessful()) {
             throw new DOMException($response->getErrorMessage());
