@@ -52,7 +52,7 @@ class Node
      *
      * @return Node|null
      */
-    public function querySelector($selector): ?Node
+    public function querySelector($selector): ?self
     {
         $message = new Message('DOM.querySelector', [
             'nodeId' => $this->nodeId,

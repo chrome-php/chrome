@@ -6,7 +6,6 @@ namespace HeadlessChromium\Dom;
 
 class NodePosition
 {
-
     /**
      * @var int
      */

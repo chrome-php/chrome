@@ -45,7 +45,6 @@ class DomTest extends BaseTestCase
         $this->assertNotNull($element);
     }
 
-
     public function testSearchByCssSelectorAll(): void
     {
         $page = $this->openSitePage('domForm.html');
