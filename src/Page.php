@@ -773,7 +773,7 @@ class Page
     /**
      * @return Dom
      */
-    public function dom()
+    public function dom(): Dom
     {
         return new Dom($this);
     }

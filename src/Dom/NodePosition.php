@@ -51,48 +51,48 @@ class NodePosition
     /**
      * @return int
      */
-    public function getX()
+    public function getX(): int
     {
-        return (int)$this->x;
+        return (int) $this->x;
     }
 
     /**
      * @return int
      */
-    public function getY()
+    public function getY(): int
     {
-        return (int)$this->y;
+        return (int) $this->y;
     }
 
     /**
      * @return int
      */
-    public function getWidth()
+    public function getWidth(): int
     {
-        return (int)$this->width;
+        return (int) $this->width;
     }
 
     /**
      * @return int
      */
-    public function getHeight()
+    public function getHeight(): int
     {
-        return (int)$this->height;
+        return (int) $this->height;
     }
 
     /**
      * @return int
      */
-    public function getCenterX()
+    public function getCenterX(): int
     {
-        return (int)($this->x + ($this->width / 2));
+        return (int) ($this->x + ($this->width / 2));
     }
 
     /**
      * @return int
      */
-    public function getCenterY()
+    public function getCenterY(): int
     {
-        return (int)($this->y + ($this->height / 2));
+        return (int) ($this->y + ($this->height / 2));
     }
 }

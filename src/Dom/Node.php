@@ -33,7 +33,7 @@ class Node
     /**
      * @return NodeAttributes
      */
-    public function getAttributes()
+    public function getAttributes(): NodeAttributes
     {
         $message = new Message('DOM.getAttributes', [
             'nodeId' => $this->nodeId,
@@ -52,7 +52,7 @@ class Node
      *
      * @return Node|null
      */
-    public function querySelector($selector)
+    public function querySelector($selector): ?Node
     {
         $message = new Message('DOM.querySelector', [
             'nodeId' => $this->nodeId,
@@ -70,13 +70,12 @@ class Node
         return null;
     }
 
-
     /**
      * @param string $selector
      *
      * @return array
      */
-    public function querySelectorAll($selector)
+    public function querySelectorAll($selector): array
     {
         $message = new Message('DOM.querySelectorAll', [
             'nodeId' => $this->nodeId,
@@ -109,11 +108,11 @@ class Node
     }
 
     /**
-     * @param  string $name
+     * @param string $name
      *
      * @return string|null
      */
-    public function getAttribute($name)
+    public function getAttribute($name): ?string
     {
         return $this->getAttributes()->get($name);
     }
@@ -121,7 +120,7 @@ class Node
     /**
      * @return NodePosition|null
      */
-    public function getPosition()
+    public function getPosition(): ?NodePosition
     {
         $message = new Message('DOM.getBoxModel', [
             'nodeId' => $this->nodeId,
@@ -142,7 +141,7 @@ class Node
     /**
      * @return bool
      */
-    public function hasPosition()
+    public function hasPosition(): bool
     {
         return null !== $this->getPosition();
     }
@@ -232,9 +231,9 @@ class Node
     /**
      * @param Response $response
      *
-     * @return void
-     *
      * @throws DomException
+     *
+     * @return void
      */
     public function assertNotError($response): void
     {

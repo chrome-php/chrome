@@ -36,7 +36,7 @@ class DomTest extends BaseTestCase
         return $page;
     }
 
-    public function testSearchByCssSelector()
+    public function testSearchByCssSelector(): void
     {
         $page = $this->openSitePage('domForm.html');
         $element = $page->dom()->querySelector('button');
@@ -46,27 +46,27 @@ class DomTest extends BaseTestCase
     }
 
 
-    public function testSearchByCssSelectorAll()
+    public function testSearchByCssSelectorAll(): void
     {
         $page = $this->openSitePage('domForm.html');
 
         $elements = $page->dom()->querySelectorAll('div');
 
         //assert found two elements
-        $this->assertEquals(count($elements), 2);
+        $this->assertEquals(\count($elements), 2);
     }
 
-    public function testSearchByXpath()
+    public function testSearchByXpath(): void
     {
         $page = $this->openSitePage('domForm.html');
 
         $elements = $page->dom()->search('//*/div');
 
         //assert found two elements
-        $this->assertEquals(count($elements), 2);
+        $this->assertEquals(\count($elements), 2);
     }
 
-    public function testClick()
+    public function testClick(): void
     {
         $page = $this->openSitePage('domForm.html');
 
@@ -89,7 +89,7 @@ class DomTest extends BaseTestCase
         $this->assertTrue($value);
     }
 
-    public function testType()
+    public function testType(): void
     {
         $page = $this->openSitePage('domForm.html');
 
@@ -106,7 +106,7 @@ class DomTest extends BaseTestCase
         $this->assertEquals('bar', $value);
     }
 
-    public function testGetText()
+    public function testGetText(): void
     {
         $page = $this->openSitePage('domForm.html');
 
@@ -118,7 +118,7 @@ class DomTest extends BaseTestCase
         $this->assertEquals('bar', $value);
     }
 
-    public function testGetAttribute()
+    public function testGetAttribute(): void
     {
         $page = $this->openSitePage('domForm.html');
 
@@ -130,7 +130,8 @@ class DomTest extends BaseTestCase
         $this->assertEquals('foo', $value);
     }
 
-    public function testUploadFile(){
+    public function testUploadFile(): void
+    {
         $page = $this->openSitePage('domForm.html');
         $file = self::sitePath('domForm.html');
 

@@ -24,7 +24,7 @@ class NodeAttributes
     /**
      * @return array
      */
-    public function toArray()
+    public function toArray(): array
     {
         return $this->attributes;
     }
@@ -34,7 +34,7 @@ class NodeAttributes
      *
      * @return bool
      */
-    public function has($name)
+    public function has($name): bool
     {
         return isset($this->attributes[$name]);
     }
@@ -42,9 +42,9 @@ class NodeAttributes
     /**
      * @param string $name
      *
-     * @return mixed|null
+     * @return string|null
      */
-    public function get($name)
+    public function get($name): ?string
     {
         return $this->attributes[$name] ?? null;
     }

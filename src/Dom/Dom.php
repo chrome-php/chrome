@@ -9,7 +9,6 @@ use HeadlessChromium\Page;
 
 class Dom extends Node
 {
-
     /**
      * Dom constructor.
      */
@@ -29,7 +28,7 @@ class Dom extends Node
      *
      * @return array
      */
-    public function search($selector)
+    public function search($selector): array
     {
         $message = new Message('DOM.performSearch', [
             'query' => $selector,
