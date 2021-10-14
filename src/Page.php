@@ -776,7 +776,7 @@ class Page
     }
 
     /**
-     * Get Dom object
+     * Get Dom object.
      */
     public function dom(): Dom
     {
