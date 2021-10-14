@@ -14,9 +14,6 @@ class NodePosition
 
     private float $height;
 
-    /**
-     * NodePosition constructor.
-     */
     public function __construct(array $points)
     {
         $leftTopX = $points[0];

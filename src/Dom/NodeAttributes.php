@@ -8,9 +8,6 @@ class NodeAttributes
 {
     private array $attributes = [];
 
-    /**
-     * NodeAttributes constructor.
-     */
     public function __construct(array $attrs)
     {
         for ($i = 0; $i <= \count($attrs) - 2; $i += 2) {

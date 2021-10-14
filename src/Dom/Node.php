@@ -15,9 +15,6 @@ class Node
 
     protected int $nodeId;
 
-    /**
-     * Node constructor.
-     */
     public function __construct(Page $page, int $nodeId)
     {
         $this->page = $page;

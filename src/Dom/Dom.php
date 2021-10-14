@@ -9,9 +9,7 @@ use HeadlessChromium\Page;
 
 class Dom extends Node
 {
-    /**
-     * Dom constructor.
-     */
+
     public function __construct(Page $page)
     {
         $message = new Message('DOM.getDocument');

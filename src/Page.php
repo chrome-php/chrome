@@ -775,9 +775,6 @@ class Page
         return $this->keyboard;
     }
 
-    /**
-     * Get Dom object.
-     */
     public function dom(): Dom
     {
         return new Dom($this);
