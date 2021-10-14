@@ -6,25 +6,13 @@ namespace HeadlessChromium\Dom;
 
 class NodePosition
 {
-    /**
-     * @var int
-     */
-    private $x;
+    private float $x;
 
-    /**
-     * @var int
-     */
-    private $y;
+    private float $y;
 
-    /**
-     * @var int
-     */
-    private $width;
+    private float $width;
 
-    /**
-     * @var int
-     */
-    private $height;
+    private float $height;
 
     /**
      * NodePosition constructor.
@@ -47,49 +35,31 @@ class NodePosition
         $this->width = $rightBottomX - $leftBottomX;
     }
 
-    /**
-     * @return int
-     */
     public function getX(): int
     {
         return (int) $this->x;
     }
 
-    /**
-     * @return int
-     */
     public function getY(): int
     {
         return (int) $this->y;
     }
 
-    /**
-     * @return int
-     */
     public function getWidth(): int
     {
         return (int) $this->width;
     }
 
-    /**
-     * @return int
-     */
     public function getHeight(): int
     {
         return (int) $this->height;
     }
 
-    /**
-     * @return int
-     */
     public function getCenterX(): int
     {
         return (int) ($this->x + ($this->width / 2));
     }
 
-    /**
-     * @return int
-     */
     public function getCenterY(): int
     {
         return (int) ($this->y + ($this->height / 2));

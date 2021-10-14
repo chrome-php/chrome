@@ -771,7 +771,7 @@ class Page
     }
 
     /**
-     * @return Dom
+     * Get Dom object
      */
     public function dom(): Dom
     {

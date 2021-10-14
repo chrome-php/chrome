@@ -30,9 +30,6 @@ class Node
         $this->nodeId = $nodeId;
     }
 
-    /**
-     * @return NodeAttributes
-     */
     public function getAttributes(): NodeAttributes
     {
         $message = new Message('DOM.getAttributes', [
@@ -47,11 +44,6 @@ class Node
         return new NodeAttributes($attributes);
     }
 
-    /**
-     * @param string $selector
-     *
-     * @return Node|null
-     */
     public function querySelector(string $selector): ?self
     {
         $message = new Message('DOM.querySelector', [
@@ -70,11 +62,6 @@ class Node
         return null;
     }
 
-    /**
-     * @param string $selector
-     *
-     * @return array
-     */
     public function querySelectorAll(string $selector): array
     {
         $message = new Message('DOM.querySelectorAll', [
@@ -94,9 +81,6 @@ class Node
         return $nodes;
     }
 
-    /**
-     * @return void
-     */
     public function focus(): void
     {
         $message = new Message('DOM.focus', [
@@ -107,19 +91,11 @@ class Node
         $this->assertNotError($response);
     }
 
-    /**
-     * @param string $name
-     *
-     * @return string|null
-     */
     public function getAttribute(string $name): ?string
     {
         return $this->getAttributes()->get($name);
     }
 
-    /**
-     * @return NodePosition|null
-     */
     public function getPosition(): ?NodePosition
     {
         $message = new Message('DOM.getBoxModel', [
@@ -138,17 +114,11 @@ class Node
         }
     }
 
-    /**
-     * @return bool
-     */
     public function hasPosition(): bool
     {
         return null !== $this->getPosition();
     }
 
-    /**
-     * @return string
-     */
     public function getHTML(): string
     {
         $message = new Message('DOM.getOuterHTML', [
@@ -161,17 +131,11 @@ class Node
         return $response->getResultData('outerHTML');
     }
 
-    /**
-     * @return string
-     */
     public function getText(): string
     {
         return \strip_tags($this->getHTML());
     }
 
-    /**
-     * @return void
-     */
     public function scrollIntoView(): void
     {
         $message = new Message('DOM.scrollIntoViewIfNeeded', [
@@ -184,8 +148,6 @@ class Node
 
     /**
      * @throws DomException
-     *
-     * @return void
      */
     public function click(): void
     {
@@ -199,11 +161,6 @@ class Node
             ->click();
     }
 
-    /**
-     * @param string $text
-     *
-     * @return void
-     */
     public function sendKeys(string $text): void
     {
         $this->scrollIntoView();
@@ -212,11 +169,6 @@ class Node
             ->typeText($text);
     }
 
-    /**
-     * @param string $filePath
-     *
-     * @return void
-     */
     public function sendFile(string $filePath): void
     {
         $message = new Message('DOM.setFileInputFiles', [
@@ -229,11 +181,7 @@ class Node
     }
 
     /**
-     * @param Response $response
-     *
      * @throws DomException
-     *
-     * @return void
      */
     public function assertNotError(Response $response): void
     {

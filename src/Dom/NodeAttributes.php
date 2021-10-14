@@ -6,10 +6,7 @@ namespace HeadlessChromium\Dom;
 
 class NodeAttributes
 {
-    /**
-     * @var array
-     */
-    private $attributes = [];
+    private array $attributes = [];
 
     /**
      * NodeAttributes constructor.
@@ -21,29 +18,16 @@ class NodeAttributes
         }
     }
 
-    /**
-     * @return array
-     */
     public function toArray(): array
     {
         return $this->attributes;
     }
 
-    /**
-     * @param string $name
-     *
-     * @return bool
-     */
     public function has(string $name): bool
     {
         return isset($this->attributes[$name]);
     }
 
-    /**
-     * @param string $name
-     *
-     * @return string|null
-     */
     public function get(string $name): ?string
     {
         return $this->attributes[$name] ?? null;
