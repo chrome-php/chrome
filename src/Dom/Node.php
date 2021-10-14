@@ -11,15 +11,9 @@ use HeadlessChromium\Page;
 
 class Node
 {
-    /**
-     * @var Page
-     */
-    protected $page;
+    protected Page $page;
 
-    /**
-     * @var int
-     */
-    protected $nodeId;
+    protected int $nodeId;
 
     /**
      * Node constructor.
