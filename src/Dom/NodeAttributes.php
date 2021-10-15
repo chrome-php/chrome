@@ -6,7 +6,10 @@ namespace HeadlessChromium\Dom;
 
 class NodeAttributes
 {
-    private array $attributes = [];
+    /**
+     * @var array
+     */
+    private $attributes = [];
 
     public function __construct(array $attrs)
     {

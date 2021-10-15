@@ -6,13 +6,25 @@ namespace HeadlessChromium\Dom;
 
 class NodePosition
 {
-    private float $x;
+    /**
+     * @var float
+     */
+    private $x;
 
-    private float $y;
+    /**
+     * @var float
+     */
+    private $y;
 
-    private float $width;
+    /**
+     * @var float
+     */
+    private $width;
 
-    private float $height;
+    /**
+     * @var float
+     */
+    private $height;
 
     public function __construct(array $points)
     {
