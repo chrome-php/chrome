@@ -293,8 +293,6 @@ class BrowserProcess implements LoggerAwareInterface
             '--disable-background-networking',
             '--disable-background-timer-throttling',
             '--disable-client-side-phishing-detection',
-            '--disable-default-apps',
-            '--disable-extensions',
             '--disable-hang-monitor',
             '--disable-popup-blocking',
             '--disable-prompt-on-repost',
