@@ -16,6 +16,7 @@ use HeadlessChromium\Communication\Session;
 use HeadlessChromium\Communication\Target;
 use HeadlessChromium\Cookies\Cookie;
 use HeadlessChromium\Cookies\CookiesCollection;
+use HeadlessChromium\Dom\Dom;
 use HeadlessChromium\Exception\CommunicationException;
 use HeadlessChromium\Exception\NoResponseAvailable;
 use HeadlessChromium\Exception\TargetDestroyed;
@@ -772,6 +773,11 @@ class Page
         }
 
         return $this->keyboard;
+    }
+
+    public function dom(): Dom
+    {
+        return new Dom($this);
     }
 
     /**

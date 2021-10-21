@@ -579,7 +579,7 @@ if ($cookieBar) {
 
 ### Set user agent
 
-You can set an user agent per page :
+You can set an user agent per page:
 
 ```php
 $page->setUserAgent('my user agent');
@@ -650,6 +650,53 @@ $connection->connect();
 
 // create browser
 $browser = new Browser($connection);
+```
+
+### Interacting with DOM
+
+Find one element on page by css selector:
+
+```php
+$page = $browser->createPage();
+$page->navigate('http://example.com')->waitForNavigation();
+
+$elem = $page->dom()->querySelector('#index_email');
+```
+
+Find all elements in another element by css selector:
+
+```php
+$elem = $page->dom()->querySelector('#index_email');
+$elem->querySelectorAll('a.link');
+```
+
+Find all elements on page by xpath selector:
+
+```php
+$page = $browser->createPage();
+$page->navigate('http://example.com')->waitForNavigation();
+
+$elem = $page->dom()->search('//div/*/a');
+```
+
+You can send text to element or click on it:
+
+```php
+$elem->click();
+$elem->sendKeys('Sample text');
+```
+
+You can upload file to file from input:
+
+```php
+$elem->uploadFile('/path/to/file');
+```
+
+You can get element text or attribute:
+
+```php
+$text = $elem->getText();
+$attr = $elem->getAttribute('class');
 ```
 
 
