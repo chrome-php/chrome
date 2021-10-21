@@ -46,6 +46,16 @@ class MouseApiTest extends BaseTestCase
         return $page;
     }
 
+    public function mouseFindProvider(): array
+    {
+        return [
+            // position, expected page title
+            [-1,         'c - test'],
+            [2,          'b - test'],
+            [99,         'a - test'],
+        ];
+    }
+
     /**
      * @throws \HeadlessChromium\Exception\CommunicationException
      * @throws \HeadlessChromium\Exception\NoResponseAvailable
@@ -108,39 +118,21 @@ class MouseApiTest extends BaseTestCase
     }
 
     /**
+     * @dataProvider mouseFindProvider
+     *
      * @throws \HeadlessChromium\Exception\CommunicationException
      * @throws \HeadlessChromium\Exception\NoResponseAvailable
      */
-    public function testFind_withMultipleElements(): void
+    public function testFind_withMultipleElements(int $position, string $expectedPageTitle): void
     {
-        // initial navigation
         $page = $this->openSitePage('b.html');
 
-        // click on the second element with class "a"
-        $page->mouse()->find('.a', 1)->click();
+        $page->mouse()->find('.a', $position)->click();
         $page->waitForReload();
 
         $title = $page->evaluate('document.title')->getReturnValue();
 
-        $this->assertEquals('a - test', $title);
-    }
-
-    /**
-     * @throws \HeadlessChromium\Exception\CommunicationException
-     * @throws \HeadlessChromium\Exception\NoResponseAvailable
-     */
-    public function testFind_withPositionOutOfBounds(): void
-    {
-        // initial navigation
-        $page = $this->openSitePage('b.html');
-
-        // click on last element with class "a"
-        $page->mouse()->find('.a', 999)->click();
-        $page->waitForReload();
-
-        $title = $page->evaluate('document.title')->getReturnValue();
-
-        $this->assertEquals('a - test', $title);
+        $this->assertEquals($expectedPageTitle, $title);
     }
 
     /**
