@@ -129,6 +129,20 @@ class DomTest extends BaseTestCase
         $this->assertEquals('foo', $value);
     }
 
+    public function testSetAttribute(): void
+    {
+        $page = $this->openSitePage('domForm.html');
+
+        $element = $page->dom()->querySelector('#div1');
+
+        //Getting element contents
+        $element->setAttributeValue('type', 'hello');
+
+        $value = $element->getAttribute('type');
+
+        $this->assertEquals('hello', $value);
+    }
+
     public function testUploadFile(): void
     {
         $page = $this->openSitePage('domForm.html');
