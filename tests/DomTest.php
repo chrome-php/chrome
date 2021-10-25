@@ -41,7 +41,6 @@ class DomTest extends BaseTestCase
         $page = $this->openSitePage('domForm.html');
         $element = $page->dom()->querySelector('button');
 
-        //assert element not null
         $this->assertNotNull($element);
     }
 
@@ -51,8 +50,7 @@ class DomTest extends BaseTestCase
 
         $elements = $page->dom()->querySelectorAll('div');
 
-        //assert found two elements
-        $this->assertEquals(\count($elements), 2);
+        $this->assertCount(2, $elements);
     }
 
     public function testSearchByXpath(): void
@@ -61,8 +59,7 @@ class DomTest extends BaseTestCase
 
         $elements = $page->dom()->search('//*/div');
 
-        //assert found two elements
-        $this->assertEquals(\count($elements), 2);
+        $this->assertCount(2, $elements);
     }
 
     public function testClick(): void
@@ -111,7 +108,6 @@ class DomTest extends BaseTestCase
 
         $element = $page->dom()->querySelector('#div1');
 
-        //Getting element contents
         $value = $element->getText();
 
         $this->assertEquals('bar', $value);
@@ -123,7 +119,6 @@ class DomTest extends BaseTestCase
 
         $element = $page->dom()->querySelector('#div1');
 
-        //Getting element contents
         $value = $element->getAttribute('type');
 
         $this->assertEquals('foo', $value);
@@ -135,7 +130,6 @@ class DomTest extends BaseTestCase
 
         $element = $page->dom()->querySelector('#div1');
 
-        //Getting element contents
         $element->setAttributeValue('type', 'hello');
 
         $value = $element->getAttribute('type');
