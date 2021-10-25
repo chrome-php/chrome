@@ -41,6 +41,18 @@ class Node
         return new NodeAttributes($attributes);
     }
 
+    public function setAttributeValue(string $name, string $value): void
+    {
+        $message = new Message('DOM.setAttributeValue', [
+            'nodeId' => $this->nodeId,
+            'name' => $name,
+            'value' => $value,
+        ]);
+        $response = $this->page->getSession()->sendMessageSync($message);
+
+        $this->assertNotError($response);
+    }
+
     public function querySelector(string $selector): ?self
     {
         $message = new Message('DOM.querySelector', [
