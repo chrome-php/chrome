@@ -105,23 +105,19 @@ class PageTest extends BaseTestCase
 
     public function testSetTimezoneInvalid(): void
     {
+        $this->expectException(InvalidTimezoneId::class);
+
         $factory = new BrowserFactory();
 
         $browser = $factory->createBrowser();
 
         $page = $browser->createPage();
 
-        try {
-            $page->setTimezone('Foo/Bar');
-        } catch (\Exception $e) {
-            $this->assertEquals('Invalid Timezone ID: Foo/Bar', $e->getMessage());
-        }
+        $page->setTimezone('Foo/Bar');
+        $this->expectExceptionMessage('Invalid Timezone ID: Foo/Bar');
 
-        try {
-            $page->setTimezone('Baz/Qux');
-        } catch (\Exception $e) {
-            $this->assertEquals('Invalid Timezone ID: Baz/Qux', $e->getMessage());
-        }
+        $page->setTimezone('Baz/Qux');
+        $this->expectExceptionMessage('Invalid Timezone ID: Baz/Qux');
     }
 
     public function testPreScriptOption(): void
