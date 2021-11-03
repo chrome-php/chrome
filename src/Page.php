@@ -814,12 +814,12 @@ class Page
 
     /**
      * Set user agent for the current page.
+     *
      * @see https://source.chromium.org/chromium/chromium/deps/icu.git/+/faee8bc70570192d82d2978a71e2a615788597d1:source/data/misc/metaZones.txt | ICU’s metaZones.txt
      *
      * @throws InvalidTimezoneId|CommunicationException|NoResponseAvailable
-     *
      */
-    public function setTimezone($timezoneId = null)
+    public function setTimezone($timezoneId = null): void
     {
         // ensure target is not closed
         $this->assertNotClosed();
@@ -834,7 +834,7 @@ class Page
                 )
             );
 
-        if (mb_strpos($response->getErrorMessage(), 'Invalid timezone')) {
+        if (\strpos($response->getErrorMessage(), 'Invalid timezone')) {
             throw new InvalidTimezoneId("Invalid Timezone ID: $timezoneId");
         }
     }
