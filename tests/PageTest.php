@@ -12,6 +12,7 @@
 namespace HeadlessChromium\Test;
 
 use HeadlessChromium\BrowserFactory;
+use HeadlessChromium\Exception\InvalidTimezoneId;
 
 /**
  * @covers \HeadlessChromium\Page
@@ -55,6 +56,68 @@ class PageTest extends BaseTestCase
 
         $this->assertEquals('foobar', $value1);
         $this->assertEquals('barbaz', $value2);
+    }
+
+    public function testSetTimezone(): void
+    {
+        $factory = new BrowserFactory();
+
+        $browser = $factory->createBrowser();
+
+        $page = $browser->createPage();
+
+        $page->evaluate('
+            globalThis.date = new Date(1479579154987);
+        ');
+
+        $page->setTimezone('America/Jamaica');
+        $this->assertEquals(
+            'Sat Nov 19 2016 13:12:34 GMT-0500 (Eastern Standard Time)',
+            $page->evaluate('date.toString()')->getReturnValue()
+        );
+
+        $page->setTimezone('Pacific/Honolulu');
+        $this->assertEquals(
+            'Sat Nov 19 2016 08:12:34 GMT-1000 (Hawaii-Aleutian Standard Time)',
+            $page->evaluate('date.toString()')->getReturnValue()
+        );
+
+        $page->setTimezone('America/Buenos_Aires');
+        $this->assertEquals(
+            'Sat Nov 19 2016 15:12:34 GMT-0300 (Argentina Standard Time)',
+            $page->evaluate('date.toString()')->getReturnValue()
+        );
+
+        $page->setTimezone('Europe/Berlin');
+        $this->assertEquals(
+            'Sat Nov 19 2016 19:12:34 GMT+0100 (Central European Standard Time)',
+            $page->evaluate('date.toString()')->getReturnValue()
+        );
+
+        $page->setTimezone('Europe/Berlin');
+        $this->assertEquals(
+            'Sat Nov 19 2016 19:12:34 GMT+0100 (Central European Standard Time)',
+            $page->evaluate('date.toString()')->getReturnValue()
+        );
+
+        $page->setTimezone('gteged');
+    }
+
+    public function testSetTimezoneInvalid(): void
+    {
+        $this->expectException(InvalidTimezoneId::class);
+
+        $factory = new BrowserFactory();
+
+        $browser = $factory->createBrowser();
+
+        $page = $browser->createPage();
+
+        $page->setTimezone('Foo/Bar');
+        $this->expectExceptionMessage('Invalid Timezone ID: Foo/Bar');
+
+        $page->setTimezone('Baz/Qux');
+        $this->expectExceptionMessage('Invalid Timezone ID: Baz/Qux');
     }
 
     public function testPreScriptOption(): void

@@ -18,6 +18,7 @@ use HeadlessChromium\Cookies\Cookie;
 use HeadlessChromium\Cookies\CookiesCollection;
 use HeadlessChromium\Dom\Dom;
 use HeadlessChromium\Exception\CommunicationException;
+use HeadlessChromium\Exception\InvalidTimezoneId;
 use HeadlessChromium\Exception\NoResponseAvailable;
 use HeadlessChromium\Exception\TargetDestroyed;
 use HeadlessChromium\Input\Keyboard;
@@ -808,6 +809,33 @@ class Page
     {
         if ($this->target->isDestroyed()) {
             throw new TargetDestroyed('The page was closed and is not available anymore.');
+        }
+    }
+
+    /**
+     * Set user agent for the current page.
+     *
+     * @see https://source.chromium.org/chromium/chromium/deps/icu.git/+/faee8bc70570192d82d2978a71e2a615788597d1:source/data/misc/metaZones.txt | ICU’s metaZones.txt
+     *
+     * @throws InvalidTimezoneId|CommunicationException|NoResponseAvailable
+     */
+    public function setTimezone($timezoneId = null): void
+    {
+        // ensure target is not closed
+        $this->assertNotClosed();
+
+        $response = $this->getSession()
+            ->sendMessageSync(
+                new Message(
+                    'Emulation.setTimezoneOverride',
+                    [
+                        'timezoneId' => $timezoneId ?? '',
+                    ]
+                )
+            );
+
+        if (\strpos($response->getErrorMessage(), 'Invalid timezone')) {
+            throw new InvalidTimezoneId("Invalid Timezone ID: $timezoneId");
         }
     }
 
