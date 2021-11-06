@@ -11,6 +11,7 @@
 
 namespace HeadlessChromium\Test;
 
+use finfo;
 use HeadlessChromium\BrowserFactory;
 
 /**
@@ -254,14 +255,22 @@ class PageTest extends BaseTestCase
         $this->assertEquals(1000, $clip->getHeight());
     }
 
-    public function testInvalidScaleOptionThrowAnException(): void
+    public function testPdf(): void
     {
-        $this->expectException(\InvalidArgumentException::class);
-
+        $finfo = new finfo(\FILEINFO_MIME_TYPE);
         $factory = new BrowserFactory();
+
         $browser = $factory->createBrowser();
         $page = $browser->createPage();
-        $page->pdf(['scale' => '2px']);
+
+        $page->navigate(self::sitePath('index.html'))->waitForNavigation();
+
+        $pagePdf = $page->pdf(['landscape' => false]);
+
+        $pdf = $pagePdf->getBase64();
+        $mimeType = $finfo->buffer(\base64_decode($pdf));
+
+        $this->assertSame('application/pdf', $mimeType);
     }
 
     public function testGetHtml(): void

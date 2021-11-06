@@ -559,6 +559,7 @@ class Page
      *                       - scale: default 1
      *
      * @throws CommunicationException
+     * @throws \InvalidArgumentException
      *
      * @return PagePdf
      */
@@ -566,128 +567,7 @@ class Page
     {
         $this->assertNotClosed();
 
-        $pdfOptions = [];
-
-        // is landscape?
-        if (\array_key_exists('landscape', $options)) {
-            // landscape requires type to be boolean
-            if (!\is_bool($options['landscape'])) {
-                throw new \InvalidArgumentException('Invalid options "landscape" for print to pdf. Must be true or false');
-            }
-            $pdfOptions['landscape'] = $options['landscape'];
-        }
-
-        // should print background?
-        if (\array_key_exists('printBackground', $options)) {
-            // printBackground requires type to be boolean
-            if (!\is_bool($options['printBackground'])) {
-                throw new \InvalidArgumentException('Invalid options "printBackground" for print to pdf. Must be true or false');
-            }
-            $pdfOptions['printBackground'] = $options['printBackground'];
-        }
-
-        // option displayHeaderFooter
-        if (\array_key_exists('displayHeaderFooter', $options)) {
-            // displayHeaderFooter requires type to be boolean
-            if (!\is_bool($options['displayHeaderFooter'])) {
-                throw new \InvalidArgumentException('Invalid options "displayHeaderFooter" for print to pdf. Must be true or false');
-            }
-            $pdfOptions['displayHeaderFooter'] = $options['displayHeaderFooter'];
-        }
-
-        // option headerTemplate
-        if (\array_key_exists('headerTemplate', $options)) {
-            // headerTemplate requires type to be string
-            if (!\is_string($options['headerTemplate'])) {
-                throw new \InvalidArgumentException('Invalid options "headerTemplate" for print to pdf. Must be string');
-            }
-            $pdfOptions['headerTemplate'] = $options['headerTemplate'];
-        }
-
-        // option footerTemplate
-        if (\array_key_exists('footerTemplate', $options)) {
-            // footerTemplate requires type to be string
-            if (!\is_string($options['footerTemplate'])) {
-                throw new \InvalidArgumentException('Invalid options "footerTemplate" for print to pdf. Must be string');
-            }
-            $pdfOptions['footerTemplate'] = $options['footerTemplate'];
-        }
-
-        // option paperWidth
-        if (\array_key_exists('paperWidth', $options)) {
-            // paperWidth requires type to be float
-            if ('double' !== \gettype($options['paperWidth'])) {
-                throw new \InvalidArgumentException('Invalid options "paperWidth" for print to pdf. Must be float like 1.0 or 5.4');
-            }
-            $pdfOptions['paperWidth'] = $options['paperWidth'];
-        }
-
-        // option paperHeight
-        if (\array_key_exists('paperHeight', $options)) {
-            // paperHeight requires type to be float
-            if ('double' !== \gettype($options['paperHeight'])) {
-                throw new \InvalidArgumentException('Invalid options "paperHeight" for print to pdf. Must be float like 1.0 or 5.4');
-            }
-            $pdfOptions['paperHeight'] = $options['paperHeight'];
-        }
-
-        // option marginTop
-        if (\array_key_exists('marginTop', $options)) {
-            // marginTop requires type to be float
-            if ('double' !== \gettype($options['marginTop'])) {
-                throw new \InvalidArgumentException('Invalid options "marginTop" for print to pdf. Must be float like 1.0 or 5.4');
-            }
-            $pdfOptions['marginTop'] = $options['marginTop'];
-        }
-
-        // option marginBottom
-        if (\array_key_exists('marginBottom', $options)) {
-            // marginBottom requires type to be float
-            if ('double' !== \gettype($options['marginBottom'])) {
-                throw new \InvalidArgumentException('Invalid options "marginBottom" for print to pdf. Must be float like 1.0 or 5.4');
-            }
-            $pdfOptions['marginBottom'] = $options['marginBottom'];
-        }
-
-        // option marginLeft
-        if (\array_key_exists('marginLeft', $options)) {
-            // marginLeft requires type to be float
-            if ('double' !== \gettype($options['marginLeft'])) {
-                throw new \InvalidArgumentException('Invalid options "marginLeft" for print to pdf. Must be float like 1.0 or 5.4');
-            }
-            $pdfOptions['marginLeft'] = $options['marginLeft'];
-        }
-
-        // option marginRight
-        if (\array_key_exists('marginRight', $options)) {
-            // marginRight requires type to be float
-            if ('double' !== \gettype($options['marginRight'])) {
-                throw new \InvalidArgumentException('Invalid options "marginRight" for print to pdf. Must be float like 1.0 or 5.4');
-            }
-            $pdfOptions['marginRight'] = $options['marginRight'];
-        }
-
-        // option preferCSSPageSize
-        if (\array_key_exists('preferCSSPageSize', $options)) {
-            // preferCSSPageSize requires type to be boolean
-            if (!\is_bool($options['preferCSSPageSize'])) {
-                throw new \InvalidArgumentException('Invalid options "preferCSSPageSize" for print to pdf. Must be true or false');
-            }
-            $pdfOptions['preferCSSPageSize'] = $options['preferCSSPageSize'];
-        }
-
-        if (\array_key_exists('scale', $options)) {
-            if (!\is_float($options['scale'])) {
-                throw new \InvalidArgumentException('Invalid options "scale" for print to pdf. Must be float like 1.0 or 0.74');
-            }
-            $pdfOptions['scale'] = $options['scale'];
-        }
-
-        // request pdf
-        $responseReader = $this->getSession()
-            ->sendMessage(new Message('Page.printToPDF', $pdfOptions));
-
-        return new PagePdf($responseReader);
+        return new PagePdf($this, $options);
     }
 
     /**
