@@ -36,7 +36,7 @@ class PagePdf extends AbstractBinaryInput
         'marginBottom' => self::TYPE_NUMERIC,
         'marginLeft' => self::TYPE_NUMERIC,
         'marginRight' => self::TYPE_NUMERIC,
-        'pageRanges'              => self::TYPE_STRING,
+        'pageRanges' => self::TYPE_STRING,
         'ignoreInvalidPageRanges' => self::TYPE_BOOLEAN,
         'preferCSSPageSize' => self::TYPE_BOOLEAN,
         'scale' => self::TYPE_NUMERIC,

@@ -555,6 +555,8 @@ class Page
      *                       - marginBottom: default 1 cm
      *                       - marginLeft: default 1 cm
      *                       - marginRight: default 1 cm
+     *                       - pageRanges: Paper ranges to print, e.g., '1-5, 8, 11-13'. Defaults to the empty string, which means print all pages
+     *                       - ignoreInvalidPageRanges: Whether to silently ignore invalid but successfully parsed page ranges, such as '3-2'. Defaults to false
      *                       - preferCSSPageSize: default false
      *                       - scale: default 1
      *

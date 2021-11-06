@@ -72,7 +72,7 @@ class PagePdfTest extends BaseTestCase
             $this->getOptionsDataset('marginBottom', self::TYPES_NUMERIC),
             $this->getOptionsDataset('marginLeft', self::TYPES_NUMERIC),
             $this->getOptionsDataset('marginRight', self::TYPES_NUMERIC),
-            $this->getOptionsDataset('pageRanges',              self::TYPES_STRING),
+            $this->getOptionsDataset('pageRanges', self::TYPES_STRING),
             $this->getOptionsDataset('ignoreInvalidPageRanges', self::TYPES_BOOLEAN),
             $this->getOptionsDataset('preferCSSPageSize', self::TYPES_BOOLEAN),
             $this->getOptionsDataset('scale', self::TYPES_NUMERIC),
