@@ -92,6 +92,46 @@ class Page
         );
     }
 
+    public function authenticate(string $username, string $password): void
+    {
+        $this->getSession()->sendMessageSync(new Message(
+            'Fetch.enable',
+            [
+                'patterns' => [
+                    [
+                        'urlPattern' => '*',
+                    ],
+                ],
+                'handleAuthRequests' => true,
+            ]
+        ));
+
+        $this->getSession()->on('method:Fetch.requestPaused', function (array $params): void {
+            $this->getSession()->sendMessageSync(new Message(
+                'Fetch.continueRequest',
+                [
+                    'requestId' => $params['requestId'],
+                ]
+            ));
+        });
+
+        $this->getSession()->on('method:Fetch.authRequired', function (array $params) use ($username, $password): void {
+            $this->getSession()->sendMessageSync(new Message(
+                'Fetch.continueWithAuth',
+                [
+                    'requestId' => $params['requestId'],
+                    'authChallengeResponse' => [
+                        'response' => 'ProvideCredentials',
+                        'username' => $username,
+                        'password' => $password,
+                    ],
+                ],
+            ));
+
+            $this->getSession()->sendMessageSync(new Message('Fetch.disable'));
+        });
+    }
+
     /**
      * Retrieves layout metrics of the page.
      *
