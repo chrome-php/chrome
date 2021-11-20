@@ -1,6 +1,11 @@
 # CHANGELOG
 
 
+## 1.1.1 (2021-11-20)
+
+* Fix mouse element position
+
+
 ## 1.1.0 (2021-09-26)
 
 * Add DOM element locator
