@@ -369,7 +369,7 @@ $screenshot->saveToFile('/some/place/file.jpg');
 
 **Full-page screenshot**
 
-You can also take a screenshot for the full layout using ``$page->getFullPageClip``
+You can also take a screenshot for the full-page layout (not only the viewport) using ``$page->getFullPageClip`` with attribute ``captureBeyondViewport = true``
 
 ```php
 // navigate
