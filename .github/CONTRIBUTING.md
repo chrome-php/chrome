@@ -33,7 +33,7 @@ You will be provided with an output of what is happening within the library and 
 Tests
 -----
 
-Writting test is also a great way to contribute because it ensures that the library will remain consistent after any upgrade. You can [see the current coverage at code climate](https://codeclimate.com/github/gsouf/headless-chromium-php/coverage)
+Writting test is also a great way to contribute because it ensures that the library will remain consistent after any upgrade.
 
 Implementing new features or fixing bugs
 ----------------------------------------
