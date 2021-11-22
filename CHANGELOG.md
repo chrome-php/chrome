@@ -1,6 +1,14 @@
 # CHANGELOG
 
 
+## 1.2.0 (2021-11-20)
+
+* Dropped `--disable-default-apps` and `--disable-extensions` by default
+* Added API for interacting with the DOM
+* Added a way to set the timezone
+* Reworked `PagePdf` class to improve validation
+
+
 ## 1.1.1 (2021-11-20)
 
 * Fix mouse element position

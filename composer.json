@@ -7,6 +7,10 @@
         {
             "name": "Graham Campbell",
             "email": "hello@gjcampbell.co.uk"
+        },
+        {
+            "name": "Enrico Dias",
+            "email": "enricodias@gmail.com"
         }
     ],
     "require": {

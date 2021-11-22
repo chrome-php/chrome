@@ -11,7 +11,9 @@
 
 namespace HeadlessChromium\Test;
 
+use finfo;
 use HeadlessChromium\BrowserFactory;
+use HeadlessChromium\Exception\InvalidTimezoneId;
 
 /**
  * @covers \HeadlessChromium\Page
@@ -55,6 +57,68 @@ class PageTest extends BaseTestCase
 
         $this->assertEquals('foobar', $value1);
         $this->assertEquals('barbaz', $value2);
+    }
+
+    public function testSetTimezone(): void
+    {
+        $factory = new BrowserFactory();
+
+        $browser = $factory->createBrowser();
+
+        $page = $browser->createPage();
+
+        $page->evaluate('
+            globalThis.date = new Date(1479579154987);
+        ');
+
+        $page->setTimezone('America/Jamaica');
+        $this->assertEquals(
+            'Sat Nov 19 2016 13:12:34 GMT-0500 (Eastern Standard Time)',
+            $page->evaluate('date.toString()')->getReturnValue()
+        );
+
+        $page->setTimezone('Pacific/Honolulu');
+        $this->assertEquals(
+            'Sat Nov 19 2016 08:12:34 GMT-1000 (Hawaii-Aleutian Standard Time)',
+            $page->evaluate('date.toString()')->getReturnValue()
+        );
+
+        $page->setTimezone('America/Buenos_Aires');
+        $this->assertEquals(
+            'Sat Nov 19 2016 15:12:34 GMT-0300 (Argentina Standard Time)',
+            $page->evaluate('date.toString()')->getReturnValue()
+        );
+
+        $page->setTimezone('Europe/Berlin');
+        $this->assertEquals(
+            'Sat Nov 19 2016 19:12:34 GMT+0100 (Central European Standard Time)',
+            $page->evaluate('date.toString()')->getReturnValue()
+        );
+
+        $page->setTimezone('Europe/Berlin');
+        $this->assertEquals(
+            'Sat Nov 19 2016 19:12:34 GMT+0100 (Central European Standard Time)',
+            $page->evaluate('date.toString()')->getReturnValue()
+        );
+
+        $page->setTimezone('gteged');
+    }
+
+    public function testSetTimezoneInvalid(): void
+    {
+        $this->expectException(InvalidTimezoneId::class);
+
+        $factory = new BrowserFactory();
+
+        $browser = $factory->createBrowser();
+
+        $page = $browser->createPage();
+
+        $page->setTimezone('Foo/Bar');
+        $this->expectExceptionMessage('Invalid Timezone ID: Foo/Bar');
+
+        $page->setTimezone('Baz/Qux');
+        $this->expectExceptionMessage('Invalid Timezone ID: Baz/Qux');
     }
 
     public function testPreScriptOption(): void
@@ -254,14 +318,22 @@ class PageTest extends BaseTestCase
         $this->assertEquals(1000, $clip->getHeight());
     }
 
-    public function testInvalidScaleOptionThrowAnException(): void
+    public function testPdf(): void
     {
-        $this->expectException(\InvalidArgumentException::class);
-
+        $finfo = new finfo(\FILEINFO_MIME_TYPE);
         $factory = new BrowserFactory();
+
         $browser = $factory->createBrowser();
         $page = $browser->createPage();
-        $page->pdf(['scale' => '2px']);
+
+        $page->navigate(self::sitePath('index.html'))->waitForNavigation();
+
+        $pagePdf = $page->pdf(['landscape' => false]);
+
+        $pdf = $pagePdf->getBase64();
+        $mimeType = $finfo->buffer(\base64_decode($pdf));
+
+        $this->assertSame('application/pdf', $mimeType);
     }
 
     public function testGetHtml(): void
