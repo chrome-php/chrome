@@ -668,7 +668,7 @@ $browser = new Browser($connection);
 
 ### Interacting with DOM
 
-Find one element on page by css selector:
+Find one element on a page by CSS selector:
 
 ```php
 $page = $browser->createPage();
@@ -677,14 +677,14 @@ $page->navigate('http://example.com')->waitForNavigation();
 $elem = $page->dom()->querySelector('#index_email');
 ```
 
-Find all elements in another element by css selector:
+Find all elements in another element by CSS selector:
 
 ```php
 $elem = $page->dom()->querySelector('#index_email');
 $elem->querySelectorAll('a.link');
 ```
 
-Find all elements on page by xpath selector:
+Find all elements on a page by XPath selector:
 
 ```php
 $page = $browser->createPage();
@@ -693,14 +693,14 @@ $page->navigate('http://example.com')->waitForNavigation();
 $elem = $page->dom()->search('//div/*/a');
 ```
 
-You can send text to element or click on it:
+You can send out a text to an element or click on it:
 
 ```php
 $elem->click();
 $elem->sendKeys('Sample text');
 ```
 
-You can upload file to file from input:
+You can upload file to file from the input:
 
 ```php
 $elem->uploadFile('/path/to/file');
