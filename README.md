@@ -75,7 +75,7 @@ try {
 When starting, the factory will look for the environment variable ``"CHROME_PATH"`` to use as the chrome executable.
 If the variable is not found, it will try to guess the correct executable path according to your OS or use ``"chrome"`` as the default.
 
-You also explicitly set any executable of your choice when creating a new object. For instance ``"chromium-browser"``:
+You are also able to explicitly set up any executable of your choice when creating a new object. For instance ``"chromium-browser"``:
 
 ```php
 use HeadlessChromium\BrowserFactory;
@@ -591,7 +591,7 @@ if ($cookieBar) {
 }
 ```
 
-### Set user agent
+### Set User-Agent
 
 You can set up a user-agent per page:
 
@@ -599,7 +599,7 @@ You can set up a user-agent per page:
 $page->setUserAgent('my user-agent');
 ```
 
-See also BrowserFactory option ``userAgent`` to set it for the whole browser.
+See also BrowserFactory option ``userAgent`` to set up it for the whole browser.
 
 
 Advanced usage
@@ -677,7 +677,7 @@ $page->navigate('http://example.com')->waitForNavigation();
 $elem = $page->dom()->querySelector('#index_email');
 ```
 
-Find all elements in another element by CSS selector:
+Find all elements inside another element by CSS selector:
 
 ```php
 $elem = $page->dom()->querySelector('#index_email');
