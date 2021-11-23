@@ -591,7 +591,7 @@ if ($cookieBar) {
 }
 ```
 
-### Set User-Agent
+### Set user agent
 
 You can set up a user-agent per page:
 
