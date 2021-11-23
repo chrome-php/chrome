@@ -85,6 +85,8 @@ class Connection extends EventEmitter implements LoggerAwareInterface
      */
     protected $receivedData = [];
 
+    protected $httpHeaders = [];
+
     /**
      * CommunicationChannel constructor.
      *
@@ -125,6 +127,23 @@ class Connection extends EventEmitter implements LoggerAwareInterface
     public function setConnectionDelay(int $delay): void
     {
         $this->delay = $delay;
+    }
+
+    /**
+     * @param array<string, string> $headers 
+     * @return void 
+     */
+    public function setConnectionHttpHeaders(array $headers): void
+    {
+        $this->httpHeaders = $headers;
+    }
+
+    /** 
+     * @return array<string, string>
+    */
+    public function getConnectionHttpHeaders(): array
+    {
+        return $this->httpHeaders;
     }
 
     /**

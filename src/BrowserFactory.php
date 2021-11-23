@@ -22,6 +22,7 @@ use Wrench\Exception\HandshakeException;
 class BrowserFactory
 {
     protected $chromeBinary;
+    protected $options;
 
     public function __construct(string $chromeBinary = null)
     {
@@ -63,10 +64,34 @@ class BrowserFactory
             \register_shutdown_function([$browserProcess, 'kill']);
         }
 
+        // Cache options at factory 
+        $this->options = $options;
+
         // start the browser and connect to it
-        $browserProcess->start($this->chromeBinary, $options);
+        $browserProcess->start($this->chromeBinary, $this->options);
 
         return $browserProcess->getBrowser();
+    }
+
+    /**
+     * @param string $name 
+     * @param string $value 
+     * @return void 
+     */
+    public function addHeader(string $name, string $value): void
+    {
+        $this->options['headers'][$name] = $value;
+    }
+
+    /**
+     * @param array $headers 
+     * @return void 
+     */
+    public function addHeaders(array $headers): void
+    {
+        foreach ($headers as $name => $value) {
+            $this->addHeader($name, $value);
+        }
     }
 
     /**

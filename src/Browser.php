@@ -75,6 +75,10 @@ class Browser
 
         // enable target discovery
         $connection->sendMessageSync(new Message('Target.setDiscoverTargets', ['discover' => true]));
+
+        // set up http headers
+        $headers = $connection->getConnectionHttpHeaders();
+        $connection->sendMessageSync(new Message('Network.setExtraHTTPHeaders', $headers));
     }
 
     /**
