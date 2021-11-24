@@ -119,6 +119,11 @@ class BrowserFactory
      * // get the device for emulation
      * $iphone = $browserFactory->getDevice('Iphone 6');
      * 
+     * // specify device positioning 
+     * $iphone->landscape();
+     * // or
+     * $iphone->portrait();
+     * 
      * try {
      *     $page = $browser->createPage();
      * 
