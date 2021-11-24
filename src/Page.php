@@ -168,7 +168,7 @@ class Page
     }
 
     /**
-     * Reference - https://pptr.dev/#?product=Puppeteer&version=v5.2.1&show=api-pagesetextrahttpheadersheaders
+     * Reference - https://pptr.dev/#?product=Puppeteer&version=v5.2.1&show=api-pagesetextrahttpheadersheaders.
      *
      * If headers are not passed, all instances of Page::class will use global settings from the BrowserFactory::class.
      *
