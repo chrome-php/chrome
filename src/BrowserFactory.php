@@ -17,7 +17,7 @@ use HeadlessChromium\Browser\ProcessAwareBrowser;
 use HeadlessChromium\Communication\Connection;
 use HeadlessChromium\Exception\BrowserConnectionFailed;
 use HeadlessChromium\PageUtils\Devices\Device;
-use HeadlessChromium\PageUtils\Devices\DevicesFactory;
+use HeadlessChromium\PageUtils\Devices\DeviceFactory;
 use Symfony\Component\Process\Process;
 use Wrench\Exception\HandshakeException;
 
@@ -63,7 +63,7 @@ class BrowserFactory
         $browserProcess = new BrowserProcess($logger);
 
         // create devices factory
-        $this->devices = new DevicesFactory();
+        $this->devices = new DeviceFactory();
 
         // instruct the runtime to kill chrome and clean temp files on exit
         if (!\array_key_exists('keepAlive', $options) || !$options['keepAlive']) {
