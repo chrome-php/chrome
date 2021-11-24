@@ -64,7 +64,7 @@ class BrowserFactory
             \register_shutdown_function([$browserProcess, 'kill']);
         }
 
-        // Cache options at factory 
+        // Cache options at factory
         $this->options = $options;
 
         // start the browser and connect to it
@@ -74,9 +74,10 @@ class BrowserFactory
     }
 
     /**
-     * @param string $name 
-     * @param string $value 
-     * @return void 
+     * @param string $name
+     * @param string $value
+     *
+     * @return void
      */
     public function addHeader(string $name, string $value): void
     {
@@ -84,8 +85,9 @@ class BrowserFactory
     }
 
     /**
-     * @param array $headers 
-     * @return void 
+     * @param array $headers
+     *
+     * @return void
      */
     public function addHeaders(array $headers): void
     {

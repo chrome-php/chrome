@@ -130,17 +130,18 @@ class Connection extends EventEmitter implements LoggerAwareInterface
     }
 
     /**
-     * @param array<string, string> $headers 
-     * @return void 
+     * @param array<string, string> $headers
+     *
+     * @return void
      */
     public function setConnectionHttpHeaders(array $headers): void
     {
         $this->httpHeaders = $headers;
     }
 
-    /** 
+    /**
      * @return array<string, string>
-    */
+     */
     public function getConnectionHttpHeaders(): array
     {
         return $this->httpHeaders;
