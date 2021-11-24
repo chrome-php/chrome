@@ -39,7 +39,7 @@ final class DeviceFactory
      */
     public function getDevice(string $name): Device
     {
-        if (\in_array($name, $this->devices)) {
+        if (! \in_array($name, $this->devices)) {
             throw new InexistentDevice("Device {$name} isn't supported.");
         }
 
