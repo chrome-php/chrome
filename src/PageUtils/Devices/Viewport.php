@@ -83,6 +83,6 @@ abstract class Viewport
 	public function rotate(): void
 	{
 		$this->isLandscape = ! $this->isLandscape;
-		$this->getResolution()->rotate();
+		$this->resolution->rotate();
 	}
 }
