@@ -24,6 +24,7 @@ use HeadlessChromium\Exception\TargetDestroyed;
 use HeadlessChromium\Input\Keyboard;
 use HeadlessChromium\Input\Mouse;
 use HeadlessChromium\PageUtils\CookiesGetter;
+use HeadlessChromium\PageUtils\Devices\Device;
 use HeadlessChromium\PageUtils\PageEvaluation;
 use HeadlessChromium\PageUtils\PageLayoutMetrics;
 use HeadlessChromium\PageUtils\PageNavigation;
@@ -67,6 +68,55 @@ class Page
     {
         $this->target = $target;
         $this->frameManager = new FrameManager($this, $frameTree);
+    }
+
+    /**
+     * Emulates given device metrics and user agent. This method is a shortcut  
+     * for calling two methods: `Page::setUserAgent()` and `Page::setViewport()`    
+     * To aid emulation, Chrome provides a list of device descriptors that can  
+     * be obtained via the `BrowserFactory::getDevice()`. `Page::emulate()`  
+     * will resize the page. A lot of websites don't expect phones to change size,  
+     * so you should emulate before navigating to the page.  
+     * 
+     * Usage:
+     * 
+     * ```php
+     * use HeadlessChromium\BrowserFactory;
+     * 
+     * $browserFactory = new BrowserFactory();
+     * 
+     * // starts headless chrome
+     * $browser = $browserFactory->createBrowser();
+     * 
+     * // get the device for emulation
+     * $iphone = $browserFactory->getDevice('Iphone 6');
+     * 
+     * try {
+     *     $page = $browser->createPage();
+     * 
+     *     $page->emulate($iphone);
+     * 
+     *     $page->navigate('http://example.com')->waitForNavigation();
+     *     // ... other actions
+     * } finally {
+     *     $browser->close();
+     * }
+     * ```
+     * 
+     * List of all available devices is available in the source code:
+     * @link https://github.com/puppeteer/puppeteer/blob/main/src/common/DeviceDescriptors.ts.
+     * 
+     * @param HeadlessChromium\Device $device 
+     * @return void 
+     * @throws CommunicationException 
+     * @throws NoResponseAvailable 
+     */
+    public function emulate(Device $device): void
+    {
+        $viewportResolution = $device->getViewport()->getResolution();
+
+        $this->setViewport($viewportResolution->getWidth(), $viewportResolution->getHeight());
+        $this->setUserAgent($device->getUserAgent());
     }
 
     /**
