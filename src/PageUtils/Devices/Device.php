@@ -2,7 +2,6 @@
 
 namespace HeadlessChromium\PageUtils\Devices;
 
-/** @package HeadlessChromium\PageUtils\Devices */
 abstract class Device
 {
 	/**
@@ -18,14 +17,14 @@ abstract class Device
 	/**
 	 * @var Viewport
 	 */
-	protected Viewport $viewport; 
+	protected Viewport $viewport;
 
 	/**
-	 * @param string $name 
-	 * @param string $userAgent 
-	 * @param Viewport $viewport 
-	 * 
-	 * @return void 
+	 * @param string $name
+	 * @param string $userAgent
+	 * @param Viewport $viewport
+	 *
+	 * @return void
 	 */
 	public function __construct(string $name, string $userAgent, Viewport $viewport)
 	{
@@ -36,34 +35,30 @@ abstract class Device
 
 	/** 
 	 * Horizontal representation of the device
-	 * 
+	 *
 	 * @return void
 	*/
 	public function landscape(): void
 	{
 		if (! $this->viewport->isLandscape()) {
-			$this->viewport->isLandscape(true);
-
-			$this->viewport->getResolution()->rotate();
+			$this->viewport->rotate();
 		}
 	}
 
 	/** 
 	 * Vertical representation of the device
-	 * 
+	 *
 	 * @return void
 	*/
 	public function portrait(): void
 	{
 		if ($this->viewport->isLandscape()) {
-			$this->viewport->isLandscape(false);
-
-			$this->viewport->getResolution()->rotate();
+			$this->viewport->rotate();
 		}
 	}
 
 	/** 
-	 * @return string 
+	 * @return string
 	*/
 	public function getName(): string
 	{
@@ -71,7 +66,7 @@ abstract class Device
 	}
 
 	/** 
-	 * @return string 
+	 * @return string
 	*/
 	public function getUserAgent(): string
 	{

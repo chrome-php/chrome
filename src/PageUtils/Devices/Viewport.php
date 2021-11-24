@@ -72,8 +72,17 @@ abstract class Viewport
 	/** 
 	 * @return bool
 	*/
-	public function isLandscape(bool $switch = false): bool
+	public function isLandscape(): bool
 	{
-		return $this->isLandscape = $switch;
+		return $this->isLandscape;
+	}
+
+	/** 
+	 * @return void
+	*/
+	public function rotate(): void
+	{
+		$this->isLandscape = ! $this->isLandscape;
+		$this->getResolution()->rotate();
 	}
 }
