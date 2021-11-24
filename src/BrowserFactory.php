@@ -16,8 +16,6 @@ use HeadlessChromium\Browser\BrowserProcess;
 use HeadlessChromium\Browser\ProcessAwareBrowser;
 use HeadlessChromium\Communication\Connection;
 use HeadlessChromium\Exception\BrowserConnectionFailed;
-use HeadlessChromium\PageUtils\Devices\Device;
-use HeadlessChromium\PageUtils\Devices\DevicesFactory;
 use Symfony\Component\Process\Process;
 use Wrench\Exception\HandshakeException;
 
@@ -25,7 +23,6 @@ class BrowserFactory
 {
     protected $chromeBinary;
     protected $options;
-    protected $devices;
 
     public function __construct(string $chromeBinary = null)
     {
@@ -62,9 +59,6 @@ class BrowserFactory
         // create browser process
         $browserProcess = new BrowserProcess($logger);
 
-        // create devices factory
-        $this->devices = new DevicesFactory();
-
         // instruct the runtime to kill chrome and clean temp files on exit
         if (!\array_key_exists('keepAlive', $options) || !$options['keepAlive']) {
             \register_shutdown_function([$browserProcess, 'kill']);
@@ -98,46 +92,6 @@ class BrowserFactory
         foreach ($headers as $name => $value) {
             $this->addHeader($name, $value);
         }
-    }
-
-    /**
-     * A list of devices to be used with `Page::emulate(options)`. 
-     * 
-     * Actual list of devices can be found in 
-     * @link https://github.com/puppeteer/puppeteer/blob/main/src/common/DeviceDescriptors.ts.
-     * 
-     * Usage:
-     * 
-     * ```php
-     * use HeadlessChromium\BrowserFactory;
-     * 
-     * $browserFactory = new BrowserFactory();
-     * 
-     * // starts headless chrome
-     * $browser = $browserFactory->createBrowser();
-     * 
-     * // get the device for emulation
-     * $iphone = $browserFactory->getDevice('Iphone 6');
-     * 
-     * try {
-     *     $page = $browser->createPage();
-     * 
-     *     $page->emulate($iphone);
-     * 
-     *     $page->navigate('http://example.com')->waitForNavigation();
-     *     // ... other actions
-     * } finally {
-     *     $browser->close();
-     * }
-     * ```
-     * 
-     * @param string $name 
-     * 
-     * @return Device 
-     */
-    public function getDevice(string $name): Device
-    {
-        return $this->devices->getDevice($name);
     }
 
     /**
