@@ -85,6 +85,9 @@ class Connection extends EventEmitter implements LoggerAwareInterface
      */
     protected $receivedData = [];
 
+    /**
+     * @var array<string, string>
+     */
     protected $httpHeaders = [];
 
     /**

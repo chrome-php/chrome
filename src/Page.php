@@ -173,6 +173,7 @@ class Page
      * If headers are not passed, all instances of Page::class will use global settings from the BrowserFactory::class.
      *
      * @param array<string, string> $headers
+     *
      * @return void
      */
     public function setExtraHTTPHeaders(array $headers = []): void

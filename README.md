@@ -148,6 +148,7 @@ Here are the options available for the browser factory:
 | `userAgent`               | none    | User agent to use for the whole browser (see page api for alternative)                       |
 | `userDataDir`             | none    | Chrome user data dir (default: a new empty dir is generated temporarily)                     |
 | `windowSize`              | none    | Size of the window. usage: `$width, $height` - see also Page::setViewport                    |
+| `headers`                 | none    | Set an array of custom HTTP headers                                                          |
 
 ### Browser API
 

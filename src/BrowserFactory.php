@@ -48,6 +48,7 @@ class BrowserFactory
      *                       - userAgent: user agent to use for the browser
      *                       - userDataDir: chrome user data dir (default: a new empty dir is generated temporarily)
      *                       - windowSize: size of the window, ex: [1920, 1080] (default: none)
+     *                       - headers: set an array of custom HTTP headers
      *
      * @return ProcessAwareBrowser a Browser instance to interact with the new chrome process
      */
@@ -85,7 +86,7 @@ class BrowserFactory
     }
 
     /**
-     * @param array $headers
+     * @param array<string, string> $headers
      *
      * @return void
      */
