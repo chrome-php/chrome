@@ -148,10 +148,9 @@ class Page
     public function setBasicAuthHeader(string $username, string $password): void
     {
         $header = \base64_encode($username.':'.$password);
-        $this->getSession()->sendMessage(new Message(
-            'Network.setExtraHTTPHeaders',
-            ['headers' => ['Authorization' => 'Basic '.$header]]
-        ));
+        $this->setExtraHTTPHeaders([
+            'Authorization' => 'Basic '.$header,
+        ]);
     }
 
     /**
@@ -168,13 +167,13 @@ class Page
     }
 
     /**
-     * Reference - https://pptr.dev/#?product=Puppeteer&version=v5.2.1&show=api-pagesetextrahttpheadersheaders.
+     * Set extra http headers.
      *
-     * If headers are not passed, all instances of Page::class will use global settings from the BrowserFactory::class.
+     * If headers are not passed, all instances of Page::class will use global settings from the BrowserFactory::class
+     *
+     * @see https://chromedevtools.github.io/devtools-protocol/1-2/Network/#method-setExtraHTTPHeaders
      *
      * @param array<string, string> $headers
-     *
-     * @return void
      */
     public function setExtraHTTPHeaders(array $headers = []): void
     {

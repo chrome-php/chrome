@@ -59,6 +59,40 @@ class BrowserFactoryTest extends BaseTestCase
         $this->assertEquals('foo bar baz', $response);
     }
 
+    public function testAddHeaders(): void
+    {
+        $factory = new BrowserFactoryForTests();
+
+        $factory->addHeader('header_name', 'header_value');
+        $factory->addHeaders(['header_name2' => 'header_value2']);
+
+        $expected = [
+            'header_name' => 'header_value',
+            'header_name2' => 'header_value2',
+        ];
+        
+        $this->assertSame($expected, $factory->getOptions()['headers']);
+    }
+
+    public function testMergedOptions(): void
+    {
+        $factory = new BrowserFactoryForTests();
+
+        $factory->addHeader('header_name', 'header_value');
+        $factory->createBrowser([
+            'userAgent' => 'foo bar baz',
+        ]);
+
+        $expected = [
+            'headers' => [
+                'header_name' => 'header_value',
+            ],
+            'userAgent' => 'foo bar baz',
+        ];
+        
+        $this->assertSame($expected, $factory->getOptions());
+    }
+
     public function testConnectToBrowser(): void
     {
         // create a browser
