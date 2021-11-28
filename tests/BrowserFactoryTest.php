@@ -61,7 +61,7 @@ class BrowserFactoryTest extends BaseTestCase
 
     public function testAddHeaders(): void
     {
-        $factory = new BrowserFactoryForTests();
+        $factory = new BrowserFactory();
 
         $factory->addHeader('header_name', 'header_value');
         $factory->addHeaders(['header_name2' => 'header_value2']);
@@ -76,7 +76,7 @@ class BrowserFactoryTest extends BaseTestCase
 
     public function testMergedOptions(): void
     {
-        $factory = new BrowserFactoryForTests();
+        $factory = new BrowserFactory();
 
         $factory->addHeader('header_name', 'header_value');
         $factory->createBrowser([

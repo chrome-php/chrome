@@ -152,6 +152,11 @@ class BrowserFactory
         return new Browser($connection);
     }
 
+    public function getOptions(): array
+    {
+        return $this->options;
+    }
+
     /**
      * Create a logger instance from given options.
      *
