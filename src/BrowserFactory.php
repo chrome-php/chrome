@@ -66,7 +66,7 @@ class BrowserFactory
         }
 
         // Cache options at factory
-        $this->options = \array_merge($this->options, \array_diff_key($options, $this->options));
+        $this->options = \array_merge($this->options, $options);
 
         // start the browser and connect to it
         $browserProcess->start($this->chromeBinary, $this->options);

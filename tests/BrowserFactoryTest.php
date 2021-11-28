@@ -78,17 +78,28 @@ class BrowserFactoryTest extends BaseTestCase
     {
         $factory = new BrowserFactory();
 
-        $factory->addHeader('header_name', 'header_value');
+        $header = [
+            'header_name' => 'header_value',
+        ];
+
+        $factory->addHeaders($header);
         $factory->createBrowser([
             'userAgent' => 'foo bar baz',
         ]);
 
         $expected = [
-            'headers' => [
-                'header_name' => 'header_value',
-            ],
+            'headers' => $header,
             'userAgent' => 'foo bar baz',
         ];
+
+        $this->assertSame($expected, $factory->getOptions());
+
+        // test overwriting
+        $factory->createBrowser([
+            'userAgent' => 'foo bar',
+        ]);
+
+        $expected['userAgent'] = 'foo bar';
 
         $this->assertSame($expected, $factory->getOptions());
     }
