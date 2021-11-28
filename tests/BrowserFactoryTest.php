@@ -70,7 +70,7 @@ class BrowserFactoryTest extends BaseTestCase
             'header_name' => 'header_value',
             'header_name2' => 'header_value2',
         ];
-        
+
         $this->assertSame($expected, $factory->getOptions()['headers']);
     }
 
@@ -89,7 +89,7 @@ class BrowserFactoryTest extends BaseTestCase
             ],
             'userAgent' => 'foo bar baz',
         ];
-        
+
         $this->assertSame($expected, $factory->getOptions());
     }
 
