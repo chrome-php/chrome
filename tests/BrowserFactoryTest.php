@@ -74,34 +74,36 @@ class BrowserFactoryTest extends BaseTestCase
         $this->assertSame($expected, $factory->getOptions()['headers']);
     }
 
-    public function testMergedOptions(): void
+    public function testOptions(): void
     {
         $factory = new BrowserFactory();
 
-        $header = [
-            'header_name' => 'header_value',
-        ];
+        $headers = ['header_name' => 'header_value'];
+        $options = ['userAgent' => 'foo bar baz'];
+        $modifiedOptions = ['userAgent' => 'foo bar'];
 
-        $factory->addHeaders($header);
-        $factory->createBrowser([
-            'userAgent' => 'foo bar baz',
-        ]);
+        $factory->addHeaders($headers);
+        $factory->addOptions($options);
 
-        $expected = [
-            'headers' => $header,
-            'userAgent' => 'foo bar baz',
-        ];
+        $expected = \array_merge(['headers' => $headers], $options);
 
         $this->assertSame($expected, $factory->getOptions());
 
         // test overwriting
-        $factory->createBrowser([
-            'userAgent' => 'foo bar',
-        ]);
+        $factory->addOptions($modifiedOptions);
 
         $expected['userAgent'] = 'foo bar';
 
         $this->assertSame($expected, $factory->getOptions());
+
+        // test removing options
+        $factory->setOptions($modifiedOptions);
+
+        $this->assertSame($modifiedOptions, $factory->getOptions());
+
+        $factory->setOptions([]);
+
+        $this->assertSame([], $factory->getOptions());
     }
 
     public function testConnectToBrowser(): void

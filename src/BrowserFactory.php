@@ -22,6 +22,27 @@ use Wrench\Exception\HandshakeException;
 class BrowserFactory
 {
     protected $chromeBinary;
+
+    /**
+     * Options for browser creation
+     *
+     * - connectionDelay: amount of time in seconds to slows down connection for debugging purposes (default: none)
+     * - customFlags: array of custom flag to flags to pass to the command line
+     * - debugLogger: resource string ("php://stdout"), resource or psr-3 logger instance (default: none)
+     * - enableImages: toggle the loading of images (default: true)
+     * - envVariables: array of environment variables to pass to the process (example DISPLAY variable)
+     * - headless: whether chrome should be started headless (default: true)
+     * - ignoreCertificateErrors: set chrome to ignore ssl errors
+     * - keepAlive: true to keep alive the chrome instance when the script terminates (default: false)
+     * - noSandbox: enable no sandbox mode (default: false)
+     * - proxyServer: a proxy server, ex: 127.0.0.1:8080 (default: none)
+     * - sendSyncDefaultTimeout: maximum time in ms to wait for synchronous messages to send (default 5000 ms)
+     * - startupTimeout: maximum time in seconds to wait for chrome to start (default: 30 sec)
+     * - userAgent: user agent to use for the browser
+     * - userDataDir: chrome user data dir (default: a new empty dir is generated temporarily)
+     * - windowSize: size of the window, ex: [1920, 1080] (default: none)
+     * - headers: set an array of custom HTTP headers
+     */
     protected $options = [];
 
     public function __construct(string $chromeBinary = null)
@@ -32,27 +53,13 @@ class BrowserFactory
     /**
      * Start a chrome process and allows to interact with it.
      *
-     * @param array $options options for browser creation:
-     *                       - connectionDelay: amount of time in seconds to slows down connection for debugging purposes (default: none)
-     *                       - customFlags: array of custom flag to flags to pass to the command line
-     *                       - debugLogger: resource string ("php://stdout"), resource or psr-3 logger instance (default: none)
-     *                       - enableImages: toggle the loading of images (default: true)
-     *                       - envVariables: array of environment variables to pass to the process (example DISPLAY variable)
-     *                       - headless: whether chrome should be started headless (default: true)
-     *                       - ignoreCertificateErrors: set chrome to ignore ssl errors
-     *                       - keepAlive: true to keep alive the chrome instance when the script terminates (default: false)
-     *                       - noSandbox: enable no sandbox mode (default: false)
-     *                       - proxyServer: a proxy server, ex: 127.0.0.1:8080 (default: none)
-     *                       - sendSyncDefaultTimeout: maximum time in ms to wait for synchronous messages to send (default 5000 ms)
-     *                       - startupTimeout: maximum time in seconds to wait for chrome to start (default: 30 sec)
-     *                       - userAgent: user agent to use for the browser
-     *                       - userDataDir: chrome user data dir (default: a new empty dir is generated temporarily)
-     *                       - windowSize: size of the window, ex: [1920, 1080] (default: none)
-     *                       - headers: set an array of custom HTTP headers
+     * @see BrowserFactory::$options
+     *
+     * @param array $options overwrite options for browser creation
      *
      * @return ProcessAwareBrowser a Browser instance to interact with the new chrome process
      */
-    public function createBrowser(array $options = []): ProcessAwareBrowser
+    public function createBrowser(?array $options = null): ProcessAwareBrowser
     {
         // create logger from options
         $logger = self::createLogger($options);
@@ -60,26 +67,21 @@ class BrowserFactory
         // create browser process
         $browserProcess = new BrowserProcess($logger);
 
+        if (null === $options) {
+            $options = $this->options;
+        }
+
         // instruct the runtime to kill chrome and clean temp files on exit
         if (!\array_key_exists('keepAlive', $options) || !$options['keepAlive']) {
             \register_shutdown_function([$browserProcess, 'kill']);
         }
 
-        // Cache options at factory
-        $this->options = \array_merge($this->options, $options);
-
         // start the browser and connect to it
-        $browserProcess->start($this->chromeBinary, $this->options);
+        $browserProcess->start($this->chromeBinary, $options);
 
         return $browserProcess->getBrowser();
     }
 
-    /**
-     * @param string $name
-     * @param string $value
-     *
-     * @return void
-     */
     public function addHeader(string $name, string $value): void
     {
         $this->options['headers'][$name] = $value;
@@ -87,8 +89,6 @@ class BrowserFactory
 
     /**
      * @param array<string, string> $headers
-     *
-     * @return void
      */
     public function addHeaders(array $headers): void
     {
@@ -150,6 +150,26 @@ class BrowserFactory
         }
 
         return new Browser($connection);
+    }
+
+    /**
+     * Set default options to be used in all browser instances
+     *
+     * @see BrowserFactory::$options
+     */
+    public function setOptions(array $options): void
+    {
+        $this->options = $options;
+    }
+
+    /**
+     * Add or overwrite options to the default options list
+     *
+     * @see BrowserFactory::$options
+     */
+    public function addOptions(array $options): void
+    {
+        $this->options = \array_merge($this->options, $options);
     }
 
     public function getOptions(): array
