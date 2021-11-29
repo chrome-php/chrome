@@ -24,7 +24,7 @@ class BrowserFactory
     protected $chromeBinary;
 
     /**
-     * Options for browser creation
+     * Options for browser creation.
      *
      * - connectionDelay: amount of time in seconds to slows down connection for debugging purposes (default: none)
      * - customFlags: array of custom flag to flags to pass to the command line
@@ -153,7 +153,7 @@ class BrowserFactory
     }
 
     /**
-     * Set default options to be used in all browser instances
+     * Set default options to be used in all browser instances.
      *
      * @see BrowserFactory::$options
      */
@@ -163,7 +163,7 @@ class BrowserFactory
     }
 
     /**
-     * Add or overwrite options to the default options list
+     * Add or overwrite options to the default options list.
      *
      * @see BrowserFactory::$options
      */
