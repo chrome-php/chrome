@@ -142,7 +142,7 @@ class CookiesCollection implements \IteratorAggregate, \Countable
     {
         $cookie_array = array();
         foreach ($this->cookies as $cookie) {
-            $cookie_array[] = trim($cookie->data['name']);
+            $cookie_array[] = trim($cookie->getName());
         }
         return $cookie_array;
     }
@@ -160,10 +160,8 @@ class CookiesCollection implements \IteratorAggregate, \Countable
     public function getListAllDataAsArray():array
     {
         $cookie_array = array();
-        $i = 0;
         foreach ($this->cookies as $cookie) {
-            $cookie_array[$i]=$cookie->data;
-            $i++;
+            $cookie_array[] = $cookie->getData();
         }
         return $cookie_array;
     }

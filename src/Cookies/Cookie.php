@@ -16,7 +16,7 @@ class Cookie implements \ArrayAccess
     /**
      * @var array
      */
-    protected $data;
+    private $data;
 
     /**
      * Cookie constructor.
@@ -28,6 +28,14 @@ class Cookie implements \ArrayAccess
         }
 
         $this->data = $data;
+    }
+
+    /**
+     * @return array
+     */
+    public function getData(): array
+    {
+        return $this->data;
     }
 
     /**
