@@ -11,13 +11,15 @@
 
 namespace HeadlessChromium;
 
-use Apix\Log\Logger\Stream as StreamLogger;
 use HeadlessChromium\Browser\BrowserProcess;
 use HeadlessChromium\Browser\ProcessAwareBrowser;
 use HeadlessChromium\Communication\Connection;
 use HeadlessChromium\Exception\BrowserConnectionFailed;
 use Symfony\Component\Process\Process;
+use Monolog\Logger;
+use Monolog\Handler\StreamHandler;
 use Wrench\Exception\HandshakeException;
+use Psr\Log\LoggerInterface;
 
 class BrowserFactory
 {
@@ -179,21 +181,18 @@ class BrowserFactory
 
     /**
      * Create a logger instance from given options.
-     *
-     * @param array $options
-     *
-     * @return StreamLogger|null
      */
-    private static function createLogger($options)
+    private static function createLogger(array $options): LoggerInterface
     {
-        // prepare logger
         $logger = $options['debugLogger'] ?? null;
 
-        // create logger from string name or resource
         if (\is_string($logger) || \is_resource($logger)) {
-            $logger = new StreamLogger($logger);
+            $log = new Logger('chrome');
+            $log->pushHandler(new StreamHandler($logger));
+
+            return $log;
         }
 
-        return $logger;
+        return new NullLogger();
     }
 }
