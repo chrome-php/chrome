@@ -16,7 +16,7 @@ class Cookie implements \ArrayAccess
     /**
      * @var array
      */
-    private $data;
+    protected $data;
 
     /**
      * Cookie constructor.
