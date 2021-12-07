@@ -58,21 +58,19 @@ class BrowserFactory
      *
      * @see BrowserFactory::$options
      *
-     * @param array $options overwrite options for browser creation
+     * @param array|null $options overwrite options for browser creation
      *
      * @return ProcessAwareBrowser a Browser instance to interact with the new chrome process
      */
     public function createBrowser(?array $options = null): ProcessAwareBrowser
     {
+        $options = $options ?? $this->options;
+
         // create logger from options
         $logger = self::createLogger($options);
 
         // create browser process
         $browserProcess = new BrowserProcess($logger);
-
-        if (null === $options) {
-            $options = $this->options;
-        }
 
         // instruct the runtime to kill chrome and clean temp files on exit
         if (!\array_key_exists('keepAlive', $options) || !$options['keepAlive']) {
@@ -186,6 +184,10 @@ class BrowserFactory
     private static function createLogger(array $options): LoggerInterface
     {
         $logger = $options['debugLogger'] ?? null;
+
+        if ($logger instanceof LoggerInterface) {
+            return $logger;
+        }
 
         if (\is_string($logger) || \is_resource($logger)) {
             $log = new Logger('chrome');
