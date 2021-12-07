@@ -101,6 +101,7 @@ class Response implements \ArrayAccess
     /**
      * {@inheritdoc}
      */
+    #[\ReturnTypeWillChange]
     public function offsetExists($offset)
     {
         return \array_key_exists($offset, $this->data);
@@ -109,6 +110,7 @@ class Response implements \ArrayAccess
     /**
      * {@inheritdoc}
      */
+    #[\ReturnTypeWillChange]
     public function offsetGet($offset)
     {
         return $this->data[$offset];
@@ -117,6 +119,7 @@ class Response implements \ArrayAccess
     /**
      * {@inheritdoc}
      */
+    #[\ReturnTypeWillChange]
     public function offsetSet($offset, $value): void
     {
         throw new \Exception('Responses are immutable');
@@ -125,6 +128,7 @@ class Response implements \ArrayAccess
     /**
      * {@inheritdoc}
      */
+    #[\ReturnTypeWillChange]
     public function offsetUnset($offset): void
     {
         throw new \Exception('Responses are immutable');

@@ -441,11 +441,11 @@ class Page
     }
 
     /**
-     * Get a clip that uses the full layout page, not only the viewport.
+     * Get a clip that uses the full screen layout (only the viewport).
      *
-     * This method is synchronous
+     * This method is synchronous.
      *
-     * Fullpage screenshot exemple:
+     * Full-screen screenshot example:
      *
      * ```php
      *     $page
@@ -469,10 +469,58 @@ class Page
     /**
      * Take a screenshot.
      *
-     * Usage:
+     * Simple screenshot:
      *
      * ```php
      * $page->screenshot()->saveToFile('/tmp/image.jpg');
+     * ```
+     * --------------------------------------------------------------------------------
+     *
+     * Screenshot an area on a page:
+     *
+     * ```php
+     * use HeadlessChromium\Clip;
+     *
+     * // navigate
+     * $navigation = $page->navigate('http://example.com');
+     *
+     * // wait for the page to be loaded
+     * $navigation->waitForNavigation();
+     *
+     * // create a rectangle by specifying to left corner coordinates + width and height
+     * $x = 10;
+     * $y = 10;
+     * $width = 100;
+     * $height = 100;
+     * $clip = new Clip($x, $y, $width, $height);
+     *
+     * // take the screenshot (in memory binaries)
+     * $screenshot = $page->screenshot([
+     *     'clip'  => $clip,
+     * ]);
+     *
+     * // save the screenshot
+     * $screenshot->saveToFile('/some/place/file.jpg');
+     * ```
+     * --------------------------------------------------------------------------------
+     *
+     * Full-page screenshot (not only the viewport):
+     *
+     * ```php
+     * // navigate
+     * $navigation = $page->navigate('https://example.com');
+     *
+     * // wait for the page to be loaded
+     * $navigation->waitForNavigation();
+     *
+     * $screenshot = $page->screenshot([
+     *     'captureBeyondViewport' => true,
+     *     'clip' => $page->getFullPageClip(),
+     *     'format' => 'jpeg', // default to 'png' - possible values: 'png', 'jpeg',
+     * ]);
+     *
+     * // save the screenshot
+     * $screenshot->saveToFile('/some/place/file.jpg');
      * ```
      *
      * @param array $options
