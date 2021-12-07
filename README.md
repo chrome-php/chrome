@@ -144,7 +144,7 @@ Here are the options available for the browser factory:
 | `proxyServer`             | none    | Proxy server to use. usage: `127.0.0.1:8080` (authorisation with credentials does not work)  |
 | `sendSyncDefaultTimeout`  | `5000`  | Default timeout (ms) for sending sync messages                                               |
 | `startupTimeout`          | `30`    | Maximum time in seconds to wait for chrome to start                                          |
-| `userAgent`               | none    | User-agent to use for the whole browser (see page API for alternative)                       |
+| `userAgent`               | none    | User agent to use for the whole browser (see page API for alternative)                       |
 | `userDataDir`             | none    | Chrome user data dir (default: a new empty dir is generated temporarily)                     |
 | `windowSize`              | none    | Size of the window. usage: `$width, $height` - see also Page::setViewport                    |
 
