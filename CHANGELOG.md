@@ -1,6 +1,11 @@
 # CHANGELOG
 
 
+## 1.2.1 (2021-12-07)
+
+* Partial PHP 8.1 support
+
+
 ## 1.2.0 (2021-11-20)
 
 * Dropped `--disable-default-apps` and `--disable-extensions` by default
