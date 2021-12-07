@@ -140,7 +140,7 @@ Here are the options available for the browser factory:
 | `headless`                | `true`  | Enable or disable headless mode                                                              |
 | `ignoreCertificateErrors` | `false` | Set chrome to ignore ssl errors                                                              |
 | `keepAlive`               | `false` | Set to `true` to keep alive the chrome instance when the script terminates                   |
-| `noSandbox`               | `false` | Useful to run in a docker container                                                          |
+| `noSandbox`               | `false` | Enable no sandbox mode, useful to run in a docker container                                  |
 | `proxyServer`             | none    | Proxy server to use. usage: `127.0.0.1:8080` (authorisation with credentials does not work)  |
 | `sendSyncDefaultTimeout`  | `5000`  | Default timeout (ms) for sending sync messages                                               |
 | `startupTimeout`          | `30`    | Maximum time in seconds to wait for chrome to start                                          |
