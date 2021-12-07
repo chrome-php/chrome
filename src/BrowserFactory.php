@@ -18,6 +18,7 @@ use HeadlessChromium\Exception\BrowserConnectionFailed;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
 use Psr\Log\LoggerInterface;
+use Psr\Log\NullLogger;
 use Symfony\Component\Process\Process;
 use Wrench\Exception\HandshakeException;
 
