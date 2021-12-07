@@ -150,6 +150,11 @@ class BrowserProcess implements LoggerAwareInterface
             $connection->setConnectionDelay($options['connectionDelay']);
         }
 
+        // connection headers
+        if (\array_key_exists('headers', $options)) {
+            $connection->setConnectionHttpHeaders($options['headers']);
+        }
+
         // set connection to allow killing chrome
         $this->connection = $connection;
 

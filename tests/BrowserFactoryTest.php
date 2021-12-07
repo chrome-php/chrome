@@ -59,6 +59,53 @@ class BrowserFactoryTest extends BaseTestCase
         $this->assertEquals('foo bar baz', $response);
     }
 
+    public function testAddHeaders(): void
+    {
+        $factory = new BrowserFactory();
+
+        $factory->addHeader('header_name', 'header_value');
+        $factory->addHeaders(['header_name2' => 'header_value2']);
+
+        $expected = [
+            'header_name' => 'header_value',
+            'header_name2' => 'header_value2',
+        ];
+
+        $this->assertSame($expected, $factory->getOptions()['headers']);
+    }
+
+    public function testOptions(): void
+    {
+        $factory = new BrowserFactory();
+
+        $headers = ['header_name' => 'header_value'];
+        $options = ['userAgent' => 'foo bar baz'];
+        $modifiedOptions = ['userAgent' => 'foo bar'];
+
+        $factory->addHeaders($headers);
+        $factory->addOptions($options);
+
+        $expected = \array_merge(['headers' => $headers], $options);
+
+        $this->assertSame($expected, $factory->getOptions());
+
+        // test overwriting
+        $factory->addOptions($modifiedOptions);
+
+        $expected['userAgent'] = 'foo bar';
+
+        $this->assertSame($expected, $factory->getOptions());
+
+        // test removing options
+        $factory->setOptions($modifiedOptions);
+
+        $this->assertSame($modifiedOptions, $factory->getOptions());
+
+        $factory->setOptions([]);
+
+        $this->assertSame([], $factory->getOptions());
+    }
+
     public function testConnectToBrowser(): void
     {
         // create a browser

@@ -95,7 +95,7 @@ use HeadlessChromium\BrowserFactory;
 $browserFactory = new BrowserFactory();
 
 $browser = $browserFactory->createBrowser([
-    'headless'        => false,          // disable headless mode
+    'headless' => false, // disable headless mode
 ]);
 ```
 
@@ -117,17 +117,44 @@ or [apix/log](https://github.com/apix/log)).
 
 ### Browser Factory
 
+Options set directly in the `createBrowser` method will be used only for a single browser creation. The default options will be ignored.
+
 ```php
 use HeadlessChromium\BrowserFactory;
 
 $browserFactory = new BrowserFactory();
 $browser = $browserFactory->createBrowser([
-    'windowSize'      => [1920, 1000],
-    'enableImages'    => false,
+    'windowSize'   => [1920, 1000],
+    'enableImages' => false,
 ]);
+
+// this browser will be created without any options
+$browser2 = $browserFactory->createBrowser();
 ```
 
-#### Options
+Options set using the `setOptions` and `addOptions` methods will persist.
+
+```php
+$browserFactory->setOptions([
+    'windowSize' => [1920, 1000],
+]);
+
+// both browser will have the same 'windowSize' option
+$browser1 = $browserFactory->createBrowser();
+$browser2 = $browserFactory->createBrowser();
+
+$browserFactory->addOptions(['enableImages' => false]);
+
+// this browser will have both the 'windowSize' and 'enableImages' options
+$browser3 = $browserFactory->createBrowser();
+
+$browserFactory->addOptions(['enableImages' => true]);
+
+// this browser will have the previous 'windowSize', but 'enableImages' will be true
+$browser4 = $browserFactory->createBrowser();
+```
+
+#### Available options
 
 Here are the options available for the browser factory:
 
@@ -148,6 +175,7 @@ Here are the options available for the browser factory:
 | `userAgent`               | none    | User agent to use for the whole browser (see page api for alternative)                       |
 | `userDataDir`             | none    | Chrome user data dir (default: a new empty dir is generated temporarily)                     |
 | `windowSize`              | none    | Size of the window. usage: `$width, $height` - see also Page::setViewport                    |
+| `headers`                 | none    | Set an array of custom HTTP headers                                                          |
 
 ### Browser API
 
