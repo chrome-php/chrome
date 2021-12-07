@@ -1,7 +1,7 @@
 # CHANGELOG
 
 
-# 1.3.0 (UPCOMING)
+## 1.3.0 (2021-12-07)
 
 * Added support for setting HTTP headers
 * Added support for `psr/log` 2 and 3
