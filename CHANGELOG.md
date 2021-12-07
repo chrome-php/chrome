@@ -1,6 +1,12 @@
 # CHANGELOG
 
 
+# 1.3.0 (UPCOMING)
+
+* Added support for setting HTTP headers
+* Added support for `psr/log` 2 and 3
+
+
 ## 1.2.1 (2021-12-07)
 
 * Partial PHP 8.1 support
