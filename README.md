@@ -154,10 +154,6 @@ Here are the options available for the browser factory:
 
 ```php
 $page = $browser->createPage();
-
-// The destination can be specified
-$uri = 'http://example.com';
-$page = $browser->createPage($uri);
 ```
 
 #### Close the browser
