@@ -11,11 +11,14 @@
 
 namespace HeadlessChromium;
 
-use Apix\Log\Logger\Stream as StreamLogger;
 use HeadlessChromium\Browser\BrowserProcess;
 use HeadlessChromium\Browser\ProcessAwareBrowser;
 use HeadlessChromium\Communication\Connection;
 use HeadlessChromium\Exception\BrowserConnectionFailed;
+use Monolog\Handler\StreamHandler;
+use Monolog\Logger;
+use Psr\Log\LoggerInterface;
+use Psr\Log\NullLogger;
 use Symfony\Component\Process\Process;
 use Wrench\Exception\HandshakeException;
 
@@ -55,21 +58,19 @@ class BrowserFactory
      *
      * @see BrowserFactory::$options
      *
-     * @param array $options overwrite options for browser creation
+     * @param array|null $options overwrite options for browser creation
      *
      * @return ProcessAwareBrowser a Browser instance to interact with the new chrome process
      */
     public function createBrowser(?array $options = null): ProcessAwareBrowser
     {
+        $options = $options ?? $this->options;
+
         // create logger from options
         $logger = self::createLogger($options);
 
         // create browser process
         $browserProcess = new BrowserProcess($logger);
-
-        if (null === $options) {
-            $options = $this->options;
-        }
 
         // instruct the runtime to kill chrome and clean temp files on exit
         if (!\array_key_exists('keepAlive', $options) || !$options['keepAlive']) {
@@ -179,21 +180,22 @@ class BrowserFactory
 
     /**
      * Create a logger instance from given options.
-     *
-     * @param array $options
-     *
-     * @return StreamLogger|null
      */
-    private static function createLogger($options)
+    private static function createLogger(array $options): LoggerInterface
     {
-        // prepare logger
         $logger = $options['debugLogger'] ?? null;
 
-        // create logger from string name or resource
-        if (\is_string($logger) || \is_resource($logger)) {
-            $logger = new StreamLogger($logger);
+        if ($logger instanceof LoggerInterface) {
+            return $logger;
         }
 
-        return $logger;
+        if (\is_string($logger) || \is_resource($logger)) {
+            $log = new Logger('chrome');
+            $log->pushHandler(new StreamHandler($logger));
+
+            return $log;
+        }
+
+        return new NullLogger();
     }
 }
