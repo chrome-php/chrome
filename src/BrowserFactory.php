@@ -15,11 +15,11 @@ use HeadlessChromium\Browser\BrowserProcess;
 use HeadlessChromium\Browser\ProcessAwareBrowser;
 use HeadlessChromium\Communication\Connection;
 use HeadlessChromium\Exception\BrowserConnectionFailed;
-use Symfony\Component\Process\Process;
-use Monolog\Logger;
 use Monolog\Handler\StreamHandler;
-use Wrench\Exception\HandshakeException;
+use Monolog\Logger;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\Process\Process;
+use Wrench\Exception\HandshakeException;
 
 class BrowserFactory
 {
