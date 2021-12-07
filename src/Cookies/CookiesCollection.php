@@ -129,25 +129,6 @@ class CookiesCollection implements \IteratorAggregate, \Countable
     }
 
     /**
-     * Get List of all Cookies with Values
-     *
-     * usage:
-     *
-     * $cookie_data = $cookies->getListAsArray();
-     *
-     *
-     * @return array
-     */
-    public function getListAsArray()
-    {
-        $cookie_array = array();
-        foreach ($this->cookies as $cookie) {
-            $cookie_array[]=($cookie->data);
-        }
-        return $cookie_array;
-    }
-
-    /**
      * Get List of all Cookies with only Names as Values
      *
      * usage:
