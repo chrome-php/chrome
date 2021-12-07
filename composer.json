@@ -17,16 +17,16 @@
     ],
     "require": {
         "php": "^7.3 || ^8.0",
-        "apix/log": "^1.2",
         "chrome-php/wrench": "^1.0",
         "evenement/evenement": "^3.0.1",
-        "psr/log": "^1.1",
+        "monolog/monolog": "^1.26 || ^2.2",
+        "psr/log": "^1.1 || ^2.0 || ^3.0",
         "symfony/filesystem": "^4.4 || ^5.0 || ^6.0",
         "symfony/process": "^4.4 || ^5.0 || ^6.0"
     },
     "require-dev":{
         "bamarni/composer-bin-plugin": "^1.4.1",
-        "phpunit/phpunit": "^9.5.9",
+        "phpunit/phpunit": "^9.5.10",
         "symfony/var-dumper": "^4.4 || ^5.0 || ^6.0"
     },
     "autoload":{
