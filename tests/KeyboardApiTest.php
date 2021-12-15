@@ -170,7 +170,7 @@ class KeyboardApiTest extends BaseTestCase
         $this->assertGreaterThan(300, $millisecondsElapsed);
     }
     
-     /**
+    /**
      * @throws \HeadlessChromium\Exception\CommunicationException
      * @throws \HeadlessChromium\Exception\NoResponseAvailable
      * @throws \HeadlessChromium\Exception\CommunicationException\InvalidResponse
