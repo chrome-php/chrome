@@ -169,7 +169,7 @@ class KeyboardApiTest extends BaseTestCase
         // if this test takes less than 300ms to run (3 keys x 100ms), setKeyInterval is not working
         $this->assertGreaterThan(300, $millisecondsElapsed);
     }
-    
+
     /**
      * @throws \HeadlessChromium\Exception\CommunicationException
      * @throws \HeadlessChromium\Exception\NoResponseAvailable
@@ -180,9 +180,8 @@ class KeyboardApiTest extends BaseTestCase
         // initial navigation
         $page = $this->openSitePage('form.html');
 
-        //Unicode text
         $text = 'Со ГӀалгӀа ва';
-        
+
         $page->keyboard()
             ->type('Tab')
             ->typeText($text);
@@ -192,6 +191,6 @@ class KeyboardApiTest extends BaseTestCase
             ->getReturnValue();
 
         // checks if the input contains the typed text
-        $this->assertEquals($text, $value);
+        $this->assertSame($text, $value);
     }
 }
