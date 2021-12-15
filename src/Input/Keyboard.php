@@ -56,7 +56,7 @@ class Keyboard
             $this->page->getSession()->sendMessageSync(new Message('Input.dispatchKeyEvent', [
                 'type' => 'char',
                 'modifiers' => $this->getModifiers(),
-                'text' => $text[$i],
+                'text' => mb_substr($text, $i, 1),
             ]));
 
             \usleep($this->sleep);
