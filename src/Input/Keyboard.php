@@ -50,13 +50,13 @@ class Keyboard
     {
         $this->page->assertNotClosed();
 
-        $length = \strlen($text);
+        $length = \mb_strlen($text);
 
         for ($i = 0; $i < $length; ++$i) {
             $this->page->getSession()->sendMessageSync(new Message('Input.dispatchKeyEvent', [
                 'type' => 'char',
                 'modifiers' => $this->getModifiers(),
-                'text' => $text[$i],
+                'text' => \mb_substr($text, $i, 1),
             ]));
 
             \usleep($this->sleep);
