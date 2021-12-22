@@ -13,7 +13,7 @@ Can be used synchronously and asynchronously!
 - Open chrome or chromium browser from php
 - Create pages and navigate to pages
 - Take screenshots
-- Evaluate javascript in the page
+- Evaluate javascript on the page
 - Make PDF
 - Emulate mouse
 - Emulate keyboard
@@ -26,7 +26,7 @@ Happy browsing!
 
 Requires PHP 7.3-8.0 and a chrome/chromium 65+ executable.
 
-Note that the library is only tested on Linux but is compatible with MacOS and Windows.
+Note that the library is only tested on Linux but is compatible with macOS and Windows.
 
 
 ## Installation
@@ -41,8 +41,7 @@ $ composer require chrome-php/chrome
 
 ## Usage
 
-It uses a simple and understandable API to start chrome, to open pages, to take screenshots,
-to crawl websites... and almost everything that you can do with chrome as a human.
+It uses a simple and understandable API to start chrome, to open pages, take screenshots, crawl websites... and almost everything that you can do with chrome as a human.
 
 ```php
 use HeadlessChromium\BrowserFactory;
@@ -53,7 +52,7 @@ $browserFactory = new BrowserFactory();
 $browser = $browserFactory->createBrowser();
 
 try {
-    // creates a new page and navigate to an url
+    // creates a new page and navigate to an URL
     $page = $browser->createPage();
     $page->navigate('http://example.com')->waitForNavigation();
 
@@ -76,7 +75,7 @@ try {
 When starting, the factory will look for the environment variable ``"CHROME_PATH"`` to use as the chrome executable.
 If the variable is not found, it will try to guess the correct executable path according to your OS or use ``"chrome"`` as the default.
 
-You also explicitly set any executable of your choice when creating a new object. For instance ``"chromium-browser"``:
+You are also able to explicitly set up any executable of your choice when creating a new object. For instance ``"chromium-browser"``:
 
 ```php
 use HeadlessChromium\BrowserFactory;
@@ -95,7 +94,7 @@ use HeadlessChromium\BrowserFactory;
 $browserFactory = new BrowserFactory();
 
 $browser = $browserFactory->createBrowser([
-    'headless'        => false,          // disable headless mode
+    'headless' => false, // disable headless mode
 ]);
 ```
 
@@ -108,7 +107,7 @@ Other debug options:
 ]
 ```
 
-About ``debugLogger``: this can be any of a resource string, a resource or an object implementing
+About ``debugLogger``: this can be any of a resource string, a resource, or an object implementing
 ``LoggerInterface`` from Psr\Log (such as [monolog](https://github.com/Seldaek/monolog)
 or [apix/log](https://github.com/apix/log)).
 
@@ -134,18 +133,18 @@ Here are the options available for the browser factory:
 | Option name               | Default | Description                                                                                  |
 |---------------------------|---------|----------------------------------------------------------------------------------------------|
 | `connectionDelay`         | `0`     | Delay to apply between each operation for debugging purposes                                 |
-| `customFlags`             | none    | Array of flags to pass to the command line. Eg: `['--option1', '--option2=someValue']`       |
+| `customFlags`             | none    | An array of flags to pass to the command line. Eg: `['--option1', '--option2=someValue']`    |
 | `debugLogger`             | `null`  | A string (e.g "php://stdout"), or resource, or PSR-3 logger instance to print debug messages |
 | `enableImages`            | `true`  | Toggles loading of images                                                                    |
-| `envVariables`            | none    | Array of environment variables to pass to the process (example DISPLAY variable)             |
+| `envVariables`            | none    | An array of environment variables to pass to the process (example DISPLAY variable)          |
 | `headless`                | `true`  | Enable or disable headless mode                                                              |
 | `ignoreCertificateErrors` | `false` | Set chrome to ignore ssl errors                                                              |
 | `keepAlive`               | `false` | Set to `true` to keep alive the chrome instance when the script terminates                   |
-| `noSandbox`               | `false` | Useful to run in a docker container                                                          |
+| `noSandbox`               | `false` | Enable no sandbox mode, useful to run in a docker container                                  |
 | `proxyServer`             | none    | Proxy server to use. usage: `127.0.0.1:8080` (authorisation with credentials does not work)  |
 | `sendSyncDefaultTimeout`  | `5000`  | Default timeout (ms) for sending sync messages                                               |
 | `startupTimeout`          | `30`    | Maximum time in seconds to wait for chrome to start                                          |
-| `userAgent`               | none    | User agent to use for the whole browser (see page api for alternative)                       |
+| `userAgent`               | none    | User agent to use for the whole browser (see page API for alternative)                       |
 | `userDataDir`             | none    | Chrome user data dir (default: a new empty dir is generated temporarily)                     |
 | `windowSize`              | none    | Size of the window. usage: `$width, $height` - see also Page::setViewport                    |
 
@@ -155,16 +154,12 @@ Here are the options available for the browser factory:
 
 ```php
 $page = $browser->createPage();
-
-// destination can be specified
-$uri = 'http://example.com';
-$page = $browser->createPage($uri);
 ```
 
 #### Close the browser
 
 ```php
-    $browser->close();
+$browser->close();
 ```
 
 ### Set a script to evaluate before every page created by this browser will navigate
@@ -181,7 +176,7 @@ window.navigator.permissions.query = (parameters) => (
 
 ### Page API
 
-#### Navigate to an url
+#### Navigate to an URL
 
 ```php
 // navigate
@@ -191,7 +186,7 @@ $navigation = $page->navigate('http://example.com');
 $navigation->waitForNavigation();
 ```
 
-When Using ``$navigation->waitForNavigation()`` you will wait for 30sec until the page event "loaded" is triggered.
+When using ``$navigation->waitForNavigation()`` you will wait for 30sec until the page event "loaded" is triggered.
 You can change the timeout or the event to listen for:
 
 ```php
@@ -205,9 +200,9 @@ Available events (in the order they trigger):
 - ``Page::LOAD``: (default) page and all resources are loaded
 - ``Page::NETWORK_IDLE``: page has loaded, and no network activity has occurred for at least 500ms
 
-When you want to wait for the page to navigate there are 2 main issues that may occur.
-First the page is too long to load and second the page you were waiting to be loaded has been replaced.
-The good news is that you can handle those issues using a good old try catch:
+When you want to wait for the page to navigate 2 main issues may occur.
+First, the page is too long to load and second, the page you were waiting to be loaded has been replaced.
+The good news is that you can handle those issues using a good old try-catch:
 
 ```php
 use HeadlessChromium\Exception\OperationTimedOut;
@@ -241,7 +236,7 @@ $value = $evaluation->getReturnValue();
 ```
 
 
-Sometime the script you evaluate will click a link or submit a form, in this case the page will reload and you
+Sometimes the script you evaluate will click a link or submit a form, in this case, the page will reload and you
 will want to wait for the new page to reload.
 
 You can achieve this by using ``$page->evaluate('some js that will reload the page')->waitForPageReload()``.
@@ -249,7 +244,7 @@ An example is available in [form-submit.php](./examples/form-submit.php)
 
 #### Call a function
 
-This is an alternative to ``evaluate`` that allows to call a given function with the given arguments in the page context:
+This is an alternative to ``evaluate`` that allows calling a given function with the given arguments in the page context:
 
 ```php
 $evaluation = $page->callFunction(
@@ -272,7 +267,7 @@ $page->addScriptTag([
 $page->evaluate('$(".my.element").html()');
 ```
 
-You can also use an url to feed the src attribute:
+You can also use an URL to feed the src attribute:
 
 ```php
 $page->addScriptTag([
@@ -310,14 +305,14 @@ $page->addPreScript($script, ['onLoad' => true]);
 
 #### Set viewport size
 
-This features allows to change the size of the viewport (emulation) for the current page without affecting the size of
+This feature allows changing the size of the viewport (emulation) for the current page without affecting the size of
 all the browser's pages (see also option ``"windowSize"`` of [BrowserFactory::createBrowser](#options)).
 
 ```php
 $width = 600;
 $height = 300;
 $page->setViewport($width, $height)
-    ->await(); // wait for operation to complete
+    ->await(); // wait for the operation to complete
 ```
 
 #### Make a screenshot
@@ -339,15 +334,9 @@ $screenshot = $page->screenshot([
 $screenshot->saveToFile('/some/place/file.jpg');
 ```
 
-**choose an area**
+**Screenshot an area on a page**
 
-You can use the option "clip" in order to choose an area for the screenshot (TODO exemple)
-
-**take a full page screenshot**
-
-You can also take a screenshot for the full layout (not only the layout) using ``$page->getFullPageClip`` (TODO exemple)
-
-TODO ``Page.getFullPageClip();``
+You can use the option "clip" to choose an area on a page for the screenshot
 
 ```php
 use HeadlessChromium\Clip;
@@ -374,6 +363,27 @@ $screenshot = $page->screenshot([
 $screenshot->saveToFile('/some/place/file.jpg');
 ```
 
+**Full-page screenshot**
+
+You can also take a screenshot for the full-page layout (not only the viewport) using ``$page->getFullPageClip`` with attribute ``captureBeyondViewport = true``
+
+```php
+// navigate
+$navigation = $page->navigate('https://example.com');
+
+// wait for the page to be loaded
+$navigation->waitForNavigation();
+
+$screenshot = $page->screenshot([
+    'captureBeyondViewport' => true,
+    'clip' => $page->getFullPageClip(),
+    'format' => 'jpeg', // default to 'png' - possible values: 'png', 'jpeg',
+]);
+
+// save the screenshot
+$screenshot->saveToFile('/some/place/file.jpg');
+```
+
 #### Print as PDF
 
 ```php
@@ -387,16 +397,16 @@ $options = [
     'landscape'           => true,             // default to false
     'printBackground'     => true,             // default to false
     'displayHeaderFooter' => true,             // default to false
-    'preferCSSPageSize'   => true,             // default to false ( reads parameters directly from @page )
-    'marginTop'           => 0.0,              // defaults to ~0.4 (must be float, value in inches)
-    'marginBottom'        => 1.4,              // defaults to ~0.4 (must be float, value in inches)
-    'marginLeft'          => 5.0,              // defaults to ~0.4 (must be float, value in inches)
-    'marginRight'         => 1.0,              // defaults to ~0.4 (must be float, value in inches)
-    'paperWidth'          => 6.0,              // defaults to 8.5 (must be float, value in inches)
-    'paperHeight'         => 6.0,              // defaults to 8.5 (must be float, value in inches)
+    'preferCSSPageSize'   => true,             // default to false (reads parameters directly from @page)
+    'marginTop'           => 0.0,              // defaults to ~0.4 (must be a float, value in inches)
+    'marginBottom'        => 1.4,              // defaults to ~0.4 (must be a float, value in inches)
+    'marginLeft'          => 5.0,              // defaults to ~0.4 (must be a float, value in inches)
+    'marginRight'         => 1.0,              // defaults to ~0.4 (must be a float, value in inches)
+    'paperWidth'          => 6.0,              // defaults to 8.5 (must be a float, value in inches)
+    'paperHeight'         => 6.0,              // defaults to 8.5 (must be a float, value in inches)
     'headerTemplate'      => '<div>foo</div>', // see details above
     'footerTemplate'      => '<div>foo</div>', // see details above
-    'scale'               => 1.2,              // defaults to 1.0 (must be float)
+    'scale'               => 1.2,              // defaults to 1.0 (must be a float)
 ];
 
 // print as pdf (in memory binaries)
@@ -419,7 +429,7 @@ echo base64_decode($pdf->getBase64());
 
 Options `headerTempalte` and `footerTempalte`:
 
-Should be valid HTML markup with following classes used to inject printing values into them:
+Should be valid HTML markup with the following classes used to inject printing values into them:
 - date: formatted print date
 - title: document title
 - url: document location
@@ -441,17 +451,17 @@ The mouse API is dependent on the page instance and allows you to control the mo
 
 ```php
 $page->mouse()
-    ->move(10, 20)                             // Moves mouse to position x=10;y=20
-    ->click()                                  // left click on position set above
-    ->move(100, 200, ['steps' => 5])           // move mouse to x=100;y=200 in 5 equal steps
-    ->click(['button' => Mouse::BUTTON_RIGHT]; // right click on position set above
+    ->move(10, 20)                             // Moves mouse to position x=10; y=20
+    ->click()                                  // left-click on position set above
+    ->move(100, 200, ['steps' => 5])           // move mouse to x=100; y=200 in 5 equal steps
+    ->click(['button' => Mouse::BUTTON_RIGHT]; // right-click on position set above
 
 // given the last click was on a link, the next step will wait
 // for the page to load after the link was clicked
 $page->waitForReload();
 ```
 
-You can emulate the mouse wheel to scroll up and down in a page, frame or element.
+You can emulate the mouse wheel to scroll up and down in a page, frame, or element.
 
 ```php
 $page->mouse()
@@ -465,7 +475,7 @@ The `find` method will search for elements using [querySelector](https://develop
 
 ```php
 try {
-    $page->mouse()->find('#a')->click(); // find and click on element with id "a"
+    $page->mouse()->find('#a')->click(); // find and click at an element with id "a"
 
     $page->mouse()->find('.a', 10); // find the 10th or last element with class "a"
 } catch (ElementNotFoundException $exception) {
@@ -473,7 +483,7 @@ try {
 }
 ```
 
-This method will attempt scroll right and down to bring the element to the visible screen. If the element is inside an internal scrollable section, try moving the mouse to inside that section first.
+This method will attempt to scroll right and down to bring the element to the visible screen. If the element is inside an internal scrollable section, try moving the mouse to inside that section first.
 
 ### Keyboard API
 
@@ -488,29 +498,29 @@ $page->keyboard()
 To impersonate a real user you may want to add a delay between each keystroke using the ```setKeyInterval``` method:
 
 ```php
-$page->keyboard()->setKeyInterval(10); // sets a delay of 10 miliseconds between keystrokes
+$page->keyboard()->setKeyInterval(10); // sets a delay of 10 milliseconds between keystrokes
 ```
 
 #### Key combinations
 
-The methods `press`, `type` and `release` can be used to send key combinations such as `ctrl + v`.
+The methods `press`, `type`, and `release` can be used to send key combinations such as `ctrl + v`.
 
 ```php
 // ctrl + a to select all text
 $page->keyboard()
-    ->press(' control ') // key names are case insensitive and trimmed
-        ->type('a') // press and release
+    ->press('control') // key names are case insensitive and trimmed
+        ->type('a')    // press and release
     ->release('Control');
 
 // ctrl + c to copy and ctrl + v to paste it twice
 $page->keyboard()
     ->press('Ctrl') // alias for Control
         ->type('c')
-        ->type('V') // upper and lower case should behave the same way
-    ->release(); // release all
+        ->type('V') // upper and lower cases should behave the same way
+    ->release();    // release all
 ```
 
-You can press the same key several times in sequence, this is equivalent of a user pressing and holding the key. The release event, however, will be sent only once per key.
+You can press the same key several times in sequence, this is the equivalent to a user pressing and holding the key. The release event, however, will be sent only once per key.
 
 #### Key aliases
 
@@ -579,13 +589,13 @@ if ($cookieBar) {
 
 ### Set user agent
 
-You can set an user agent per page:
+You can set up a user-agent per page:
 
 ```php
-$page->setUserAgent('my user agent');
+$page->setUserAgent('my user-agent');
 ```
 
-See also BrowserFactory option ``userAgent`` to set it for the whole browser.
+See also BrowserFactory option ``userAgent`` to set up it for the whole browser.
 
 
 Advanced usage
@@ -600,7 +610,7 @@ Example:
 use HeadlessChromium\Communication\Connection;
 use HeadlessChromium\Communication\Message;
 
-// chrome devtools uri
+// chrome devtools URI
 $webSocketUri = 'ws://127.0.0.1:9222/devtools/browser/xxx';
 
 // create a connection
@@ -614,7 +624,7 @@ $responseReader = $connection->sendMessage(new Message('Target.activateTarget', 
 $response = $responseReader->waitForResponse(1000);
 ```
 
-### Create a session and send message to the target
+### Create a session and send a message to the target
 
 ```php
 // given a target id
@@ -632,7 +642,7 @@ $response = $session->sendMessageSync(new Message('Page.reload'));
 You can ease the debugging by setting a delay before each operation is made:
 
 ```php
-  $connection->setConnectionDelay(500); // wait for 500 ms between each operation to ease debugging
+  $connection->setConnectionDelay(500); // wait for 500ms between each operation to ease debugging
 ```
 
 ### Browser (standalone)
@@ -641,10 +651,10 @@ You can ease the debugging by setting a delay before each operation is made:
 use HeadlessChromium\Communication\Connection;
 use HeadlessChromium\Browser;
 
-// chrome devtools uri
+// chrome devtools URI
 $webSocketUri = 'ws://127.0.0.1:9222/devtools/browser/xxx';
 
-// create connection given a web socket uri
+// create connection given a WebSocket URI
 $connection = new Connection($webSocketUri);
 $connection->connect();
 
@@ -654,7 +664,7 @@ $browser = new Browser($connection);
 
 ### Interacting with DOM
 
-Find one element on page by css selector:
+Find one element on a page by CSS selector:
 
 ```php
 $page = $browser->createPage();
@@ -663,14 +673,14 @@ $page->navigate('http://example.com')->waitForNavigation();
 $elem = $page->dom()->querySelector('#index_email');
 ```
 
-Find all elements in another element by css selector:
+Find all elements inside another element by CSS selector:
 
 ```php
 $elem = $page->dom()->querySelector('#index_email');
 $elem->querySelectorAll('a.link');
 ```
 
-Find all elements on page by xpath selector:
+Find all elements on a page by XPath selector:
 
 ```php
 $page = $browser->createPage();
@@ -679,14 +689,14 @@ $page->navigate('http://example.com')->waitForNavigation();
 $elem = $page->dom()->search('//div/*/a');
 ```
 
-You can send text to element or click on it:
+You can send out a text to an element or click on it:
 
 ```php
 $elem->click();
 $elem->sendKeys('Sample text');
 ```
 
-You can upload file to file from input:
+You can upload file to file from the input:
 
 ```php
 $elem->uploadFile('/path/to/file');
