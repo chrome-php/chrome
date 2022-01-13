@@ -362,6 +362,12 @@ class BrowserProcess implements LoggerAwareInterface
         if (\array_key_exists('proxyServer', $options)) {
             $args[] = '--proxy-server='.$options['proxyServer'];
         }
+        if (\array_key_exists('noProxyServer', $options)) {
+            $args[] = '--no-proxy-server';
+        }
+        if (\array_key_exists('proxyBypassList', $options)) {
+            $args[] = '--proxy-bypass-list='.$options['proxyBypassList'];
+        }
 
         // add custom flags
         if (\array_key_exists('customFlags', $options) && \is_array($options['customFlags'])) {
