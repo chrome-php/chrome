@@ -812,9 +812,9 @@ class Page
      *
      * @return string
      */
-    public function getHtml()
+    public function getHtml(?int $timeout = null): string
     {
-        return $this->evaluate('document.documentElement.outerHTML')->getReturnValue();
+        return $this->evaluate('document.documentElement.outerHTML')->getReturnValue($timeout);
     }
 
     /**
