@@ -157,14 +157,14 @@ class KeyboardApiTest extends BaseTestCase
         // initial navigation
         $page = $this->openSitePage('form.html');
 
-        $start = \round(\microtime(true) * 1000);
+        $start = \round(\hrtime(true) / 1000 / 1000);
 
         $page->keyboard()
             ->setKeyInterval(100)
             ->typeRawKey('Tab')
             ->typeText('bar');
 
-        $millisecondsElapsed = \round(\microtime(true) * 1000) - $start;
+        $millisecondsElapsed = \round(\hrtime(true) / 1000 / 1000) - $start;
 
         // if this test takes less than 300ms to run (3 keys x 100ms), setKeyInterval is not working
         $this->assertGreaterThan(300, $millisecondsElapsed);
