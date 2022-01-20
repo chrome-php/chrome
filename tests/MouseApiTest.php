@@ -118,6 +118,25 @@ class MouseApiTest extends BaseTestCase
     }
 
     /**
+     * @throws \HeadlessChromium\Exception\CommunicationException
+     * @throws \HeadlessChromium\Exception\NoResponseAvailable
+     */
+    public function testFind_afterMove(): void
+    {
+        // initial navigation
+        $page = $this->openSitePage('b.html');
+
+        $page->mouse()->move(1000, 1000);
+
+        $page->mouse()->find('#a')->click();
+        $page->waitForReload();
+
+        $title = $page->evaluate('document.title')->getReturnValue();
+
+        $this->assertEquals('a - test', $title);
+    }
+
+    /**
      * @dataProvider mouseFindProvider
      *
      * @throws \HeadlessChromium\Exception\CommunicationException
