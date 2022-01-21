@@ -68,7 +68,7 @@ class MouseApiTest extends BaseTestCase
             ->evaluate('JSON.parse(JSON.stringify(document.querySelector("#a").getBoundingClientRect()));')
             ->getReturnValue();
 
-        $page->mouse()->move($rect['x'], $rect['y'])->click();
+        $page->mouse()->move(\ceil($rect['x']), \ceil($rect['y']))->click();
         $page->waitForReload();
 
         $title = $page->evaluate('document.title')->getReturnValue();
