@@ -461,7 +461,7 @@ class Page
      */
     public function getFullPageClip(int $timeout = null): Clip
     {
-        $contentSize = $this->getLayoutMetrics()->await($timeout)->getContentSize();
+        $contentSize = $this->getLayoutMetrics()->await($timeout)->getCssContentSize();
 
         return new Clip(0, 0, $contentSize['width'], $contentSize['height']);
     }

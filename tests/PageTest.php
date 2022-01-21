@@ -263,6 +263,9 @@ class PageTest extends BaseTestCase
         $contentSize = $metrics->getContentSize();
         $layoutViewport = $metrics->getLayoutViewport();
         $visualViewport = $metrics->getVisualViewport();
+        $cssContentSize = $metrics->getCssContentSize();
+        $cssLayoutViewport = $metrics->getCssLayoutViewport();
+        $cssVisualViewport = $metrics->getCssVisualViewport();
 
         $this->assertEquals(
             [
@@ -296,6 +299,70 @@ class PageTest extends BaseTestCase
                 'zoom' => 1,
             ],
             $visualViewport
+        );
+
+        // This is made to be a bit loose to pass on retina displays
+
+        $this->assertContains(
+            $cssContentSize,
+            [
+                [
+                    'x' => 0,
+                    'y' => 0,
+                    'width' => 900,
+                    'height' => 1000,
+                ],
+                [
+                    'x' => 0,
+                    'y' => 0,
+                    'width' => 1800,
+                    'height' => 2000,
+                ],
+            ]
+        );
+
+        $this->assertContains(
+            $cssLayoutViewport,
+            [
+                [
+                    'pageX' => 0,
+                    'pageY' => 0,
+                    'clientWidth' => 100,
+                    'clientHeight' => 300,
+                ],
+                [
+                    'pageX' => 0,
+                    'pageY' => 0,
+                    'clientWidth' => 200,
+                    'clientHeight' => 600,
+                ],
+            ]
+        );
+
+        $this->assertContains(
+            $cssVisualViewport,
+            [
+                [
+                    'offsetX' => 0,
+                    'offsetY' => 0,
+                    'pageX' => 0,
+                    'pageY' => 0,
+                    'clientWidth' => 100,
+                    'clientHeight' => 300,
+                    'scale' => 1,
+                    'zoom' => 1,
+                ],
+                [
+                    'offsetX' => 0,
+                    'offsetY' => 0,
+                    'pageX' => 0,
+                    'pageY' => 0,
+                    'clientWidth' => 200,
+                    'clientHeight' => 600,
+                    'scale' => 1,
+                    'zoom' => 1,
+                ],
+            ]
         );
     }
 
