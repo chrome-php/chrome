@@ -441,6 +441,61 @@ class Page
     }
 
     /**
+     * Wait until page contains Node.
+     *
+     * @param string $selectors
+     * @param int    $timeout
+     *
+     * @throws Exception\OperationTimedOut
+     *
+     * @return $this
+     */
+    public function waitUntilContains(string $selectors, int $timeout = 60000)
+    {
+        $this->assertNotClosed();
+
+        Utils::tryWithTimeout($timeout * 1000, $this->waitForElement($selectors));
+
+        return $this;
+    }
+
+    /**
+     *
+     * @return bool|\Generator
+     *
+     * @internal
+     */
+    public function waitForElement(string $selectors, int $position = 1)
+    {
+        $delay = 500;
+        $element = [];
+
+        while (true) {
+
+            try {
+                $elementList = $this
+                    ->evaluate('JSON.parse(JSON.stringify(document.querySelectorAll("'.$selectors.'")));')
+                    ->getReturnValue();
+
+                $position = \max(0, ($position - 1));
+                $position = \min($position, (\count($elementList) - 1));
+
+                $element = $this
+                    ->evaluate('JSON.parse(JSON.stringify(document.querySelectorAll("'.$selectors.'")['.$position.'].getBoundingClientRect()));')
+                    ->getReturnValue();
+            } catch (\Throwable $exception) {
+                yield $delay;
+            }
+
+            if (\array_key_exists('x', $element)) {
+                return true;
+            }
+
+            yield $delay;
+        }
+    }
+
+    /**
      * Get a clip that uses the full screen layout (only the viewport).
      *
      * This method is synchronous.
