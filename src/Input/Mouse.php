@@ -264,16 +264,7 @@ class Mouse
         $this->page->assertNotClosed();
 
         try {
-            $elementList = $this->page
-                ->evaluate('JSON.parse(JSON.stringify(document.querySelectorAll("'.$selectors.'")));')
-                ->getReturnValue();
-
-            $position = \max(0, ($position - 1));
-            $position = \min($position, (\count($elementList) - 1));
-
-            $element = $this->page
-                ->evaluate('JSON.parse(JSON.stringify(document.querySelectorAll("'.$selectors.'")['.$position.'].getBoundingClientRect()));')
-                ->getReturnValue();
+            $element = Utils::getElementPositionFromPage($this->page, $selectors, $position);
         } catch (JavascriptException $exception) {
             throw new ElementNotFoundException('The search for "'.$selectors.'" returned no elements.');
         }
