@@ -450,7 +450,7 @@ class Page
      *
      * @return $this
      */
-    public function waitUntilContains(string $selectors, int $timeout = 60000)
+    public function waitUntilContainsElement(string $selectors, int $timeout = 30000)
     {
         $this->assertNotClosed();
 
@@ -460,7 +460,6 @@ class Page
     }
 
     /**
-     *
      * @return bool|\Generator
      *
      * @internal
