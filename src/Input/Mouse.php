@@ -291,8 +291,8 @@ class Mouse
 
         $offsetX = $visibleArea['pageX'];
         $offsetY = $visibleArea['pageY'];
-        $positionX = \mt_rand(\ceil($element['left'] - $offsetX), $rightBoundary - $offsetX);
-        $positionY = \mt_rand(\ceil($element['top'] - $offsetY), $bottomBoundary - $offsetY);
+        $positionX = \random_int(\ceil($element['left'] - $offsetX), $rightBoundary - $offsetX);
+        $positionY = \random_int(\ceil($element['top'] - $offsetY), $bottomBoundary - $offsetY);
 
         $this->move($positionX, $positionY);
 
