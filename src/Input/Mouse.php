@@ -285,14 +285,16 @@ class Mouse
         $rightBoundary = \floor($element['right']);
         $bottomBoundary = \floor($element['bottom']);
 
-        $positionX = \mt_rand(\ceil($element['left']), $rightBoundary);
-        $positionY = \mt_rand(\ceil($element['top']), $bottomBoundary);
+        $this->scrollToBoundary($rightBoundary, $bottomBoundary);
 
-        $this->scrollToBoundary($rightBoundary, $bottomBoundary)
-            ->move(
-                ($positionX - $this->x),
-                ($positionY - $this->y)
-            );
+        $visibleArea = $this->page->getLayoutMetrics()->getLayoutViewport();
+
+        $offsetX = $visibleArea['pageX'];
+        $offsetY = $visibleArea['pageY'];
+        $positionX = \random_int(\ceil($element['left'] - $offsetX), $rightBoundary - $offsetX);
+        $positionY = \random_int(\ceil($element['top'] - $offsetY), $bottomBoundary - $offsetY);
+
+        $this->move($positionX, $positionY);
 
         return $this;
     }
