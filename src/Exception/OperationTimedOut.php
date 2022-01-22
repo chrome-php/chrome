@@ -15,18 +15,19 @@ class OperationTimedOut extends \Exception
 {
     public static function createFromTimeout(int $timeoutMicroSec): self
     {
-        return new self('Operation timed out ('.self::getTimeoutPhrase($timeoutMicroSec).')');
+        return new self(sprintf('Operation timed out after %s.'), self::getTimeoutPhrase($timeoutMicroSec));
     }
 
     private static function getTimeoutPhrase(int $timeoutMicroSec): string
     {
         if ($timeoutMicroSec > 1000 * 1000) {
-            return (int) ($timeoutMicroSec / (1000 * 1000)).'sec';
-        }
-        if ($timeoutMicroSec > 1000) {
-            return (int) ($timeoutMicroSec / 1000).'ms';
+            return sprintf('%ds', (int) ($timeoutMicroSec / (1000 * 1000)));
         }
 
-        return (int) ($timeoutMicroSec).'μs';
+        if ($timeoutMicroSec > 1000) {
+            return sprintf('%dms', (int) ($timeoutMicroSec / 1000));
+        }
+
+        return sprintf('%dμs', (int) ($timeoutMicroSec));
     }
 }
