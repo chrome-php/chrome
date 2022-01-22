@@ -149,7 +149,26 @@ class DomTest extends BaseTestCase
             ->evaluate('document.querySelector("#myfile").value;')
             ->getReturnValue();
 
-        // check if file was uploaded
-        $this->assertNotEmpty($value);
+        // check if the file was selected
+        $this->assertStringEndsWith(\basename($file), $value);
+    }
+
+    public function testUploadFiles(): void
+    {
+        $page = $this->openSitePage('domForm.html');
+        $files = [
+            self::sitePath('domForm.html'),
+            self::sitePath('form.html'),
+        ];
+
+        $element = $page->dom()->querySelector('#myfiles');
+        $element->sendFiles($files);
+
+        $value1 = $page->evaluate('document.querySelector("#myfiles").files[0].name;')->getReturnValue();
+        $value2 = $page->evaluate('document.querySelector("#myfiles").files[1].name;')->getReturnValue();
+
+        // check if the files were selected
+        $this->assertStringEndsWith(\basename($files[0]), $value1);
+        $this->assertStringEndsWith(\basename($files[1]), $value2);
     }
 }
