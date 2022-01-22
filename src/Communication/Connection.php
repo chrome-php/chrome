@@ -212,7 +212,7 @@ class Connection extends EventEmitter implements LoggerAwareInterface
     private function waitForDelay(): void
     {
         if ($this->lastMessageSentTime) {
-            $currentTime = (int) (\microtime(true) * 1000);
+            $currentTime = (int) (\hrtime(true) / 1000 / 1000);
             // if not enough time was spent until last message was sent, wait
             if ($this->lastMessageSentTime + $this->delay > $currentTime) {
                 $timeToWait = ($this->lastMessageSentTime + $this->delay) - $currentTime;
@@ -220,7 +220,7 @@ class Connection extends EventEmitter implements LoggerAwareInterface
             }
         }
 
-        $this->lastMessageSentTime = (int) (\microtime(true) * 1000);
+        $this->lastMessageSentTime = (int) (\hrtime(true) / 1000 / 1000);
     }
 
     /**

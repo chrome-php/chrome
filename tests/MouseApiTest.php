@@ -68,7 +68,7 @@ class MouseApiTest extends BaseTestCase
             ->evaluate('JSON.parse(JSON.stringify(document.querySelector("#a").getBoundingClientRect()));')
             ->getReturnValue();
 
-        $page->mouse()->move($rect['x'], $rect['y'])->click();
+        $page->mouse()->move(\ceil($rect['x']), \ceil($rect['y']))->click();
         $page->waitForReload();
 
         $title = $page->evaluate('document.title')->getReturnValue();
@@ -108,6 +108,25 @@ class MouseApiTest extends BaseTestCase
     {
         // initial navigation
         $page = $this->openSitePage('b.html');
+
+        $page->mouse()->find('#a')->click();
+        $page->waitForReload();
+
+        $title = $page->evaluate('document.title')->getReturnValue();
+
+        $this->assertEquals('a - test', $title);
+    }
+
+    /**
+     * @throws \HeadlessChromium\Exception\CommunicationException
+     * @throws \HeadlessChromium\Exception\NoResponseAvailable
+     */
+    public function testFind_afterMove(): void
+    {
+        // initial navigation
+        $page = $this->openSitePage('b.html');
+
+        $page->mouse()->move(1000, 1000);
 
         $page->mouse()->find('#a')->click();
         $page->waitForReload();

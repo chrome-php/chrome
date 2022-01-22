@@ -178,11 +178,11 @@ class Mouse
     {
         $this->page->assertNotClosed();
 
-        $scollableArea = $this->page->getLayoutMetrics()->getContentSize();
-        $visibleArea = $this->page->getLayoutMetrics()->getVisualViewport();
+        $scrollableArea = $this->page->getLayoutMetrics()->getCssContentSize();
+        $visibleArea = $this->page->getLayoutMetrics()->getCssVisualViewport();
 
-        $distanceX = $this->getMaximumDistance($distanceX, $visibleArea['pageX'], $scollableArea['width']);
-        $distanceY = $this->getMaximumDistance($distanceY, $visibleArea['pageY'], $scollableArea['height']);
+        $distanceX = $this->getMaximumDistance($distanceX, $visibleArea['pageX'], $scrollableArea['width']);
+        $distanceY = $this->getMaximumDistance($distanceY, $visibleArea['pageY'], $scrollableArea['height']);
 
         $targetX = $visibleArea['pageX'] + $distanceX;
         $targetY = $visibleArea['pageY'] + $distanceY;
@@ -222,7 +222,7 @@ class Mouse
      */
     private function scrollToBoundary(int $right, int $bottom): self
     {
-        $visibleArea = $this->page->getLayoutMetrics()->getLayoutViewport();
+        $visibleArea = $this->page->getLayoutMetrics()->getCssLayoutViewport();
 
         $distanceX = $distanceY = 0;
 
@@ -285,14 +285,16 @@ class Mouse
         $rightBoundary = \floor($element['right']);
         $bottomBoundary = \floor($element['bottom']);
 
-        $positionX = \mt_rand(\ceil($element['left']), $rightBoundary);
-        $positionY = \mt_rand(\ceil($element['top']), $bottomBoundary);
+        $this->scrollToBoundary($rightBoundary, $bottomBoundary);
 
-        $this->scrollToBoundary($rightBoundary, $bottomBoundary)
-            ->move(
-                ($positionX - $this->x),
-                ($positionY - $this->y)
-            );
+        $visibleArea = $this->page->getLayoutMetrics()->getLayoutViewport();
+
+        $offsetX = $visibleArea['pageX'];
+        $offsetY = $visibleArea['pageY'];
+        $positionX = \random_int(\ceil($element['left'] - $offsetX), $rightBoundary - $offsetX);
+        $positionY = \random_int(\ceil($element['top'] - $offsetY), $bottomBoundary - $offsetY);
+
+        $this->move($positionX, $positionY);
 
         return $this;
     }
@@ -338,7 +340,7 @@ class Mouse
     private function waitForScroll(int $targetX, int $targetY)
     {
         while (true) {
-            $visibleArea = $this->page->getLayoutMetrics()->getVisualViewport();
+            $visibleArea = $this->page->getLayoutMetrics()->getCssVisualViewport();
 
             if ($visibleArea['pageX'] === $targetX && $visibleArea['pageY'] === $targetY) {
                 return true;
