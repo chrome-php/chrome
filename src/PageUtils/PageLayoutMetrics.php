@@ -47,9 +47,7 @@ class PageLayoutMetrics extends ResponseWaiter
      */
     public function getContentSize(): array
     {
-        $response = $this->awaitResponse();
-
-        return $response->getResultData('contentSize');
+        return $this->getResultData('contentSize');
     }
 
     /**
@@ -63,9 +61,7 @@ class PageLayoutMetrics extends ResponseWaiter
      */
     public function getLayoutViewport(): array
     {
-        $response = $this->awaitResponse();
-
-        return $response->getResultData('layoutViewport');
+        return $this->getResultData('layoutViewport');
     }
 
     /**
@@ -79,8 +75,54 @@ class PageLayoutMetrics extends ResponseWaiter
      */
     public function getVisualViewport()
     {
-        $response = $this->awaitResponse();
+        return $this->getResultData('visualViewport');
+    }
 
-        return $response->getResultData('visualViewport');
+    /**
+     * Returns real size of scrollable area.
+     *
+     * @throws CommunicationException\ResponseHasError
+     * @throws \HeadlessChromium\Exception\NoResponseAvailable
+     * @throws \HeadlessChromium\Exception\OperationTimedOut
+     *
+     * @return array
+     */
+    public function getCssContentSize(): array
+    {
+        return $this->getResultData('cssContentSize');
+    }
+
+    /**
+     * Returns real metrics relating to the layout viewport.
+     *
+     * @throws CommunicationException\ResponseHasError
+     * @throws \HeadlessChromium\Exception\NoResponseAvailable
+     * @throws \HeadlessChromium\Exception\OperationTimedOut
+     *
+     * @return array
+     */
+    public function getCssLayoutViewport(): array
+    {
+        return $this->getResultData('cssLayoutViewport');
+    }
+
+    /**
+     * Returns real metrics relating to the visual viewport.
+     *
+     * @throws CommunicationException\ResponseHasError
+     * @throws \HeadlessChromium\Exception\NoResponseAvailable
+     * @throws \HeadlessChromium\Exception\OperationTimedOut
+     *
+     * @return array
+     */
+    public function getCssVisualViewport()
+    {
+        return $this->getResultData('cssVisualViewport');
+    }
+
+    /** @param 'layoutViewport'|'visualViewport'|'contentSize'|'cssLayoutViewport'|'cssVisualViewport'|'cssContentSize' $key */
+    private function getResultData(string $key): array
+    {
+        return $this->awaitResponse()->getResultData($key);
     }
 }
