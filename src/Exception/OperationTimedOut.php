@@ -15,7 +15,7 @@ class OperationTimedOut extends \Exception
 {
     public static function createFromTimeout(int $timeoutMicroSec): self
     {
-        return new self(sprintf('Operation timed out after %s.'), self::getTimeoutPhrase($timeoutMicroSec));
+        return new self(sprintf('Operation timed out after %s.', self::getTimeoutPhrase($timeoutMicroSec)));
     }
 
     private static function getTimeoutPhrase(int $timeoutMicroSec): string
