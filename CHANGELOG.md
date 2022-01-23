@@ -1,6 +1,13 @@
 # CHANGELOG
 
 
+## 1.3.1 (2022-01-23)
+
+* Fixed issues with `Keyboard::typeText` with multibyte strings
+* Fixed issues with retina and scaled displays
+* Fixed issues with timeouts if system time changes
+* Fixed `Mouse::find()` after cursor has moved
+
 ## 1.3.0 (2021-12-07)
 
 * Added support for setting HTTP headers
