@@ -1,9 +1,11 @@
 # CHANGELOG
 
 
-## 1.4.0 (UPCOMING)
+## 1.4.0 (2022-01-23)
 
 * Added support for `--no-proxy-server` and `--proxy-bypass-list`
+* Added timeout option to `Page::getHtml`
+* Added `Node::sendFiles` method
 
 
 ## 1.3.1 (2022-01-23)
