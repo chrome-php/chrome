@@ -34,7 +34,7 @@ class Message
      * @var array
      */
     protected $params;
- 
+
     /**
      * @var ?string
      */
@@ -98,7 +98,7 @@ class Message
         }
         return \json_encode($message);
     }
-    
+
     public function getSessionId(): ?string
     {
         return $this->sessionId;
