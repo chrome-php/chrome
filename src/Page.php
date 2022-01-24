@@ -449,7 +449,7 @@ class Page
      *
      * @throws Exception\OperationTimedOut
      */
-    public function waitUntilContainsElement(string $selectors, int $timeout = 30000) : self
+    public function waitUntilContainsElement(string $selectors, int $timeout = 30000): self
     {
         $this->assertNotClosed();
 
