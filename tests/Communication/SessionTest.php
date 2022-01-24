@@ -59,7 +59,7 @@ class SessionTest extends TestCase
         $this->assertEquals(
             [
                 \json_encode([
-                    'id' => $responseReader->getTopResponseReader()->getMessage()->getId(),
+                    'id' => $responseReader->getMessage()->getId(),
                     'method' => 'Target.sendMessageToTarget',
                     'params' => [
                         'message' => \json_encode([
