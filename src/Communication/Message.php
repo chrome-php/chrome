@@ -96,7 +96,7 @@ class Message
         if (null !== $this->sessionId) {
             $message['sessionId'] = $this->sessionId;
         }
-    
+
         return \json_encode($message);
     }
 
