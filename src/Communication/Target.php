@@ -46,6 +46,7 @@ class Target
 
     /**
      * @param ?string $sessionId
+     *
      * @return Session
      */
     public function getSession(?string $sessionId = null): Session
