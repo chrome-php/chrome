@@ -34,7 +34,7 @@ class Message
      * @var array
      */
     protected $params;
-    
+ 
     /**
      * @var ?string
      */
@@ -93,7 +93,7 @@ class Message
             'method' => $this->getMethod(),
             'params' => (object) $this->getParams(),
         ];
-        if ($this->sessionId !== null) {
+        if (null !== $this->sessionId) {
             $message['sessionId'] = $this->sessionId;
         }
         return \json_encode($message);
@@ -104,7 +104,7 @@ class Message
         return $this->sessionId;
     }
 
-    public function setSessionId(string $sessionId)
+    public function setSessionId(string $sessionId): void
     {
         $this->sessionId = $sessionId;
     }
