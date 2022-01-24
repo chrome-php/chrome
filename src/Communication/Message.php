@@ -82,10 +82,14 @@ class Message
 
     public function __toString(): string
     {
-        return \json_encode([
+        $message = [
             'id' => $this->getId(),
             'method' => $this->getMethod(),
             'params' => (object) $this->getParams(),
-        ]);
+        ];
+        if ($this->sessionId !== null) {
+            $message['sessionId'] = $this->sessionId;
+        }
+        return \json_encode($message);
     }
 }
