@@ -470,7 +470,6 @@ class Page
         $element = [];
 
         while (true) {
-
             try {
                 $element = Utils::getElementPositionFromPage($this, $selectors, $position);
             } catch (\Throwable $exception) {
