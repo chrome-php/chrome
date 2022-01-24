@@ -19,6 +19,7 @@ use HeadlessChromium\Cookies\CookiesCollection;
 use HeadlessChromium\Dom\Dom;
 use HeadlessChromium\Exception\CommunicationException;
 use HeadlessChromium\Exception\InvalidTimezoneId;
+use HeadlessChromium\Exception\JavascriptException;
 use HeadlessChromium\Exception\NoResponseAvailable;
 use HeadlessChromium\Exception\TargetDestroyed;
 use HeadlessChromium\Input\Keyboard;
@@ -470,7 +471,7 @@ class Page
         while (true) {
             try {
                 $element = Utils::getElementPositionFromPage($this, $selectors, $position);
-            } catch (\Throwable $exception) {
+            } catch (JavascriptException $exception) {
                 yield $delay;
             }
 
