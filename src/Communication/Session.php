@@ -65,7 +65,7 @@ class Session extends EventEmitter
             throw new TargetDestroyed('The session was destroyed.');
         }
 
-        if ($message->getSessionId() === null) {
+        if (null === $message->getSessionId()) {
             $message->setSessionId($this->getSessionId());
         }
         $topResponse = $this->getConnection()->sendMessage($message);
