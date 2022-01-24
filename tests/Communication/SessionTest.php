@@ -59,16 +59,10 @@ class SessionTest extends TestCase
         $this->assertEquals(
             [
                 \json_encode([
-                    'id' => $responseReader->getMessage()->getId(),
-                    'method' => 'Target.sendMessageToTarget',
-                    'params' => [
-                        'message' => \json_encode([
-                            'id' => $message->getId(),
-                            'method' => 'baz',
-                            'params' => ['qux' => 'quux'],
-                        ]),
-                        'sessionId' => 'bar',
-                    ],
+                    'id' => $message->getId(),
+                    'method' => 'baz',
+                    'params' => ['qux' => 'quux'],
+                    'sessionId' => 'bar',
                 ]),
             ],
             $this->mockSocket->getSentData()
@@ -92,16 +86,10 @@ class SessionTest extends TestCase
         $this->assertEquals(
             [
                 \json_encode([
-                    'id' => $message->getId() + 1,
-                    'method' => 'Target.sendMessageToTarget',
-                    'params' => [
-                        'message' => \json_encode([
-                            'id' => $message->getId(),
-                            'method' => 'baz',
-                            'params' => ['qux' => 'quux'],
-                        ]),
-                        'sessionId' => 'bar',
-                    ],
+                    'id' => $message->getId(),
+                    'method' => 'baz',
+                    'params' => ['qux' => 'quux'],
+                    'sessionId' => 'bar',
                 ]),
             ],
             $this->mockSocket->getSentData()
