@@ -276,18 +276,21 @@ class Connection extends EventEmitter implements LoggerAwareInterface
      * Create a session for the given target id.
      *
      * @param string $targetId
+     * @param ?string $sessionId
      *
      * @return Session
      */
-    public function createSession($targetId): Session
+    public function createSession($targetId, $sessionId = null): Session
     {
-        $response = $this->sendMessageSync(
-            new Message('Target.attachToTarget', ['targetId' => $targetId])
-        );
-        if (empty($response['result'])) {
-            throw new TargetDestroyed('The target was destroyed.');
+        if ($sessionId === null) {
+            $response = $this->sendMessageSync(
+                new Message('Target.attachToTarget', ['targetId' => $targetId, 'flatten' => true])
+            );
+            if (empty($response['result'])) {
+                throw new TargetDestroyed('The target was destroyed.');
+            }
+            $sessionId = $response['result']['sessionId'];
         }
-        $sessionId = $response['result']['sessionId'];
         $session = new Session($targetId, $sessionId, $this);
 
         $this->sessions[$sessionId] = $session;
