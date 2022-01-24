@@ -447,10 +447,8 @@ class Page
      * @param int    $timeout
      *
      * @throws Exception\OperationTimedOut
-     *
-     * @return $this
      */
-    public function waitUntilContainsElement(string $selectors, int $timeout = 30000)
+    public function waitUntilContainsElement(string $selectors, int $timeout = 30000) : self
     {
         $this->assertNotClosed();
 
