@@ -388,7 +388,7 @@ class Connection extends EventEmitter implements LoggerAwareInterface
                     return $this->dispatchMessage($response['params']['message'], $session);
                 } else {
                     if (!$session && isset($response['sessionId'])) {
-                        $session = $this->sessions[$response['sessionId']]??null;
+                        $session = $this->sessions[$response['sessionId']] ?? null;
                     }
                     if ($session) {
                         $this->logger->debug(
