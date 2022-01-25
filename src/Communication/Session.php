@@ -136,5 +136,6 @@ class Session extends EventEmitter
         $this->emit('destroyed');
         $this->connection = null;
         $this->removeAllListeners();
+        $this->destroyed = true;
     }
 }
