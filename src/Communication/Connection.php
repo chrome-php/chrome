@@ -445,4 +445,13 @@ class Connection extends EventEmitter implements LoggerAwareInterface
 
         return null;
     }
+
+    /**
+     * @param string $sessionId
+     * @return boolean
+     */
+    public function isSessionDestroyed($sessionId): bool
+    {
+        return !isset($this->sessions[$sessionId]);
+    }
 }
