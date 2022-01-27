@@ -64,7 +64,7 @@ class Node
 
         $nodeId = $response->getResultData('nodeId');
 
-        if (null !== $nodeId) {
+        if (null !== $nodeId && 0 !== $nodeId) {
             return new self($this->page, $nodeId);
         }
 
