@@ -96,7 +96,7 @@ class Utils
      * @throws CommunicationException
      * @throws Exception\EvaluationFailed
      *
-     * @return mixed|null
+     * @return mixed
      */
     public static function getElementPositionFromPage(Page $page, string $selectors, int $position = 1)
     {
