@@ -11,8 +11,12 @@
 
 namespace HeadlessChromium\Test;
 
+use Generator;
 use HeadlessChromium\Browser;
 use HeadlessChromium\BrowserFactory;
+use HeadlessChromium\Dom\Selector\CssSelector;
+use HeadlessChromium\Dom\Selector\Selector;
+use HeadlessChromium\Dom\Selector\XPathSelector;
 
 /**
  * @covers \HeadlessChromium\Browser
@@ -44,16 +48,6 @@ class MouseApiTest extends BaseTestCase
         $page->navigate(self::sitePath($file))->waitForNavigation();
 
         return $page;
-    }
-
-    public function mouseFindProvider(): array
-    {
-        return [
-            // position, expected page title
-            [-1,         'c - test'],
-            [2,          'b - test'],
-            [99,         'a - test'],
-        ];
     }
 
     /**
@@ -101,15 +95,17 @@ class MouseApiTest extends BaseTestCase
     }
 
     /**
+     * @dataProvider providerFindElement_withSingleElement
+     *
      * @throws \HeadlessChromium\Exception\CommunicationException
      * @throws \HeadlessChromium\Exception\NoResponseAvailable
      */
-    public function testFind_withSingleElement(): void
+    public function testFindElement_withSingleElement(Selector $selector): void
     {
         // initial navigation
         $page = $this->openSitePage('b.html');
 
-        $page->mouse()->find('#a')->click();
+        $page->mouse()->findElement($selector)->click();
         $page->waitForReload();
 
         $title = $page->evaluate('document.title')->getReturnValue();
@@ -118,17 +114,28 @@ class MouseApiTest extends BaseTestCase
     }
 
     /**
+     * @return Generator<string, array{Selector}>
+     */
+    public function providerFindElement_withSingleElement(): Generator
+    {
+        yield 'css' => [new CssSelector('#a')];
+        yield 'xpath' => [new XPathSelector('//*[@id="a"]')];
+    }
+
+    /**
+     * @dataProvider providerFindElement_afterMove
+     *
      * @throws \HeadlessChromium\Exception\CommunicationException
      * @throws \HeadlessChromium\Exception\NoResponseAvailable
      */
-    public function testFind_afterMove(): void
+    public function testFindElement_afterMove(Selector $selector): void
     {
         // initial navigation
         $page = $this->openSitePage('b.html');
 
         $page->mouse()->move(1000, 1000);
 
-        $page->mouse()->find('#a')->click();
+        $page->mouse()->findElement($selector)->click();
         $page->waitForReload();
 
         $title = $page->evaluate('document.title')->getReturnValue();
@@ -137,16 +144,25 @@ class MouseApiTest extends BaseTestCase
     }
 
     /**
-     * @dataProvider mouseFindProvider
+     * @return Generator<string, array{Selector}>
+     */
+    public function providerFindElement_afterMove(): Generator
+    {
+        yield 'css' => [new CssSelector('#a')];
+        yield 'xpath' => [new XPathSelector('//*[@id="a"]')];
+    }
+
+    /**
+     * @dataProvider providerFindElement_withMultipleElements
      *
      * @throws \HeadlessChromium\Exception\CommunicationException
      * @throws \HeadlessChromium\Exception\NoResponseAvailable
      */
-    public function testFind_withMultipleElements(int $position, string $expectedPageTitle): void
+    public function testFindElement_withMultipleElements(Selector $selector, int $position, string $expectedPageTitle): void
     {
         $page = $this->openSitePage('b.html');
 
-        $page->mouse()->find('.a', $position)->click();
+        $page->mouse()->findElement($selector, $position)->click();
         $page->waitForReload();
 
         $title = $page->evaluate('document.title')->getReturnValue();
@@ -155,15 +171,32 @@ class MouseApiTest extends BaseTestCase
     }
 
     /**
+     * @return Generator<array-key, array{Selector, int, string}>
+     */
+    public function providerFindElement_withMultipleElements(): Generator
+    {
+        $cssSelector = new CssSelector('.a');
+        $xPathSelector = new XPathSelector('//*[@class="a"]');
+
+        foreach (['css' => $cssSelector, 'xpath' => $xPathSelector] as $type => $selector) {
+            yield $type.' – 1' => [$selector, -1, 'c - test'];
+            yield $type.' – 2' => [$selector, 2, 'b - test'];
+            yield $type.' – 3' => [$selector, 99, 'a - test'];
+        }
+    }
+
+    /**
+     * @dataProvider providerFindElement_withScrolling
+     *
      * @throws \HeadlessChromium\Exception\CommunicationException
      * @throws \HeadlessChromium\Exception\NoResponseAvailable
      */
-    public function testFind_withScrolling(): void
+    public function testFindElement_withScrolling(Selector $selector): void
     {
         // initial navigation
         $page = $this->openSitePage('bigLayout.html');
 
-        $page->mouse()->find('#bottomLink');
+        $page->mouse()->findElement($selector);
 
         $page->mouse()->click();
         $page->waitForReload();
@@ -174,18 +207,38 @@ class MouseApiTest extends BaseTestCase
     }
 
     /**
+     * @return Generator<string, array{Selector}>
+     */
+    public function providerFindElement_withScrolling(): Generator
+    {
+        yield 'css' => [new CssSelector('#bottomLink')];
+        yield 'xpath' => [new XPathSelector('//*[@id="bottomLink"]')];
+    }
+
+    /**
+     * @dataProvider providerFindElement_withMissingElement
+     *
      * @throws \HeadlessChromium\Exception\CommunicationException
      * @throws \HeadlessChromium\Exception\NoResponseAvailable
      * @throws \HeadlessChromium\Exception\ElementNotFoundException
      */
-    public function testFind_withMissingElement(): void
+    public function testFindElement_withMissingElement(Selector $selector): void
     {
         $this->expectException(\HeadlessChromium\Exception\ElementNotFoundException::class);
 
         // initial navigation
         $page = $this->openSitePage('b.html');
 
-        $page->mouse()->find('#missing');
+        $page->mouse()->findElement($selector);
+    }
+
+    /**
+     * @return Generator<string, array{Selector}>
+     */
+    public function providerFindElement_withMissingElement(): Generator
+    {
+        yield 'css' => [new CssSelector('#missing')];
+        yield 'xpath' => [new XPathSelector('//*[@id="missing"]')];
     }
 
     /**
