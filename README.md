@@ -307,6 +307,16 @@ $page->addScriptTag([
 $page->evaluate('$(".my.element").html()');
 ```
 
+#### Set the page HTML
+
+You can manually inject html to a page using the ```setHtml``` method.
+
+```php
+$page->setHtml('<p>text</p>');
+```
+
+Note that this will not append to the current page html, it will completely replace it.
+
 #### Get the page HTML
 
 You can get the page HTML as a string using the ```getHtml``` method.
