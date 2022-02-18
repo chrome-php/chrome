@@ -577,7 +577,7 @@ $page = $browser->createPage();
 $page->setCookies([
     Cookie::create('name', 'value', [
         'domain' => 'example.com',
-        'expires' => time() + 3600 // expires in 1 day
+        'expires' => time() + 3600 // expires in 1 hour
     ])
 ])->await();
 
