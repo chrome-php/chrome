@@ -30,7 +30,7 @@ class HttpEnabledTestCase extends BaseTestCase
             __DIR__.'/resources/static-web',
         ]);
         self::$process->start();
-        \usleep(80000); //wait for server to get going
+        \usleep(80000); // wait for server to get going
 
         // ensure it started
         if (!self::$process->isRunning()) {
