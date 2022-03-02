@@ -303,6 +303,7 @@ class BrowserProcess implements LoggerAwareInterface
             '--disable-prompt-on-repost',
             '--disable-sync',
             '--disable-translate',
+            '--disable-features=ChromeWhatsNewUI',
             '--metrics-recording-only',
             '--no-first-run',
             '--safebrowsing-disable-auto-update',
