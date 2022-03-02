@@ -104,4 +104,52 @@ class BrowsingTest extends BaseTestCase
 
         $this->assertTrue(true);
     }
+
+    public function testGetPages(): void
+    {
+        $initialCount = \count(self::$browser->getPages());
+
+        self::$browser->createPage();
+
+        $finalCount = \count(self::$browser->getPages());
+
+        $this->assertGreaterThan($initialCount, $finalCount);
+    }
+
+    /**
+     * @throws \HeadlessChromium\Exception\CommunicationException
+     * @throws \HeadlessChromium\Exception\NoResponseAvailable
+     */
+    public function testGetPagesNavigateEvaluate(): void
+    {
+        self::$browser->createPage();
+
+        $pages = self::$browser->getPages();
+
+        foreach ($pages as $page) {
+            // initial navigation
+            $page = $this->openSitePage('index.html');
+            $title = $page->evaluate('document.title')->getReturnValue();
+            $this->assertEquals('foo', $title);
+
+            // navigate again
+            $page->navigate(self::sitePath('a.html'))->waitForNavigation();
+            $title = $page->evaluate('document.title')->getReturnValue();
+            $this->assertEquals('a - test', $title);
+        }
+    }
+
+    public function testGetPagesClose(): void
+    {
+        self::$browser->createPage();
+        $page = self::$browser->createPage();
+
+        $initialCount = \count(self::$browser->getPages());
+
+        $page->close();
+
+        $finalCount = \count(self::$browser->getPages());
+
+        $this->assertLessThan($initialCount, $finalCount);
+    }
 }

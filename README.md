@@ -186,6 +186,12 @@ Here are the options available for the browser factory:
 $page = $browser->createPage();
 ```
 
+#### Get opened pages (tabs)
+
+```php
+$pages = $browser->getPages();
+```
+
 #### Close the browser
 
 ```php
