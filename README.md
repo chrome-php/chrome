@@ -729,7 +729,7 @@ $elem->sendKeys('Sample text');
 You can upload file to file from the input:
 
 ```php
-$elem->uploadFile('/path/to/file');
+$elem->sendFile('/path/to/file');
 ```
 
 You can get element text or attribute:
