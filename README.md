@@ -457,7 +457,7 @@ header('Pragma: public');
 echo base64_decode($pdf->getBase64());
 ```
 
-Options `headerTempalte` and `footerTempalte`:
+Options `headerTemplate` and `footerTemplate`:
 
 Should be valid HTML markup with the following classes used to inject printing values into them:
 - date: formatted print date
