@@ -399,8 +399,8 @@ class Page
     {
         $this->assertNotClosed();
 
-        if (!$loaderId) {
-            $loaderId = $loader = $this->frameManager->getMainFrame()->getLatestLoaderId();
+        if (null === $loaderId) {
+            $loaderId = $this->frameManager->getMainFrame()->getLatestLoaderId();
         }
 
         Utils::tryWithTimeout($timeout * 1000, $this->waitForReloadGenerator($eventName, $loaderId));
@@ -849,11 +849,29 @@ class Page
     }
 
     /**
+     * Sets the raw html of the current page.
+     *
+     * @throws Exception\CommunicationException
+     */
+    public function setHtml(string $html, int $timeout = 3000): void
+    {
+        $this->getSession()->sendMessageSync(
+            new Message(
+                'Page.setDocumentContent',
+                [
+                    'frameId' => $this->getFrameManager()->getMainFrame()->getFrameId(),
+                    'html' => $html,
+                ]
+            )
+        );
+
+        $this->waitForReload(self::LOAD, $timeout, '');
+    }
+
+    /**
      * Gets the raw html of the current page.
      *
      * @throws Exception\CommunicationException
-     *
-     * @return string
      */
     public function getHtml(?int $timeout = null): string
     {
