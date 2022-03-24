@@ -13,6 +13,7 @@ namespace HeadlessChromium;
 
 use HeadlessChromium\Communication\Connection;
 use HeadlessChromium\Communication\Message;
+use HeadlessChromium\Exception\CommunicationException;
 use HeadlessChromium\Exception\OperationTimedOut;
 
 class Utils
@@ -89,5 +90,25 @@ class Utils
                 }
             }
         }
+    }
+
+    /**
+     * @throws CommunicationException
+     * @throws Exception\EvaluationFailed
+     *
+     * @return mixed
+     */
+    public static function getElementPositionFromPage(Page $page, string $selectors, int $position = 1)
+    {
+        $elementList = $page
+            ->evaluate('JSON.parse(JSON.stringify(document.querySelectorAll("'.$selectors.'")));')
+            ->getReturnValue();
+
+        $position = \max(0, ($position - 1));
+        $position = \min($position, (\count($elementList) - 1));
+
+        return $page
+            ->evaluate('JSON.parse(JSON.stringify(document.querySelectorAll("'.$selectors.'")['.$position.'].getBoundingClientRect()));')
+            ->getReturnValue();
     }
 }

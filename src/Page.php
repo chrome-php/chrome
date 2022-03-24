@@ -19,6 +19,7 @@ use HeadlessChromium\Cookies\CookiesCollection;
 use HeadlessChromium\Dom\Dom;
 use HeadlessChromium\Exception\CommunicationException;
 use HeadlessChromium\Exception\InvalidTimezoneId;
+use HeadlessChromium\Exception\JavascriptException;
 use HeadlessChromium\Exception\NoResponseAvailable;
 use HeadlessChromium\Exception\TargetDestroyed;
 use HeadlessChromium\Input\Keyboard;
@@ -437,6 +438,48 @@ class Page
             }
 
             $this->getSession()->getConnection()->readData();
+        }
+    }
+
+    /**
+     * Wait until page contains Node.
+     *
+     * @param string $selectors
+     * @param int    $timeout
+     *
+     * @throws Exception\OperationTimedOut
+     */
+    public function waitUntilContainsElement(string $selectors, int $timeout = 30000): self
+    {
+        $this->assertNotClosed();
+
+        Utils::tryWithTimeout($timeout * 1000, $this->waitForElement($selectors));
+
+        return $this;
+    }
+
+    /**
+     * @return bool|\Generator
+     *
+     * @internal
+     */
+    public function waitForElement(string $selectors, int $position = 1)
+    {
+        $delay = 500;
+        $element = [];
+
+        while (true) {
+            try {
+                $element = Utils::getElementPositionFromPage($this, $selectors, $position);
+            } catch (JavascriptException $exception) {
+                yield $delay;
+            }
+
+            if (\array_key_exists('x', $element)) {
+                return true;
+            }
+
+            yield $delay;
         }
     }
 
