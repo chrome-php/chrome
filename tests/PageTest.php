@@ -425,7 +425,7 @@ class PageTest extends BaseTestCase
 
         $this->assertStringContainsString($html, $page->getHtml());
     }
-  
+
     public function testWaitUntilContainsElement(): void
     {
         $factory = new BrowserFactory();
