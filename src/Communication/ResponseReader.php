@@ -178,6 +178,11 @@ class ResponseReader
             return true;
         }
 
+        // check if the session was destroyed in the mean time
+        if (null !== $this->message->getSessionId() && $this->connection->isSessionDestroyed($this->message->getSessionId())) {
+            throw new \HeadlessChromium\Exception\TargetDestroyed('The session is destroyed.');
+        }
+
         return false;
     }
 }

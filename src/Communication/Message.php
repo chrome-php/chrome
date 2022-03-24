@@ -36,6 +36,11 @@ class Message
     protected $params;
 
     /**
+     * @var ?string
+     */
+    protected $sessionId;
+
+    /**
      * get the last generated message id.
      *
      * @return int
@@ -49,11 +54,12 @@ class Message
      * @param string $method
      * @param array  $params
      */
-    public function __construct(string $method, array $params = [])
+    public function __construct(string $method, array $params = [], ?string $sessionId = null)
     {
         $this->id = ++self::$messageId;
         $this->method = $method;
         $this->params = $params;
+        $this->sessionId = $sessionId;
     }
 
     /**
@@ -82,10 +88,25 @@ class Message
 
     public function __toString(): string
     {
-        return \json_encode([
+        $message = [
             'id' => $this->getId(),
             'method' => $this->getMethod(),
             'params' => (object) $this->getParams(),
-        ]);
+        ];
+        if (null !== $this->sessionId) {
+            $message['sessionId'] = $this->sessionId;
+        }
+
+        return \json_encode($message);
+    }
+
+    public function getSessionId(): ?string
+    {
+        return $this->sessionId;
+    }
+
+    public function setSessionId(string $sessionId): void
+    {
+        $this->sessionId = $sessionId;
     }
 }

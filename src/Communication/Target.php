@@ -45,9 +45,11 @@ class Target
     }
 
     /**
+     * @param ?string $sessionId
+     *
      * @return Session
      */
-    public function getSession(): Session
+    public function getSession(?string $sessionId = null): Session
     {
         if ($this->destroyed) {
             throw new TargetDestroyed('The target was destroyed.');
@@ -55,7 +57,7 @@ class Target
 
         // if not already done, create a session for the target
         if (!$this->session) {
-            $this->session = $session = $this->connection->createSession($this->getTargetInfo('targetId'));
+            $this->session = $this->connection->createSession($this->getTargetInfo('targetId'), $sessionId);
         }
 
         return $this->session;

@@ -57,20 +57,20 @@ class Session extends EventEmitter
      *
      * @throws CommunicationException
      *
-     * @return SessionResponseReader
+     * @return ResponseReader
      */
-    public function sendMessage(Message $message): SessionResponseReader
+    public function sendMessage(Message $message): ResponseReader
     {
         if ($this->destroyed) {
             throw new TargetDestroyed('The session was destroyed.');
         }
 
-        $topResponse = $this->getConnection()->sendMessage(new Message('Target.sendMessageToTarget', [
-            'message' => (string) $message,
-            'sessionId' => $this->getSessionId(),
-        ]));
+        if (null === $message->getSessionId()) {
+            $message->setSessionId($this->getSessionId());
+        }
+        $topResponse = $this->getConnection()->sendMessage($message);
 
-        return new SessionResponseReader($topResponse, $message);
+        return $topResponse;
     }
 
     /**

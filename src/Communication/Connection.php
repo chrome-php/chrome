@@ -275,19 +275,22 @@ class Connection extends EventEmitter implements LoggerAwareInterface
     /**
      * Create a session for the given target id.
      *
-     * @param string $targetId
+     * @param string  $targetId
+     * @param ?string $sessionId
      *
      * @return Session
      */
-    public function createSession($targetId): Session
+    public function createSession($targetId, $sessionId = null): Session
     {
-        $response = $this->sendMessageSync(
-            new Message('Target.attachToTarget', ['targetId' => $targetId])
-        );
-        if (empty($response['result'])) {
-            throw new TargetDestroyed('The target was destroyed.');
+        if (null === $sessionId) {
+            $response = $this->sendMessageSync(
+                new Message('Target.attachToTarget', ['targetId' => $targetId, 'flatten' => true])
+            );
+            if (empty($response['result'])) {
+                throw new TargetDestroyed('The target was destroyed.');
+            }
+            $sessionId = $response['result']['sessionId'];
         }
-        $sessionId = $response['result']['sessionId'];
         $session = new Session($targetId, $sessionId, $this);
 
         $this->sessions[$sessionId] = $session;
@@ -384,6 +387,9 @@ class Connection extends EventEmitter implements LoggerAwareInterface
 
                     return $this->dispatchMessage($response['params']['message'], $session);
                 } else {
+                    if (!$session && isset($response['sessionId'])) {
+                        $session = $this->sessions[$response['sessionId']] ?? null;
+                    }
                     if ($session) {
                         $this->logger->debug(
                             'session('.$session->getSessionId().'): ⇶ dispatching method:'.$response['method']
@@ -438,5 +444,15 @@ class Connection extends EventEmitter implements LoggerAwareInterface
         }
 
         return null;
+    }
+
+    /**
+     * @param string $sessionId
+     *
+     * @return bool
+     */
+    public function isSessionDestroyed($sessionId)
+    {
+        return !isset($this->sessions[$sessionId]);
     }
 }
