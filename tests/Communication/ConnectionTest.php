@@ -209,7 +209,7 @@ class ConnectionTest extends TestCase
         $connection = new Connection($this->mocSocket);
         $connection->connect();
 
-        //set invalid json
+        // set invalid json
         $this->mocSocket->addReceivedData('{');
 
         $connection->readData();
@@ -222,7 +222,7 @@ class ConnectionTest extends TestCase
         $connection = new Connection($this->mocSocket);
         $connection->connect();
 
-        //set string variable instead of array
+        // set string variable instead of array
         $this->mocSocket->addReceivedData('"foo"');
 
         $connection->readData();
@@ -235,7 +235,7 @@ class ConnectionTest extends TestCase
         $connection = new Connection($this->mocSocket);
         $connection->connect();
 
-        //set string variable instead of array
+        // set string variable instead of array
         $this->mocSocket->addReceivedData('{"message": "foo"}');
 
         $connection->readData();

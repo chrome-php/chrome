@@ -425,4 +425,18 @@ class PageTest extends BaseTestCase
 
         $this->assertStringContainsString($html, $page->getHtml());
     }
+  
+    public function testWaitUntilContainsElement(): void
+    {
+        $factory = new BrowserFactory();
+
+        $browser = $factory->createBrowser();
+        $page = $browser->createPage();
+
+        $page->navigate(self::sitePath('elementLoad.html'))->waitForNavigation();
+
+        $page->waitUntilContainsElement('div[data-name=\"el\"]');
+
+        $this->assertStringContainsString('<div data-name="el"></div>', $page->getHtml());
+    }
 }

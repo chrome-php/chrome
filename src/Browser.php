@@ -32,6 +32,11 @@ class Browser
     protected $targets = [];
 
     /**
+     * @var array<string,Page>
+     */
+    protected $pages = [];
+
+    /**
      * A preScript to be automatically added on every new pages.
      *
      * @var string|null
@@ -64,6 +69,8 @@ class Browser
             $target = $this->getTarget($params['targetId']);
 
             if ($target) {
+                // remove the page
+                unset($this->pages[$params['targetId']]);
                 // remove the target
                 unset($this->targets[$params['targetId']]);
                 $target->destroy();
@@ -150,6 +157,51 @@ class Browser
             throw new \RuntimeException('Target could not be created for page.');
         }
 
+        $page = $this->getPage($targetId);
+
+        return $page;
+    }
+
+    /**
+     * @param string $targetId
+     *
+     * @return Target|null
+     */
+    public function getTarget($targetId)
+    {
+        // make sure target was created (via Target.targetCreated event)
+        if (!\array_key_exists($targetId, $this->targets)) {
+            return null;
+        }
+
+        return $this->targets[$targetId];
+    }
+
+    /**
+     * @return Target[]
+     */
+    public function getTargets()
+    {
+        return \array_values($this->targets);
+    }
+
+    /**
+     * @param string $targetId
+     *
+     * @return Page|null
+     */
+    public function getPage($targetId)
+    {
+        if (\array_key_exists($targetId, $this->pages)) {
+            return $this->pages[$targetId];
+        }
+
+        $target = $this->getTarget($targetId);
+
+        if ('page' !== $target->getTargetInfo('type')) {
+            return null;
+        }
+
         // get initial frame tree
         $frameTreeResponse = $target->getSession()->sendMessageSync(new Message('Page.getFrameTree'));
 
@@ -178,29 +230,20 @@ class Browser
             $page->addPreScript($this->pagePreScript);
         }
 
+        $this->pages[$targetId] = $page;
+
         return $page;
     }
 
     /**
-     * @param string $targetId
-     *
-     * @return Target|null
+     * @return Page[]
      */
-    public function getTarget($targetId)
+    public function getPages()
     {
-        // make sure target was created (via Target.targetCreated event)
-        if (!\array_key_exists($targetId, $this->targets)) {
-            return null;
-        }
+        $ids = \array_keys($this->targets);
 
-        return $this->targets[$targetId];
-    }
+        $pages = \array_filter(\array_map([$this, 'getPage'], $ids));
 
-    /**
-     * @return Target[]
-     */
-    public function getTargets()
-    {
-        return \array_values($this->targets);
+        return \array_values($pages);
     }
 }

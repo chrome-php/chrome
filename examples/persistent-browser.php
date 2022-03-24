@@ -45,6 +45,13 @@ if (!$browser) {
 }
 
 // do something with the browser
-$page = $browser->createPage();
+$pages = $browser->getPages();
+
+if (isset($pages[0])) {
+    // Get the first opened page
+    $page = $pages[0];
+} else {
+    $page = $browser->createPage();
+}
 
 $page->navigate('http://example.com')->waitForNavigation();

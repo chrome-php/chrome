@@ -186,6 +186,12 @@ Here are the options available for the browser factory:
 $page = $browser->createPage();
 ```
 
+#### Get opened pages (tabs)
+
+```php
+$pages = $browser->getPages();
+```
+
 #### Close the browser
 
 ```php
@@ -587,7 +593,7 @@ $page = $browser->createPage();
 $page->setCookies([
     Cookie::create('name', 'value', [
         'domain' => 'example.com',
-        'expires' => time() + 3600 // expires in 1 day
+        'expires' => time() + 3600 // expires in 1 hour
     ])
 ])->await();
 
