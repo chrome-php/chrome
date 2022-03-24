@@ -738,7 +738,7 @@ class Page
 
         $this->getSession()
             ->getConnection()
-            ->sendMessage(
+            ->sendMessageSync(
                 new Message(
                     'Target.closeTarget',
                     ['targetId' => $this->getSession()->getTargetId()]
