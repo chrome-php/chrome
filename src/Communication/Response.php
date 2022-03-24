@@ -119,7 +119,6 @@ class Response implements \ArrayAccess
     /**
      * {@inheritdoc}
      */
-    #[\ReturnTypeWillChange]
     public function offsetSet($offset, $value): void
     {
         throw new \Exception('Responses are immutable');
@@ -128,7 +127,6 @@ class Response implements \ArrayAccess
     /**
      * {@inheritdoc}
      */
-    #[\ReturnTypeWillChange]
     public function offsetUnset($offset): void
     {
         throw new \Exception('Responses are immutable');
