@@ -40,8 +40,10 @@ class DomTest extends BaseTestCase
     {
         $page = $this->openSitePage('domForm.html');
         $element = $page->dom()->querySelector('button');
+        $notFoundElement = $page->dom()->querySelector('img');
 
         $this->assertNotNull($element);
+        $this->assertNull($notFoundElement);
     }
 
     public function testSearchByCssSelectorAll(): void
@@ -51,6 +53,9 @@ class DomTest extends BaseTestCase
         $elements = $page->dom()->querySelectorAll('div');
 
         $this->assertCount(2, $elements);
+
+        $notFoundElements = $page->dom()->querySelectorAll('img');
+        $this->assertCount(0, $notFoundElements);
     }
 
     public function testSearchByXpath(): void

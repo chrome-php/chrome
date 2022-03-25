@@ -44,6 +44,7 @@ class CookiesCollection implements \IteratorAggregate, \Countable
     /**
      * {@inheritdoc}
      */
+    #[\ReturnTypeWillChange]
     public function getIterator()
     {
         return new \ArrayIterator($this->cookies);
@@ -52,6 +53,7 @@ class CookiesCollection implements \IteratorAggregate, \Countable
     /**
      * {@inheritdoc}
      */
+    #[\ReturnTypeWillChange]
     public function count()
     {
         return \count($this->cookies);
