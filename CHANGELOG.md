@@ -1,6 +1,15 @@
 # CHANGELOG
 
 
+## 1.4.1 (2022-03-25)
+
+* Added fallback to css layout metrics
+* Added missing destroyed setting
+* Prevent `Node::querySelector` from returning nodeId `0`
+* Fixed "What's new" page opening on startup
+* More fixes to enable eventual PHP 8.1 support
+
+
 ## 1.4.0 (2022-01-23)
 
 * Added support for `--no-proxy-server` and `--proxy-bypass-list`
