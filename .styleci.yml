@@ -1,5 +1,7 @@
 preset: symfony
 
+version: 7.4
+
 risky: true
 
 enabled:
