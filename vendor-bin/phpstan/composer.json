@@ -1,6 +1,6 @@
 {
     "require": {
-        "php": "^8.0",
+        "php": "^7.4",
         "phpstan/phpstan": "1.5.0"
     },
     "config": {
