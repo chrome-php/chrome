@@ -1,6 +1,16 @@
 # CHANGELOG
 
 
+## 1.5.0 (2022-03-25)
+
+* Added `Browser::getPages` method
+* Added `Page::waitUntilContainsElement()` method
+* Added `Page::setHtml()` method
+* Added support for XPath by introducing `Selector`
+* Added `Mouse::findElement()` method
+* Switch to flatten mode
+
+
 ## 1.4.1 (2022-03-25)
 
 * Added fallback to css layout metrics
