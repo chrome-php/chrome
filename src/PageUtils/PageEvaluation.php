@@ -98,6 +98,7 @@ class PageEvaluation
      * @param int|null $timeout
      *
      * @throws EvaluationFailed
+     * @throws JavascriptException
      *
      * @return mixed
      */

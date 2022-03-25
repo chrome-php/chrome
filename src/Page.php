@@ -17,6 +17,7 @@ use HeadlessChromium\Communication\Target;
 use HeadlessChromium\Cookies\Cookie;
 use HeadlessChromium\Cookies\CookiesCollection;
 use HeadlessChromium\Dom\Dom;
+use HeadlessChromium\Dom\Selector\CssSelector;
 use HeadlessChromium\Exception\CommunicationException;
 use HeadlessChromium\Exception\InvalidTimezoneId;
 use HeadlessChromium\Exception\JavascriptException;
@@ -444,9 +445,6 @@ class Page
     /**
      * Wait until page contains Node.
      *
-     * @param string $selectors
-     * @param int    $timeout
-     *
      * @throws Exception\OperationTimedOut
      */
     public function waitUntilContainsElement(string $selectors, int $timeout = 30000): self
@@ -470,7 +468,7 @@ class Page
 
         while (true) {
             try {
-                $element = Utils::getElementPositionFromPage($this, $selectors, $position);
+                $element = Utils::getElementPositionFromPage($this, new CssSelector($selectors), $position);
             } catch (JavascriptException $exception) {
                 yield $delay;
             }

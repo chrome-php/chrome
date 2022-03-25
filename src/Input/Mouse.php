@@ -12,6 +12,8 @@
 namespace HeadlessChromium\Input;
 
 use HeadlessChromium\Communication\Message;
+use HeadlessChromium\Dom\Selector\CssSelector;
+use HeadlessChromium\Dom\Selector\Selector;
 use HeadlessChromium\Exception\ElementNotFoundException;
 use HeadlessChromium\Exception\JavascriptException;
 use HeadlessChromium\Page;
@@ -261,16 +263,44 @@ class Mouse
      */
     public function find(string $selectors, int $position = 1): self
     {
+        $this->findElement(new CssSelector($selectors), $position);
+
+        return $this;
+    }
+
+    /**
+     * Find an element and move the mouse to a random position over it.
+     *
+     * The search could result in several elements. The $position param can be used to select a specific element.
+     * The given position can only be between 1 and the maximum number or elements. It will be adjusted to the
+     * minimum and maximum values if needed.
+     *
+     * Example:
+     * $page->mouse()->findElement(new CssSelector('#a')):
+     * $page->mouse()->findElement(new CssSelector('.a'), 2);
+     * $page->mouse()->findElement(new XPathSelector('//*[@id="a"]'), 2);
+     *
+     * @param Selector $selector selector to use
+     * @param int      $position (optional) which element of the result set should be used
+     *
+     * @throws \HeadlessChromium\Exception\CommunicationException
+     * @throws \HeadlessChromium\Exception\NoResponseAvailable
+     * @throws \HeadlessChromium\Exception\ElementNotFoundException
+     *
+     * @return $this
+     */
+    public function findElement(Selector $selector, int $position = 1): self
+    {
         $this->page->assertNotClosed();
 
         try {
-            $element = Utils::getElementPositionFromPage($this->page, $selectors, $position);
+            $element = Utils::getElementPositionFromPage($this->page, $selector, $position);
         } catch (JavascriptException $exception) {
-            throw new ElementNotFoundException('The search for "'.$selectors.'" returned no elements.');
+            throw new ElementNotFoundException('The search for "'.$selector->expressionCount().'" returned no result.');
         }
 
         if (false === \array_key_exists('x', $element)) {
-            throw new ElementNotFoundException('The search for "'.$selectors.'" returned an element with no position.');
+            throw new ElementNotFoundException('The search for "'.$selector->expressionFindOne($position).'" returned an element with no position.');
         }
 
         $rightBoundary = \floor($element['right']);
