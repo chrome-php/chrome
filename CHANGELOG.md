@@ -1,7 +1,7 @@
 # CHANGELOG
 
 
-## 1.6.0 (UPCOMING)
+## 1.6.0 (2022-03-30)
 
 * Officially support PHP 8.1
 
