@@ -1,6 +1,11 @@
 # CHANGELOG
 
 
+## 1.6.0 (UPCOMING)
+
+* Officially support PHP 8.1
+
+
 ## 1.5.0 (2022-03-25)
 
 * Added `Browser::getPages` method

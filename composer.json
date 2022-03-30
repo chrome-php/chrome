@@ -17,7 +17,7 @@
     ],
     "require": {
         "php": "^7.3 || ^8.0",
-        "chrome-php/wrench": "^1.1",
+        "chrome-php/wrench": "^1.2",
         "evenement/evenement": "^3.0.1",
         "monolog/monolog": "^1.26 || ^2.2",
         "psr/log": "^1.1 || ^2.0 || ^3.0",
