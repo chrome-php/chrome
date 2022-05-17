@@ -19,7 +19,7 @@
         "php": "^7.3 || ^8.0",
         "chrome-php/wrench": "^1.2",
         "evenement/evenement": "^3.0.1",
-        "monolog/monolog": "^1.26 || ^2.2",
+        "monolog/monolog": "^1.26 || ^2.2 || ^3.0",
         "psr/log": "^1.1 || ^2.0 || ^3.0",
         "symfony/filesystem": "^4.4 || ^5.0 || ^6.0",
         "symfony/polyfill-mbstring": "^1.23",
