@@ -1,7 +1,7 @@
 # CHANGELOG
 
 
-## 1.6.1 (UPCOMING)
+## 1.6.1 (2022-05-17)
 
 * Support Monolog 3
 
