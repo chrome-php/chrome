@@ -181,7 +181,7 @@ class Page
     {
         $this->getSession()->sendMessage(new Message(
             'Network.setExtraHTTPHeaders',
-            $headers
+            ['headers' => $headers]
         ));
     }
 

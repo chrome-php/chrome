@@ -132,19 +132,6 @@ class ConnectionTest extends TestCase
         );
     }
 
-    public function testConnectionHttpHeaders(): void
-    {
-        $connection = new Connection($this->mocSocket);
-
-        $header = [
-            'header_name' => 'header_value',
-        ];
-
-        $connection->setConnectionHttpHeaders($header);
-
-        $this->assertSame($header, $connection->getConnectionHttpHeaders());
-    }
-
     public function testSendMessageSync(): void
     {
         $connection = new Connection($this->mocSocket);

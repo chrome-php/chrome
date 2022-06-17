@@ -133,24 +133,6 @@ class Connection extends EventEmitter implements LoggerAwareInterface
     }
 
     /**
-     * @param array<string, string> $headers
-     *
-     * @return void
-     */
-    public function setConnectionHttpHeaders(array $headers): void
-    {
-        $this->httpHeaders = $headers;
-    }
-
-    /**
-     * @return array<string, string>
-     */
-    public function getConnectionHttpHeaders(): array
-    {
-        return $this->httpHeaders;
-    }
-
-    /**
      * Gets the default timeout used when sending a message synchronously.
      *
      * @return int
