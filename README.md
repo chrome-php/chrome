@@ -226,6 +226,8 @@ When using ``$navigation->waitForNavigation()`` you will wait for 30sec until th
 You can change the timeout or the event to listen for:
 
 ```php
+use HeadlessChromium\Page;
+
 // wait 10secs for the event "DOMContentLoaded" to be triggered
 $navigation->waitForNavigation(Page::DOM_CONTENT_LOADED, 10000);
 ```
