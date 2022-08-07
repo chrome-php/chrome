@@ -435,6 +435,8 @@ $screenshot->saveToFile('/some/place/file.jpg');
 #### Print as PDF
 
 ```php
+use HeadlessChromium\PageUtils\PagePdfOptions;
+
 // navigate
 $navigation = $page->navigate('http://example.com');
 
@@ -442,19 +444,12 @@ $navigation = $page->navigate('http://example.com');
 $navigation->waitForNavigation();
 
 $options = [
-    'landscape'           => true,             // default to false
-    'printBackground'     => true,             // default to false
-    'displayHeaderFooter' => true,             // default to false
-    'preferCSSPageSize'   => true,             // default to false (reads parameters directly from @page)
-    'marginTop'           => 0.0,              // defaults to ~0.4 (must be a float, value in inches)
-    'marginBottom'        => 1.4,              // defaults to ~0.4 (must be a float, value in inches)
-    'marginLeft'          => 5.0,              // defaults to ~0.4 (must be a float, value in inches)
-    'marginRight'         => 1.0,              // defaults to ~0.4 (must be a float, value in inches)
-    'paperWidth'          => 6.0,              // defaults to 8.5 (must be a float, value in inches)
-    'paperHeight'         => 6.0,              // defaults to 8.5 (must be a float, value in inches)
-    'headerTemplate'      => '<div>foo</div>', // see details above
-    'footerTemplate'      => '<div>foo</div>', // see details above
-    'scale'               => 1.2,              // defaults to 1.0 (must be a float)
+    PagePdfOptions::landscape           => true,
+    PagePdfOptions::printBackground     => true,
+    PagePdfOptions::displayHeaderFooter => true,
+    PagePdfOptions::headerTemplate      => '<div>foo</div>',
+    PagePdfOptions::footerTemplate      => '<div>foo</div>',
+    PagePdfOptions::scale               => 1.2,
 ];
 
 // print as pdf (in memory binaries)
@@ -475,14 +470,27 @@ header('Pragma: public');
 echo base64_decode($pdf->getBase64());
 ```
 
-Options `headerTemplate` and `footerTemplate`:
+##### Available options
 
-Should be valid HTML markup with the following classes used to inject printing values into them:
-- date: formatted print date
-- title: document title
-- url: document location
-- pageNumber: current page number
-- totalPages: total pages in the document
+| Option name               | Default | Description                                                                           |
+|---------------------------|---------|---------------------------------------------------------------------------------------|
+| `landscape`               | `false` | Paper orientation                                                                     |
+| `displayHeaderFooter`     | `false` | Display header and footer                                                             |
+| `printBackground`         | `false` | Print background graphics                                                             |
+| `scale`                   | `1`     | Scale of the webpage rendering                                                        |
+| `paperWidth`              | `8.5`   | Paper width in inches                                                                 |
+| `paperHeight`             | `11`    | Paper height in inches                                                                |
+| `marginTop`               | `0.4`   | Top margin in inches                                                                  |
+| `marginBottom`            | `0.4`   | Bottom margin in inches                                                               |
+| `marginLeft`              | `0.4`   | Left margin in inches                                                                 |
+| `marginRight`             | `0.4`   | Right margin in inches                                                                |
+| `pageRanges`              | none    | Paper ranges to print, one based, e.g., '1-5, 8, 11-13'                               |
+| `ignoreInvalidPageRanges` | `false` | Whether to silently ignore invalid but successfully parsed page ranges, such as ‘3-2’ |
+| `headerTemplate`          | none    | HTML template for the print header                                                    |
+| `footerTemplate`          | none    | HTML template for the print footer                                                    |
+| `preferCSSPageSize`       | `false` | Whether or not to prefer page size as defined by css                                  |
+
+Those options are documented as constants in the `HeadlessChromium\PageUtils\PagePdfOptions::class`
 
 ### Save downloads
 

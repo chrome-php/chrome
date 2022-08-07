@@ -26,10 +26,9 @@ class PagePdf extends AbstractBinaryInput
      */
     private const OPTIONS = [
         'landscape' => self::TYPE_BOOLEAN,
-        'printBackground' => self::TYPE_BOOLEAN,
         'displayHeaderFooter' => self::TYPE_BOOLEAN,
-        'headerTemplate' => self::TYPE_STRING,
-        'footerTemplate' => self::TYPE_STRING,
+        'printBackground' => self::TYPE_BOOLEAN,
+        'scale' => self::TYPE_NUMERIC,
         'paperWidth' => self::TYPE_NUMERIC,
         'paperHeight' => self::TYPE_NUMERIC,
         'marginTop' => self::TYPE_NUMERIC,
@@ -38,8 +37,9 @@ class PagePdf extends AbstractBinaryInput
         'marginRight' => self::TYPE_NUMERIC,
         'pageRanges' => self::TYPE_STRING,
         'ignoreInvalidPageRanges' => self::TYPE_BOOLEAN,
+        'headerTemplate' => self::TYPE_STRING,
+        'footerTemplate' => self::TYPE_STRING,
         'preferCSSPageSize' => self::TYPE_BOOLEAN,
-        'scale' => self::TYPE_NUMERIC,
     ];
 
     /**

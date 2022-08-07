@@ -62,10 +62,9 @@ class PagePdfTest extends BaseTestCase
     {
         return \array_merge(
             $this->getOptionsDataset('landscape', self::TYPES_BOOLEAN),
-            $this->getOptionsDataset('printBackground', self::TYPES_BOOLEAN),
             $this->getOptionsDataset('displayHeaderFooter', self::TYPES_BOOLEAN),
-            $this->getOptionsDataset('headerTemplate', self::TYPES_STRING),
-            $this->getOptionsDataset('footerTemplate', self::TYPES_STRING),
+            $this->getOptionsDataset('printBackground', self::TYPES_BOOLEAN),
+            $this->getOptionsDataset('scale', self::TYPES_NUMERIC),
             $this->getOptionsDataset('paperWidth', self::TYPES_NUMERIC),
             $this->getOptionsDataset('paperHeight', self::TYPES_NUMERIC),
             $this->getOptionsDataset('marginTop', self::TYPES_NUMERIC),
@@ -74,8 +73,9 @@ class PagePdfTest extends BaseTestCase
             $this->getOptionsDataset('marginRight', self::TYPES_NUMERIC),
             $this->getOptionsDataset('pageRanges', self::TYPES_STRING),
             $this->getOptionsDataset('ignoreInvalidPageRanges', self::TYPES_BOOLEAN),
+            $this->getOptionsDataset('headerTemplate', self::TYPES_STRING),
+            $this->getOptionsDataset('footerTemplate', self::TYPES_STRING),
             $this->getOptionsDataset('preferCSSPageSize', self::TYPES_BOOLEAN),
-            $this->getOptionsDataset('scale', self::TYPES_NUMERIC),
         );
     }
 
@@ -94,6 +94,7 @@ class PagePdfTest extends BaseTestCase
      */
     public function testValidOptions(string $optionName, $optionValue): void
     {
+        $this->assertSame($optionName, \constant('HeadlessChromium\PageUtils\PagePdfOptions::'.$optionName));
         $this->assertInstanceOf(PagePdf::class, $this->pagePdf->setOptions([$optionName => $optionValue]));
     }
 
