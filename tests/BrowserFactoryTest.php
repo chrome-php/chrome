@@ -11,6 +11,7 @@
 
 namespace HeadlessChromium\Test;
 
+use HeadlessChromium\Browser\BrowserOptions;
 use HeadlessChromium\BrowserFactory;
 use HeadlessChromium\Communication\Target;
 
@@ -104,6 +105,15 @@ class BrowserFactoryTest extends BaseTestCase
         $factory->setOptions([]);
 
         $this->assertSame([], $factory->getOptions());
+    }
+
+    public function testBrowserOptions(): void
+    {
+        $factory = new BrowserFactory();
+
+        $factory->addOptions([BrowserOptions::userAgent => 'foo bar']);
+
+        $this->assertSame([BrowserOptions::userAgent => 'foo bar'], $factory->getOptions());
     }
 
     public function testConnectToBrowser(): void

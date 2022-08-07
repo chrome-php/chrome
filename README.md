@@ -90,11 +90,12 @@ The following example disables headless mode to ease debugging
 
 ```php
 use HeadlessChromium\BrowserFactory;
+use HeadlessChromium\Browser\BrowserOptions;
 
 $browserFactory = new BrowserFactory();
 
 $browser = $browserFactory->createBrowser([
-    'headless' => false, // disable headless mode
+    BrowserOptions::headless => false, // disable headless mode
 ]);
 ```
 
@@ -102,8 +103,8 @@ Other debug options:
 
 ```php
 [
-    'connectionDelay' => 0.8,            // add 0.8 second of delay between each instruction sent to chrome,
-    'debugLogger'     => 'php://stdout', // will enable verbose mode
+    BrowserOptions::connectionDelay => 0.8,            // add 0.8 second of delay between each instruction sent to chrome,
+    BrowserOptions::debugLogger     => 'php://stdout', // will enable verbose mode
 ]
 ```
 
@@ -120,11 +121,12 @@ Options set directly in the `createBrowser` method will be used only for a singl
 
 ```php
 use HeadlessChromium\BrowserFactory;
+use HeadlessChromium\Browser\BrowserOptions;
 
 $browserFactory = new BrowserFactory();
 $browser = $browserFactory->createBrowser([
-    'windowSize'   => [1920, 1000],
-    'enableImages' => false,
+    BrowserOptions::windowSize   => [1920, 1000],
+    BrowserOptions::enableImages => false,
 ]);
 
 // this browser will be created without any options
@@ -135,27 +137,29 @@ Options set using the `setOptions` and `addOptions` methods will persist.
 
 ```php
 $browserFactory->setOptions([
-    'windowSize' => [1920, 1000],
+    BrowserOptions::windowSize => [1920, 1000],
 ]);
 
 // both browser will have the same 'windowSize' option
 $browser1 = $browserFactory->createBrowser();
 $browser2 = $browserFactory->createBrowser();
 
-$browserFactory->addOptions(['enableImages' => false]);
+$browserFactory->addOptions([
+    BrowserOptions::enableImages => false
+]);
 
 // this browser will have both the 'windowSize' and 'enableImages' options
 $browser3 = $browserFactory->createBrowser();
 
-$browserFactory->addOptions(['enableImages' => true]);
+$browserFactory->addOptions([
+    BrowserOptions::enableImages => true
+]);
 
 // this browser will have the previous 'windowSize', but 'enableImages' will be true
 $browser4 = $browserFactory->createBrowser();
 ```
 
 #### Available options
-
-Here are the options available for the browser factory:
 
 | Option name               | Default | Description                                                                                  |
 |---------------------------|---------|----------------------------------------------------------------------------------------------|
@@ -178,6 +182,7 @@ Here are the options available for the browser factory:
 | `userDataDir`             | none    | Chrome user data dir (default: a new empty dir is generated temporarily)                     |
 | `windowSize`              | none    | Size of the window. usage: `$width, $height` - see also Page::setViewport                    |
 
+Those options are documented as constants in the `HeadlessChromium\Browser\BrowserOptions::class`
 
 ### Persistent Browser
 
