@@ -1,11 +1,13 @@
 /.github            export-ignore
 /examples           export-ignore
 /tests              export-ignore
+/vendor-bin         export-ignore
 .editorconfig       export-ignore
 .gitattributes      export-ignore
 .gitignore          export-ignore
 .styleci.yml        export-ignore
 CHANGELOG.md        export-ignore
+Makefile            export-ignore
 phpstan.neon.dist   export-ignore
 phpunit.xml.dist    export-ignore
 README.md           export-ignore
