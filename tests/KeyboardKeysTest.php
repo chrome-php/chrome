@@ -11,11 +11,16 @@
 
 namespace HeadlessChromium\Test;
 
+use HeadlessChromium\Input\Keys;
+
 /**
  * @covers \HeadlessChromium\Input\KeyboardKeys
  */
 class KeyboardKeysTest extends BaseTestCase
 {
+    /**
+     * @var KeyboardForTests
+     */
     private $keyboard;
 
     protected function setUp(): void
@@ -51,6 +56,12 @@ class KeyboardKeysTest extends BaseTestCase
             ['Command', 4],
 
             ['Shift',   8],
+
+            [Keys::Alt,     1],
+            [Keys::Control, 2],
+            [Keys::Meta,    4],
+            [Keys::Command, 4],
+            [Keys::Shift,   8],
         ];
     }
 
@@ -65,7 +76,7 @@ class KeyboardKeysTest extends BaseTestCase
     /**
      * @dataProvider keyProvider
      */
-    public function testOnKeyPressAndRelease($key, $expectedKey): void
+    public function testOnKeyPressAndRelease(string $key, string $expectedKey): void
     {
         $this->assertFalse($this->keyboard->isKeyPressed());
         $this->assertEquals(0, $this->keyboard->getModifiers());
@@ -118,7 +129,7 @@ class KeyboardKeysTest extends BaseTestCase
     /**
      * @dataProvider keyCodesProvider
      */
-    public function testGetKeyCode($key, $code): void
+    public function testGetKeyCode(string $key, int $code): void
     {
         $this->keyboard->setCurrentKey($key);
 

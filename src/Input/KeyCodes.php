@@ -12,11 +12,11 @@
 namespace HeadlessChromium\Input;
 
 /**
- * Holds key constants and their respective bit values.
+ * Holds modifier key constants and their respective bit values.
  *
  * @see https://chromedevtools.github.io/devtools-protocol/1-2/Input/
  */
-abstract class Key
+abstract class KeyCodes
 {
     public const ALT = 1;
     public const CONTROL = 2;

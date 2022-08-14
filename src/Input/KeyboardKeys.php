@@ -42,22 +42,22 @@ trait KeyboardKeys
      * Aliases for modifier keys, in lowercase.
      */
     protected $keyAliases = [
-        Key::ALT => [
+        KeyCodes::ALT => [
             'alt',
             'altgr',
             'alt gr',
         ],
-        Key::CONTROL => [
+        KeyCodes::CONTROL => [
             'control',
             'ctrl',
             'ctr',
         ],
-        Key::META => [
+        KeyCodes::META => [
             'meta',
             'command',
             'cmd',
         ],
-        Key::SHIFT => [
+        KeyCodes::SHIFT => [
             'shift',
         ],
     ];

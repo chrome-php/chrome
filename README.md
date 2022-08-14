@@ -570,7 +570,19 @@ $page->keyboard()
 
 You can press the same key several times in sequence, this is the equivalent to a user pressing and holding the key. The release event, however, will be sent only once per key.
 
+#### Key list
+
+A list of common special keys are available in the `\HeadlessChromium\Input\Keys::class` for easy usage.
+
+```php
+use \HeadlessChromium\Input\Keys;
+
+$page->keyboard()->typeRawKey(Keys::Tab);
+```
+
 #### Key aliases
+
+When typing keys directly as strings, the following aliases are available:
 
 | Key     | Aliases                  |
 |---------|--------------------------|
