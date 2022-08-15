@@ -40,8 +40,18 @@ class AutoDiscover
             case 'Windows':
                 return self::getFromRegistry() ?? '%ProgramFiles(x86)%\Google\Chrome\Application\chrome.exe';
             default:
-                return 'chrome';
+                return self::getFromCommand('google-chrome') ?? 'chrome';
         }
+    }
+
+    private static function getFromCommand(string $command): ?string
+    {
+        try {
+            return \shell_exec('command -v '.$command) ? $command : null;
+        } catch (\Throwable $e) {
+        }
+
+        return null;
     }
 
     private static function getFromRegistry(): ?string
