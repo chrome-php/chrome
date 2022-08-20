@@ -178,6 +178,36 @@ Here are the options available for the browser factory:
 | `userDataDir`             | none    | Chrome user data dir (default: a new empty dir is generated temporarily)                     |
 | `windowSize`              | none    | Size of the window. usage: `$width, $height` - see also Page::setViewport                    |
 
+
+### Persistent Browser
+
+This example shows how to share a single instance of chrome for multiple scripts.
+
+The first time the script is started we use the browser factory in order to start chrome, afterwards we save the uri to connect to this browser in the file system.
+
+The next calls to the script will read the uri from that file in order to connect to the chrome instance instead of creating a new one. If chrome was closed or crashed, a new instance is started again.
+
+```php
+use \HeadlessChromium\BrowserFactory;
+use \HeadlessChromium\Exception\BrowserConnectionFailed;
+
+// path to the file to store websocket's uri
+$socket = \file_get_contents('/tmp/chrome-php-demo-socket');
+
+try {
+    $browser = BrowserFactory::connectToBrowser($socket);
+} catch (BrowserConnectionFailed $e) {
+    // The browser was probably closed, start it again
+    $factory = new BrowserFactory();
+    $browser = $factory->createBrowser([
+        'keepAlive' => true,
+    ]);
+
+    // save the uri to be able to connect again to browser
+    \file_put_contents($socketFile, $browser->getSocketUri(), LOCK_EX);
+}
+```
+
 ### Browser API
 
 #### Create a new page (tab)
