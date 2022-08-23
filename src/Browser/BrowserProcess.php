@@ -11,7 +11,6 @@
 
 namespace HeadlessChromium\Browser;
 
-use HeadlessChromium\Browser;
 use HeadlessChromium\Communication\Connection;
 use HeadlessChromium\Exception\OperationTimedOut;
 use HeadlessChromium\Utils;
@@ -280,6 +279,7 @@ class BrowserProcess implements LoggerAwareInterface
     /**
      * Get args for creating chrome's startup command.
      *
+     * @param $binary
      * @param array $options
      *
      * @return array
@@ -368,6 +368,10 @@ class BrowserProcess implements LoggerAwareInterface
         }
         if (\array_key_exists('proxyBypassList', $options)) {
             $args[] = '--proxy-bypass-list='.$options['proxyBypassList'];
+        }
+
+        if (\array_key_exists('lang', $options)) {
+            $args[] = '--lang='.$options['lang'];
         }
 
         // add custom flags

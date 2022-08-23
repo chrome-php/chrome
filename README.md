@@ -157,26 +157,27 @@ $browser4 = $browserFactory->createBrowser();
 
 Here are the options available for the browser factory:
 
-| Option name               | Default | Description                                                                                  |
-|---------------------------|---------|----------------------------------------------------------------------------------------------|
-| `connectionDelay`         | `0`     | Delay to apply between each operation for debugging purposes                                 |
-| `customFlags`             | none    | An array of flags to pass to the command line. Eg: `['--option1', '--option2=someValue']`    |
-| `debugLogger`             | `null`  | A string (e.g "php://stdout"), or resource, or PSR-3 logger instance to print debug messages |
-| `enableImages`            | `true`  | Toggles loading of images                                                                    |
-| `envVariables`            | none    | An array of environment variables to pass to the process (example DISPLAY variable)          |
-| `headers`                 | none    | An array of custom HTTP headers                                                              |
-| `headless`                | `true`  | Enable or disable headless mode                                                              |
-| `ignoreCertificateErrors` | `false` | Set chrome to ignore ssl errors                                                              |
-| `keepAlive`               | `false` | Set to `true` to keep alive the chrome instance when the script terminates                   |
-| `noSandbox`               | `false` | Enable no sandbox mode, useful to run in a docker container                                  |
-| `noProxyServer`           | `false` | Don't use a proxy server, always make direct connections. Overrides other proxy settings.    |
-| `proxyBypassList`         | none    | Specifies a list of hosts for whom we bypass proxy settings and use direct connections       |
-| `proxyServer`             | none    | Proxy server to use. usage: `127.0.0.1:8080` (authorisation with credentials does not work)  |
-| `sendSyncDefaultTimeout`  | `5000`  | Default timeout (ms) for sending sync messages                                               |
-| `startupTimeout`          | `30`    | Maximum time in seconds to wait for chrome to start                                          |
-| `userAgent`               | none    | User agent to use for the whole browser (see page API for alternative)                       |
-| `userDataDir`             | none    | Chrome user data dir (default: a new empty dir is generated temporarily)                     |
-| `windowSize`              | none    | Size of the window. usage: `$width, $height` - see also Page::setViewport                    |
+| Option name               | Default | Description                                                                                    |
+|---------------------------|---------|------------------------------------------------------------------------------------------------|
+| `connectionDelay`         | `0`     | Delay to apply between each operation for debugging purposes                                   |
+| `customFlags`             | none    | An array of flags to pass to the command line. Eg: `['--option1', '--option2=someValue']`      |
+| `debugLogger`             | `null`  | A string (e.g "php://stdout"), or resource, or PSR-3 logger instance to print debug messages   |
+| `enableImages`            | `true`  | Toggles loading of images                                                                      |
+| `envVariables`            | none    | An array of environment variables to pass to the process (example DISPLAY variable)            |
+| `headers`                 | none    | An array of custom HTTP headers                                                                |
+| `headless`                | `true`  | Enable or disable headless mode                                                                |
+| `ignoreCertificateErrors` | `false` | Set chrome to ignore ssl errors                                                                |
+| `keepAlive`               | `false` | Set to `true` to keep alive the chrome instance when the script terminates                     |
+| `noSandbox`               | `false` | Enable no sandbox mode, useful to run in a docker container                                    |
+| `noProxyServer`           | `false` | Don't use a proxy server, always make direct connections. Overrides other proxy settings.      |
+| `proxyBypassList`         | none    | Specifies a list of hosts for whom we bypass proxy settings and use direct connections         |
+| `proxyServer`             | none    | Proxy server to use. usage: `127.0.0.1:8080` (authorisation with credentials does not work)    |
+| `sendSyncDefaultTimeout`  | `5000`  | Default timeout (ms) for sending sync messages                                                 |
+| `startupTimeout`          | `30`    | Maximum time in seconds to wait for chrome to start                                            |
+| `userAgent`               | none    | User agent to use for the whole browser (see page API for alternative)                         |
+| `userDataDir`             | none    | Chrome user data dir (default: a new empty dir is generated temporarily)                       |
+| `windowSize`              | none    | Size of the window. usage: `$width, $height` - see also Page::setViewport                      |
+| `lang`                    | none    | Language as defined in RFC 5646 (e.g. `de-AT`, or multiple like: `de-AT,de,en-US,en,fr-FR,fr`) |
 
 
 ### Persistent Browser

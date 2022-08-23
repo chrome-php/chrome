@@ -1,6 +1,11 @@
 # CHANGELOG
 
 
+## 1.7.0 (2022-08-24)
+
+* Added option `lang` to browser creation.
+
+
 ## 1.6.1 (2022-05-17)
 
 * Support Monolog 3

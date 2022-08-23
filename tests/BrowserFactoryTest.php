@@ -59,6 +59,21 @@ class BrowserFactoryTest extends BaseTestCase
         $this->assertEquals('foo bar baz', $response);
     }
 
+    public function testLangOption(): void
+    {
+        $factory = new BrowserFactory();
+
+        $browser = $factory->createBrowser([
+            'lang' => 'de-AT,de,en-US,en,fr-FR',
+        ]);
+
+        $page = $browser->createPage();
+
+        $response = $page->evaluate('navigator.languages')->getReturnValue();
+
+        $this->assertEquals(['de@at', 'de', 'en-us', 'en', 'fr-fr'], $response);
+    }
+
     public function testAddHeaders(): void
     {
         $factory = new BrowserFactory();
