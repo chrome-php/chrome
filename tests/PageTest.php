@@ -439,4 +439,14 @@ class PageTest extends BaseTestCase
 
         $this->assertStringContainsString('<div data-name="el"></div>', $page->getHtml());
     }
+
+    public function testSetExtraHTTPHeaders(): void
+    {
+        $factory = new BrowserFactory();
+
+        $page = $factory->createBrowser()->createPage();
+        $page->setExtraHTTPHeaders(['test' => 'test']);
+
+        $this->expectNotToPerformAssertions();
+    }
 }
