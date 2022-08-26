@@ -286,8 +286,6 @@ class Mouse
      * @throws \HeadlessChromium\Exception\CommunicationException
      * @throws \HeadlessChromium\Exception\NoResponseAvailable
      * @throws \HeadlessChromium\Exception\ElementNotFoundException
-     *
-     * @return $this
      */
     public function findElement(Selector $selector, int $position = 1): self
     {
@@ -312,8 +310,11 @@ class Mouse
 
         $offsetX = $visibleArea['pageX'];
         $offsetY = $visibleArea['pageY'];
-        $positionX = \random_int(\ceil($element['left'] - $offsetX), $rightBoundary - $offsetX);
-        $positionY = \random_int(\ceil($element['top'] - $offsetY), $bottomBoundary - $offsetY);
+        $minX = $element['left'] - $offsetX;
+        $minY = $element['top'] - $offsetY;
+
+        $positionX = \floor($minX + (($rightBoundary - $offsetX) - $minX) / 2);
+        $positionY = \ceil($minY + (($bottomBoundary - $offsetY) - $minY) / 2);
 
         $this->move($positionX, $positionY);
 
