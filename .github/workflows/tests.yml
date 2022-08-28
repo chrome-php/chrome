@@ -33,10 +33,6 @@ jobs:
       - name: Setup Problem Matchers
         run: echo "::add-matcher::${{ runner.tool_cache }}/phpunit.json"
 
-      - name: Mimic PHP 8.1
-        run: composer config platform.php 8.1.999
-        if: matrix.php > 8.1
-
       - name: Select Symfony 4
         uses: nick-invision/retry@v1
         with:
