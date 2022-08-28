@@ -85,6 +85,7 @@ class MouseApiTest extends BaseTestCase
         $windowScrollY = $page->evaluate('window.scrollY')->getReturnValue();
 
         $this->assertEquals(100, $windowScrollY);
+        $this->assertEquals(100, $page->mouse()->getPosition()['y']);
 
         // scrolling 100px up should revert the last action
         $page->mouse()->scrollUp(100);
@@ -92,6 +93,15 @@ class MouseApiTest extends BaseTestCase
         $windowScrollY = $page->evaluate('window.scrollY')->getReturnValue();
 
         $this->assertEquals(0, $windowScrollY);
+        $this->assertEquals(0, $page->mouse()->getPosition()['y']);
+
+        // try to scroll more than possible
+        $page->mouse()->scrollDown(10000);
+
+        $windowScrollY = $page->evaluate('window.scrollY')->getReturnValue();
+
+        $this->assertLessThan(10000, $windowScrollY);
+        $this->assertLessThan(10000, $page->mouse()->getPosition()['y']);
     }
 
     /**

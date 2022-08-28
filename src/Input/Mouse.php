@@ -183,8 +183,11 @@ class Mouse
         $scrollableArea = $this->page->getLayoutMetrics()->getCssContentSize();
         $visibleArea = $this->page->getLayoutMetrics()->getCssVisualViewport();
 
-        $distanceX = $this->getMaximumDistance($distanceX, $visibleArea['pageX'], $scrollableArea['width']);
-        $distanceY = $this->getMaximumDistance($distanceY, $visibleArea['pageY'], $scrollableArea['height']);
+        $maximumX = $scrollableArea['width'] - $visibleArea['clientWidth'];
+        $maximumY = $scrollableArea['height'] - $visibleArea['clientHeight'];
+
+        $distanceX = $this->getMaximumDistance($distanceX, $visibleArea['pageX'], $maximumX);
+        $distanceY = $this->getMaximumDistance($distanceY, $visibleArea['pageY'], $maximumY);
 
         $targetX = $visibleArea['pageX'] + $distanceX;
         $targetY = $visibleArea['pageY'] + $distanceY;
@@ -328,7 +331,7 @@ class Mouse
      *
      * @param int $distance Distance to scroll, positive or negative
      * @param int $current  Current position
-     * @param int $maximum  Maximum posible distance
+     * @param int $maximum  Maximum possible distance
      *
      * @return int allowed distance to scroll
      */
