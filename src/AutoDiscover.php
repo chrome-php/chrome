@@ -40,35 +40,33 @@ class AutoDiscover
             case 'Windows':
                 return self::getFromRegistry() ?? '%ProgramFiles(x86)%\Google\Chrome\Application\chrome.exe';
             default:
-                return self::getFromCommand('google-chrome') ?? 'chrome';
+                return null === self::shellExec('google-chrome') ? 'google-chrome' : 'chrome';
         }
-    }
-
-    private static function getFromCommand(string $command): ?string
-    {
-        try {
-            return \shell_exec('command -v '.$command) ? $command : null;
-        } catch (\Throwable $e) {
-        }
-
-        return null;
     }
 
     private static function getFromRegistry(): ?string
     {
-        try {
-            $registryKey = \shell_exec(
-                'reg query "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths\chrome.exe" /ve'
-            );
-
-            \preg_match('/.:(?!.*:).*/', $registryKey, $matches);
-
-            if (isset($matches[0])) {
-                return $matches[0];
-            }
-        } catch (\Throwable $e) {
+        $registryKey = self::shellExec(
+            'reg query "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths\chrome.exe" /ve'
+        );
+        
+        if (null === $registryKey) {
+            return null;
         }
 
-        return null;
+        \preg_match('/.:(?!.*:).*/', $registryKey, $matches);
+
+        return $matches[0] ?? null;
+    }
+
+    private static function shellExec(string $command): ?string
+    {
+        try {
+            $result = @\shell_exec('command -v '.$command);
+
+            return is_string($result) ? $result : null;
+        } catch (\Throwable $e) {
+            return null;
+        }
     }
 }
