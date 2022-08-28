@@ -55,7 +55,13 @@ class AutoDiscoverTest extends BaseTestCase
             return 'Linux';
         });
 
-        $this->assertSame('chrome', $autoDiscover->guessChromeBinaryPath());
+        $this->assertThat(
+            $autoDiscover->guessChromeBinaryPath(),
+            $this->logicalOr(
+                'chrome',
+                'google-chrome'
+            )
+          );
     }
 
     public function testMac(): void
