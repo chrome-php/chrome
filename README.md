@@ -24,7 +24,7 @@ Happy browsing!
 
 ## Requirements
 
-Requires PHP 7.3-8.1 and a chrome/chromium 65+ executable.
+Requires PHP 7.3-8.2 and a chrome/chromium 65+ executable.
 
 Note that the library is only tested on Linux but is compatible with macOS and Windows.
 
