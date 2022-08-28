@@ -220,7 +220,7 @@ class Mouse
      * @param int $right  The element right boundary
      * @param int $bottom The element bottom boundary
      *
-     * @return self
+     * @return $this
      */
     private function scrollToBoundary(int $right, int $bottom): self
     {
@@ -312,8 +312,11 @@ class Mouse
 
         $offsetX = $visibleArea['pageX'];
         $offsetY = $visibleArea['pageY'];
-        $positionX = \random_int(\ceil($element['left'] - $offsetX), $rightBoundary - $offsetX);
-        $positionY = \random_int(\ceil($element['top'] - $offsetY), $bottomBoundary - $offsetY);
+        $minX = $element['left'] - $offsetX;
+        $minY = $element['top'] - $offsetY;
+
+        $positionX = \floor($minX + (($rightBoundary - $offsetX) - $minX) / 2);
+        $positionY = \ceil($minY + (($bottomBoundary - $offsetY) - $minY) / 2);
 
         $this->move($positionX, $positionY);
 
