@@ -1,6 +1,12 @@
 # CHANGELOG
 
 
+## 1.6.2 (2022-08-28)
+
+* Fix intermittency in `Mouse::findElement()`
+* Fix scroll with values higher than possible
+
+
 ## 1.6.1 (2022-05-17)
 
 * Support Monolog 3
