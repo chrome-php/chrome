@@ -182,9 +182,13 @@ class Browser
     }
 
     /**
+     * @param string $targetId
+     *
      * @throws CommunicationException
+     *
+     * @return Page|null
      */
-    public function getPage(string $targetId): ?Page
+    public function getPage($targetId)
     {
         if (\array_key_exists($targetId, $this->pages)) {
             return $this->pages[$targetId];
