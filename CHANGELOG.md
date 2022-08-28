@@ -1,10 +1,11 @@
 # CHANGELOG
 
 
-## 1.7.0 (UPCOMING)
+## 1.7.0 (2022-08-28)
 
 * Use `command` to guess the chrome executable in Linux
 * Officially support PHP 8.2
+* Fix extra HTTP headers
 
 
 ## 1.6.2 (2022-08-28)
