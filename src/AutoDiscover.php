@@ -40,7 +40,7 @@ class AutoDiscover
             case 'Windows':
                 return self::getFromRegistry() ?? '%ProgramFiles(x86)%\Google\Chrome\Application\chrome.exe';
             default:
-                return null === self::shellExec('google-chrome') ? 'google-chrome' : 'chrome';
+                return null === self::shellExec('google-chrome') ? 'chrome' : 'google-chrome';
         }
     }
 
