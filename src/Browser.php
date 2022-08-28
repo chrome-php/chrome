@@ -82,10 +82,6 @@ class Browser
 
         // enable target discovery
         $connection->sendMessageSync(new Message('Target.setDiscoverTargets', ['discover' => true]));
-
-        // set up http headers
-        $headers = $connection->getConnectionHttpHeaders();
-        $connection->sendMessageSync(new Message('Network.setExtraHTTPHeaders', $headers));
     }
 
     /**
@@ -188,6 +184,8 @@ class Browser
     /**
      * @param string $targetId
      *
+     * @throws CommunicationException
+     *
      * @return Page|null
      */
     public function getPage($targetId)
@@ -224,6 +222,13 @@ class Browser
 
         // Page.setLifecycleEventsEnabled
         $page->getSession()->sendMessageSync(new Message('Page.setLifecycleEventsEnabled', ['enabled' => true]));
+
+        // set up http headers
+        $headers = $this->connection->getConnectionHttpHeaders();
+
+        if (\count($headers) > 0) {
+            $page->setExtraHTTPHeaders($headers);
+        }
 
         // add prescript
         if ($this->pagePreScript) {

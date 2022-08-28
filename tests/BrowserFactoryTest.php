@@ -65,6 +65,7 @@ class BrowserFactoryTest extends BaseTestCase
 
         $factory->addHeader('header_name', 'header_value');
         $factory->addHeaders(['header_name2' => 'header_value2']);
+        $factory->createBrowser()->createPage();
 
         $expected = [
             'header_name' => 'header_value',
@@ -84,6 +85,7 @@ class BrowserFactoryTest extends BaseTestCase
 
         $factory->addHeaders($headers);
         $factory->addOptions($options);
+        $factory->createBrowser()->createPage();
 
         $expected = \array_merge(['headers' => $headers], $options);
 
@@ -91,6 +93,7 @@ class BrowserFactoryTest extends BaseTestCase
 
         // test overwriting
         $factory->addOptions($modifiedOptions);
+        $factory->createBrowser()->createPage();
 
         $expected['userAgent'] = 'foo bar';
 
@@ -98,10 +101,12 @@ class BrowserFactoryTest extends BaseTestCase
 
         // test removing options
         $factory->setOptions($modifiedOptions);
+        $factory->createBrowser()->createPage();
 
         $this->assertSame($modifiedOptions, $factory->getOptions());
 
         $factory->setOptions([]);
+        $factory->createBrowser()->createPage();
 
         $this->assertSame([], $factory->getOptions());
     }
