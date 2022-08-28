@@ -49,7 +49,7 @@ class AutoDiscover
         $registryKey = self::shellExec(
             'reg query "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths\chrome.exe" /ve'
         );
-        
+
         if (null === $registryKey) {
             return null;
         }
@@ -64,7 +64,7 @@ class AutoDiscover
         try {
             $result = @\shell_exec('command -v '.$command);
 
-            return is_string($result) ? $result : null;
+            return \is_string($result) ? $result : null;
         } catch (\Throwable $e) {
             return null;
         }
