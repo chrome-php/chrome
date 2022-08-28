@@ -1,6 +1,11 @@
 # CHANGELOG
 
 
+## 1.7.0 (UPCOMING)
+
+* Use `command` to guess the chrome executable in Linux
+
+
 ## 1.6.2 (2022-08-28)
 
 * Fix intermittency in `Mouse::findElement()`
