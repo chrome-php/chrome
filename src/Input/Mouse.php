@@ -220,7 +220,7 @@ class Mouse
      * @param int $right  The element right boundary
      * @param int $bottom The element bottom boundary
      *
-     * @return self
+     * @return $this
      */
     private function scrollToBoundary(int $right, int $bottom): self
     {
@@ -286,6 +286,8 @@ class Mouse
      * @throws \HeadlessChromium\Exception\CommunicationException
      * @throws \HeadlessChromium\Exception\NoResponseAvailable
      * @throws \HeadlessChromium\Exception\ElementNotFoundException
+     *
+     * @return $this
      */
     public function findElement(Selector $selector, int $position = 1): self
     {
