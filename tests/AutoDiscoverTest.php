@@ -22,7 +22,7 @@ class AutoDiscoverTest extends BaseTestCase
 
     protected function setUp(): void
     {
-        if (false !== \array_key_exists('CHROME_PATH', $_SERVER)) {
+        if (\array_key_exists('CHROME_PATH', $_SERVER)) {
             $this->originalEnvPath = $_SERVER['CHROME_PATH'];
 
             unset($_SERVER['CHROME_PATH']);
