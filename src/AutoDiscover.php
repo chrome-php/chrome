@@ -40,7 +40,7 @@ class AutoDiscover
             case 'Windows':
                 return self::getFromRegistry() ?? '%ProgramFiles(x86)%\Google\Chrome\Application\chrome.exe';
             default:
-                return null === self::shellExec('google-chrome') ? 'chrome' : 'google-chrome';
+                return null === self::shellExec('command -v google-chrome') ? 'chrome' : 'google-chrome';
         }
     }
 
@@ -62,7 +62,7 @@ class AutoDiscover
     private static function shellExec(string $command): ?string
     {
         try {
-            $result = @\shell_exec('command -v '.$command);
+            $result = @\shell_exec($command);
 
             return \is_string($result) ? $result : null;
         } catch (\Throwable $e) {
