@@ -1,6 +1,11 @@
 # CHANGELOG
 
 
+## 1.7.1 (2022-09-04)
+
+* Fix command execution in `AutoDiscover`
+
+
 ## 1.7.0 (2022-08-28)
 
 * Use `command` to guess the chrome executable in Linux
