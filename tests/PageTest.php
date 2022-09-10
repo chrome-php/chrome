@@ -13,6 +13,7 @@ namespace HeadlessChromium\Test;
 
 use finfo;
 use HeadlessChromium\BrowserFactory;
+use HeadlessChromium\Entity\ConsoleMessageEntity;
 use HeadlessChromium\Exception\InvalidTimezoneId;
 
 /**
@@ -460,5 +461,26 @@ class PageTest extends BaseTestCase
 
         $target = $browser->findTarget('page', 'bigLayout.html');
         $this->assertSame('bigLayout.html', $target->getTargetInfo('title'));
+    }
+
+    public function testGetConsoleMessages(): void
+    {
+        $factory = new BrowserFactory();
+
+        $browser = $factory->createBrowser();
+        $page = $browser->createPage();
+
+        $page->addPreScript('console.log("test")');
+        $page->navigate(self::sitePath('index.html'))->waitForNavigation();
+
+        $consoleMessages = $page->getConsoleMessages();
+        $this->assertCount(1, $consoleMessages);
+
+        $firstMessage = $consoleMessages[0];
+        $this->assertSame(ConsoleMessageEntity::TYPE_log, $firstMessage->type);
+        $this->assertCount(1, $firstMessage->args);
+        $this->assertSame('string', $firstMessage->args[0]['type']);
+        $this->assertSame('test', $firstMessage->args[0]['value']);
+        $this->assertGreaterThan(0, $firstMessage->timestamp);
     }
 }
