@@ -158,7 +158,7 @@ $browser4 = $browserFactory->createBrowser();
 Here are the options available for the browser factory:
 
 | Option name               | Default | Description                                                                                  |
-|---------------------------|---------|----------------------------------------------------------------------------------------------|
+| ------------------------- | ------- | -------------------------------------------------------------------------------------------- |
 | `connectionDelay`         | `0`     | Delay to apply between each operation for debugging purposes                                 |
 | `customFlags`             | none    | An array of flags to pass to the command line. Eg: `['--option1', '--option2=someValue']`    |
 | `debugLogger`             | `null`  | A string (e.g "php://stdout"), or resource, or PSR-3 logger instance to print debug messages |
@@ -284,6 +284,29 @@ try {
     // An other page was loaded
 }
 ```
+
+#### Get network responses
+
+All responses received since the last navigation can be fetched using the `getNetworkResponses` method. It returns a list of `NetworkResponseEntity`, one for each response.
+
+```php
+$page->navigate('http://example.com')->waitForNavigation();
+$networkResponses = $page->getNetworkResponses();
+
+// status code and headers of the first request
+$status = $networkResponses[0]->status; // 200
+$headers = $networkResponses[0]->headers; // ['Content-Type' => 'text/html']
+```
+
+The `NetworkResponseEntity` contains the following public properties:
+
+| Property     | Description                                     |
+| ------------ | ----------------------------------------------- |
+| `url`        | Response URL.                                   |
+| `status`     | HTTP response status code.                      |
+| `statusText` | HTTP response status text.                      |
+| `headers`    | HTTP response headers.                          |
+| `mimeType`   | Resource mimeType as determined by the browser. |
 
 #### Evaluate script on the page
 
@@ -603,7 +626,7 @@ You can press the same key several times in sequence, this is the equivalent to 
 #### Key aliases
 
 | Key     | Aliases                  |
-|---------|--------------------------|
+| ------- | ------------------------ |
 | Control | `Control`, `Ctrl`, `Ctr` |
 | Alt     | `Alt`, `AltGr`, `Alt Gr` |
 | Meta    | `Meta`, `Command`, `Cmd` |

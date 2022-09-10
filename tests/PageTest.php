@@ -461,4 +461,23 @@ class PageTest extends BaseTestCase
         $target = $browser->findTarget('page', 'bigLayout.html');
         $this->assertSame('bigLayout.html', $target->getTargetInfo('title'));
     }
+
+    public function testGetNetworkResponses(): void
+    {
+        $factory = new BrowserFactory();
+
+        $browser = $factory->createBrowser();
+        $page = $browser->createPage();
+
+        $page->navigate(self::sitePath('index.html'))->waitForNavigation();
+        $networkResponses = $page->getNetworkResponses();
+        $this->assertCount(2, $networkResponses);
+
+        $firstRequestHeaders = $networkResponses[0]->headers;
+        $this->assertSame('text/html', $firstRequestHeaders['Content-Type']);
+
+        // ensures the data is cleared when navigating again, reusing the same object
+        $page->navigate(self::sitePath('a.html'))->waitForNavigation();
+        $this->assertCount(1, $page->getNetworkResponses());
+    }
 }

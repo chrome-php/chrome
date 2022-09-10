@@ -18,6 +18,7 @@ use HeadlessChromium\Cookies\Cookie;
 use HeadlessChromium\Cookies\CookiesCollection;
 use HeadlessChromium\Dom\Dom;
 use HeadlessChromium\Dom\Selector\CssSelector;
+use HeadlessChromium\Entity\NetworkResponseEntity;
 use HeadlessChromium\Exception\CommunicationException;
 use HeadlessChromium\Exception\InvalidTimezoneId;
 use HeadlessChromium\Exception\JavascriptException;
@@ -60,6 +61,13 @@ class Page
     protected $keyboard;
 
     /**
+     * Network responses from all requests since the last navigation.
+     *
+     * @var NetworkResponseEntity[]
+     */
+    private $networkResponses = [];
+
+    /**
      * Page constructor.
      *
      * @param Target $target
@@ -69,6 +77,19 @@ class Page
     {
         $this->target = $target;
         $this->frameManager = new FrameManager($this, $frameTree);
+
+        $this->getSession()->on(
+            'method:Network.responseReceived',
+            function (array $params): void {
+                $this->networkResponses[] = new NetworkResponseEntity(
+                    $params['response']['url'],
+                    $params['response']['status'],
+                    $params['response']['statusText'],
+                    $params['response']['headers'],
+                    $params['response']['mimeType']
+                );
+            }
+        );
     }
 
     /**
@@ -203,6 +224,8 @@ class Page
     public function navigate(string $url, array $options = [])
     {
         $this->assertNotClosed();
+
+        $this->networkResponses = [];
 
         return new PageNavigation($this, $url, $options['strict'] ?? false);
     }
@@ -850,6 +873,16 @@ class Page
 
         // get url from target info
         return $this->target->getTargetInfo('url');
+    }
+
+    /**
+     * Get the network responses from all requests since the last navigation.
+     *
+     * @return NetworkResponseEntity[]
+     */
+    public function getNetworkResponses(): array
+    {
+        return $this->networkResponses;
     }
 
     /**
