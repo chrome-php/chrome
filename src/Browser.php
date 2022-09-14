@@ -186,10 +186,8 @@ class Browser
      *
      * @param string $type  Target type
      * @param string $title Target title
-     *
-     * @return Target|null
      */
-    public function findTarget(string $type, string $title)
+    public function findTarget(string $type, string $title): ?Target
     {
         foreach ($this->targets as $target) {
             if ($target->getTargetInfo('type') === $type) {
