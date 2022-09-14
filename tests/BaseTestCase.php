@@ -17,6 +17,11 @@ class BaseTestCase extends TestCase
 {
     protected static function sitePath(string $file): string
     {
-        return 'file://'.\realpath(__DIR__.'/resources/static-web/'.$file);
+        $path = \realpath(__DIR__.'/resources/static-web/'.$file);
+        if (\DIRECTORY_SEPARATOR == '\\') {
+            $path = '/'.\str_replace('\\', '/', $path);  // Windows compatibility
+        }
+
+        return 'file://'.$path;
     }
 }
