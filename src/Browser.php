@@ -182,6 +182,27 @@ class Browser
     }
 
     /**
+     * Find a target matching the type and title.
+     *
+     * @param string $type  Target type
+     * @param string $title Target title
+     *
+     * @return Target|null
+     */
+    public function findTarget(string $type, string $title)
+    {
+        foreach ($this->targets as $target) {
+            if ($target->getTargetInfo('type') === $type) {
+                if ($target->getTargetInfo('title') === $title) {
+                    return $target;
+                }
+            }
+        }
+
+        return null;
+    }
+
+    /**
      * @param string $targetId
      *
      * @throws CommunicationException

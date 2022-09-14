@@ -449,4 +449,16 @@ class PageTest extends BaseTestCase
 
         $this->expectNotToPerformAssertions();
     }
+
+    public function testFindTarget(): void
+    {
+        $factory = new BrowserFactory();
+
+        $browser = $factory->createBrowser();
+        $page = $browser->createPage();
+        $page->navigate($this->sitePath('bigLayout.html'))->waitForNavigation();
+
+        $target = $browser->findTarget('page', 'bigLayout.html');
+        $this->assertEquals('bigLayout.html', $target->getTargetInfo('title'));
+    }
 }
