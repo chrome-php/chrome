@@ -12,8 +12,7 @@ class Dom extends Node
     public function __construct(Page $page)
     {
         $message = new Message('DOM.getDocument');
-        $stream = $page->getSession()->sendMessage($message);
-        $response = $stream->waitForResponse(1000);
+        $response = $page->getSession()->sendMessageSync($message);
 
         $rootNodeId = $response->getResultData('root')['nodeId'];
 
