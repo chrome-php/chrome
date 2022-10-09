@@ -72,32 +72,32 @@ class PageTest extends BaseTestCase
         ');
 
         $page->setTimezone('America/Jamaica');
-        $this->assertEquals(
-            'Sat Nov 19 2016 13:12:34 GMT-0500 (Eastern Standard Time)',
+        $this->assertStringStartsWith(
+            'Sat Nov 19 2016 13:12:34 GMT-0500',
             $page->evaluate('date.toString()')->getReturnValue()
         );
 
         $page->setTimezone('Pacific/Honolulu');
-        $this->assertEquals(
-            'Sat Nov 19 2016 08:12:34 GMT-1000 (Hawaii-Aleutian Standard Time)',
+        $this->assertStringStartsWith(
+            'Sat Nov 19 2016 08:12:34 GMT-1000',
             $page->evaluate('date.toString()')->getReturnValue()
         );
 
         $page->setTimezone('America/Buenos_Aires');
-        $this->assertEquals(
-            'Sat Nov 19 2016 15:12:34 GMT-0300 (Argentina Standard Time)',
+        $this->assertStringStartsWith(
+            'Sat Nov 19 2016 15:12:34 GMT-0300',
             $page->evaluate('date.toString()')->getReturnValue()
         );
 
         $page->setTimezone('Europe/Berlin');
-        $this->assertEquals(
-            'Sat Nov 19 2016 19:12:34 GMT+0100 (Central European Standard Time)',
+        $this->assertStringStartsWith(
+            'Sat Nov 19 2016 19:12:34 GMT+0100',
             $page->evaluate('date.toString()')->getReturnValue()
         );
 
         $page->setTimezone('Europe/Berlin');
-        $this->assertEquals(
-            'Sat Nov 19 2016 19:12:34 GMT+0100 (Central European Standard Time)',
+        $this->assertStringStartsWith(
+            'Sat Nov 19 2016 19:12:34 GMT+0100',
             $page->evaluate('date.toString()')->getReturnValue()
         );
 
