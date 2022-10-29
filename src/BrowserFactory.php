@@ -44,6 +44,7 @@ class BrowserFactory
      * - startupTimeout: Maximum time in seconds to wait for chrome to start (default: 30 sec)
      * - userAgent: User agent to use for the whole browser
      * - userDataDir: Chrome user data dir (default: a new empty dir is generated temporarily)
+     * - userCrashDumpsDir: The directory crashpad should store dumps in (crash reporter will be enabled automatically)
      * - windowSize: Size of the window. ex: `[1920, 1080]` (default: none)
      */
     protected $options = [];

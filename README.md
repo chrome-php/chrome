@@ -176,6 +176,7 @@ Here are the options available for the browser factory:
 | `startupTimeout`          | `30`    | Maximum time in seconds to wait for chrome to start                                          |
 | `userAgent`               | none    | User agent to use for the whole browser (see page API for alternative)                       |
 | `userDataDir`             | none    | Chrome user data dir (default: a new empty dir is generated temporarily)                     |
+| `userCrashDumpsDir`       | none    | The directory crashpad should store dumps in (crash reporter will be enabled automatically)  |
 | `windowSize`              | none    | Size of the window. usage: `$width, $height` - see also Page::setViewport                    |
 
 
