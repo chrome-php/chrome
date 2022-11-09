@@ -21,7 +21,7 @@ class Dom extends Node
     }
 
     /**
-     * @return array<\HeadlessChromium\Dom\Node>
+     * @return Node[]
      */
     public function search(string $selector): array
     {
