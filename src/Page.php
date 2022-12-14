@@ -874,7 +874,7 @@ class Page
 
         $timeout -= (int) \floor((\hrtime(true) / 1000 / 1000) - $time);
 
-        $this->waitForReload(self::LOAD, \max(0, $timeout), '');
+        $this->waitForReload(self::NETWORK_IDLE, \max(0, $timeout), '');
     }
 
     /**
