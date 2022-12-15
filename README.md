@@ -350,10 +350,16 @@ $page->evaluate('$(".my.element").html()');
 You can manually inject html to a page using the ```setHtml``` method.
 
 ```php
+// Basic
 $page->setHtml('<p>text</p>');
+
+// Specific timeout & event
+$page->setHtml('<p>text</p>', 10000, Page::NETWORK_IDLE);
 ```
 
-Note that this will not append to the current page html, it will completely replace it.
+When a page's HTML is updated, we'll wait for the page to unload. You can specify how long to wait and which event to wait for through two optional parameters. This defaults to 3000ms and the "load" event.
+
+Note that this method will not append to the current page HTML, it will completely replace it.
 
 #### Get the page HTML
 
