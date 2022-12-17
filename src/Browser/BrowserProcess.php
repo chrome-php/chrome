@@ -344,6 +344,11 @@ class BrowserProcess implements LoggerAwareInterface
             $args[] = '--window-size='.\implode(',', $options['windowSize']);
         }
 
+        if (\array_key_exists('userCrashDumpsDir', $options)) {
+            $args[] = '--enable-crash-reporter';
+            $args[] = '--crash-dumps-dir='.$options['userCrashDumpsDir'];
+        }
+
         // sandbox mode - useful if you want to use chrome headless inside docker
         if (\array_key_exists('noSandbox', $options) && $options['noSandbox']) {
             $args[] = '--no-sandbox';
