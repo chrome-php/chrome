@@ -857,7 +857,7 @@ class Page
      *
      * @throws CommunicationException
      */
-    public function setHtml(string $html, int $timeout = 3000): void
+    public function setHtml(string $html, int $timeout = 3000, string $eventName = self::LOAD): void
     {
         $this->getSession()->sendMessageSync(
             new Message(
@@ -869,7 +869,7 @@ class Page
             )
         );
 
-        $this->waitForReload(self::LOAD, $timeout, '');
+        $this->waitForReload($eventName, $timeout, '');
     }
 
     /**
