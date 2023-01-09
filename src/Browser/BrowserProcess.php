@@ -446,6 +446,7 @@ class BrowserProcess implements LoggerAwareInterface
 
             return Utils::tryWithTimeout($timeout, $generator($process));
         } catch (OperationTimedOut $e) {
+            $process->stop();
             throw new \RuntimeException('Cannot start browser', 0, $e);
         }
     }
