@@ -122,6 +122,7 @@ class Browser
     {
         if (!$this->connection->isConnected()) {
             $this->connection->getLogger()->debug('process: chrome already stopped, ignoring');
+
             return;
         }
         $r = $this->connection->sendMessageSync(new Message('Browser.close'));
