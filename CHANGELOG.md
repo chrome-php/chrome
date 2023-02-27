@@ -1,6 +1,14 @@
 # CHANGELOG
 
 
+## 1.8.0 (UPCOMING)
+
+* Add helper function to find target
+* Add `--crash-dumps-dir` option
+* Allow passing the event name to wait for in `setHtml`
+* Dropped PHP 7.3 support
+
+
 ## 1.7.2 (2023-02-27)
 
 * Fix case where the timeout in `setHtml()` isn't respected

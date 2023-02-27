@@ -15,8 +15,7 @@ use Symfony\Component\Process\Process;
 
 class HttpEnabledTestCase extends BaseTestCase
 {
-    /** @var Process */
-    private static $process;
+    private static Process $process;
 
     public static function setUpBeforeClass(): void
     {

@@ -33,10 +33,7 @@ class PagePdfTest extends BaseTestCase
         false,
     ];
 
-    /**
-     * @var PagePdfForTests
-     */
-    private $pagePdf;
+    private PagePdfForTests $pagePdf;
 
     /**
      * @before
@@ -46,7 +43,7 @@ class PagePdfTest extends BaseTestCase
         $this->pagePdf = new PagePdfForTests();
     }
 
-    public function invalidPdfOptionsProvider(): array
+    public static function invalidPdfOptionsProvider(): array
     {
         return \array_merge(
             $this->getOptionsDataset('landscape', self::TYPES_STRING),
@@ -58,7 +55,7 @@ class PagePdfTest extends BaseTestCase
         );
     }
 
-    public function validPdfOptionsProvider(): array
+    public static function validPdfOptionsProvider(): array
     {
         return \array_merge(
             $this->getOptionsDataset('landscape', self::TYPES_BOOLEAN),
