@@ -33,30 +33,30 @@ class ResponseReaderTest extends TestCase
 
         $responseReader = new ResponseReader($message, $connection);
 
-        $this->assertSame($message, $responseReader->getMessage());
-        $this->assertSame($connection, $responseReader->getConnection());
+        self::assertSame($message, $responseReader->getMessage());
+        self::assertSame($connection, $responseReader->getConnection());
 
         // no response
-        $this->assertFalse($responseReader->hasResponse());
+        self::assertFalse($responseReader->hasResponse());
 
         try {
             $responseReader->waitForResponse(1);
             $this->fail('exception not thrown');
         } catch (OperationTimedOut $e) {
-            $this->assertTrue(true);
+            self::assertTrue(true);
         }
 
-        $this->assertFalse($responseReader->checkForResponse());
+        self::assertFalse($responseReader->checkForResponse());
 
         // add response
         $mockSocket->addReceivedData(\json_encode(['id' => $message->getId(), 'foo' => 'qux']));
 
-        $this->assertTrue($responseReader->checkForResponse());
-        $this->assertTrue($responseReader->hasResponse());
-        $this->assertInstanceOf(Response::class, $responseReader->getResponse());
-        $this->assertSame($responseReader->waitForResponse(1), $responseReader->getResponse());
+        self::assertTrue($responseReader->checkForResponse());
+        self::assertTrue($responseReader->hasResponse());
+        self::assertInstanceOf(Response::class, $responseReader->getResponse());
+        self::assertSame($responseReader->waitForResponse(1), $responseReader->getResponse());
 
-        $this->assertEquals(['id' => $message->getId(), 'foo' => 'qux'], $responseReader->getResponse()->getData());
+        self::assertEquals(['id' => $message->getId(), 'foo' => 'qux'], $responseReader->getResponse()->getData());
     }
 
     public function testWaitForResponse(): void
@@ -71,7 +71,7 @@ class ResponseReaderTest extends TestCase
             $responseReader->waitForResponse(1);
             $this->fail('exception not thrown');
         } catch (OperationTimedOut $e) {
-            $this->assertTrue(true);
+            self::assertTrue(true);
         }
 
         // receive data
@@ -79,12 +79,12 @@ class ResponseReaderTest extends TestCase
 
         // timeout should not be reached and response should be get immediately
         $response = $responseReader->waitForResponse(0);
-        $this->assertInstanceOf(Response::class, $response);
+        self::assertInstanceOf(Response::class, $response);
 
         // response should be stored
-        $this->assertTrue($responseReader->hasResponse());
-        $this->assertSame($response, $responseReader->getResponse());
-        $this->assertSame($response, $responseReader->waitForResponse(0));
+        self::assertTrue($responseReader->hasResponse());
+        self::assertSame($response, $responseReader->getResponse());
+        self::assertSame($response, $responseReader->waitForResponse(0));
     }
 
     /**
@@ -114,12 +114,12 @@ class ResponseReaderTest extends TestCase
 
         // wait for response should not read the second message (method:qux.quux)
         $response = $responseReader->waitForResponse(1);
-        $this->assertEquals(['id' => $message->getId(), 'foo' => 'qux'], $response->getData());
-        $this->assertEquals(0, $emitWatcher->emittedCount);
+        self::assertEquals(['id' => $message->getId(), 'foo' => 'qux'], $response->getData());
+        self::assertEquals(0, $emitWatcher->emittedCount);
 
         // next call to read line should read the second message (method:qux.quux)
         $connection->readLine();
-        $this->assertEquals(1, $emitWatcher->emittedCount);
+        self::assertEquals(1, $emitWatcher->emittedCount);
     }
 
     public function testExceptionNoResponse(): void

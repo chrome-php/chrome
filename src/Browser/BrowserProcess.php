@@ -437,6 +437,9 @@ class BrowserProcess implements LoggerAwareInterface
                                 $this->logger->debug('process: ✓ accepted output');
 
                                 return $matches[1];
+                            } elseif (\preg_match('/Cannot start http server for devtools\./', $output, $matches)) {
+                                $process->stop();
+                                throw new \RuntimeException('Devtools could not start');
                             } else {
                                 // log
                                 $this->logger->debug('process: ignoring output:'.\trim($output));
@@ -451,6 +454,7 @@ class BrowserProcess implements LoggerAwareInterface
 
             return Utils::tryWithTimeout($timeout, $generator($process));
         } catch (OperationTimedOut $e) {
+            $process->stop();
             throw new \RuntimeException('Cannot start browser', 0, $e);
         }
     }

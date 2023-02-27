@@ -859,6 +859,8 @@ class Page
      */
     public function setHtml(string $html, int $timeout = 3000, string $eventName = self::LOAD): void
     {
+        $time = \hrtime(true) / 1000 / 1000;
+
         $this->getSession()->sendMessageSync(
             new Message(
                 'Page.setDocumentContent',
@@ -866,10 +868,13 @@ class Page
                     'frameId' => $this->getFrameManager()->getMainFrame()->getFrameId(),
                     'html' => $html,
                 ]
-            )
+            ),
+            $timeout
         );
 
-        $this->waitForReload($eventName, $timeout, '');
+        $timeout -= (int) \floor((\hrtime(true) / 1000 / 1000) - $time);
+
+        $this->waitForReload($eventName, \max(0, $timeout), '');
     }
 
     /**

@@ -26,7 +26,7 @@ class BrowserFactoryTest extends BaseTestCase
 
         $browser = $factory->createBrowser();
 
-        $this->assertMatchesRegularExpression('#^ws://#', $browser->getSocketUri());
+        self::assertMatchesRegularExpression('#^ws://#', $browser->getSocketUri());
     }
 
     public function testWindowSizeOption(): void
@@ -41,7 +41,7 @@ class BrowserFactoryTest extends BaseTestCase
 
         $response = $page->evaluate('[window.outerHeight, window.outerWidth]')->getReturnValue();
 
-        $this->assertEquals([333, 1212], $response);
+        self::assertEquals([333, 1212], $response);
     }
 
     public function testUserAgentOption(): void
@@ -56,7 +56,7 @@ class BrowserFactoryTest extends BaseTestCase
 
         $response = $page->evaluate('navigator.userAgent')->getReturnValue();
 
-        $this->assertEquals('foo bar baz', $response);
+        self::assertEquals('foo bar baz', $response);
     }
 
     public function testAddHeaders(): void
@@ -72,7 +72,7 @@ class BrowserFactoryTest extends BaseTestCase
             'header_name2' => 'header_value2',
         ];
 
-        $this->assertSame($expected, $factory->getOptions()['headers']);
+        self::assertSame($expected, $factory->getOptions()['headers']);
     }
 
     public function testOptions(): void
@@ -89,7 +89,7 @@ class BrowserFactoryTest extends BaseTestCase
 
         $expected = \array_merge(['headers' => $headers], $options);
 
-        $this->assertSame($expected, $factory->getOptions());
+        self::assertSame($expected, $factory->getOptions());
 
         // test overwriting
         $factory->addOptions($modifiedOptions);
@@ -97,18 +97,18 @@ class BrowserFactoryTest extends BaseTestCase
 
         $expected['userAgent'] = 'foo bar';
 
-        $this->assertSame($expected, $factory->getOptions());
+        self::assertSame($expected, $factory->getOptions());
 
         // test removing options
         $factory->setOptions($modifiedOptions);
         $factory->createBrowser()->createPage();
 
-        $this->assertSame($modifiedOptions, $factory->getOptions());
+        self::assertSame($modifiedOptions, $factory->getOptions());
 
         $factory->setOptions([]);
         $factory->createBrowser()->createPage();
 
-        $this->assertSame([], $factory->getOptions());
+        self::assertSame([], $factory->getOptions());
     }
 
     public function testConnectToBrowser(): void
@@ -131,6 +131,6 @@ class BrowserFactoryTest extends BaseTestCase
 
         // make sure 2nd browser received the new page
         $target = $browser2->getTarget($page2TargetId);
-        $this->assertInstanceOf(Target::class, $target);
+        self::assertInstanceOf(Target::class, $target);
     }
 }

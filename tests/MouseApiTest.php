@@ -67,7 +67,7 @@ class MouseApiTest extends BaseTestCase
 
         $title = $page->evaluate('document.title')->getReturnValue();
 
-        $this->assertEquals('a - test', $title);
+        self::assertEquals('a - test', $title);
     }
 
     /**
@@ -84,24 +84,24 @@ class MouseApiTest extends BaseTestCase
 
         $windowScrollY = $page->evaluate('window.scrollY')->getReturnValue();
 
-        $this->assertEquals(100, $windowScrollY);
-        $this->assertEquals(100, $page->mouse()->getPosition()['y']);
+        self::assertEquals(100, $windowScrollY);
+        self::assertEquals(100, $page->mouse()->getPosition()['y']);
 
         // scrolling 100px up should revert the last action
         $page->mouse()->scrollUp(100);
 
         $windowScrollY = $page->evaluate('window.scrollY')->getReturnValue();
 
-        $this->assertEquals(0, $windowScrollY);
-        $this->assertEquals(0, $page->mouse()->getPosition()['y']);
+        self::assertEquals(0, $windowScrollY);
+        self::assertEquals(0, $page->mouse()->getPosition()['y']);
 
         // try to scroll more than possible
         $page->mouse()->scrollDown(10000);
 
         $windowScrollY = $page->evaluate('window.scrollY')->getReturnValue();
 
-        $this->assertLessThan(10000, $windowScrollY);
-        $this->assertLessThan(10000, $page->mouse()->getPosition()['y']);
+        self::assertLessThan(10000, $windowScrollY);
+        self::assertLessThan(10000, $page->mouse()->getPosition()['y']);
     }
 
     /**
@@ -120,7 +120,7 @@ class MouseApiTest extends BaseTestCase
 
         $title = $page->evaluate('document.title')->getReturnValue();
 
-        $this->assertEquals('a - test', $title);
+        self::assertEquals('a - test', $title);
     }
 
     /**
@@ -150,7 +150,7 @@ class MouseApiTest extends BaseTestCase
 
         $title = $page->evaluate('document.title')->getReturnValue();
 
-        $this->assertEquals('a - test', $title);
+        self::assertEquals('a - test', $title);
     }
 
     /**
@@ -177,7 +177,7 @@ class MouseApiTest extends BaseTestCase
 
         $title = $page->evaluate('document.title')->getReturnValue();
 
-        $this->assertEquals($expectedPageTitle, $title);
+        self::assertEquals($expectedPageTitle, $title);
     }
 
     /**
@@ -213,7 +213,7 @@ class MouseApiTest extends BaseTestCase
 
         $title = $page->evaluate('document.title')->getReturnValue();
 
-        $this->assertEquals('a - test', $title);
+        self::assertEquals('a - test', $title);
     }
 
     /**
@@ -260,7 +260,7 @@ class MouseApiTest extends BaseTestCase
         // initial navigation
         $page = $this->openSitePage('b.html');
 
-        $this->assertEquals(['x' => 0, 'y' => 0], $page->mouse()->getPosition());
+        self::assertEquals(['x' => 0, 'y' => 0], $page->mouse()->getPosition());
 
         // find element with id "a"
         $page->mouse()->find('#a');
@@ -268,10 +268,10 @@ class MouseApiTest extends BaseTestCase
         $x = $page->mouse()->getPosition()['x'];
         $y = $page->mouse()->getPosition()['y'];
 
-        $this->assertGreaterThanOrEqual(1, $x); // 8
-        $this->assertLessThanOrEqual(51, $x);
+        self::assertGreaterThanOrEqual(1, $x); // 8
+        self::assertLessThanOrEqual(51, $x);
 
-        $this->assertGreaterThanOrEqual(1, $y); // 87
-        $this->assertLessThanOrEqual(107, $y);
+        self::assertGreaterThanOrEqual(1, $y); // 87
+        self::assertLessThanOrEqual(107, $y);
     }
 }

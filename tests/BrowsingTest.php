@@ -55,12 +55,12 @@ class BrowsingTest extends BaseTestCase
         // initial navigation
         $page = $this->openSitePage('index.html');
         $title = $page->evaluate('document.title')->getReturnValue();
-        $this->assertEquals('foo', $title);
+        self::assertEquals('foo', $title);
 
         // navigate again
         $page->navigate(self::sitePath('a.html'))->waitForNavigation();
         $title = $page->evaluate('document.title')->getReturnValue();
-        $this->assertEquals('a - test', $title);
+        self::assertEquals('a - test', $title);
     }
 
     public function testFormSubmission(): void
@@ -75,7 +75,7 @@ class BrowsingTest extends BaseTestCase
         );
 
         $evaluation->waitForPageReload();
-        $this->assertEquals('hello', $page->evaluate('document.querySelector("#value").innerHTML')->getReturnValue());
+        self::assertEquals('hello', $page->evaluate('document.querySelector("#value").innerHTML')->getReturnValue());
     }
 
     public function testGetCurrentUrl(): void
@@ -84,11 +84,11 @@ class BrowsingTest extends BaseTestCase
 
         $page->getSession()->getConnection()->readData();
 
-        $this->assertEquals('about:blank', $page->getCurrentUrl());
+        self::assertEquals('about:blank', $page->getCurrentUrl());
 
         $page->navigate(self::sitePath('a.html'))->waitForNavigation();
 
-        $this->assertEquals(self::sitePath('a.html'), $page->getCurrentUrl());
+        self::assertEquals(self::sitePath('a.html'), $page->getCurrentUrl());
     }
 
     public function testPageNavigationLocalNotFoundUrl(): void
@@ -102,7 +102,7 @@ class BrowsingTest extends BaseTestCase
         // here we are testing that feature with strict and non strict modes
         $page->navigate('file:///does-not-exist')->waitForNavigation();
 
-        $this->assertTrue(true);
+        self::assertTrue(true);
     }
 
     public function testGetPages(): void
@@ -113,7 +113,7 @@ class BrowsingTest extends BaseTestCase
 
         $finalCount = \count(self::$browser->getPages());
 
-        $this->assertGreaterThan($initialCount, $finalCount);
+        self::assertGreaterThan($initialCount, $finalCount);
     }
 
     /**
@@ -130,12 +130,12 @@ class BrowsingTest extends BaseTestCase
             // initial navigation
             $page = $this->openSitePage('index.html');
             $title = $page->evaluate('document.title')->getReturnValue();
-            $this->assertEquals('foo', $title);
+            self::assertEquals('foo', $title);
 
             // navigate again
             $page->navigate(self::sitePath('a.html'))->waitForNavigation();
             $title = $page->evaluate('document.title')->getReturnValue();
-            $this->assertEquals('a - test', $title);
+            self::assertEquals('a - test', $title);
         }
     }
 
@@ -150,6 +150,6 @@ class BrowsingTest extends BaseTestCase
 
         $finalCount = \count(self::$browser->getPages());
 
-        $this->assertLessThan($initialCount, $finalCount);
+        self::assertLessThan($initialCount, $finalCount);
     }
 }

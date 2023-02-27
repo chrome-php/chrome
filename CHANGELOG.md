@@ -1,6 +1,16 @@
 # CHANGELOG
 
 
+## 1.7.2 (2023-02-27)
+
+* Fix case where the timeout in `setHtml()` isn't respected
+* Fix hard coded timeout in `Dom` class
+* Fix hard coded timeout in `ResponseReader` class
+* Stop process when an error occurs during startup
+* Stop process on `waitForStartup` if dev tools failed to start
+* Disconnect socket on `sendCloseMessage`
+
+
 ## 1.7.1 (2022-09-04)
 
 * Fix command execution in `AutoDiscover`

@@ -120,12 +120,18 @@ class Browser
      */
     final public function sendCloseMessage(): void
     {
+        if (!$this->connection->isConnected()) {
+            $this->connection->getLogger()->debug('process: chrome already stopped, ignoring');
+
+            return;
+        }
         $r = $this->connection->sendMessageSync(new Message('Browser.close'));
         if (!$r->isSuccessful()) {
             // log
             $this->connection->getLogger()->debug('process: ✗ could not close gracefully');
             throw new \Exception('cannot close, Browser.close not supported');
         }
+        $this->connection->disconnect();
     }
 
     /**
