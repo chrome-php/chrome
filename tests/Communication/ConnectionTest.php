@@ -26,10 +26,7 @@ use PHPUnit\Framework\TestCase;
  */
 class ConnectionTest extends TestCase
 {
-    /**
-     * @var MockSocket
-     */
-    protected $mocSocket;
+    private MockSocket $mocSocket;
 
     public function setUp(): void
     {

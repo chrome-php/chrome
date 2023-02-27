@@ -10,10 +10,7 @@ use HeadlessChromium\BrowserFactory;
  */
 class DomTest extends BaseTestCase
 {
-    /**
-     * @var Browser\ProcessAwareBrowser
-     */
-    public static $browser;
+    public static Browser\ProcessAwareBrowser $browser;
 
     public static function setUpBeforeClass(): void
     {

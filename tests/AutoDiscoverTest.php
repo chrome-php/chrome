@@ -18,7 +18,7 @@ use HeadlessChromium\AutoDiscover;
  */
 class AutoDiscoverTest extends BaseTestCase
 {
-    private $originalEnvPath = null;
+    private ?string $originalEnvPath = null;
 
     protected function setUp(): void
     {

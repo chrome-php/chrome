@@ -23,10 +23,7 @@ use HeadlessChromium\Cookies\CookiesCollection;
  */
 class CookieTest extends HttpEnabledTestCase
 {
-    /**
-     * @var Browser\ProcessAwareBrowser
-     */
-    public static $browser;
+    public static Browser\ProcessAwareBrowser $browser;
 
     public function setUp(): void
     {

@@ -24,10 +24,7 @@ use PHPUnit\Framework\TestCase;
  */
 class SessionTest extends TestCase
 {
-    /**
-     * @var MockSocket
-     */
-    protected $mockSocket;
+    private MockSocket $mockSocket;
 
     public function setUp(): void
     {

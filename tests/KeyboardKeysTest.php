@@ -16,14 +16,14 @@ namespace HeadlessChromium\Test;
  */
 class KeyboardKeysTest extends BaseTestCase
 {
-    private $keyboard;
+    private KeyboardForTests $keyboard;
 
     protected function setUp(): void
     {
         $this->keyboard = new KeyboardForTests();
     }
 
-    public function keyProvider(): array
+    public static function keyProvider(): array
     {
         return [
             // Key,   expectedKey
@@ -34,7 +34,7 @@ class KeyboardKeysTest extends BaseTestCase
         ];
     }
 
-    public function modifierKeyProvider(): array
+    public static function modifierKeyProvider(): array
     {
         return [
             // Key,     expectedModifier
@@ -54,7 +54,7 @@ class KeyboardKeysTest extends BaseTestCase
         ];
     }
 
-    public function keyCodesProvider(): array
+    public static function keyCodesProvider(): array
     {
         return [
             ['a', 65],
