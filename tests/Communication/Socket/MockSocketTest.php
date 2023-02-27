@@ -24,33 +24,33 @@ class MockSocketTest extends TestCase
         $mock = new MockSocket();
 
         // not connected
-        $this->assertFalse($mock->isConnected());
-        $this->assertFalse($mock->sendData('foo'));
-        $this->assertEmpty($mock->getSentData());
-        $this->assertEmpty($mock->receiveData());
+        self::assertFalse($mock->isConnected());
+        self::assertFalse($mock->sendData('foo'));
+        self::assertEmpty($mock->getSentData());
+        self::assertEmpty($mock->receiveData());
 
         // connected
         $mock->connect();
 
-        $this->assertTrue($mock->isConnected());
-        $this->assertTrue($mock->sendData('foo'));
-        $this->assertEquals(['foo'], $mock->getSentData());
-        $this->assertEquals(['foo'], $mock->getSentData()); // not empty until flush
-        $this->assertEmpty($mock->receiveData());
+        self::assertTrue($mock->isConnected());
+        self::assertTrue($mock->sendData('foo'));
+        self::assertEquals(['foo'], $mock->getSentData());
+        self::assertEquals(['foo'], $mock->getSentData()); // not empty until flush
+        self::assertEmpty($mock->receiveData());
 
         // flush sent data
         $mock->flushData();
-        $this->assertEmpty($mock->getSentData());
+        self::assertEmpty($mock->getSentData());
 
         // with received data
         $mock->addReceivedData('bar');
 
-        $this->assertEquals(['bar'], $mock->receiveData());
-        $this->assertEmpty($mock->receiveData());
+        self::assertEquals(['bar'], $mock->receiveData());
+        self::assertEmpty($mock->receiveData());
 
         // disconnected
         $mock->disconnect();
-        $this->assertFalse($mock->isConnected());
+        self::assertFalse($mock->isConnected());
     }
 
     public function testReceivedDateForNextMessage(): void
@@ -62,10 +62,10 @@ class MockSocketTest extends TestCase
 
         $mock->addReceivedData(\json_encode(['foo' => 'bar']), true);
 
-        $this->assertEmpty($mock->receiveData());
+        self::assertEmpty($mock->receiveData());
 
         $mock->sendData(\json_encode(['id' => 1]));
 
-        $this->assertEquals([\json_encode(['foo' => 'bar', 'id' => 1])], $mock->receiveData());
+        self::assertEquals([\json_encode(['foo' => 'bar', 'id' => 1])], $mock->receiveData());
     }
 }

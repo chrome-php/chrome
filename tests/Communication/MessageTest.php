@@ -22,19 +22,19 @@ class MessageTest extends TestCase
     public function testMessage(): void
     {
         $message = new Message('foo', ['bar' => 'baz']);
-        $this->assertEquals(Message::getLastMessageId(), $message->getId());
-        $this->assertEquals('foo', $message->getMethod());
-        $this->assertEquals(['bar' => 'baz'], $message->getParams());
+        self::assertEquals(Message::getLastMessageId(), $message->getId());
+        self::assertEquals('foo', $message->getMethod());
+        self::assertEquals(['bar' => 'baz'], $message->getParams());
 
-        $this->assertEquals(
+        self::assertEquals(
             \json_encode(['id' => $message->getId(), 'method' => 'foo', 'params' => ['bar' => 'baz']]),
             (string) $message
         );
 
         $message2 = new Message('qux', ['quux' => 'corge']);
-        $this->assertEquals(Message::getLastMessageId(), $message2->getId());
-        $this->assertNotSame($message->getId(), $message2->getId());
-        $this->assertEquals('qux', $message2->getMethod());
-        $this->assertEquals(['quux' => 'corge'], $message2->getParams());
+        self::assertEquals(Message::getLastMessageId(), $message2->getId());
+        self::assertNotSame($message->getId(), $message2->getId());
+        self::assertEquals('qux', $message2->getMethod());
+        self::assertEquals(['quux' => 'corge'], $message2->getParams());
     }
 }
