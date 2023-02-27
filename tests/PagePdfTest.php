@@ -94,7 +94,7 @@ class PagePdfTest extends BaseTestCase
      */
     public function testValidOptions(string $optionName, $optionValue): void
     {
-        $this->assertInstanceOf(PagePdf::class, $this->pagePdf->setOptions([$optionName => $optionValue]));
+        self::assertInstanceOf(PagePdf::class, $this->pagePdf->setOptions([$optionName => $optionValue]));
     }
 
     private function getOptionsDataset(string $optionName, array $optionValues): array
