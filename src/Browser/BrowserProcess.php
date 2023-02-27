@@ -433,6 +433,7 @@ class BrowserProcess implements LoggerAwareInterface
 
                                 return $matches[1];
                             } elseif (\preg_match('/Cannot start http server for devtools\./', $output, $matches)) {
+                                $process->stop();
                                 throw new \RuntimeException('Devtools could not start');
                             } else {
                                 // log
