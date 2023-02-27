@@ -223,7 +223,7 @@ class MouseApiTest extends BaseTestCase
     }
 
     /**
-     * @dataProvider providerFindElement_withMissingElement
+     * @dataProvider providerFindElementWithMissingElement
      *
      * @throws \HeadlessChromium\Exception\CommunicationException
      * @throws \HeadlessChromium\Exception\NoResponseAvailable
