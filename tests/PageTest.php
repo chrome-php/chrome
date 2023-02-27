@@ -459,6 +459,6 @@ class PageTest extends BaseTestCase
         $page->navigate($this->sitePath('bigLayout.html'))->waitForNavigation();
 
         $target = $browser->findTarget('page', 'bigLayout.html');
-        $this->assertSame('bigLayout.html', $target->getTargetInfo('title'));
+        self::assertSame('bigLayout.html', $target->getTargetInfo('title'));
     }
 }
