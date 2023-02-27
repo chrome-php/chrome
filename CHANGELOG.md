@@ -1,7 +1,7 @@
 # CHANGELOG
 
 
-## 1.8.0 (UPCOMING)
+## 1.8.0 (2023-02-27)
 
 * Add helper function to find target
 * Add `--crash-dumps-dir` option
