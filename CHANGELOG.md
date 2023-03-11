@@ -1,6 +1,11 @@
 # CHANGELOG
 
 
+## 1.8.1 (2023-03-XX)
+
+* Fixed issue where Chrome 111 and later have different default allowed origins
+
+
 ## 1.8.0 (2023-02-27)
 
 * Add helper function to find target
