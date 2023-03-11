@@ -1,7 +1,7 @@
 # CHANGELOG
 
 
-## 1.8.1 (2023-03-XX)
+## 1.8.1 (2023-03-11)
 
 * Fixed issue where Chrome 111 and later have different default allowed origins
 
