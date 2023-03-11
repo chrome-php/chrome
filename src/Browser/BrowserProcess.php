@@ -294,6 +294,9 @@ class BrowserProcess implements LoggerAwareInterface
             // auto debug port
             '--remote-debugging-port=0',
 
+            // allow remote access
+            '--remote-allow-origins=*',
+
             // disable undesired features
             '--disable-background-networking',
             '--disable-background-timer-throttling',
