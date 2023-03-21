@@ -291,6 +291,9 @@ class BrowserProcess implements LoggerAwareInterface
         $args = [
             $binary,
 
+            // allow remote access
+            '--remote-allow-origins=*',
+
             // auto debug port
             '--remote-debugging-port=0',
 
