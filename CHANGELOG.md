@@ -4,6 +4,7 @@
 
 * Fixed issue where Chrome 111 and later have different default allowed origins
 
+
 ## 1.7.2 (2023-02-27)
 
 * Fix case where the timeout in `setHtml()` isn't respected
