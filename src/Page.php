@@ -1052,4 +1052,32 @@ class Page
 
         return new ResponseWaiter($response);
     }
+
+    /**
+     * Handle JS dialog
+     *
+     * @param array $options
+     *
+     * @throws CommunicationException
+     *
+     * @return ResponseWaiter
+     */
+    public function handleJavaScriptDialog(array $options = [])
+    {
+        $this->assertNotClosed();
+
+        $params = [];
+        $params['accept'] = !\array_key_exists('accept', $options) || $options['accept'];
+
+        if (\array_key_exists('promptText', $options)) {
+            $params['promptText'] = (string) $options['promptText'];
+        }
+
+        $response = $this->getSession()
+            ->sendMessage(
+                new Message('Page.handleJavaScriptDialog', $params)
+            );
+
+        return new ResponseWaiter($response);
+    }
 }
