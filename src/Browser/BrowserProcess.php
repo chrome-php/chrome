@@ -321,7 +321,13 @@ class BrowserProcess implements LoggerAwareInterface
 
         // enable headless mode
         if (!\array_key_exists('headless', $options) || $options['headless']) {
-            $args[] = '--headless';
+            // enable the new headless mode available from Chrome 112 and up
+            if ($options['headless'] === 'new') {
+                $args[] = '--headless=new';
+            } else {
+                $args[] = '--headless';
+            }
+
             $args[] = '--disable-gpu';
             $args[] = '--font-render-hinting=none';
             $args[] = '--hide-scrollbars';
