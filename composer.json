@@ -51,5 +51,7 @@
             "bin-links": true,
             "forward-command": false
         }
-    }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
 }
