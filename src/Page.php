@@ -1056,28 +1056,23 @@ class Page
     /**
      * Handle JS dialog
      *
-     * @param array $options
-     *
+     * @param bool $isAccept
+     * @param string $promptText
+     * @return void
      * @throws CommunicationException
-     *
-     * @return ResponseWaiter
      */
-    public function handleJavaScriptDialog(array $options = [])
+    public function handleJavaScriptDialog(bool $isAccept = true, string $promptText = ''): void
     {
         $this->assertNotClosed();
+        $params['accept'] = $isAccept;
 
-        $params = [];
-        $params['accept'] = !\array_key_exists('accept', $options) || $options['accept'];
-
-        if (\array_key_exists('promptText', $options)) {
-            $params['promptText'] = (string) $options['promptText'];
+        if (!empty($promptText)) {
+            $params['promptText'] = $promptText;
         }
 
-        $response = $this->getSession()
+        $this->getSession()
             ->sendMessage(
                 new Message('Page.handleJavaScriptDialog', $params)
             );
-
-        return new ResponseWaiter($response);
     }
 }
