@@ -39,12 +39,10 @@ class Page
     public const FIRST_CONTENTFUL_PAINT = 'firstContentfulPaint';
     public const FIRST_IMAGE_PAINT = 'firstImagePaint';
     public const FIRST_MEANINGFUL_PAINT = 'firstMeaningfulPaint';
-    public const FIRST_MEANINGFUL_PAINT_CANDIDATE = 'firstMeaningfulPaintCandidate';
     public const FIRST_PAINT = 'firstPaint';
     public const INIT = 'init';
     public const INTERACTIVE_TIME = 'InteractiveTime';
     public const LOAD = 'load';
-    public const NETWORK_ALMOST_IDLE = 'networkAlmostIdle';
     public const NETWORK_IDLE = 'networkIdle';
 
     /**
