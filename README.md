@@ -266,12 +266,6 @@ $navigation->waitForNavigation(Page::DOM_CONTENT_LOADED, 10000);
 Available events (in the order they trigger):
 
 - ``Page::DOM_CONTENT_LOADED``: dom has completely loaded
-- ``Page::FIRST_CONTENTFUL_PAINT``: triggered when the first non-white content element is painted on the screen
-- ``Page::FIRST_IMAGE_PAINT``: triggered when the first image is painted on the screen
-- ``Page::FIRST_MEANINGFUL_PAINT``: triggered when the primary content of a page is visible to the user
-- ``Page::FIRST_PAINT``: triggered when any pixel on the screen is painted, including the browser's default background color
-- ``Page::INIT``: connection to DevTools protocol is initialized
-- ``Page::INTERACTIVE_TIME``: scripts have finished loading and the main thread is no longer blocked by rendering or other tasks
 - ``Page::LOAD``: (default) page and all resources are loaded
 - ``Page::NETWORK_IDLE``: page has loaded, and no network activity has occurred for at least 500ms
 

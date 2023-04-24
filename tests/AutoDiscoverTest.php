@@ -63,7 +63,7 @@ class AutoDiscoverTest extends BaseTestCase
                 'chrome',
                 'google-chrome'
             )
-        );
+          );
     }
 
     public function testMac(): void

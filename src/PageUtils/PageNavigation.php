@@ -176,7 +176,7 @@ class PageNavigation
                     yield $delay;
                 }
 
-            // else if frame has still the previous loader, wait for the new one
+                // else if frame has still the previous loader, wait for the new one
             } elseif ($this->frame->getLatestLoaderId() == $this->previousLoaderId) {
                 yield $delay;
 
