@@ -11,7 +11,6 @@
 
 namespace HeadlessChromium\Browser;
 
-use HeadlessChromium\Browser;
 use HeadlessChromium\Communication\Connection;
 use HeadlessChromium\Exception\OperationTimedOut;
 use HeadlessChromium\Utils;
