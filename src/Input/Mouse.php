@@ -146,7 +146,7 @@ class Mouse
      */
     public function scrollUp(int $distance)
     {
-        return $this->scroll((-1 * \abs($distance)));
+        return $this->scroll(-1 * \abs($distance));
     }
 
     /**
