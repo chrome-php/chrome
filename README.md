@@ -162,6 +162,7 @@ Here are the options available for the browser factory:
 | `connectionDelay`         | `0`     | Delay to apply between each operation for debugging purposes                                 |
 | `customFlags`             | none    | An array of flags to pass to the command line. Eg: `['--option1', '--option2=someValue']`    |
 | `debugLogger`             | `null`  | A string (e.g "php://stdout"), or resource, or PSR-3 logger instance to print debug messages |
+| `disableNotifications`    | `false` | Disable browser notifications                                                                |
 | `enableImages`            | `true`  | Toggles loading of images                                                                    |
 | `envVariables`            | none    | An array of environment variables to pass to the process (example DISPLAY variable)          |
 | `headers`                 | none    | An array of custom HTTP headers                                                              |
