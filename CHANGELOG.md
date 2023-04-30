@@ -1,6 +1,12 @@
 # CHANGELOG
 
 
+## 1.9.0 (2023-04-30)
+
+* Added some additional life-cycle event constants
+* Added support for disabling browser notifications
+
+
 ## 1.8.1 (2023-03-11)
 
 * Fixed issue where Chrome 111 and later have different default allowed origins
