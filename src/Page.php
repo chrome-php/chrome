@@ -892,7 +892,7 @@ class Page
     {
         try {
             return $this->evaluate('document.documentElement.outerHTML')->getReturnValue($timeout);
-        } catch (Exception\JavascriptException $e) {
+        } catch (JavascriptException $e) {
             if (0 === \strpos($e->getMessage(), 'Error during javascript evaluation: TypeError: Cannot read properties of null (reading \'outerHTML\')')) {
                 // sometimes after a page reload, for a split second,
                 // document.documentElement does not exist
