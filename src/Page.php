@@ -887,10 +887,20 @@ class Page
      * Gets the raw html of the current page.
      *
      * @throws CommunicationException
+     * @throws JavascriptException
      */
     public function getHtml(?int $timeout = null): string
     {
-        return $this->evaluate('document.documentElement.outerHTML')->getReturnValue($timeout);
+        try {
+            return $this->evaluate('document.documentElement.outerHTML')->getReturnValue($timeout);
+        } catch (JavascriptException $e) {
+            if (0 === \strpos($e->getMessage(), 'Error during javascript evaluation: TypeError: Cannot read properties of null (reading \'outerHTML\')')) {
+                \usleep(1000);
+
+                return $this->evaluate('document.documentElement.outerHTML')->getReturnValue($timeout);
+            }
+            throw $e;
+        }
     }
 
     /**
