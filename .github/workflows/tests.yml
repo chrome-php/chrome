@@ -11,11 +11,9 @@ jobs:
 
     strategy:
       matrix:
-        php: ['7.3', '7.4', '8.0', '8.1', '8.2']
+        php: ['7.4', '8.0', '8.1', '8.2']
         symfony: ['4', '5', '6']
         exclude:
-          - php: '7.3'
-            symfony: '6'
           - php: '7.4'
             symfony: '6'
 
@@ -29,6 +27,8 @@ jobs:
           php-version: ${{ matrix.php }}
           tools: composer:v2
           coverage: none
+        env:
+          update: true
 
       - name: Setup Problem Matchers
         run: echo "::add-matcher::${{ runner.tool_cache }}/phpunit.json"

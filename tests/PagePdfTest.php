@@ -33,10 +33,7 @@ class PagePdfTest extends BaseTestCase
         false,
     ];
 
-    /**
-     * @var PagePdfForTests
-     */
-    private $pagePdf;
+    private PagePdfForTests $pagePdf;
 
     /**
      * @before
@@ -46,36 +43,36 @@ class PagePdfTest extends BaseTestCase
         $this->pagePdf = new PagePdfForTests();
     }
 
-    public function invalidPdfOptionsProvider(): array
+    public static function invalidPdfOptionsProvider(): array
     {
         return \array_merge(
-            $this->getOptionsDataset('landscape', self::TYPES_STRING),
-            $this->getOptionsDataset('headerTemplate', self::TYPES_NUMERIC),
-            $this->getOptionsDataset('scale', self::TYPES_STRING),
+            self::getOptionsDataset('landscape', self::TYPES_STRING),
+            self::getOptionsDataset('headerTemplate', self::TYPES_NUMERIC),
+            self::getOptionsDataset('scale', self::TYPES_STRING),
             [['headerTemplate', new \stdClass()]],
             [['footerTemplate', []]],
             [['unknown_field',  1]],
         );
     }
 
-    public function validPdfOptionsProvider(): array
+    public static function validPdfOptionsProvider(): array
     {
         return \array_merge(
-            $this->getOptionsDataset('landscape', self::TYPES_BOOLEAN),
-            $this->getOptionsDataset('printBackground', self::TYPES_BOOLEAN),
-            $this->getOptionsDataset('displayHeaderFooter', self::TYPES_BOOLEAN),
-            $this->getOptionsDataset('headerTemplate', self::TYPES_STRING),
-            $this->getOptionsDataset('footerTemplate', self::TYPES_STRING),
-            $this->getOptionsDataset('paperWidth', self::TYPES_NUMERIC),
-            $this->getOptionsDataset('paperHeight', self::TYPES_NUMERIC),
-            $this->getOptionsDataset('marginTop', self::TYPES_NUMERIC),
-            $this->getOptionsDataset('marginBottom', self::TYPES_NUMERIC),
-            $this->getOptionsDataset('marginLeft', self::TYPES_NUMERIC),
-            $this->getOptionsDataset('marginRight', self::TYPES_NUMERIC),
-            $this->getOptionsDataset('pageRanges', self::TYPES_STRING),
-            $this->getOptionsDataset('ignoreInvalidPageRanges', self::TYPES_BOOLEAN),
-            $this->getOptionsDataset('preferCSSPageSize', self::TYPES_BOOLEAN),
-            $this->getOptionsDataset('scale', self::TYPES_NUMERIC),
+            self::getOptionsDataset('landscape', self::TYPES_BOOLEAN),
+            self::getOptionsDataset('printBackground', self::TYPES_BOOLEAN),
+            self::getOptionsDataset('displayHeaderFooter', self::TYPES_BOOLEAN),
+            self::getOptionsDataset('headerTemplate', self::TYPES_STRING),
+            self::getOptionsDataset('footerTemplate', self::TYPES_STRING),
+            self::getOptionsDataset('paperWidth', self::TYPES_NUMERIC),
+            self::getOptionsDataset('paperHeight', self::TYPES_NUMERIC),
+            self::getOptionsDataset('marginTop', self::TYPES_NUMERIC),
+            self::getOptionsDataset('marginBottom', self::TYPES_NUMERIC),
+            self::getOptionsDataset('marginLeft', self::TYPES_NUMERIC),
+            self::getOptionsDataset('marginRight', self::TYPES_NUMERIC),
+            self::getOptionsDataset('pageRanges', self::TYPES_STRING),
+            self::getOptionsDataset('ignoreInvalidPageRanges', self::TYPES_BOOLEAN),
+            self::getOptionsDataset('preferCSSPageSize', self::TYPES_BOOLEAN),
+            self::getOptionsDataset('scale', self::TYPES_NUMERIC),
         );
     }
 
@@ -94,10 +91,10 @@ class PagePdfTest extends BaseTestCase
      */
     public function testValidOptions(string $optionName, $optionValue): void
     {
-        $this->assertInstanceOf(PagePdf::class, $this->pagePdf->setOptions([$optionName => $optionValue]));
+        self::assertInstanceOf(PagePdf::class, $this->pagePdf->setOptions([$optionName => $optionValue]));
     }
 
-    private function getOptionsDataset(string $optionName, array $optionValues): array
+    private static function getOptionsDataset(string $optionName, array $optionValues): array
     {
         return \array_reduce(
             $optionValues,

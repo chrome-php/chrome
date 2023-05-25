@@ -1,6 +1,35 @@
 # CHANGELOG
 
 
+## 1.9.0 (2023-04-30)
+
+* Added some additional life-cycle event constants
+* Added support for disabling browser notifications
+
+
+## 1.8.1 (2023-03-11)
+
+* Fixed issue where Chrome 111 and later have different default allowed origins
+
+
+## 1.8.0 (2023-02-27)
+
+* Add helper function to find target
+* Add `--crash-dumps-dir` option
+* Allow passing the event name to wait for in `setHtml`
+* Dropped PHP 7.3 support
+
+
+## 1.7.2 (2023-02-27)
+
+* Fix case where the timeout in `setHtml()` isn't respected
+* Fix hard coded timeout in `Dom` class
+* Fix hard coded timeout in `ResponseReader` class
+* Stop process when an error occurs during startup
+* Stop process on `waitForStartup` if dev tools failed to start
+* Disconnect socket on `sendCloseMessage`
+
+
 ## 1.7.1 (2022-09-04)
 
 * Fix command execution in `AutoDiscover`

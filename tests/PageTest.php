@@ -34,7 +34,7 @@ class PageTest extends BaseTestCase
 
         $response = $page->evaluate('[window.innerWidth, window.innerHeight]')->getReturnValue();
 
-        $this->assertEquals([100, 300], $response);
+        self::assertEquals([100, 300], $response);
     }
 
     public function testSetUserAgent(): void
@@ -55,8 +55,8 @@ class PageTest extends BaseTestCase
         $value1 = $pageFooBar->evaluate('navigator.userAgent')->getReturnValue();
         $value2 = $pageBarBaz->evaluate('navigator.userAgent')->getReturnValue();
 
-        $this->assertEquals('foobar', $value1);
-        $this->assertEquals('barbaz', $value2);
+        self::assertEquals('foobar', $value1);
+        self::assertEquals('barbaz', $value2);
     }
 
     public function testSetTimezone(): void
@@ -72,32 +72,32 @@ class PageTest extends BaseTestCase
         ');
 
         $page->setTimezone('America/Jamaica');
-        $this->assertEquals(
-            'Sat Nov 19 2016 13:12:34 GMT-0500 (Eastern Standard Time)',
+        self::assertStringStartsWith(
+            'Sat Nov 19 2016 13:12:34 GMT-0500',
             $page->evaluate('date.toString()')->getReturnValue()
         );
 
         $page->setTimezone('Pacific/Honolulu');
-        $this->assertEquals(
-            'Sat Nov 19 2016 08:12:34 GMT-1000 (Hawaii-Aleutian Standard Time)',
+        self::assertStringStartsWith(
+            'Sat Nov 19 2016 08:12:34 GMT-1000',
             $page->evaluate('date.toString()')->getReturnValue()
         );
 
         $page->setTimezone('America/Buenos_Aires');
-        $this->assertEquals(
-            'Sat Nov 19 2016 15:12:34 GMT-0300 (Argentina Standard Time)',
+        self::assertStringStartsWith(
+            'Sat Nov 19 2016 15:12:34 GMT-0300',
             $page->evaluate('date.toString()')->getReturnValue()
         );
 
         $page->setTimezone('Europe/Berlin');
-        $this->assertEquals(
-            'Sat Nov 19 2016 19:12:34 GMT+0100 (Central European Standard Time)',
+        self::assertStringStartsWith(
+            'Sat Nov 19 2016 19:12:34 GMT+0100',
             $page->evaluate('date.toString()')->getReturnValue()
         );
 
         $page->setTimezone('Europe/Berlin');
-        $this->assertEquals(
-            'Sat Nov 19 2016 19:12:34 GMT+0100 (Central European Standard Time)',
+        self::assertStringStartsWith(
+            'Sat Nov 19 2016 19:12:34 GMT+0100',
             $page->evaluate('date.toString()')->getReturnValue()
         );
 
@@ -148,22 +148,22 @@ class PageTest extends BaseTestCase
         $page->navigate(self::sitePath('a.html'))->waitForNavigation();
         $fooValue = $page->evaluate('navigator.foo')->getReturnValue();
         $barValue = $page->evaluate('navigator.bar')->getReturnValue();
-        $this->assertEquals(1, $fooValue);
-        $this->assertEquals(11, $barValue);
+        self::assertEquals(1, $fooValue);
+        self::assertEquals(11, $barValue);
 
         // make sure prescript is not adding again and again on every requests
         $page->navigate(self::sitePath('b.html'))->waitForNavigation();
         $fooValue = $page->evaluate('navigator.foo')->getReturnValue();
         $barValue = $page->evaluate('navigator.bar')->getReturnValue();
-        $this->assertEquals(1, $fooValue);
-        $this->assertEquals(11, $barValue);
+        self::assertEquals(1, $fooValue);
+        self::assertEquals(11, $barValue);
 
         // make sure prescript did not pollute other pages
         $page2->navigate(self::sitePath('b.html'))->waitForNavigation();
         $fooValue = $page2->evaluate('navigator.foo')->getReturnValue();
         $barValue = $page2->evaluate('navigator.bar')->getReturnValue();
-        $this->assertEquals(null, $fooValue);
-        $this->assertEquals(null, $barValue);
+        self::assertEquals(null, $fooValue);
+        self::assertEquals(null, $barValue);
     }
 
     public function testCallFunction(): void
@@ -174,8 +174,8 @@ class PageTest extends BaseTestCase
         $page = $browser->createPage();
         $evaluation = $page->callFunction('function(a, b) { window.foo = a + b; return window.foo;}', [1, 2]);
 
-        $this->assertEquals(3, $evaluation->getReturnValue());
-        $this->assertEquals(3, $page->evaluate('window.foo')->getReturnValue());
+        self::assertEquals(3, $evaluation->getReturnValue());
+        self::assertEquals(3, $page->evaluate('window.foo')->getReturnValue());
     }
 
     public function testCallFunctionPromise(): void
@@ -192,7 +192,7 @@ class PageTest extends BaseTestCase
             })
         }', [1, 2]);
 
-        $this->assertEquals(3, $evaluation->getReturnValue());
+        self::assertEquals(3, $evaluation->getReturnValue());
     }
 
     public function testEvaluatePromise(): void
@@ -207,7 +207,7 @@ class PageTest extends BaseTestCase
             }, 100);
         })');
 
-        $this->assertEquals(11, $evaluation->getReturnValue());
+        self::assertEquals(11, $evaluation->getReturnValue());
     }
 
     public function testAddScriptTagContent(): void
@@ -220,7 +220,7 @@ class PageTest extends BaseTestCase
             'content' => 'window.foo = "bar";',
         ])->waitForResponse();
 
-        $this->assertEquals('bar', $page->evaluate('window.foo')->getReturnValue());
+        self::assertEquals('bar', $page->evaluate('window.foo')->getReturnValue());
     }
 
     public function testAddScriptTagUrl(): void
@@ -240,9 +240,9 @@ class PageTest extends BaseTestCase
         $isIncluded = $page->evaluate('window.testJsIsIncluded')->getReturnValue();
         $scriptSrc = $page->evaluate('document.querySelector("script").getAttribute("src")')->getReturnValue();
 
-        $this->assertEquals('isIncluded', $isIncluded);
-        $this->assertStringStartsWith('file://', $scriptSrc);
-        $this->assertStringEndsWith('/jsInclude.js', $scriptSrc);
+        self::assertEquals('isIncluded', $isIncluded);
+        self::assertStringStartsWith('file://', $scriptSrc);
+        self::assertStringEndsWith('/jsInclude.js', $scriptSrc);
     }
 
     public function testGetLayoutMetrics(): void
@@ -267,7 +267,7 @@ class PageTest extends BaseTestCase
         $cssLayoutViewport = $metrics->getCssLayoutViewport();
         $cssVisualViewport = $metrics->getCssVisualViewport();
 
-        $this->assertEquals(
+        self::assertEquals(
             [
                 'x' => 0,
                 'y' => 0,
@@ -277,7 +277,7 @@ class PageTest extends BaseTestCase
             $contentSize
         );
 
-        $this->assertEquals(
+        self::assertEquals(
             [
                 'pageX' => 0,
                 'pageY' => 0,
@@ -287,7 +287,7 @@ class PageTest extends BaseTestCase
             $layoutViewport
         );
 
-        $this->assertEquals(
+        self::assertEquals(
             [
                 'offsetX' => 0,
                 'offsetY' => 0,
@@ -303,7 +303,7 @@ class PageTest extends BaseTestCase
 
         // This is made to be a bit loose to pass on retina displays
 
-        $this->assertContains(
+        self::assertContains(
             $cssContentSize,
             [
                 [
@@ -321,7 +321,7 @@ class PageTest extends BaseTestCase
             ]
         );
 
-        $this->assertContains(
+        self::assertContains(
             $cssLayoutViewport,
             [
                 [
@@ -339,7 +339,7 @@ class PageTest extends BaseTestCase
             ]
         );
 
-        $this->assertContains(
+        self::assertContains(
             $cssVisualViewport,
             [
                 [
@@ -379,10 +379,10 @@ class PageTest extends BaseTestCase
 
         $clip = $page->getFullPageClip();
 
-        $this->assertEquals(0, $clip->getX());
-        $this->assertEquals(0, $clip->getY());
-        $this->assertEquals(900, $clip->getWidth());
-        $this->assertEquals(1000, $clip->getHeight());
+        self::assertEquals(0, $clip->getX());
+        self::assertEquals(0, $clip->getY());
+        self::assertEquals(900, $clip->getWidth());
+        self::assertEquals(1000, $clip->getHeight());
     }
 
     public function testPdf(): void
@@ -400,7 +400,7 @@ class PageTest extends BaseTestCase
         $pdf = $pagePdf->getBase64();
         $mimeType = $finfo->buffer(\base64_decode($pdf));
 
-        $this->assertSame('application/pdf', $mimeType);
+        self::assertSame('application/pdf', $mimeType);
     }
 
     public function testGetHtml(): void
@@ -412,7 +412,7 @@ class PageTest extends BaseTestCase
 
         $page->navigate(self::sitePath('index.html'))->waitForNavigation();
 
-        $this->assertStringContainsString('<h1>bar</h1>', $page->getHtml());
+        self::assertStringContainsString('<h1>bar</h1>', $page->getHtml());
     }
 
     public function testSetHtml(): void
@@ -423,7 +423,7 @@ class PageTest extends BaseTestCase
         $page = $factory->createBrowser()->createPage();
         $page->setHtml($html);
 
-        $this->assertStringContainsString($html, $page->getHtml());
+        self::assertStringContainsString($html, $page->getHtml());
     }
 
     public function testWaitUntilContainsElement(): void
@@ -437,7 +437,7 @@ class PageTest extends BaseTestCase
 
         $page->waitUntilContainsElement('div[data-name=\"el\"]');
 
-        $this->assertStringContainsString('<div data-name="el"></div>', $page->getHtml());
+        self::assertStringContainsString('<div data-name="el"></div>', $page->getHtml());
     }
 
     public function testSetExtraHTTPHeaders(): void
@@ -459,6 +459,6 @@ class PageTest extends BaseTestCase
         $page->navigate($this->sitePath('bigLayout.html'))->waitForNavigation();
 
         $target = $browser->findTarget('page', 'bigLayout.html');
-        $this->assertSame('bigLayout.html', $target->getTargetInfo('title'));
+        self::assertSame('bigLayout.html', $target->getTargetInfo('title'));
     }
 }

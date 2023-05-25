@@ -10,10 +10,7 @@ use HeadlessChromium\BrowserFactory;
  */
 class DomTest extends BaseTestCase
 {
-    /**
-     * @var Browser\ProcessAwareBrowser
-     */
-    public static $browser;
+    public static Browser\ProcessAwareBrowser $browser;
 
     public static function setUpBeforeClass(): void
     {
@@ -42,8 +39,8 @@ class DomTest extends BaseTestCase
         $element = $page->dom()->querySelector('button');
         $notFoundElement = $page->dom()->querySelector('img');
 
-        $this->assertNotNull($element);
-        $this->assertNull($notFoundElement);
+        self::assertNotNull($element);
+        self::assertNull($notFoundElement);
     }
 
     public function testSearchByCssSelectorAll(): void
@@ -52,10 +49,10 @@ class DomTest extends BaseTestCase
 
         $elements = $page->dom()->querySelectorAll('div');
 
-        $this->assertCount(2, $elements);
+        self::assertCount(2, $elements);
 
         $notFoundElements = $page->dom()->querySelectorAll('img');
-        $this->assertCount(0, $notFoundElements);
+        self::assertCount(0, $notFoundElements);
     }
 
     public function testSearchByXpath(): void
@@ -64,7 +61,7 @@ class DomTest extends BaseTestCase
 
         $elements = $page->dom()->search('//*/div');
 
-        $this->assertCount(2, $elements);
+        self::assertCount(2, $elements);
     }
 
     public function testClick(): void
@@ -77,7 +74,7 @@ class DomTest extends BaseTestCase
             ->evaluate('document.activeElement === document.querySelector("#myinput");')
             ->getReturnValue();
 
-        $this->assertFalse($value);
+        self::assertFalse($value);
 
         // press the Tab key
         $element->click();
@@ -87,7 +84,7 @@ class DomTest extends BaseTestCase
             ->evaluate('document.activeElement === document.querySelector("#myinput");')
             ->getReturnValue();
 
-        $this->assertTrue($value);
+        self::assertTrue($value);
     }
 
     public function testType(): void
@@ -104,7 +101,7 @@ class DomTest extends BaseTestCase
             ->getReturnValue();
 
         // checks if the input contains the typed text
-        $this->assertEquals('bar', $value);
+        self::assertEquals('bar', $value);
     }
 
     public function testGetText(): void
@@ -115,7 +112,7 @@ class DomTest extends BaseTestCase
 
         $value = $element->getText();
 
-        $this->assertEquals('bar', $value);
+        self::assertEquals('bar', $value);
     }
 
     public function testGetAttribute(): void
@@ -126,7 +123,7 @@ class DomTest extends BaseTestCase
 
         $value = $element->getAttribute('type');
 
-        $this->assertEquals('foo', $value);
+        self::assertEquals('foo', $value);
     }
 
     public function testSetAttribute(): void
@@ -139,7 +136,7 @@ class DomTest extends BaseTestCase
 
         $value = $element->getAttribute('type');
 
-        $this->assertEquals('hello', $value);
+        self::assertEquals('hello', $value);
     }
 
     public function testUploadFile(): void
@@ -155,7 +152,7 @@ class DomTest extends BaseTestCase
             ->getReturnValue();
 
         // check if the file was selected
-        $this->assertStringEndsWith(\basename($file), $value);
+        self::assertStringEndsWith(\basename($file), $value);
     }
 
     public function testUploadFiles(): void
@@ -173,7 +170,7 @@ class DomTest extends BaseTestCase
         $value2 = $page->evaluate('document.querySelector("#myfiles").files[1].name;')->getReturnValue();
 
         // check if the files were selected
-        $this->assertStringEndsWith(\basename($files[0]), $value1);
-        $this->assertStringEndsWith(\basename($files[1]), $value2);
+        self::assertStringEndsWith(\basename($files[0]), $value1);
+        self::assertStringEndsWith(\basename($files[1]), $value2);
     }
 }

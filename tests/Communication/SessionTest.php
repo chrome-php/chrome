@@ -24,10 +24,7 @@ use PHPUnit\Framework\TestCase;
  */
 class SessionTest extends TestCase
 {
-    /**
-     * @var MockSocket
-     */
-    protected $mockSocket;
+    private MockSocket $mockSocket;
 
     public function setUp(): void
     {
@@ -40,9 +37,9 @@ class SessionTest extends TestCase
         $connection = new Connection($this->mockSocket);
         $session = new Session('foo', 'bar', $connection);
 
-        $this->assertEquals('foo', $session->getTargetId());
-        $this->assertEquals('bar', $session->getSessionId());
-        $this->assertSame($connection, $session->getConnection());
+        self::assertEquals('foo', $session->getTargetId());
+        self::assertEquals('bar', $session->getSessionId());
+        self::assertSame($connection, $session->getConnection());
     }
 
     public function testSendMessage(): void
@@ -55,8 +52,8 @@ class SessionTest extends TestCase
 
         $responseReader = $session->sendMessage($message);
 
-        $this->assertInstanceOf(ResponseReader::class, $responseReader);
-        $this->assertEquals(
+        self::assertInstanceOf(ResponseReader::class, $responseReader);
+        self::assertEquals(
             [
                 \json_encode([
                     'id' => $message->getId(),
@@ -82,8 +79,8 @@ class SessionTest extends TestCase
 
         $response = $session->sendMessageSync($message);
 
-        $this->assertInstanceOf(Response::class, $response);
-        $this->assertEquals(
+        self::assertInstanceOf(Response::class, $response);
+        self::assertEquals(
             [
                 \json_encode([
                     'id' => $message->getId(),

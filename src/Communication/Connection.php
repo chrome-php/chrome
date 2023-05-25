@@ -267,7 +267,7 @@ class Connection extends EventEmitter implements LoggerAwareInterface
     public function sendMessageSync(Message $message, int $timeout = null): Response
     {
         $responseReader = $this->sendMessage($message);
-        $response = $responseReader->waitForResponse($timeout ?? $this->sendSyncDefaultTimeout);
+        $response = $responseReader->waitForResponse($timeout);
 
         return $response;
     }

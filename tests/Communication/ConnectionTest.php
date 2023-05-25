@@ -26,10 +26,7 @@ use PHPUnit\Framework\TestCase;
  */
 class ConnectionTest extends TestCase
 {
-    /**
-     * @var MockSocket
-     */
-    protected $mocSocket;
+    private MockSocket $mocSocket;
 
     public function setUp(): void
     {
@@ -40,9 +37,9 @@ class ConnectionTest extends TestCase
     public function testIsStrict(): void
     {
         $connection = new Connection($this->mocSocket);
-        $this->assertTrue($connection->isStrict());
+        self::assertTrue($connection->isStrict());
         $connection->setStrict(false);
-        $this->assertFalse($connection->isStrict());
+        self::assertFalse($connection->isStrict());
     }
 
     public function testConnectDisconnect(): void
@@ -50,11 +47,11 @@ class ConnectionTest extends TestCase
         $connection = new Connection($this->mocSocket);
         $connection->connect();
 
-        $this->assertTrue($this->mocSocket->isConnected());
+        self::assertTrue($this->mocSocket->isConnected());
 
         $connection->disconnect();
 
-        $this->assertFalse($this->mocSocket->isConnected());
+        self::assertFalse($this->mocSocket->isConnected());
     }
 
     public function testCreateSession(): void
@@ -66,10 +63,10 @@ class ConnectionTest extends TestCase
 
         $session = $connection->createSession('baz-qux');
 
-        $this->assertInstanceOf(Session::class, $session);
-        $this->assertEquals('foo-bar', $session->getSessionId());
-        $this->assertEquals('baz-qux', $session->getTargetId());
-        $this->assertSame($connection, $session->getConnection());
+        self::assertInstanceOf(Session::class, $session);
+        self::assertEquals('foo-bar', $session->getSessionId());
+        self::assertEquals('baz-qux', $session->getTargetId());
+        self::assertSame($connection, $session->getConnection());
     }
 
     public function testSendMessage(): void
@@ -81,11 +78,11 @@ class ConnectionTest extends TestCase
 
         $reader = $connection->sendMessage($message);
 
-        $this->assertInstanceOf(ResponseReader::class, $reader);
-        $this->assertSame($message, $reader->getMessage());
-        $this->assertSame($connection, $reader->getConnection());
+        self::assertInstanceOf(ResponseReader::class, $reader);
+        self::assertSame($message, $reader->getMessage());
+        self::assertSame($connection, $reader->getConnection());
 
-        $this->assertEquals(
+        self::assertEquals(
             [
                 \json_encode([
                     'id' => $message->getId(),
@@ -111,7 +108,7 @@ class ConnectionTest extends TestCase
         $connection->sendMessage($message);
         $connection->sendMessage($message);
 
-        $this->assertEquals(
+        self::assertEquals(
             [
                 \json_encode(
                     [
@@ -142,7 +139,7 @@ class ConnectionTest extends TestCase
 
         $connection->setConnectionHttpHeaders($header);
 
-        $this->assertSame($header, $connection->getConnectionHttpHeaders());
+        self::assertSame($header, $connection->getConnectionHttpHeaders());
     }
 
     public function testSendMessageSync(): void
@@ -156,8 +153,8 @@ class ConnectionTest extends TestCase
 
         $response = $connection->sendMessageSync($message, 2);
 
-        $this->assertSame($message, $response->getMessage());
-        $this->assertEquals(['id' => $message->getId(), 'bar' => 'foo'], $response->getData());
+        self::assertSame($message, $response->getMessage());
+        self::assertEquals(['id' => $message->getId(), 'bar' => 'foo'], $response->getData());
     }
 
     public function testSendMessageSyncException(): void
@@ -177,29 +174,29 @@ class ConnectionTest extends TestCase
         $connection = new Connection($this->mocSocket);
         $connection->connect();
 
-        $this->assertFalse($connection->readData());
+        self::assertFalse($connection->readData());
 
         $this->mocSocket->addReceivedData(\json_encode([
             'id' => 1,
             'foo' => 'bar',
         ]));
 
-        $this->assertTrue($connection->readData());
-        $this->assertFalse($connection->readData());
+        self::assertTrue($connection->readData());
+        self::assertFalse($connection->readData());
 
-        $this->assertTrue($connection->hasResponseForId(1));
-        $this->assertTrue($connection->hasResponseForId(1)); // still true until read
-        $this->assertFalse($connection->hasResponseForId(2));
+        self::assertTrue($connection->hasResponseForId(1));
+        self::assertTrue($connection->hasResponseForId(1)); // still true until read
+        self::assertFalse($connection->hasResponseForId(2));
 
         $data = $connection->getResponseForId(1);
-        $this->assertEquals(
+        self::assertEquals(
             [
                 'id' => 1,
                 'foo' => 'bar',
             ],
             $data
         );
-        $this->assertFalse($connection->hasResponseForId(1));
+        self::assertFalse($connection->hasResponseForId(1));
     }
 
     public function testExceptionInvalideJson(): void

@@ -25,11 +25,11 @@ class ResponseTest extends TestCase
         $message = new Message('foo', ['bar' => 'baz']);
         $response = new Response(['id' => $message->getId(), 'bar' => 'foo'], $message);
 
-        $this->assertSame($message, $response->getMessage());
-        $this->assertTrue($response->isSuccessful());
-        $this->assertTrue(isset($response['bar']));
-        $this->assertEquals('foo', $response['bar']);
-        $this->assertEquals(['id' => $message->getId(), 'bar' => 'foo'], $response->getData());
+        self::assertSame($message, $response->getMessage());
+        self::assertTrue($response->isSuccessful());
+        self::assertTrue(isset($response['bar']));
+        self::assertEquals('foo', $response['bar']);
+        self::assertEquals(['id' => $message->getId(), 'bar' => 'foo'], $response->getData());
     }
 
     public function testIsNotSuccessful(): void
@@ -37,6 +37,6 @@ class ResponseTest extends TestCase
         $message = new Message('foo', ['bar' => 'baz']);
         $response = new Response(['id' => $message->getId(), 'error' => 'foo'], $message);
 
-        $this->assertFalse($response->isSuccessful());
+        self::assertFalse($response->isSuccessful());
     }
 }

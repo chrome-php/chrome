@@ -24,10 +24,7 @@ use HeadlessChromium\Dom\Selector\XPathSelector;
  */
 class MouseApiTest extends BaseTestCase
 {
-    /**
-     * @var Browser\ProcessAwareBrowser
-     */
-    public static $browser;
+    public static Browser\ProcessAwareBrowser $browser;
 
     public static function setUpBeforeClass(): void
     {
@@ -67,7 +64,7 @@ class MouseApiTest extends BaseTestCase
 
         $title = $page->evaluate('document.title')->getReturnValue();
 
-        $this->assertEquals('a - test', $title);
+        self::assertEquals('a - test', $title);
     }
 
     /**
@@ -84,28 +81,28 @@ class MouseApiTest extends BaseTestCase
 
         $windowScrollY = $page->evaluate('window.scrollY')->getReturnValue();
 
-        $this->assertEquals(100, $windowScrollY);
-        $this->assertEquals(100, $page->mouse()->getPosition()['y']);
+        self::assertEquals(100, $windowScrollY);
+        self::assertEquals(100, $page->mouse()->getPosition()['y']);
 
         // scrolling 100px up should revert the last action
         $page->mouse()->scrollUp(100);
 
         $windowScrollY = $page->evaluate('window.scrollY')->getReturnValue();
 
-        $this->assertEquals(0, $windowScrollY);
-        $this->assertEquals(0, $page->mouse()->getPosition()['y']);
+        self::assertEquals(0, $windowScrollY);
+        self::assertEquals(0, $page->mouse()->getPosition()['y']);
 
         // try to scroll more than possible
         $page->mouse()->scrollDown(10000);
 
         $windowScrollY = $page->evaluate('window.scrollY')->getReturnValue();
 
-        $this->assertLessThan(10000, $windowScrollY);
-        $this->assertLessThan(10000, $page->mouse()->getPosition()['y']);
+        self::assertLessThan(10000, $windowScrollY);
+        self::assertLessThan(10000, $page->mouse()->getPosition()['y']);
     }
 
     /**
-     * @dataProvider providerFindElement_withSingleElement
+     * @dataProvider providerFindElementWithSingleElement
      *
      * @throws \HeadlessChromium\Exception\CommunicationException
      * @throws \HeadlessChromium\Exception\NoResponseAvailable
@@ -120,25 +117,25 @@ class MouseApiTest extends BaseTestCase
 
         $title = $page->evaluate('document.title')->getReturnValue();
 
-        $this->assertEquals('a - test', $title);
+        self::assertEquals('a - test', $title);
     }
 
     /**
      * @return Generator<string, array{Selector}>
      */
-    public function providerFindElement_withSingleElement(): Generator
+    public static function providerFindElementWithSingleElement(): Generator
     {
         yield 'css' => [new CssSelector('#a')];
         yield 'xpath' => [new XPathSelector('//*[@id="a"]')];
     }
 
     /**
-     * @dataProvider providerFindElement_afterMove
+     * @dataProvider providerFindElementAfterMove
      *
      * @throws \HeadlessChromium\Exception\CommunicationException
      * @throws \HeadlessChromium\Exception\NoResponseAvailable
      */
-    public function testFindElement_afterMove(Selector $selector): void
+    public function testFindElementAfterMove(Selector $selector): void
     {
         // initial navigation
         $page = $this->openSitePage('b.html');
@@ -150,25 +147,25 @@ class MouseApiTest extends BaseTestCase
 
         $title = $page->evaluate('document.title')->getReturnValue();
 
-        $this->assertEquals('a - test', $title);
+        self::assertEquals('a - test', $title);
     }
 
     /**
      * @return Generator<string, array{Selector}>
      */
-    public function providerFindElement_afterMove(): Generator
+    public static function providerFindElementAfterMove(): Generator
     {
         yield 'css' => [new CssSelector('#a')];
         yield 'xpath' => [new XPathSelector('//*[@id="a"]')];
     }
 
     /**
-     * @dataProvider providerFindElement_withMultipleElements
+     * @dataProvider providerFindElementWithMultipleElements
      *
      * @throws \HeadlessChromium\Exception\CommunicationException
      * @throws \HeadlessChromium\Exception\NoResponseAvailable
      */
-    public function testFindElement_withMultipleElements(Selector $selector, int $position, string $expectedPageTitle): void
+    public function testFindElementWithMultipleElements(Selector $selector, int $position, string $expectedPageTitle): void
     {
         $page = $this->openSitePage('b.html');
 
@@ -177,13 +174,13 @@ class MouseApiTest extends BaseTestCase
 
         $title = $page->evaluate('document.title')->getReturnValue();
 
-        $this->assertEquals($expectedPageTitle, $title);
+        self::assertEquals($expectedPageTitle, $title);
     }
 
     /**
      * @return Generator<array-key, array{Selector, int, string}>
      */
-    public function providerFindElement_withMultipleElements(): Generator
+    public static function providerFindElementWithMultipleElements(): Generator
     {
         $cssSelector = new CssSelector('.a');
         $xPathSelector = new XPathSelector('//*[@class="a"]');
@@ -196,12 +193,12 @@ class MouseApiTest extends BaseTestCase
     }
 
     /**
-     * @dataProvider providerFindElement_withScrolling
+     * @dataProvider providerFindElementWithScrolling
      *
      * @throws \HeadlessChromium\Exception\CommunicationException
      * @throws \HeadlessChromium\Exception\NoResponseAvailable
      */
-    public function testFindElement_withScrolling(Selector $selector): void
+    public function testFindElementWithScrolling(Selector $selector): void
     {
         // initial navigation
         $page = $this->openSitePage('bigLayout.html');
@@ -213,26 +210,26 @@ class MouseApiTest extends BaseTestCase
 
         $title = $page->evaluate('document.title')->getReturnValue();
 
-        $this->assertEquals('a - test', $title);
+        self::assertEquals('a - test', $title);
     }
 
     /**
      * @return Generator<string, array{Selector}>
      */
-    public function providerFindElement_withScrolling(): Generator
+    public static function providerFindElementWithScrolling(): Generator
     {
         yield 'css' => [new CssSelector('#bottomLink')];
         yield 'xpath' => [new XPathSelector('//*[@id="bottomLink"]')];
     }
 
     /**
-     * @dataProvider providerFindElement_withMissingElement
+     * @dataProvider providerFindElementWithMissingElement
      *
      * @throws \HeadlessChromium\Exception\CommunicationException
      * @throws \HeadlessChromium\Exception\NoResponseAvailable
      * @throws \HeadlessChromium\Exception\ElementNotFoundException
      */
-    public function testFindElement_withMissingElement(Selector $selector): void
+    public function testFindElementWithMissingElement(Selector $selector): void
     {
         $this->expectException(\HeadlessChromium\Exception\ElementNotFoundException::class);
 
@@ -245,7 +242,7 @@ class MouseApiTest extends BaseTestCase
     /**
      * @return Generator<string, array{Selector}>
      */
-    public function providerFindElement_withMissingElement(): Generator
+    public static function providerFindElementWithMissingElement(): Generator
     {
         yield 'css' => [new CssSelector('#missing')];
         yield 'xpath' => [new XPathSelector('//*[@id="missing"]')];
@@ -260,7 +257,7 @@ class MouseApiTest extends BaseTestCase
         // initial navigation
         $page = $this->openSitePage('b.html');
 
-        $this->assertEquals(['x' => 0, 'y' => 0], $page->mouse()->getPosition());
+        self::assertEquals(['x' => 0, 'y' => 0], $page->mouse()->getPosition());
 
         // find element with id "a"
         $page->mouse()->find('#a');
@@ -268,10 +265,10 @@ class MouseApiTest extends BaseTestCase
         $x = $page->mouse()->getPosition()['x'];
         $y = $page->mouse()->getPosition()['y'];
 
-        $this->assertGreaterThanOrEqual(1, $x); // 8
-        $this->assertLessThanOrEqual(51, $x);
+        self::assertGreaterThanOrEqual(1, $x); // 8
+        self::assertLessThanOrEqual(51, $x);
 
-        $this->assertGreaterThanOrEqual(1, $y); // 87
-        $this->assertLessThanOrEqual(107, $y);
+        self::assertGreaterThanOrEqual(1, $y); // 87
+        self::assertLessThanOrEqual(107, $y);
     }
 }
