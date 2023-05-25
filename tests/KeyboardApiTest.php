@@ -62,7 +62,7 @@ class KeyboardApiTest extends BaseTestCase
             ->getReturnValue();
 
         // checks if the input contains the typed text
-        $this->assertEquals($text, $value);
+        self::assertEquals($text, $value);
     }
 
     /**
