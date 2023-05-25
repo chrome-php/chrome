@@ -53,17 +53,19 @@ class KeyboardApiTest extends BaseTestCase
     {
         // initial navigation
         $page = $this->openSitePage('form.html');
+        $text = "line 1 \n line 2 \r tab \t".'single quotes \n';
 
         $page->keyboard()
             ->type('Tab')
-            ->typeText('bar');
+            ->type('Tab')
+            ->typeText($text);
 
         $value = $page
-            ->evaluate('document.querySelector("#myinput").value;')
+            ->evaluate('document.querySelector("#textarea").value;')
             ->getReturnValue();
 
         // checks if the input contains the typed text
-        $this->assertEquals('bar', $value);
+        $this->assertEquals($text, $value);
     }
 
     /**
