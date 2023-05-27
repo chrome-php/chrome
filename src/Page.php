@@ -887,7 +887,6 @@ class Page
      * Gets the raw html of the current page.
      *
      * @throws CommunicationException
-     * @throws JavascriptException
      */
     public function getHtml(?int $timeout = null): string
     {

@@ -97,7 +97,6 @@ class Utils
     /**
      * @throws CommunicationException
      * @throws Exception\EvaluationFailed
-     * @throws JavascriptException
      *
      * @return mixed
      */
