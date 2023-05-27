@@ -15,7 +15,6 @@ use HeadlessChromium\Communication\Connection;
 use HeadlessChromium\Communication\Message;
 use HeadlessChromium\Dom\Selector\Selector;
 use HeadlessChromium\Exception\CommunicationException;
-use HeadlessChromium\Exception\JavascriptException;
 use HeadlessChromium\Exception\OperationTimedOut;
 
 class Utils
@@ -97,7 +96,6 @@ class Utils
     /**
      * @throws CommunicationException
      * @throws Exception\EvaluationFailed
-     * @throws JavascriptException
      *
      * @return mixed
      */
