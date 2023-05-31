@@ -72,12 +72,13 @@ class Response implements \ArrayAccess
 
     /**
      * @param string $name
+     * @param mixed  $default
      *
      * @return mixed
      */
-    public function getResultData($name)
+    public function getResultData($name, $default = null)
     {
-        return $this->data['result'][$name] ?? null;
+        return $this->data['result'][$name] ?? $default;
     }
 
     /**
