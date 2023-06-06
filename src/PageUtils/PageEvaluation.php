@@ -72,7 +72,7 @@ class PageEvaluation
      *
      * @param int|null $timeout
      */
-    public function waitForResponse(int $timeout = null)
+    public function waitForResponse(int $timeout = null): self
     {
         $this->response = $this->responseReader->waitForResponse($timeout);
 

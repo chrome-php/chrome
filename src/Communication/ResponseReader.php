@@ -49,7 +49,7 @@ class ResponseReader
      *
      * @return bool
      */
-    public function hasResponse()
+    public function hasResponse(): bool
     {
         return null !== $this->response;
     }
@@ -147,7 +147,7 @@ class ResponseReader
      *
      * @return bool
      */
-    public function checkForResponse()
+    public function checkForResponse(): bool
     {
         // if response is already read, ignore
         if ($this->hasResponse()) {

@@ -98,7 +98,7 @@ class Session extends EventEmitter
     /**
      * @return string
      */
-    public function getSessionId()
+    public function getSessionId(): string
     {
         return $this->sessionId;
     }
@@ -106,7 +106,7 @@ class Session extends EventEmitter
     /**
      * @return string
      */
-    public function getTargetId()
+    public function getTargetId(): string
     {
         return $this->targetId;
     }
@@ -114,7 +114,7 @@ class Session extends EventEmitter
     /**
      * @return Connection
      */
-    public function getConnection()
+    public function getConnection(): Connection
     {
         if ($this->destroyed) {
             throw new TargetDestroyed('The session was destroyed.');
