@@ -73,7 +73,7 @@ class PageLayoutMetrics extends ResponseWaiter
      *
      * @return array
      */
-    public function getVisualViewport()
+    public function getVisualViewport(): array
     {
         return $this->getResultData('visualViewport');
     }
@@ -115,7 +115,7 @@ class PageLayoutMetrics extends ResponseWaiter
      *
      * @return array
      */
-    public function getCssVisualViewport()
+    public function getCssVisualViewport(): array
     {
         return $this->getResultData('cssVisualViewport') ?? $this->getVisualViewport();
     }

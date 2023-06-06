@@ -46,7 +46,7 @@ class Keyboard
      *
      * @return $this
      */
-    public function typeText(string $text)
+    public function typeText(string $text): self
     {
         $this->page->assertNotClosed();
 
@@ -223,7 +223,7 @@ class Keyboard
      *
      * @return $this
      */
-    public function setKeyInterval(int $milliseconds)
+    public function setKeyInterval(int $milliseconds): self
     {
         if ($milliseconds < 0) {
             $milliseconds = 0;

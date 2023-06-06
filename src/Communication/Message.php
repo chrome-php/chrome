@@ -45,7 +45,7 @@ class Message
      *
      * @return int
      */
-    public static function getLastMessageId()
+    public static function getLastMessageId(): int
     {
         return self::$messageId;
     }

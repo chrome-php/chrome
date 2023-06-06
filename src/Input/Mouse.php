@@ -54,7 +54,7 @@ class Mouse
      *
      * @return $this
      */
-    public function move(int $x, int $y, array $options = null)
+    public function move(int $x, int $y, array $options = null): self
     {
         $this->page->assertNotClosed();
 
@@ -88,7 +88,7 @@ class Mouse
      * @throws \HeadlessChromium\Exception\CommunicationException
      * @throws \HeadlessChromium\Exception\NoResponseAvailable
      */
-    public function press(array $options = null)
+    public function press(array $options = null): self
     {
         $this->page->assertNotClosed();
         $this->page->getSession()->sendMessageSync(new Message('Input.dispatchMouseEvent', [
@@ -126,7 +126,7 @@ class Mouse
      * @throws \HeadlessChromium\Exception\CommunicationException
      * @throws \HeadlessChromium\Exception\NoResponseAvailable
      */
-    public function click(array $options = null)
+    public function click(array $options = null): self
     {
         $this->press($options);
         $this->release($options);
@@ -144,7 +144,7 @@ class Mouse
      *
      * @return $this
      */
-    public function scrollUp(int $distance)
+    public function scrollUp(int $distance): self
     {
         return $this->scroll(-1 * \abs($distance));
     }
@@ -159,7 +159,7 @@ class Mouse
      *
      * @return $this
      */
-    public function scrollDown(int $distance)
+    public function scrollDown(int $distance): self
     {
         return $this->scroll(\abs($distance));
     }

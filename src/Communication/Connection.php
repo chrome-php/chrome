@@ -181,7 +181,7 @@ class Connection extends EventEmitter implements LoggerAwareInterface
      *
      * @return bool Whether a new connection was made
      */
-    public function connect()
+    public function connect(): bool
     {
         return $this->wsClient->connect();
     }
@@ -201,7 +201,7 @@ class Connection extends EventEmitter implements LoggerAwareInterface
      *
      * @return bool true if connected
      */
-    public function isConnected()
+    public function isConnected(): bool
     {
         return $this->wsClient->isConnected();
     }
@@ -319,7 +319,7 @@ class Connection extends EventEmitter implements LoggerAwareInterface
      *
      * @return bool true if data were received
      */
-    public function readData()
+    public function readData(): bool
     {
         $hasData = false;
 
@@ -330,7 +330,7 @@ class Connection extends EventEmitter implements LoggerAwareInterface
         return $hasData;
     }
 
-    public function readLine()
+    public function readLine(): bool
     {
         // if buffer empty, then read from input
         if (empty($this->receivedData)) {
@@ -424,7 +424,7 @@ class Connection extends EventEmitter implements LoggerAwareInterface
      *
      * @return bool
      */
-    public function hasResponseForId($id)
+    public function hasResponseForId($id): bool
     {
         return \array_key_exists($id, $this->responseBuffer);
     }
@@ -434,7 +434,7 @@ class Connection extends EventEmitter implements LoggerAwareInterface
      *
      * @return array|null
      */
-    public function getResponseForId($id)
+    public function getResponseForId($id): ?array
     {
         if (\array_key_exists($id, $this->responseBuffer)) {
             $data = $this->responseBuffer[$id];
@@ -451,7 +451,7 @@ class Connection extends EventEmitter implements LoggerAwareInterface
      *
      * @return bool
      */
-    public function isSessionDestroyed($sessionId)
+    public function isSessionDestroyed($sessionId): bool
     {
         return !isset($this->sessions[$sessionId]);
     }

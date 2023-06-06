@@ -114,7 +114,7 @@ class Page
      *
      * @return PageLayoutMetrics
      */
-    public function getLayoutMetrics()
+    public function getLayoutMetrics(): PageLayoutMetrics
     {
         $this->assertNotClosed();
 
@@ -206,7 +206,7 @@ class Page
      *
      * @return PageNavigation
      */
-    public function navigate(string $url, array $options = [])
+    public function navigate(string $url, array $options = []): PageNavigation
     {
         $this->assertNotClosed();
 
@@ -229,7 +229,7 @@ class Page
      *
      * @return PageEvaluation
      */
-    public function evaluate(string $expression)
+    public function evaluate(string $expression): PageEvaluation
     {
         $this->assertNotClosed();
 
@@ -363,7 +363,7 @@ class Page
      *
      * @return array
      */
-    public function getCurrentLifecycle()
+    public function getCurrentLifecycle(): array
     {
         $this->assertNotClosed();
 
@@ -408,7 +408,7 @@ class Page
      *
      * @return $this
      */
-    public function waitForReload($eventName = self::LOAD, $timeout = 30000, $loaderId = null)
+    public function waitForReload($eventName = self::LOAD, $timeout = 30000, $loaderId = null): self
     {
         $this->assertNotClosed();
 
@@ -706,7 +706,7 @@ class Page
      *
      * @return ResponseWaiter
      */
-    public function setDeviceMetricsOverride(array $overrides)
+    public function setDeviceMetricsOverride(array $overrides): ResponseWaiter
     {
         if (!\array_key_exists('width', $overrides)) {
             $overrides['width'] = 0;
@@ -739,7 +739,7 @@ class Page
      *
      * @return ResponseWaiter
      */
-    public function setViewport(int $width, int $height)
+    public function setViewport(int $width, int $height): ResponseWaiter
     {
         return $this->setDeviceMetricsOverride([
             'width' => $width,
@@ -752,7 +752,7 @@ class Page
      *
      * @return Mouse
      */
-    public function mouse()
+    public function mouse(): Mouse
     {
         if (!$this->mouse) {
             $this->mouse = new Mouse($this);
@@ -922,7 +922,7 @@ class Page
      *
      * @return CookiesGetter
      */
-    public function readCookies()
+    public function readCookies(): CookiesGetter
     {
         // ensure target is not closed
         $this->assertNotClosed();
@@ -956,7 +956,7 @@ class Page
      *
      * @return CookiesGetter
      */
-    public function readAllCookies()
+    public function readAllCookies(): CookiesGetter
     {
         // ensure target is not closed
         $this->assertNotClosed();
@@ -983,7 +983,7 @@ class Page
      *
      * @return CookiesCollection
      */
-    public function getCookies(int $timeout = null)
+    public function getCookies(int $timeout = null): CookiesCollection
     {
         return $this->readCookies()->await($timeout)->getCookies();
     }
@@ -1003,7 +1003,7 @@ class Page
      *
      * @return CookiesCollection
      */
-    public function getAllCookies(int $timeout = null)
+    public function getAllCookies(int $timeout = null): CookiesCollection
     {
         return $this->readAllCookies()->await($timeout)->getCookies();
     }
@@ -1059,7 +1059,7 @@ class Page
      *
      * @return ResponseWaiter
      */
-    public function setUserAgent(string $userAgent)
+    public function setUserAgent(string $userAgent): ResponseWaiter
     {
         $response = $this->getSession()
             ->sendMessage(

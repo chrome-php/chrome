@@ -28,7 +28,7 @@ class MockSocket implements SocketInterface
     /**
      * {@inheritdoc}
      */
-    public function sendData($data)
+    public function sendData($data): bool
     {
         if (!$this->isConnected()) {
             return false;
@@ -66,7 +66,7 @@ class MockSocket implements SocketInterface
     /**
      * gets the data stored with sendData.
      */
-    public function getSentData()
+    public function getSentData(): array
     {
         return $this->sentData;
     }
@@ -100,7 +100,7 @@ class MockSocket implements SocketInterface
     /**
      * {@inheritdoc}
      */
-    public function connect()
+    public function connect(): bool
     {
         $this->isConnected = $this->shouldConnect;
 
@@ -110,7 +110,7 @@ class MockSocket implements SocketInterface
     /**
      * {@inheritdoc}
      */
-    public function isConnected()
+    public function isConnected(): bool
     {
         return $this->isConnected;
     }
@@ -118,7 +118,7 @@ class MockSocket implements SocketInterface
     /**
      * {@inheritdoc}
      */
-    public function disconnect($reason = 1000)
+    public function disconnect($reason = 1000): bool
     {
         $this->isConnected = false;
 

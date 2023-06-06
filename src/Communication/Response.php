@@ -31,7 +31,7 @@ class Response implements \ArrayAccess
      *
      * @return bool
      */
-    public function isSuccessful()
+    public function isSuccessful(): bool
     {
         return !\array_key_exists('error', $this->data);
     }
@@ -41,7 +41,7 @@ class Response implements \ArrayAccess
      *
      * @return string|null
      */
-    public function getErrorMessage(bool $extended = true)
+    public function getErrorMessage(bool $extended = true): ?string
     {
         $message = [];
 

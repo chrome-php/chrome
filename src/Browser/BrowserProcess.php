@@ -164,7 +164,7 @@ class BrowserProcess implements LoggerAwareInterface
     /**
      * @return ProcessAwareBrowser
      */
-    public function getBrowser()
+    public function getBrowser(): ProcessAwareBrowser
     {
         return $this->browser;
     }
@@ -283,7 +283,7 @@ class BrowserProcess implements LoggerAwareInterface
      *
      * @return array
      */
-    private function getArgsFromOptions($binary, array $options)
+    private function getArgsFromOptions($binary, array $options): array
     {
         // command line args to add to start chrome (inspired by puppeteer configs)
         // see https://peter.sh/experiments/chromium-command-line-switches/
@@ -471,7 +471,7 @@ class BrowserProcess implements LoggerAwareInterface
      *
      * @return string path to the new temp directory
      */
-    private function createTempDir()
+    private function createTempDir(): string
     {
         $tmpFile = \tempnam(\sys_get_temp_dir(), 'chromium-php-');
 

@@ -169,7 +169,7 @@ class Browser
      *
      * @return Target|null
      */
-    public function getTarget($targetId)
+    public function getTarget($targetId): ?Target
     {
         // make sure target was created (via Target.targetCreated event)
         if (!\array_key_exists($targetId, $this->targets)) {
@@ -182,7 +182,7 @@ class Browser
     /**
      * @return Target[]
      */
-    public function getTargets()
+    public function getTargets(): array
     {
         return \array_values($this->targets);
     }
@@ -211,7 +211,7 @@ class Browser
      *
      * @return Page|null
      */
-    public function getPage($targetId)
+    public function getPage($targetId): ?Page
     {
         if (\array_key_exists($targetId, $this->pages)) {
             return $this->pages[$targetId];
@@ -266,7 +266,7 @@ class Browser
     /**
      * @return Page[]
      */
-    public function getPages()
+    public function getPages(): array
     {
         $ids = \array_keys($this->targets);
 

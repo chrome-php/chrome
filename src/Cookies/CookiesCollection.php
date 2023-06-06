@@ -93,7 +93,7 @@ class CookiesCollection implements \IteratorAggregate, \Countable
      *
      * @return CookiesCollection
      */
-    public function filterBy(string $param, string $value)
+    public function filterBy(string $param, string $value): self
     {
         return new self(\array_filter($this->cookies, function (Cookie $cookie) use ($param, $value) {
             return $cookie[$param] == $value;
@@ -119,7 +119,7 @@ class CookiesCollection implements \IteratorAggregate, \Countable
      *
      * @return Cookie|null
      */
-    public function findOneBy(string $param, string $value)
+    public function findOneBy(string $param, string $value): ?Cookie
     {
         foreach ($this->cookies as $cookie) {
             if ($cookie[$param] == $value) {
