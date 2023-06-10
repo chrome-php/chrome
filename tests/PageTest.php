@@ -440,6 +440,20 @@ class PageTest extends BaseTestCase
         self::assertStringContainsString('<div data-name="el"></div>', $page->getHtml());
     }
 
+    public function testWaitUntilContainsXPathElement(): void
+    {
+        $factory = new BrowserFactory();
+
+        $browser = $factory->createBrowser();
+        $page = $browser->createPage();
+
+        $page->navigate(self::sitePath('elementLoad.html'))->waitForNavigation();
+
+        $page->waitUntilContainsXPathElement('.//div[@data-name="el"]');
+
+        self::assertStringContainsString('<div data-name="el"></div>', $page->getHtml());
+    }
+
     public function testSetExtraHTTPHeaders(): void
     {
         $factory = new BrowserFactory();

@@ -18,6 +18,7 @@ use HeadlessChromium\Cookies\Cookie;
 use HeadlessChromium\Cookies\CookiesCollection;
 use HeadlessChromium\Dom\Dom;
 use HeadlessChromium\Dom\Selector\CssSelector;
+use HeadlessChromium\Dom\Selector\XPathSelector;
 use HeadlessChromium\Exception\CommunicationException;
 use HeadlessChromium\Exception\InvalidTimezoneId;
 use HeadlessChromium\Exception\JavascriptException;
@@ -481,6 +482,45 @@ class Page
         while (true) {
             try {
                 $element = Utils::getElementPositionFromPage($this, new CssSelector($selectors), $position);
+            } catch (JavascriptException $exception) {
+                yield $delay;
+            }
+
+            if (\array_key_exists('x', $element)) {
+                return true;
+            }
+
+            yield $delay;
+        }
+    }
+
+    /**
+     * Wait until page contains Node.
+     *
+     * @throws Exception\OperationTimedOut
+     */
+    public function waitUntilContainsXPathElement(string $selectors, int $timeout = 30000): self
+    {
+        $this->assertNotClosed();
+
+        Utils::tryWithTimeout($timeout * 1000, $this->waitForXPathElement($selectors));
+
+        return $this;
+    }
+
+    /**
+     * @return bool|\Generator
+     *
+     * @internal
+     */
+    public function waitForXPathElement(string $selectors, int $position = 1)
+    {
+        $delay = 500;
+        $element = [];
+
+        while (true) {
+            try {
+                $element = Utils::getElementPositionFromPage($this, new XPathSelector($selectors), $position);
             } catch (JavascriptException $exception) {
                 yield $delay;
             }
