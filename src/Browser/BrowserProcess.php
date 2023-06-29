@@ -396,7 +396,7 @@ class BrowserProcess implements LoggerAwareInterface
             foreach ($args as $arg) {
                 $toRemove = false;
                 foreach ($options['excludedSwitches'] as $excludedSwitch) {
-                    if (preg_match('/^'.preg_quote($excludedSwitch, '/').'(?:$|=)/', $arg)) {
+                    if (\preg_match('/^'.preg_quote($excludedSwitch, '/').'(?:$|=)/', $arg)) {
                         $toRemove = true;
                         break;
                     }
