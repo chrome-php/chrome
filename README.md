@@ -179,6 +179,7 @@ Here are the options available for the browser factory:
 | `userDataDir`             | none    | Chrome user data dir (default: a new empty dir is generated temporarily)                     |
 | `userCrashDumpsDir`       | none    | The directory crashpad should store dumps in (crash reporter will be enabled automatically)  |
 | `windowSize`              | none    | Size of the window. usage: `$width, $height` - see also Page::setViewport                    |
+| `excludedSwitches`        | none    | Chrome flags that should be removed from the default set (example --enable-automation)       |
 
 
 ### Persistent Browser
