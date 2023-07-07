@@ -46,6 +46,7 @@ class BrowserFactory
      * - userDataDir: Chrome user data dir (default: a new empty dir is generated temporarily)
      * - userCrashDumpsDir: The directory crashpad should store dumps in (crash reporter will be enabled automatically)
      * - windowSize: Size of the window. ex: `[1920, 1080]` (default: none)
+     * - excludedSwitches: An Array of chrome flags that should be removed from the default set (example --enable-automation)
      */
     protected $options = [];
 
