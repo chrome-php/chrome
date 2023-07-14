@@ -392,19 +392,7 @@ class BrowserProcess implements LoggerAwareInterface
 
         // remove some arguments
         if (\array_key_exists('excludedSwitches', $options) && \is_array($options['excludedSwitches'])) {
-            $newArgs = [];
-            foreach ($args as $arg) {
-                $toRemove = false;
-                foreach ($options['excludedSwitches'] as $excludedSwitch) {
-                    if (\preg_match('/^'.\preg_quote($excludedSwitch, '/').'(?:$|=)/', $arg)) {
-                        $toRemove = true;
-                        break;
-                    }
-                }
-                if (!$toRemove) {
-                    $newArgs[] = $arg;
-                }
-            }
+            $args = \array_diff($args, $options['excludedSwitches']);
         }
 
         return $args;
