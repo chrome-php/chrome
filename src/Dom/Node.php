@@ -140,6 +140,17 @@ class Node
         return $response->getResultData('outerHTML');
     }
 
+    public function setHTML(string $outerHTML): void
+    {
+        $message = new Message('DOM.setOuterHTML', [
+            'nodeId' => $this->nodeId,
+            'outerHTML' => $outerHTML,
+        ]);
+        $response = $this->page->getSession()->sendMessageSync($message);
+
+        $this->assertNotError($response);
+    }
+
     public function getText(): string
     {
         return \strip_tags($this->getHTML());

@@ -173,4 +173,18 @@ class DomTest extends BaseTestCase
         self::assertStringEndsWith(\basename($files[0]), $value1);
         self::assertStringEndsWith(\basename($files[1]), $value2);
     }
+
+    public function testSetHTML(): void
+    {
+        $page = $this->openSitePage('domForm.html');
+
+        $element = $page->dom()->querySelector('#div1');
+        $element->setHTML('<span id="span">hello</span>');
+
+        $value = $page->dom()->querySelector('#span')->getHTML();
+
+        self::assertCount(0, $page->dom()->querySelectorAll('#div1'));
+
+        self::assertEquals('<span id="span">hello</span>', $value);
+    }
 }
