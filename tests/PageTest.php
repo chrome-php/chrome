@@ -461,4 +461,28 @@ class PageTest extends BaseTestCase
         $target = $browser->findTarget('page', 'bigLayout.html');
         self::assertSame('bigLayout.html', $target->getTargetInfo('title'));
     }
+
+    public function testSetJavaScriptEnabled(): void
+    {
+        $factory = new BrowserFactory();
+
+        $browser = $factory->createBrowser();
+        $page = $browser->createPage();
+
+        $page->setJavaScriptEnabled(false);
+        $page->navigate($this->sitePath('javascript.html'))->waitForNavigation();
+
+        self::assertEquals(
+            'javascript disabled',
+            $page->evaluate('document.body.innerText')->getReturnValue()
+        );
+
+        $page->setJavaScriptEnabled(true);
+        $page->navigate($this->sitePath('javascript.html'))->waitForNavigation();
+
+        self::assertEquals(
+            'javascript enabled',
+            $page->evaluate('document.body.innerText')->getReturnValue()
+        );
+    }
 }
