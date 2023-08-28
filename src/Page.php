@@ -1074,9 +1074,9 @@ class Page
      *
      * @param bool $enabled
      *
-     * @return ResponseWaiter
-     *
      * @throws CommunicationException
+     *
+     * @return ResponseWaiter
      */
     public function setJavaScriptEnabled(bool $enabled)
     {
@@ -1084,7 +1084,7 @@ class Page
         $this->assertNotClosed();
 
         $response = $this->getSession()->sendMessage(
-            new Message('Emulation.setScriptExecutionDisabled', ['value' => ! $enabled])
+            new Message('Emulation.setScriptExecutionDisabled', ['value' => !$enabled])
         );
 
         return new ResponseWaiter($response);
