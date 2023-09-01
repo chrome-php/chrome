@@ -462,14 +462,14 @@ class PageTest extends BaseTestCase
         self::assertSame('bigLayout.html', $target->getTargetInfo('title'));
     }
 
-    public function testSetJavaScriptEnabled(): void
+    public function testSetScriptExecution(): void
     {
         $factory = new BrowserFactory();
 
         $browser = $factory->createBrowser();
         $page = $browser->createPage();
 
-        $page->setJavaScriptEnabled(false);
+        $page->setScriptExecution(false);
         $page->navigate($this->sitePath('javascript.html'))->waitForNavigation();
 
         self::assertEquals(
@@ -477,7 +477,7 @@ class PageTest extends BaseTestCase
             $page->evaluate('document.body.innerText')->getReturnValue()
         );
 
-        $page->setJavaScriptEnabled(true);
+        $page->setScriptExecution(true);
         $page->navigate($this->sitePath('javascript.html'))->waitForNavigation();
 
         self::assertEquals(

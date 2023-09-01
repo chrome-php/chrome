@@ -1078,7 +1078,7 @@ class Page
      *
      * @return ResponseWaiter
      */
-    public function setJavaScriptEnabled(bool $enabled)
+    public function setScriptExecution(bool $enabled)
     {
         // ensure target is not closed
         $this->assertNotClosed();
