@@ -1072,13 +1072,9 @@ class Page
     /**
      * Disable or enable JavaScript execution for the current page.
      *
-     * @param bool $enabled
-     *
      * @throws CommunicationException
-     *
-     * @return ResponseWaiter
      */
-    public function setScriptExecution(bool $enabled)
+    public function setScriptExecution(bool $enabled): ResponseWaiter
     {
         // ensure target is not closed
         $this->assertNotClosed();
