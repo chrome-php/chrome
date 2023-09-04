@@ -293,6 +293,30 @@ try {
 }
 ```
 
+#### Get console messages
+
+All console messages received since the last navigation can be fetched using the `getConsoleMessages` method. It returns a list of `ConsoleMessageEntity`, one for each response.
+
+```php
+// assuming that the page contains just a `console.log('test')` script
+$consoleMessages = $page->getConsoleMessages();
+
+// data of the first console message
+$message = $consoleMessages[0];
+
+$type = $message->type; // log
+$value = $message->args[0]['value']; // test
+$timestamp = $message->timestamp; // 1662829292
+```
+
+The `ConsoleMessageEntity` contains the following public properties:
+
+| Property    | Description                                                                                                                          |
+| ----------- | ------------------------------------------------------------------------------------------------------------------------------------ |
+| `type`      | Type of the call.                                                                                                                    |
+| `args`      | Call arguments, each containing a [RemoteObject](https://chromedevtools.github.io/devtools-protocol/tot/Runtime/#type-RemoteObject). |
+| `timestamp` | Call timestamp.                                                                                                                      |
+
 #### Evaluate script on the page
 
 Once the page has completed the navigation you can evaluate arbitrary script on this page:

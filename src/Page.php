@@ -18,6 +18,7 @@ use HeadlessChromium\Cookies\Cookie;
 use HeadlessChromium\Cookies\CookiesCollection;
 use HeadlessChromium\Dom\Dom;
 use HeadlessChromium\Dom\Selector\CssSelector;
+use HeadlessChromium\Entity\ConsoleMessageEntity;
 use HeadlessChromium\Exception\CommunicationException;
 use HeadlessChromium\Exception\InvalidTimezoneId;
 use HeadlessChromium\Exception\JavascriptException;
@@ -66,6 +67,13 @@ class Page
     protected $keyboard;
 
     /**
+     * Console messages since the last navigation.
+     *
+     * @var ConsoleMessageEntity[]
+     */
+    private $consoleMessages = [];
+
+    /**
      * Page constructor.
      *
      * @param Target $target
@@ -75,6 +83,17 @@ class Page
     {
         $this->target = $target;
         $this->frameManager = new FrameManager($this, $frameTree);
+
+        $this->getSession()->on(
+            'method:Runtime.consoleAPICalled',
+            function (array $message): void {
+                $this->consoleMessages[] = new ConsoleMessageEntity(
+                    $message['type'],
+                    $message['args'],
+                    $message['timestamp']
+                );
+            }
+        );
     }
 
     /**
@@ -856,6 +875,16 @@ class Page
 
         // get url from target info
         return $this->target->getTargetInfo('url');
+    }
+
+    /**
+     * Get the console messages from all requests since the last navigation.
+     *
+     * @return ConsoleMessageEntity[]
+     */
+    public function getConsoleMessages(): array
+    {
+        return $this->consoleMessages;
     }
 
     /**
