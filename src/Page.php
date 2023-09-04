@@ -812,7 +812,7 @@ class Page
     }
 
     /**
-     * Set user agent for the current page.
+     * Set timezone for the current page.
      *
      * @see https://source.chromium.org/chromium/chromium/deps/icu.git/+/faee8bc70570192d82d2978a71e2a615788597d1:source/data/misc/metaZones.txt | ICU’s metaZones.txt
      *
@@ -1065,6 +1065,23 @@ class Page
             ->sendMessage(
                 new Message('Network.setUserAgentOverride', ['userAgent' => $userAgent])
             );
+
+        return new ResponseWaiter($response);
+    }
+
+    /**
+     * Disable or enable JavaScript execution for the current page.
+     *
+     * @throws CommunicationException
+     */
+    public function setScriptExecution(bool $enabled): ResponseWaiter
+    {
+        // ensure target is not closed
+        $this->assertNotClosed();
+
+        $response = $this->getSession()->sendMessage(
+            new Message('Emulation.setScriptExecutionDisabled', ['value' => !$enabled])
+        );
 
         return new ResponseWaiter($response);
     }
