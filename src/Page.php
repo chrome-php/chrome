@@ -473,10 +473,12 @@ class Page
     /**
      * @param string|Selector $selectors
      * @param int $position
-     * @return bool|\Generator
      *
      * @throws CommunicationException
      * @throws EvaluationFailed
+     *
+     * @return bool|\Generator
+     *
      * @internal
      */
     public function waitForElement($selectors, int $position = 1)

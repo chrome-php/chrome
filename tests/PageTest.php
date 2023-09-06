@@ -21,7 +21,7 @@ use HeadlessChromium\Exception\InvalidTimezoneId;
  */
 class PageTest extends BaseTestCase
 {
-    const WAIT_FOR_ELEMENT_HTML = '<div data-name="el">content</div>';
+    public const WAIT_FOR_ELEMENT_HTML = '<div data-name="el">content</div>';
 
     public function testSetViewport(): void
     {
