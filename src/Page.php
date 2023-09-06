@@ -472,7 +472,7 @@ class Page
 
     /**
      * @param string|Selector $selectors
-     * @param int $position
+     * @param int             $position
      *
      * @throws CommunicationException
      * @throws EvaluationFailed
