@@ -462,7 +462,7 @@ class Page
      *
      * @param string|Selector $selectors
      * @param int             $timeout
-
+     *
      * @throws CommunicationException
      * @throws EvaluationFailed
      * @throws OperationTimedOut
