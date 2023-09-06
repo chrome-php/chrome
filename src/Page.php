@@ -18,7 +18,9 @@ use HeadlessChromium\Cookies\Cookie;
 use HeadlessChromium\Cookies\CookiesCollection;
 use HeadlessChromium\Dom\Dom;
 use HeadlessChromium\Dom\Selector\CssSelector;
+use HeadlessChromium\Dom\Selector\Selector;
 use HeadlessChromium\Exception\CommunicationException;
+use HeadlessChromium\Exception\EvaluationFailed;
 use HeadlessChromium\Exception\InvalidTimezoneId;
 use HeadlessChromium\Exception\JavascriptException;
 use HeadlessChromium\Exception\NoResponseAvailable;
@@ -459,7 +461,7 @@ class Page
      *
      * @throws Exception\OperationTimedOut
      */
-    public function waitUntilContainsElement(string $selectors, int $timeout = 30000): self
+    public function waitUntilContainsElement($selectors, int $timeout = 30000): self
     {
         $this->assertNotClosed();
 
@@ -469,18 +471,26 @@ class Page
     }
 
     /**
+     * @param string|Selector $selectors
+     * @param int $position
      * @return bool|\Generator
      *
+     * @throws CommunicationException
+     * @throws EvaluationFailed
      * @internal
      */
-    public function waitForElement(string $selectors, int $position = 1)
+    public function waitForElement($selectors, int $position = 1)
     {
+        if (!($selectors instanceof Selector)) {
+            $selectors = new CssSelector($selectors);
+        }
+
         $delay = 500;
         $element = [];
 
         while (true) {
             try {
-                $element = Utils::getElementPositionFromPage($this, new CssSelector($selectors), $position);
+                $element = Utils::getElementPositionFromPage($this, $selectors, $position);
             } catch (JavascriptException $exception) {
                 yield $delay;
             }
