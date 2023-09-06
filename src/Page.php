@@ -24,6 +24,7 @@ use HeadlessChromium\Exception\EvaluationFailed;
 use HeadlessChromium\Exception\InvalidTimezoneId;
 use HeadlessChromium\Exception\JavascriptException;
 use HeadlessChromium\Exception\NoResponseAvailable;
+use HeadlessChromium\Exception\OperationTimedOut;
 use HeadlessChromium\Exception\TargetDestroyed;
 use HeadlessChromium\Input\Keyboard;
 use HeadlessChromium\Input\Mouse;
@@ -459,7 +460,14 @@ class Page
     /**
      * Wait until page contains Node.
      *
-     * @throws Exception\OperationTimedOut
+     * @param string|Selector $selectors
+     * @param int             $timeout
+
+     * @throws CommunicationException
+     * @throws EvaluationFailed
+     * @throws OperationTimedOut
+     *
+     * @return Page
      */
     public function waitUntilContainsElement($selectors, int $timeout = 30000): self
     {
