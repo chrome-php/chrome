@@ -791,7 +791,7 @@ $page->waitUntilContainsElement('div[data-name=\"el\"]');
 ```
 
 If a string is passed to `Page::waitUntilContainsElement`,
-an instance of CSSSelector is created by default for internal `Page::waitForElement`.
+an instance of CSSSelector is created by default in called internal `Page::waitForElement`.
 To use other selectors, you can pass an instance of the required Selector instead of a string.
 
 Wait for element by XPath selector:
