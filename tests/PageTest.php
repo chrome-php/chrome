@@ -437,13 +437,13 @@ class PageTest extends BaseTestCase
         $browser = $factory->createBrowser();
         $page = $browser->createPage();
 
-        $page->navigate(self::sitePath(static::WAIT_FOR_ELEMENT_RESOURCE_FILE))->waitForNavigation();
+        $page->navigate(self::sitePath(self::WAIT_FOR_ELEMENT_RESOURCE_FILE))->waitForNavigation();
 
-        self::assertStringNotContainsString(static::WAIT_FOR_ELEMENT_HTML, $page->getHtml());
+        self::assertStringNotContainsString(self::WAIT_FOR_ELEMENT_HTML, $page->getHtml());
 
         $page->waitUntilContainsElement('div[data-name=\"el\"]');
 
-        self::assertStringContainsString(static::WAIT_FOR_ELEMENT_HTML, $page->getHtml());
+        self::assertStringContainsString(self::WAIT_FOR_ELEMENT_HTML, $page->getHtml());
     }
 
     public function testWaitUntilContainsElementByXPath(): void
@@ -453,13 +453,13 @@ class PageTest extends BaseTestCase
         $browser = $factory->createBrowser();
         $page = $browser->createPage();
 
-        $page->navigate(self::sitePath(static::WAIT_FOR_ELEMENT_RESOURCE_FILE))->waitForNavigation();
+        $page->navigate(self::sitePath(self::WAIT_FOR_ELEMENT_RESOURCE_FILE))->waitForNavigation();
 
-        self::assertStringNotContainsString(static::WAIT_FOR_ELEMENT_HTML, $page->getHtml());
+        self::assertStringNotContainsString(self::WAIT_FOR_ELEMENT_HTML, $page->getHtml());
 
         $page->waitUntilContainsElement(new XPathSelector('//div[contains(text(), "content")]'));
 
-        self::assertStringContainsString(static::WAIT_FOR_ELEMENT_HTML, $page->getHtml());
+        self::assertStringContainsString(self::WAIT_FOR_ELEMENT_HTML, $page->getHtml());
     }
 
     public function testSetExtraHTTPHeaders(): void
