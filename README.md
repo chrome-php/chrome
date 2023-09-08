@@ -782,6 +782,29 @@ $page->navigate('http://example.com')->waitForNavigation();
 $elem = $page->dom()->search('//div/*/a');
 ```
 
+Wait for an element by CSS selector:
+
+```php
+$page = $browser->createPage();
+$page->navigate('http://example.com')->waitForNavigation();
+
+$page->waitUntilContainsElement('div[data-name=\"el\"]');
+```
+
+If a string is passed to `Page::waitUntilContainsElement`, an instance of
+`CSSSelector` is created for you by `Page::waitForElement`. To use other
+selectors, you can pass an instance of the required `Selector`.
+
+Wait for element by XPath selector:
+
+```php
+$page = $browser->createPage();
+$page->navigate('http://example.com')->waitForNavigation();
+
+$page->waitUntilContainsElement(new XPathSelector('//div[contains(text(), "content")]'));
+```
+
+
 You can send out a text to an element or click on it:
 
 ```php

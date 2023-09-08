@@ -13,6 +13,7 @@ namespace HeadlessChromium\Test;
 
 use finfo;
 use HeadlessChromium\BrowserFactory;
+use HeadlessChromium\Dom\Selector\XPathSelector;
 use HeadlessChromium\Exception\InvalidTimezoneId;
 
 /**
@@ -20,6 +21,9 @@ use HeadlessChromium\Exception\InvalidTimezoneId;
  */
 class PageTest extends BaseTestCase
 {
+    private const WAIT_FOR_ELEMENT_HTML = '<div data-name="el">content</div>';
+    private const WAIT_FOR_ELEMENT_RESOURCE_FILE = 'elementLoad.html';
+
     public function testSetViewport(): void
     {
         $factory = new BrowserFactory();
@@ -433,11 +437,29 @@ class PageTest extends BaseTestCase
         $browser = $factory->createBrowser();
         $page = $browser->createPage();
 
-        $page->navigate(self::sitePath('elementLoad.html'))->waitForNavigation();
+        $page->navigate(self::sitePath(self::WAIT_FOR_ELEMENT_RESOURCE_FILE))->waitForNavigation();
+
+        self::assertStringNotContainsString(self::WAIT_FOR_ELEMENT_HTML, $page->getHtml());
 
         $page->waitUntilContainsElement('div[data-name=\"el\"]');
 
-        self::assertStringContainsString('<div data-name="el"></div>', $page->getHtml());
+        self::assertStringContainsString(self::WAIT_FOR_ELEMENT_HTML, $page->getHtml());
+    }
+
+    public function testWaitUntilContainsElementByXPath(): void
+    {
+        $factory = new BrowserFactory();
+
+        $browser = $factory->createBrowser();
+        $page = $browser->createPage();
+
+        $page->navigate(self::sitePath(self::WAIT_FOR_ELEMENT_RESOURCE_FILE))->waitForNavigation();
+
+        self::assertStringNotContainsString(self::WAIT_FOR_ELEMENT_HTML, $page->getHtml());
+
+        $page->waitUntilContainsElement(new XPathSelector('//div[contains(text(), "content")]'));
+
+        self::assertStringContainsString(self::WAIT_FOR_ELEMENT_HTML, $page->getHtml());
     }
 
     public function testSetExtraHTTPHeaders(): void
