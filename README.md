@@ -10,7 +10,7 @@ Can be used synchronously and asynchronously!
 
 ## Features
 
-- Open chrome or chromium browser from php
+- Open Chrome or Chromium browser from php
 - Create pages and navigate to pages
 - Take screenshots
 - Evaluate javascript on the page
@@ -24,7 +24,7 @@ Happy browsing!
 
 ## Requirements
 
-Requires PHP 7.4-8.2 and a chrome/chromium 65+ executable.
+Requires PHP 7.4-8.2 and a Chrome/Chromium 65+ executable.
 
 Note that the library is only tested on Linux but is compatible with macOS and Windows.
 
@@ -41,14 +41,14 @@ $ composer require chrome-php/chrome
 
 ## Usage
 
-It uses a simple and understandable API to start chrome, to open pages, take screenshots, crawl websites... and almost everything that you can do with chrome as a human.
+It uses a simple and understandable API to start Chrome, to open pages, take screenshots, crawl websites... and almost everything that you can do with Chrome as a human.
 
 ```php
 use HeadlessChromium\BrowserFactory;
 
 $browserFactory = new BrowserFactory();
 
-// starts headless chrome
+// starts headless Chrome
 $browser = $browserFactory->createBrowser();
 
 try {
@@ -70,9 +70,9 @@ try {
 }
 ```
 
-### Using different chrome executable
+### Using different Chrome executable
 
-When starting, the factory will look for the environment variable ``"CHROME_PATH"`` to use as the chrome executable.
+When starting, the factory will look for the environment variable ``"CHROME_PATH"`` to use as the Chrome executable.
 If the variable is not found, it will try to guess the correct executable path according to your OS or use ``"chrome"`` as the default.
 
 You are also able to explicitly set up any executable of your choice when creating a new object. For instance ``"chromium-browser"``:
@@ -102,7 +102,7 @@ Other debug options:
 
 ```php
 [
-    'connectionDelay' => 0.8,            // add 0.8 second of delay between each instruction sent to chrome,
+    'connectionDelay' => 0.8,            // add 0.8 second of delay between each instruction sent to Chrome,
     'debugLogger'     => 'php://stdout', // will enable verbose mode
 ]
 ```
@@ -157,37 +157,38 @@ $browser4 = $browserFactory->createBrowser();
 
 Here are the options available for the browser factory:
 
-| Option name               | Default | Description                                                                                  |
-|---------------------------|---------|----------------------------------------------------------------------------------------------|
-| `connectionDelay`         | `0`     | Delay to apply between each operation for debugging purposes                                 |
-| `customFlags`             | none    | An array of flags to pass to the command line. Eg: `['--option1', '--option2=someValue']`    |
-| `debugLogger`             | `null`  | A string (e.g "php://stdout"), or resource, or PSR-3 logger instance to print debug messages |
-| `disableNotifications`    | `false` | Disable browser notifications                                                                |
-| `enableImages`            | `true`  | Toggles loading of images                                                                    |
-| `envVariables`            | none    | An array of environment variables to pass to the process (example DISPLAY variable)          |
-| `headers`                 | none    | An array of custom HTTP headers                                                              |
-| `headless`                | `true`  | Enable or disable headless mode                                                              |
-| `ignoreCertificateErrors` | `false` | Set chrome to ignore ssl errors                                                              |
-| `keepAlive`               | `false` | Set to `true` to keep alive the chrome instance when the script terminates                   |
-| `noSandbox`               | `false` | Enable no sandbox mode, useful to run in a docker container                                  |
-| `noProxyServer`           | `false` | Don't use a proxy server, always make direct connections. Overrides other proxy settings.    |
-| `proxyBypassList`         | none    | Specifies a list of hosts for whom we bypass proxy settings and use direct connections       |
-| `proxyServer`             | none    | Proxy server to use. usage: `127.0.0.1:8080` (authorisation with credentials does not work)  |
-| `sendSyncDefaultTimeout`  | `5000`  | Default timeout (ms) for sending sync messages                                               |
-| `startupTimeout`          | `30`    | Maximum time in seconds to wait for chrome to start                                          |
-| `userAgent`               | none    | User agent to use for the whole browser (see page API for alternative)                       |
-| `userDataDir`             | none    | Chrome user data dir (default: a new empty dir is generated temporarily)                     |
-| `userCrashDumpsDir`       | none    | The directory crashpad should store dumps in (crash reporter will be enabled automatically)  |
-| `windowSize`              | none    | Size of the window. usage: `$width, $height` - see also Page::setViewport                    |
+| Option name               | Default | Description                                                                                        |
+|---------------------------|---------|----------------------------------------------------------------------------------------------------|
+| `connectionDelay`         | `0`     | Delay to apply between each operation for debugging purposes                                       |
+| `customFlags`             | none    | An array of flags to pass to the command line. Eg: `['--option1', '--option2=someValue']`          |
+| `debugLogger`             | `null`  | A string (e.g "php://stdout"), or resource, or PSR-3 logger instance to print debug messages       |
+| `disableNotifications`    | `false` | Disable browser notifications                                                                      |
+| `enableImages`            | `true`  | Toggles loading of images                                                                          |
+| `envVariables`            | none    | An array of environment variables to pass to the process (example DISPLAY variable)                |
+| `headers`                 | none    | An array of custom HTTP headers                                                                    |
+| `headless`                | `true`  | Enable or disable headless mode                                                                    |
+| `ignoreCertificateErrors` | `false` | Set Chrome to ignore SSL errors                                                                    |
+| `keepAlive`               | `false` | Set to `true` to keep alive the Chrome instance when the script terminates                         |
+| `noSandbox`               | `false` | Enable no sandbox mode, useful to run in a docker container                                        |
+| `noProxyServer`           | `false` | Don't use a proxy server, always make direct connections. Overrides other proxy settings.          |
+| `proxyBypassList`         | none    | Specifies a list of hosts for whom we bypass proxy settings and use direct connections             |
+| `proxyServer`             | none    | Proxy server to use. usage: `127.0.0.1:8080` (authorisation with credentials does not work)        |
+| `sendSyncDefaultTimeout`  | `5000`  | Default timeout (ms) for sending sync messages                                                     |
+| `startupTimeout`          | `30`    | Maximum time in seconds to wait for Chrome to start                                                |
+| `userAgent`               | none    | User agent to use for the whole browser (see page API for alternative)                             |
+| `userDataDir`             | none    | Chrome user data dir (default: a new empty dir is generated temporarily)                           |
+| `userCrashDumpsDir`       | none    | The directory crashpad should store dumps in (crash reporter will be enabled automatically)        |
+| `windowSize`              | none    | Size of the window. usage: `$width, $height` - see also Page::setViewport                          |
+| `excludedSwitches`        | none    | An array of Chrome flags that should be removed from the default set (example --enable-automation) |
 
 
 ### Persistent Browser
 
-This example shows how to share a single instance of chrome for multiple scripts.
+This example shows how to share a single instance of Chrome for multiple scripts.
 
-The first time the script is started we use the browser factory in order to start chrome, afterwards we save the uri to connect to this browser in the file system.
+The first time the script is started we use the browser factory in order to start Chrome, afterwards we save the uri to connect to this browser in the file system.
 
-The next calls to the script will read the uri from that file in order to connect to the chrome instance instead of creating a new one. If chrome was closed or crashed, a new instance is started again.
+The next calls to the script will read the uri from that file in order to connect to the Chrome instance instead of creating a new one. If Chrome was closed or crashed, a new instance is started again.
 
 ```php
 use \HeadlessChromium\BrowserFactory;
@@ -694,7 +695,7 @@ Advanced usage
 --------------
 
 The library ships with tools that hide all the communication logic but you can use the tools used internally to
-communicate directly with chrome debug protocol.
+communicate directly with Chrome debug protocol.
 
 Example:
 
@@ -702,7 +703,7 @@ Example:
 use HeadlessChromium\Communication\Connection;
 use HeadlessChromium\Communication\Message;
 
-// chrome devtools URI
+// Chrome devtools URI
 $webSocketUri = 'ws://127.0.0.1:9222/devtools/browser/xxx';
 
 // create a connection
@@ -743,7 +744,7 @@ You can ease the debugging by setting a delay before each operation is made:
 use HeadlessChromium\Communication\Connection;
 use HeadlessChromium\Browser;
 
-// chrome devtools URI
+// Chrome devtools URI
 $webSocketUri = 'ws://127.0.0.1:9222/devtools/browser/xxx';
 
 // create connection given a WebSocket URI

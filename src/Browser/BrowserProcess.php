@@ -390,6 +390,11 @@ class BrowserProcess implements LoggerAwareInterface
         // add user data dir to args
         $args[] = '--user-data-dir='.$options['userDataDir'];
 
+        // remove some arguments
+        if (\array_key_exists('excludedSwitches', $options) && \is_array($options['excludedSwitches'])) {
+            $args = \array_diff($args, $options['excludedSwitches']);
+        }
+
         return $args;
     }
 
