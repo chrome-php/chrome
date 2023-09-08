@@ -36,17 +36,17 @@ class BrowserFactory
      * - envVariables: An array of environment variables to pass to the process (example DISPLAY variable)
      * - headers: An array of custom HTTP headers
      * - headless: Enable or disable headless mode (default: true)
-     * - ignoreCertificateErrors: Set chrome to ignore ssl errors
-     * - keepAlive: Set to `true` to keep alive the chrome instance when the script terminates (default: false)
+     * - ignoreCertificateErrors: Set Chrome to ignore SSL errors
+     * - keepAlive: Set to `true` to keep alive the Chrome instance when the script terminates (default: false)
      * - noSandbox: Enable no sandbox mode, useful to run in a docker container (default: false)
      * - proxyServer: Proxy server to use. ex: `127.0.0.1:8080` (default: none)
      * - sendSyncDefaultTimeout: Default timeout (ms) for sending sync messages (default 5000 ms)
-     * - startupTimeout: Maximum time in seconds to wait for chrome to start (default: 30 sec)
+     * - startupTimeout: Maximum time in seconds to wait for Chrome to start (default: 30 sec)
      * - userAgent: User agent to use for the whole browser
      * - userDataDir: Chrome user data dir (default: a new empty dir is generated temporarily)
      * - userCrashDumpsDir: The directory crashpad should store dumps in (crash reporter will be enabled automatically)
      * - windowSize: Size of the window. ex: `[1920, 1080]` (default: none)
-     * - excludedSwitches: An Array of chrome flags that should be removed from the default set (example --enable-automation)
+     * - excludedSwitches: An array of Chrome flags that should be removed from the default set (example --enable-automation)
      */
     protected $options = [];
 
