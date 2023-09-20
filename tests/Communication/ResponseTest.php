@@ -28,7 +28,7 @@ class ResponseTest extends TestCase
         self::assertSame($message, $response->getMessage());
         self::assertTrue($response->isSuccessful());
         self::assertTrue(isset($response['bar']));
-        self::assertEquals('foo', $response['bar']);
+        self::assertSame('foo', $response['bar']);
         self::assertEquals(['id' => $message->getId(), 'bar' => 'foo'], $response->getData());
     }
 

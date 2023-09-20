@@ -37,8 +37,8 @@ class SessionTest extends TestCase
         $connection = new Connection($this->mockSocket);
         $session = new Session('foo', 'bar', $connection);
 
-        self::assertEquals('foo', $session->getTargetId());
-        self::assertEquals('bar', $session->getSessionId());
+        self::assertSame('foo', $session->getTargetId());
+        self::assertSame('bar', $session->getSessionId());
         self::assertSame($connection, $session->getConnection());
     }
 

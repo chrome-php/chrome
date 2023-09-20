@@ -56,7 +56,7 @@ class BrowserFactoryTest extends BaseTestCase
 
         $response = $page->evaluate('navigator.userAgent')->getReturnValue();
 
-        self::assertEquals('foo bar baz', $response);
+        self::assertSame('foo bar baz', $response);
     }
 
     public function testAddHeaders(): void

@@ -62,7 +62,7 @@ class KeyboardApiTest extends BaseTestCase
             ->getReturnValue();
 
         // checks if the input contains the typed text
-        self::assertEquals($text, $value);
+        self::assertSame($text, $value);
     }
 
     /**
@@ -127,7 +127,7 @@ class KeyboardApiTest extends BaseTestCase
             ->getReturnValue();
 
         // check if the input contains the typed text twice
-        self::assertEquals($text.$text, $value);
+        self::assertSame($text.$text, $value);
     }
 
     /**
@@ -144,7 +144,7 @@ class KeyboardApiTest extends BaseTestCase
             ->press('b')
             ->release();
 
-        self::assertEquals(0, \count($page->keyboard()->getPressedKeys()));
+        self::assertCount(0, $page->keyboard()->getPressedKeys());
     }
 
     /**
