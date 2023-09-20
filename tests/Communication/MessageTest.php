@@ -22,8 +22,8 @@ class MessageTest extends TestCase
     public function testMessage(): void
     {
         $message = new Message('foo', ['bar' => 'baz']);
-        self::assertEquals(Message::getLastMessageId(), $message->getId());
-        self::assertEquals('foo', $message->getMethod());
+        self::assertSame(Message::getLastMessageId(), $message->getId());
+        self::assertSame('foo', $message->getMethod());
         self::assertEquals(['bar' => 'baz'], $message->getParams());
 
         self::assertEquals(
@@ -32,9 +32,9 @@ class MessageTest extends TestCase
         );
 
         $message2 = new Message('qux', ['quux' => 'corge']);
-        self::assertEquals(Message::getLastMessageId(), $message2->getId());
+        self::assertSame(Message::getLastMessageId(), $message2->getId());
         self::assertNotSame($message->getId(), $message2->getId());
-        self::assertEquals('qux', $message2->getMethod());
+        self::assertSame('qux', $message2->getMethod());
         self::assertEquals(['quux' => 'corge'], $message2->getParams());
     }
 }

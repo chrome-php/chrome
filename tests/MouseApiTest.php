@@ -64,7 +64,7 @@ class MouseApiTest extends BaseTestCase
 
         $title = $page->evaluate('document.title')->getReturnValue();
 
-        self::assertEquals('a - test', $title);
+        self::assertSame('a - test', $title);
     }
 
     /**
@@ -81,16 +81,16 @@ class MouseApiTest extends BaseTestCase
 
         $windowScrollY = $page->evaluate('window.scrollY')->getReturnValue();
 
-        self::assertEquals(100, $windowScrollY);
-        self::assertEquals(100, $page->mouse()->getPosition()['y']);
+        self::assertSame(100, $windowScrollY);
+        self::assertSame(100, $page->mouse()->getPosition()['y']);
 
         // scrolling 100px up should revert the last action
         $page->mouse()->scrollUp(100);
 
         $windowScrollY = $page->evaluate('window.scrollY')->getReturnValue();
 
-        self::assertEquals(0, $windowScrollY);
-        self::assertEquals(0, $page->mouse()->getPosition()['y']);
+        self::assertSame(0, $windowScrollY);
+        self::assertSame(0, $page->mouse()->getPosition()['y']);
 
         // try to scroll more than possible
         $page->mouse()->scrollDown(10000);
@@ -117,7 +117,7 @@ class MouseApiTest extends BaseTestCase
 
         $title = $page->evaluate('document.title')->getReturnValue();
 
-        self::assertEquals('a - test', $title);
+        self::assertSame('a - test', $title);
     }
 
     /**
@@ -147,7 +147,7 @@ class MouseApiTest extends BaseTestCase
 
         $title = $page->evaluate('document.title')->getReturnValue();
 
-        self::assertEquals('a - test', $title);
+        self::assertSame('a - test', $title);
     }
 
     /**
@@ -174,7 +174,7 @@ class MouseApiTest extends BaseTestCase
 
         $title = $page->evaluate('document.title')->getReturnValue();
 
-        self::assertEquals($expectedPageTitle, $title);
+        self::assertSame($expectedPageTitle, $title);
     }
 
     /**
@@ -210,7 +210,7 @@ class MouseApiTest extends BaseTestCase
 
         $title = $page->evaluate('document.title')->getReturnValue();
 
-        self::assertEquals('a - test', $title);
+        self::assertSame('a - test', $title);
     }
 
     /**

@@ -101,7 +101,7 @@ class DomTest extends BaseTestCase
             ->getReturnValue();
 
         // checks if the input contains the typed text
-        self::assertEquals('bar', $value);
+        self::assertSame('bar', $value);
     }
 
     public function testGetText(): void
@@ -112,7 +112,7 @@ class DomTest extends BaseTestCase
 
         $value = $element->getText();
 
-        self::assertEquals('bar', $value);
+        self::assertSame('bar', $value);
     }
 
     public function testGetAttribute(): void
@@ -123,7 +123,7 @@ class DomTest extends BaseTestCase
 
         $value = $element->getAttribute('type');
 
-        self::assertEquals('foo', $value);
+        self::assertSame('foo', $value);
     }
 
     public function testSetAttribute(): void
@@ -136,7 +136,7 @@ class DomTest extends BaseTestCase
 
         $value = $element->getAttribute('type');
 
-        self::assertEquals('hello', $value);
+        self::assertSame('hello', $value);
     }
 
     public function testUploadFile(): void

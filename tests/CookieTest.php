@@ -56,8 +56,8 @@ class CookieTest extends HttpEnabledTestCase
         self::assertInstanceOf(CookiesCollection::class, $cookies);
         self::assertCount(1, $cookies);
 
-        self::assertEquals($cookies->getAt(0)->getName(), 'foo');
-        self::assertEquals($cookies->getAt(0)->getValue(), 'bar');
+        self::assertSame('foo', $cookies->getAt(0)->getName());
+        self::assertSame('bar', $cookies->getAt(0)->getValue());
     }
 
     public function testGetAllCookies(): void
@@ -70,8 +70,8 @@ class CookieTest extends HttpEnabledTestCase
         self::assertInstanceOf(CookiesCollection::class, $cookies);
         self::assertCount(1, $cookies);
 
-        self::assertEquals($cookies->getAt(0)->getName(), 'foo');
-        self::assertEquals($cookies->getAt(0)->getValue(), 'bar');
+        self::assertSame('foo', $cookies->getAt(0)->getName());
+        self::assertSame('bar', $cookies->getAt(0)->getValue());
     }
 
     public function testSetCookies(): void
@@ -92,9 +92,9 @@ class CookieTest extends HttpEnabledTestCase
         self::assertInstanceOf(CookiesCollection::class, $cookies);
         self::assertCount(1, $cookies);
 
-        self::assertEquals($cookies->getAt(0)->getName(), 'baz');
-        self::assertEquals($cookies->getAt(0)->getValue(), 'qux');
-        self::assertEquals($cookies->getAt(0)->getDomain(), 'foo.bar');
+        self::assertSame('baz', $cookies->getAt(0)->getName());
+        self::assertSame('qux', $cookies->getAt(0)->getValue());
+        self::assertSame('foo.bar', $cookies->getAt(0)->getDomain());
 
         // Set cookie for current page
         $page->navigate(self::sitePath('a.html'))->waitForNavigation();
@@ -108,12 +108,12 @@ class CookieTest extends HttpEnabledTestCase
         self::assertInstanceOf(CookiesCollection::class, $cookies);
         self::assertCount(2, $cookies);
 
-        self::assertEquals($cookies->getAt(1)->getName(), 'quux');
-        self::assertEquals($cookies->getAt(1)->getValue(), 'corge');
-        self::assertEquals($cookies->getAt(1)->getDomain(), 'localhost');
+        self::assertSame('quux', $cookies->getAt(1)->getName());
+        self::assertSame('corge', $cookies->getAt(1)->getValue());
+        self::assertSame('localhost', $cookies->getAt(1)->getDomain());
 
-        self::assertEquals($cookies->getAt(0)->getName(), 'baz');
-        self::assertEquals($cookies->getAt(0)->getValue(), 'qux');
-        self::assertEquals($cookies->getAt(0)->getDomain(), 'foo.bar');
+        self::assertSame('baz', $cookies->getAt(0)->getName());
+        self::assertSame('qux', $cookies->getAt(0)->getValue());
+        self::assertSame('foo.bar', $cookies->getAt(0)->getDomain());
     }
 }
