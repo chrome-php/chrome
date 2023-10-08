@@ -66,7 +66,7 @@ class BrowserFactory
      */
     public function createBrowser(?array $options = null): ProcessAwareBrowser
     {
-        $options = $options ?? $this->options;
+        $options ??= $this->options;
 
         // create logger from options
         $logger = self::createLogger($options);

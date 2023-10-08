@@ -64,8 +64,8 @@ class ConnectionTest extends TestCase
         $session = $connection->createSession('baz-qux');
 
         self::assertInstanceOf(Session::class, $session);
-        self::assertEquals('foo-bar', $session->getSessionId());
-        self::assertEquals('baz-qux', $session->getTargetId());
+        self::assertSame('foo-bar', $session->getSessionId());
+        self::assertSame('baz-qux', $session->getTargetId());
         self::assertSame($connection, $session->getConnection());
     }
 
