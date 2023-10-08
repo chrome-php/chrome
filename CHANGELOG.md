@@ -1,6 +1,12 @@
 # CHANGELOG
 
 
+## 1.9.1 (2023-10-08)
+
+* Fix rare crash in `Page::getHtml`
+* Fix whitespace character handling in `Keyboard::typeText()`
+
+
 ## 1.9.0 (2023-04-30)
 
 * Added some additional life-cycle event constants
