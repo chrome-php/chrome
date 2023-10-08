@@ -44,14 +44,14 @@ class NodePosition
         $this->width = $rightBottomX - $leftBottomX;
     }
 
-    public function getX(): int
+    public function getX(): float
     {
-        return (int) $this->x;
+        return (float) $this->x;
     }
 
-    public function getY(): int
+    public function getY(): float
     {
-        return (int) $this->y;
+        return (float) $this->y;
     }
 
     public function getWidth(): int

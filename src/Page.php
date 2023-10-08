@@ -17,6 +17,7 @@ use HeadlessChromium\Communication\Target;
 use HeadlessChromium\Cookies\Cookie;
 use HeadlessChromium\Cookies\CookiesCollection;
 use HeadlessChromium\Dom\Dom;
+use HeadlessChromium\Dom\Node;
 use HeadlessChromium\Dom\Selector\CssSelector;
 use HeadlessChromium\Dom\Selector\Selector;
 use HeadlessChromium\Exception\CommunicationException;
@@ -671,6 +672,13 @@ class Page
             ->sendMessage(new Message('Page.captureScreenshot', $screenshotOptions));
 
         return new PageScreenshot($responseReader);
+    }
+
+    public function screenshotElement(Node $node): PageScreenshot
+    {
+        return $this->screenshot([
+            'clip' => $node->getClip(),
+        ]);
     }
 
     /**
