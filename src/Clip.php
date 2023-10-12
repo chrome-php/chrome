@@ -22,23 +22,23 @@ class Clip
     /**
      * Clip constructor.
      *
-     * @param int   $x
-     * @param int   $y
-     * @param int   $height
-     * @param int   $width
-     * @param float $scale
+     * @param int|float $x
+     * @param int|float $y
+     * @param int|float $height
+     * @param int|float $width
+     * @param int|float $scale
      */
     public function __construct($x, $y, $width, $height, $scale = 1.0)
     {
-        $this->x = $x;
-        $this->y = $y;
-        $this->height = $height;
-        $this->width = $width;
-        $this->scale = $scale;
+        $this->x = (float) $x;
+        $this->y = (float) $y;
+        $this->height = (float) $height;
+        $this->width = (float) $width;
+        $this->scale = (float) $scale;
     }
 
     /**
-     * @return mixed
+     * @return float
      */
     public function getX()
     {
@@ -46,7 +46,7 @@ class Clip
     }
 
     /**
-     * @return mixed
+     * @return float
      */
     public function getY()
     {
@@ -54,7 +54,7 @@ class Clip
     }
 
     /**
-     * @return mixed
+     * @return float
      */
     public function getHeight()
     {
@@ -62,7 +62,7 @@ class Clip
     }
 
     /**
-     * @return mixed
+     * @return float
      */
     public function getWidth()
     {
@@ -70,7 +70,7 @@ class Clip
     }
 
     /**
-     * @return mixed
+     * @return float
      */
     public function getScale()
     {
@@ -78,42 +78,42 @@ class Clip
     }
 
     /**
-     * @param mixed $x
+     * @param int|float $x
      */
     public function setX($x): void
     {
-        $this->x = $x;
+        $this->x = (float) $x;
     }
 
     /**
-     * @param mixed $y
+     * @param int|float $y
      */
     public function setY($y): void
     {
-        $this->y = $y;
+        $this->y = (float) $y;
     }
 
     /**
-     * @param mixed $height
+     * @param int|float $height
      */
     public function setHeight($height): void
     {
-        $this->height = $height;
+        $this->height = (float) $height;
     }
 
     /**
-     * @param mixed $width
+     * @param int|float $width
      */
     public function setWidth($width): void
     {
-        $this->width = $width;
+        $this->width = (float) $width;
     }
 
     /**
-     * @param mixed $scale
+     * @param int|float $scale
      */
     public function setScale($scale): void
     {
-        $this->scale = $scale;
+        $this->scale = (float) $scale;
     }
 }
