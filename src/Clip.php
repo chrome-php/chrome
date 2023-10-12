@@ -13,15 +13,18 @@ namespace HeadlessChromium;
 
 class Clip
 {
+    /** @var float */
     protected $x;
+    /** @var float */
     protected $y;
+    /** @var int */
     protected $height;
+    /** @var int */
     protected $width;
+    /** @var float */
     protected $scale;
 
     /**
-     * Clip constructor.
-     *
      * @param int|float $x
      * @param int|float $y
      * @param int       $height
