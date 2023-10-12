@@ -54,23 +54,23 @@ class NodePosition
         return $this->y;
     }
 
-    public function getWidth(): int
+    public function getWidth(): float
     {
-        return (int) $this->width;
+        return $this->width;
     }
 
-    public function getHeight(): int
+    public function getHeight(): float
     {
-        return (int) $this->height;
+        return $this->height;
     }
 
-    public function getCenterX(): int
+    public function getCenterX(): float
     {
-        return (int) ($this->x + ($this->width / 2));
+        return $this->x + ($this->width / 2);
     }
 
-    public function getCenterY(): int
+    public function getCenterY(): float
     {
-        return (int) ($this->y + ($this->height / 2));
+        return $this->y + ($this->height / 2);
     }
 }
