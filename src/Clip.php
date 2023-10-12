@@ -13,13 +13,13 @@ namespace HeadlessChromium;
 
 class Clip
 {
-    /** @var float */
+    /** @var int|float */
     protected $x;
-    /** @var float */
+    /** @var int|float */
     protected $y;
-    /** @var int */
+    /** @var int|float */
     protected $height;
-    /** @var int */
+    /** @var int|float */
     protected $width;
     /** @var float */
     protected $scale;
@@ -27,21 +27,21 @@ class Clip
     /**
      * @param int|float $x
      * @param int|float $y
-     * @param int       $height
-     * @param int       $width
+     * @param int|float $height
+     * @param int|float $width
      * @param float     $scale
      */
     public function __construct($x, $y, $width, $height, $scale = 1.0)
     {
-        $this->x = (float) $x;
-        $this->y = (float) $y;
+        $this->x = $x;
+        $this->y = $y;
         $this->height = $height;
         $this->width = $width;
         $this->scale = $scale;
     }
 
     /**
-     * @return float
+     * @return int|float
      */
     public function getX()
     {
@@ -49,7 +49,7 @@ class Clip
     }
 
     /**
-     * @return float
+     * @return int|float
      */
     public function getY()
     {
@@ -57,7 +57,7 @@ class Clip
     }
 
     /**
-     * @return int
+     * @return int|float
      */
     public function getHeight()
     {
@@ -65,7 +65,7 @@ class Clip
     }
 
     /**
-     * @return int
+     * @return int|float
      */
     public function getWidth()
     {
@@ -85,7 +85,7 @@ class Clip
      */
     public function setX($x): void
     {
-        $this->x = (float) $x;
+        $this->x = $x;
     }
 
     /**
@@ -93,7 +93,7 @@ class Clip
      */
     public function setY($y): void
     {
-        $this->y = (float) $y;
+        $this->y = $y;
     }
 
     /**
