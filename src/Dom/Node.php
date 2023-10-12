@@ -178,7 +178,7 @@ class Node
         $this->scrollIntoView();
         $position = $this->getPosition();
         $this->page->mouse()
-            ->move($position->getCenterX(), $position->getCenterY())
+            ->move((int) $position->getCenterX(), (int) $position->getCenterY())
             ->click();
     }
 
