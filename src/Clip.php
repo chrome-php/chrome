@@ -24,17 +24,17 @@ class Clip
      *
      * @param int|float $x
      * @param int|float $y
-     * @param int|float $height
-     * @param int|float $width
-     * @param int|float $scale
+     * @param int       $height
+     * @param int       $width
+     * @param float     $scale
      */
     public function __construct($x, $y, $width, $height, $scale = 1.0)
     {
         $this->x = (float) $x;
         $this->y = (float) $y;
-        $this->height = (float) $height;
-        $this->width = (float) $width;
-        $this->scale = (float) $scale;
+        $this->height = $height;
+        $this->width = $width;
+        $this->scale = $scale;
     }
 
     /**
@@ -54,7 +54,7 @@ class Clip
     }
 
     /**
-     * @return float
+     * @return int
      */
     public function getHeight()
     {
@@ -62,7 +62,7 @@ class Clip
     }
 
     /**
-     * @return float
+     * @return int
      */
     public function getWidth()
     {
@@ -94,26 +94,26 @@ class Clip
     }
 
     /**
-     * @param int|float $height
+     * @param int $height
      */
     public function setHeight($height): void
     {
-        $this->height = (float) $height;
+        $this->height = $height;
     }
 
     /**
-     * @param int|float $width
+     * @param int $width
      */
     public function setWidth($width): void
     {
-        $this->width = (float) $width;
+        $this->width = $width;
     }
 
     /**
-     * @param int|float $scale
+     * @param float $scale
      */
     public function setScale($scale): void
     {
-        $this->scale = (float) $scale;
+        $this->scale = $scale;
     }
 }
