@@ -68,20 +68,20 @@ class KeyboardKeysTest extends BaseTestCase
     public function testOnKeyPressAndRelease($key, $expectedKey): void
     {
         self::assertFalse($this->keyboard->isKeyPressed());
-        self::assertEquals(0, $this->keyboard->getModifiers());
+        self::assertSame(0, $this->keyboard->getModifiers());
 
         $this->keyboard->onKeyPress($key);
 
-        self::assertEquals($expectedKey, $this->keyboard->getCurrentKey());
-        self::assertEquals(0, $this->keyboard->getModifiers());
-        self::assertEquals(1, \count($this->keyboard->getPressedKeys()));
+        self::assertSame($expectedKey, $this->keyboard->getCurrentKey());
+        self::assertSame(0, $this->keyboard->getModifiers());
+        self::assertSame(1, \count($this->keyboard->getPressedKeys()));
         self::assertTrue($this->keyboard->isKeyPressed());
 
         $this->keyboard->onKeyRelease($key);
 
-        self::assertEquals($expectedKey, $this->keyboard->getCurrentKey());
-        self::assertEquals(0, \count($this->keyboard->getPressedKeys()));
-        self::assertEquals(0, $this->keyboard->getModifiers());
+        self::assertSame($expectedKey, $this->keyboard->getCurrentKey());
+        self::assertSame(0, \count($this->keyboard->getPressedKeys()));
+        self::assertSame(0, $this->keyboard->getModifiers());
         self::assertFalse($this->keyboard->isKeyPressed());
     }
 
@@ -96,11 +96,11 @@ class KeyboardKeysTest extends BaseTestCase
         $this->keyboard->setCurrentKey('NonModifierKey');
         $this->keyboard->toggleModifierFromKey();
 
-        self::assertEquals($expectedModifier, $this->keyboard->getModifiers());
+        self::assertSame($expectedModifier, $this->keyboard->getModifiers());
 
         $this->keyboard->setCurrentKey($key);
         $this->keyboard->toggleModifierFromKey();
-        self::assertEquals(0, $this->keyboard->getModifiers());
+        self::assertSame(0, $this->keyboard->getModifiers());
     }
 
     public function testToggleModifier(): void
@@ -108,11 +108,11 @@ class KeyboardKeysTest extends BaseTestCase
         $this->keyboard->toggleModifier(0b0001);
         $this->keyboard->toggleModifier(0b0010);
 
-        self::assertEquals(0b0011, $this->keyboard->getModifiers());
+        self::assertSame(0b0011, $this->keyboard->getModifiers());
 
         $this->keyboard->toggleModifier(0b0010);
 
-        self::assertEquals(0b0001, $this->keyboard->getModifiers());
+        self::assertSame(0b0001, $this->keyboard->getModifiers());
     }
 
     /**
@@ -122,6 +122,6 @@ class KeyboardKeysTest extends BaseTestCase
     {
         $this->keyboard->setCurrentKey($key);
 
-        self::assertEquals($code, $this->keyboard->getKeyCode());
+        self::assertSame($code, $this->keyboard->getKeyCode());
     }
 }

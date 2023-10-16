@@ -52,12 +52,12 @@ class BrowsingTest extends BaseTestCase
         // initial navigation
         $page = $this->openSitePage('index.html');
         $title = $page->evaluate('document.title')->getReturnValue();
-        self::assertEquals('foo', $title);
+        self::assertSame('foo', $title);
 
         // navigate again
         $page->navigate(self::sitePath('a.html'))->waitForNavigation();
         $title = $page->evaluate('document.title')->getReturnValue();
-        self::assertEquals('a - test', $title);
+        self::assertSame('a - test', $title);
     }
 
     public function testFormSubmission(): void
@@ -72,7 +72,7 @@ class BrowsingTest extends BaseTestCase
         );
 
         $evaluation->waitForPageReload();
-        self::assertEquals('hello', $page->evaluate('document.querySelector("#value").innerHTML')->getReturnValue());
+        self::assertSame('hello', $page->evaluate('document.querySelector("#value").innerHTML')->getReturnValue());
     }
 
     public function testGetCurrentUrl(): void
@@ -81,11 +81,11 @@ class BrowsingTest extends BaseTestCase
 
         $page->getSession()->getConnection()->readData();
 
-        self::assertEquals('about:blank', $page->getCurrentUrl());
+        self::assertSame('about:blank', $page->getCurrentUrl());
 
         $page->navigate(self::sitePath('a.html'))->waitForNavigation();
 
-        self::assertEquals(self::sitePath('a.html'), $page->getCurrentUrl());
+        self::assertSame(self::sitePath('a.html'), $page->getCurrentUrl());
     }
 
     public function testPageNavigationLocalNotFoundUrl(): void
@@ -127,12 +127,12 @@ class BrowsingTest extends BaseTestCase
             // initial navigation
             $page = $this->openSitePage('index.html');
             $title = $page->evaluate('document.title')->getReturnValue();
-            self::assertEquals('foo', $title);
+            self::assertSame('foo', $title);
 
             // navigate again
             $page->navigate(self::sitePath('a.html'))->waitForNavigation();
             $title = $page->evaluate('document.title')->getReturnValue();
-            self::assertEquals('a - test', $title);
+            self::assertSame('a - test', $title);
         }
     }
 

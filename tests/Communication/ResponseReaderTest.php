@@ -115,11 +115,11 @@ class ResponseReaderTest extends TestCase
         // wait for response should not read the second message (method:qux.quux)
         $response = $responseReader->waitForResponse(1);
         self::assertEquals(['id' => $message->getId(), 'foo' => 'qux'], $response->getData());
-        self::assertEquals(0, $emitWatcher->emittedCount);
+        self::assertSame(0, $emitWatcher->emittedCount);
 
         // next call to read line should read the second message (method:qux.quux)
         $connection->readLine();
-        self::assertEquals(1, $emitWatcher->emittedCount);
+        self::assertSame(1, $emitWatcher->emittedCount);
     }
 
     public function testExceptionNoResponse(): void
