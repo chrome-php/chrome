@@ -419,8 +419,9 @@ $navigation->waitForNavigation();
 
 // take a screenshot
 $screenshot = $page->screenshot([
-    'format'  => 'jpeg',  // default to 'png' - possible values: 'png', 'jpeg',
-    'quality' => 80,      // only if format is 'jpeg' - default 100
+    'format'  => 'jpeg',  // default to 'png' - possible values: 'png', 'jpeg', 'webp'
+    'quality' => 80,      // only when format is 'jpeg' or 'webp' - default 100
+    'optimizeForSpeed' => true // default to 'false' - Optimize image encoding for speed, not for resulting size
 ]);
 
 // save the screenshot
@@ -470,7 +471,7 @@ $navigation->waitForNavigation();
 $screenshot = $page->screenshot([
     'captureBeyondViewport' => true,
     'clip' => $page->getFullPageClip(),
-    'format' => 'jpeg', // default to 'png' - possible values: 'png', 'jpeg',
+    'format' => 'jpeg', // default to 'png' - possible values: 'png', 'jpeg', 'webp'
 ]);
 
 // save the screenshot

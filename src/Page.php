@@ -589,7 +589,8 @@ class Page
      * $screenshot = $page->screenshot([
      *     'captureBeyondViewport' => true,
      *     'clip' => $page->getFullPageClip(),
-     *     'format' => 'jpeg', // default to 'png' - possible values: 'png', 'jpeg',
+     *     'format' => 'jpeg', // default to 'png' - possible values: 'png', 'jpeg', 'webp'
+     *     'optimizeForSpeed' => true, // default to false - Optimize image encoding for speed, not for resulting size
      * ]);
      *
      * // save the screenshot
@@ -624,15 +625,15 @@ class Page
         }
 
         // make sure format is valid
-        if (!\in_array($screenshotOptions['format'], ['png', 'jpeg'])) {
-            throw new \InvalidArgumentException('Invalid options "format" for page screenshot. Format must be "png" or "jpeg".');
+        if (!\in_array($screenshotOptions['format'], ['png', 'jpeg', 'webp'])) {
+            throw new \InvalidArgumentException('Invalid options "format" for page screenshot. Format must be "png", "jpeg" or "webp".');
         }
 
         // get quality
         if (\array_key_exists('quality', $options)) {
-            // quality requires type to be jpeg
-            if ('jpeg' !== $screenshotOptions['format']) {
-                throw new \InvalidArgumentException('Invalid options "quality" for page screenshot. Quality requires the image format to be "jpeg".');
+            // quality requires type to be jpeg or webp
+            if (!\in_array($screenshotOptions['format'], ['jpeg', 'webp'])) {
+                throw new \InvalidArgumentException('Invalid options "quality" for page screenshot. Quality requires the image format to be "jpeg" or "webp".');
             }
 
             // quality must be an integer
@@ -664,6 +665,15 @@ class Page
                 'height' => $options['clip']->getHeight(),
                 'scale' => $options['clip']->getScale(),
             ];
+        }
+
+        // optimize for speed
+        if (\array_key_exists('optimizeForSpeed', $options)) {
+            if (!\is_bool($options['optimizeForSpeed'])) {
+                throw new \InvalidArgumentException('Invalid options "optimizeForSpeed" for page screenshot. OptimizeForSpeed must be a boolean value.');
+            }
+
+            $screenshotOptions['optimizeForSpeed'] = $options['optimizeForSpeed'];
         }
 
         // request screenshot
