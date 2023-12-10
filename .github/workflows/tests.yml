@@ -12,10 +12,16 @@ jobs:
     strategy:
       matrix:
         php: ['7.4', '8.0', '8.1', '8.2']
-        symfony: ['4', '5', '6']
+        symfony: ['4', '5', '6', '7']
         exclude:
           - php: '7.4'
             symfony: '6'
+          - php: '7.4'
+            symfony: '7'
+          - php: '8.0'
+            symfony: '7'
+          - php: '8.1'
+            symfony: '7'
 
     steps:
       - name: Checkout Code
@@ -56,6 +62,14 @@ jobs:
           max_attempts: 5
           command: composer require "symfony/filesystem:^6.0" "symfony/process:^6.0" "symfony/var-dumper:^6.0" --dev --no-update --no-interaction
         if: "matrix.symfony == '6'"
+
+      - name: Select Symfony 7
+        uses: nick-invision/retry@v1
+        with:
+          timeout_minutes: 5
+          max_attempts: 5
+          command: composer require "symfony/filesystem:^7.0" "symfony/process:^7.0" "symfony/var-dumper:^7.0" --dev --no-update --no-interaction
+        if: "matrix.symfony == '7'"
 
       - name: Install Dependencies
         uses: nick-invision/retry@v1
