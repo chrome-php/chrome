@@ -1,6 +1,16 @@
 # CHANGELOG
 
 
+## 1.10.0 (2023-12-10)
+
+* Add `Add Node::setHTML` method
+* Add `Page::setScriptExecution` method
+* Allow usage of XPath in `Page::waitForElement`
+* Enable removal of Chrome flags via `excludedSwitches` option
+* Add support for `webp` `format` and `optimizeForSpeed` option in `Page::screenshot`
+* Add support for using Symfony 7 components
+
+
 ## 1.9.1 (2023-10-08)
 
 * Fix rare crash in `Page::getHtml`
