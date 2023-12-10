@@ -1,7 +1,7 @@
 {
     "require": {
         "php": "^7.4",
-        "phpstan/phpstan": "1.10.3"
+        "phpstan/phpstan": "1.10.48"
     },
     "config": {
         "preferred-install": "dist"
