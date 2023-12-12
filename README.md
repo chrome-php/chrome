@@ -799,6 +799,8 @@ selectors, you can pass an instance of the required `Selector`.
 Wait for element by XPath selector:
 
 ```php
+use HeadlessChromium\Dom\Selector\XPathSelector;
+
 $page = $browser->createPage();
 $page->navigate('http://example.com')->waitForNavigation();
 
