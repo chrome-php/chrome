@@ -41,24 +41,24 @@ final class XPathSelector implements Selector
      *
      * @author  Robert Rossney ( https://stackoverflow.com/users/19403/robert-rossney )
      *
-     * @param string $value
+     * @param string $string
      *
      * @return string
      */
-    public static function quote(string $value): string
+    public static function quote(string $string): string
     {
-        if (false === \strpos($value, '"')) {
-            return '"'.$value.'"';
+        if (false === \strpos($string, '"')) {
+            return '"'.$string.'"';
         }
-        if (false === \strpos($value, '\'')) {
-            return '\''.$value.'\'';
+        if (false === \strpos($string, '\'')) {
+            return '\''.$string.'\'';
         }
-        // if the value contains both single and double quotes, construct an
+        // if the string contains both single and double quotes, construct an
         // expression that concatenates all non-double-quote substrings with
         // the quotes, e.g.:
         //    concat("'foo'", '"', "bar")
         $sb = 'concat(';
-        $substrings = \explode('"', $value);
+        $substrings = \explode('"', $string);
         for ($i = 0; $i < \count($substrings); ++$i) {
             $needComma = ($i > 0);
             if ('' !== $substrings[$i]) {
