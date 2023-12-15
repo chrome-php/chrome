@@ -46,25 +46,26 @@ final class XPathSelector implements Selector
     public static function quote(string $string): string
     {
         if (false === \strpos($string, '"')) {
-            return '"' . $string . '"';
+            return '"'.$string.'"';
         }
         if (false === \strpos($string, '\'')) {
-            return '\'' . $string . '\'';
+            return '\''.$string.'\'';
         }
         // if the string contains both single and double quotes, construct an
         // expression that concatenates all non-double-quote substrings with
         // the quotes, e.g.:
         //   'foo'"bar" => concat("'foo'", '"bar"')
         $sb = [];
-        while (\strlen($string) > 0) {
+        while ('' !== $string) {
             $bytesUntilSingleQuote = \strcspn($string, '\'');
             $bytesUntilDoubleQuote = \strcspn($string, '"');
             $quoteMethod = ($bytesUntilSingleQuote > $bytesUntilDoubleQuote) ? "'" : '"';
-            $bytesUntilQuote = max($bytesUntilSingleQuote, $bytesUntilDoubleQuote);
-            $sb[] = $quoteMethod . \substr($string, 0, $bytesUntilQuote) . $quoteMethod;
+            $bytesUntilQuote = \max($bytesUntilSingleQuote, $bytesUntilDoubleQuote);
+            $sb[] = $quoteMethod.\substr($string, 0, $bytesUntilQuote).$quoteMethod;
             $string = \substr($string, $bytesUntilQuote);
         }
         $sb = \implode(',', $sb);
-        return 'concat(' . $sb . ')';
+
+        return 'concat('.$sb.')';
     }
 }
