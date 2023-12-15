@@ -39,8 +39,6 @@ final class XPathSelector implements Selector
      *
      * Example: new XPathSelector("//span[contains(text()," . XPathSelector::quote($string) . ")]")
      *
-     * @author  Robert Rossney ( https://stackoverflow.com/users/19403/robert-rossney )
-     *
      * @param string $string
      *
      * @return string
@@ -48,35 +46,25 @@ final class XPathSelector implements Selector
     public static function quote(string $string): string
     {
         if (false === \strpos($string, '"')) {
-            return '"'.$string.'"';
+            return '"' . $string . '"';
         }
         if (false === \strpos($string, '\'')) {
-            return '\''.$string.'\'';
+            return '\'' . $string . '\'';
         }
         // if the string contains both single and double quotes, construct an
         // expression that concatenates all non-double-quote substrings with
         // the quotes, e.g.:
-        //    concat("'foo'", '"', "bar")
-        $sb = 'concat(';
-        $substrings = \explode('"', $string);
-        for ($i = 0; $i < \count($substrings); ++$i) {
-            $needComma = ($i > 0);
-            if ('' !== $substrings[$i]) {
-                if ($i > 0) {
-                    $sb .= ', ';
-                }
-                $sb .= '"'.$substrings[$i].'"';
-                $needComma = true;
-            }
-            if ($i < (\count($substrings) - 1)) {
-                if ($needComma) {
-                    $sb .= ', ';
-                }
-                $sb .= "'\"'";
-            }
+        //   'foo'"bar" => concat("'foo'", '"bar"')
+        $sb = [];
+        while (\strlen($string) > 0) {
+            $bytesUntilSingleQuote = \strcspn($string, '\'');
+            $bytesUntilDoubleQuote = \strcspn($string, '"');
+            $quoteMethod = ($bytesUntilSingleQuote > $bytesUntilDoubleQuote) ? "'" : '"';
+            $bytesUntilQuote = max($bytesUntilSingleQuote, $bytesUntilDoubleQuote);
+            $sb[] = $quoteMethod . \substr($string, 0, $bytesUntilQuote) . $quoteMethod;
+            $string = \substr($string, $bytesUntilQuote);
         }
-        $sb .= ')';
-
-        return $sb;
+        $sb = \implode(',', $sb);
+        return 'concat(' . $sb . ')';
     }
 }
