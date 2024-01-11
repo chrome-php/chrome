@@ -40,7 +40,7 @@ class AutoDiscover
             case 'Windows':
                 return self::getFromRegistry() ?? '%ProgramFiles(x86)%\Google\Chrome\Application\chrome.exe';
             default:
-                return explode("\n", (string)self::shellExec("bash -c 'command -v google-chrome chrome chromium chromium-browser'"), 2)[0] ?: 'chrome';
+                return explode("\n", (string)self::shellExec("bash -c 'command -v google-chrome chrome chromium-browser chromium'"), 2)[0] ?: 'chrome';
         }
     }
 
