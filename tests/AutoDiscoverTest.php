@@ -61,7 +61,7 @@ class AutoDiscoverTest extends BaseTestCase
             $autoDiscover->guessChromeBinaryPath(),
             $this->logicalOr(
                 'chrome',
-                'google-chrome'
+                '/usr/bin/google-chrome'
             )
         );
     }
