@@ -107,33 +107,23 @@ class Connection extends EventEmitter implements LoggerAwareInterface
         // create socket client
         if (\is_string($socketClient)) {
 
-            $parsedUrl = parse_url($socketClient);
-            if (isset($parsedUrl['scheme']) && ($parsedUrl['scheme']==='http' or $parsedUrl['scheme']==='https'))
+            if (\in_array(\parse_url($socketClient, PHP_URL_SCHEME), ['http', 'https']))
             {
 
                 $configURL = $socketClient.'/json/version';
 
-                $curl = curl_init($configURL);
-                curl_setopt($curl, CURLOPT_URL, $configURL);
-                curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-                $resp = curl_exec($curl);
+                $resp = \file_get_contents($configURL);
 
                 if ($resp === false) {
-                    $err = curl_error($curl);
-                    curl_close($curl);
-
                     throw new \Exception("Unable to request $configURL");
                 }
-                else {
-                    curl_close($curl);
-                }
 
-                $json_resp = json_decode($resp);
+                $json_resp = \json_decode($resp);
                 if (is_null($json_resp)) {
                     throw new \Exception("Invalid JSON response from $configURL");
                 }
 
-                if (!property_exists($json_resp, 'webSocketDebuggerUrl')) {
+                if (!\property_exists($json_resp, 'webSocketDebuggerUrl')) {
                     throw new \Exception("Websocket debugger URL not found in response from $configURL");
                 }
 
