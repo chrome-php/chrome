@@ -107,19 +107,18 @@ class Connection extends EventEmitter implements LoggerAwareInterface
         // create socket client
         if (\is_string($socketClient)) {
 
-            if (\in_array(\parse_url($socketClient, PHP_URL_SCHEME), ['http', 'https']))
-            {
+            if (\in_array(\parse_url($socketClient, PHP_URL_SCHEME), ['http', 'https'])) {
 
                 $configURL = $socketClient.'/json/version';
 
                 $resp = \file_get_contents($configURL);
 
-                if ($resp === false) {
+                if (false === $resp) {
                     throw new \Exception("Unable to request $configURL");
                 }
 
                 $json_resp = \json_decode($resp);
-                if (is_null($json_resp)) {
+                if (null === $json_resp) {
                     throw new \Exception("Invalid JSON response from $configURL");
                 }
 
