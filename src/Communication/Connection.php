@@ -111,7 +111,15 @@ class Connection extends EventEmitter implements LoggerAwareInterface
 
                 $configURL = $socketClient.'/json/version';
 
-                $resp = \file_get_contents($configURL);
+                if (!\function_exists('curl_init')) {
+                    throw new \Exception("curl is not available");
+                }
+
+                $curl = curl_init($configURL);
+                curl_setopt($curl, CURLOPT_URL, $configURL);
+                curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+                $resp = curl_exec($curl);
+                curl_close($curl);
 
                 if (false === $resp) {
                     throw new \Exception("Unable to request $configURL");
