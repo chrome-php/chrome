@@ -106,9 +106,7 @@ class Connection extends EventEmitter implements LoggerAwareInterface
 
         // create socket client
         if (\is_string($socketClient)) {
-
             if (\in_array(\parse_url($socketClient, \PHP_URL_SCHEME), ['http', 'https'])) {
-
                 $configURL = $socketClient.'/json/version';
 
                 if (!\function_exists('curl_init')) {
@@ -135,7 +133,6 @@ class Connection extends EventEmitter implements LoggerAwareInterface
                 }
 
                 $socketClient = $json_resp->webSocketDebuggerUrl;
-
             }
 
             $socketClient = new Wrench(new WrenchBaseClient($socketClient, 'http://127.0.0.1'), $this->logger);
