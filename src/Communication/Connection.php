@@ -116,8 +116,8 @@ class Connection extends EventEmitter implements LoggerAwareInterface
                 }
 
                 $curl = \curl_init($configURL);
-                \curl_setopt($curl, CURLOPT_URL, $configURL);
-                \curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+                \curl_setopt($curl, \CURLOPT_URL, $configURL);
+                \curl_setopt($curl, \CURLOPT_RETURNTRANSFER, true);
                 $resp = \curl_exec($curl);
                 \curl_close($curl);
 
