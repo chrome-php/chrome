@@ -1,6 +1,11 @@
 # CHANGELOG
 
 
+## 1.11.0 (UPCOMING)
+
+* Add PHP 8.3 support
+
+
 ## 1.10.0 (2023-12-10)
 
 * Add `Add Node::setHTML` method
