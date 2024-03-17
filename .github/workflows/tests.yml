@@ -40,7 +40,7 @@ jobs:
         run: echo "::add-matcher::${{ runner.tool_cache }}/phpunit.json"
 
       - name: Select Symfony 4
-        uses: nick-invision/retry@v1
+        uses: nick-invision/retry@v3
         with:
           timeout_minutes: 5
           max_attempts: 5
@@ -48,7 +48,7 @@ jobs:
         if: "matrix.symfony == '4'"
 
       - name: Select Symfony 5
-        uses: nick-invision/retry@v1
+        uses: nick-invision/retry@v3
         with:
           timeout_minutes: 5
           max_attempts: 5
@@ -56,7 +56,7 @@ jobs:
         if: "matrix.symfony == '5'"
 
       - name: Select Symfony 6
-        uses: nick-invision/retry@v1
+        uses: nick-invision/retry@v3
         with:
           timeout_minutes: 5
           max_attempts: 5
@@ -64,7 +64,7 @@ jobs:
         if: "matrix.symfony == '6'"
 
       - name: Select Symfony 7
-        uses: nick-invision/retry@v1
+        uses: nick-invision/retry@v3
         with:
           timeout_minutes: 5
           max_attempts: 5
@@ -72,7 +72,7 @@ jobs:
         if: "matrix.symfony == '7'"
 
       - name: Install Dependencies
-        uses: nick-invision/retry@v1
+        uses: nick-invision/retry@v3
         with:
           timeout_minutes: 5
           max_attempts: 5
