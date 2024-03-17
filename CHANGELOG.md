@@ -4,6 +4,7 @@
 ## 1.11.0 (2024-03-17)
 
 * Add PHP 8.3 support
+* Auto-detect Chromium too
 
 
 ## 1.10.1 (2024-03-17)
