@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace HeadlessChromium\Dom;
 
+use HeadlessChromium\Clip;
 use HeadlessChromium\Communication\Message;
 use HeadlessChromium\Communication\Response;
 use HeadlessChromium\Exception\DomException;
@@ -177,7 +178,7 @@ class Node
         $this->scrollIntoView();
         $position = $this->getPosition();
         $this->page->mouse()
-            ->move($position->getCenterX(), $position->getCenterY())
+            ->move((int) $position->getCenterX(), (int) $position->getCenterY())
             ->click();
     }
 
@@ -213,5 +214,21 @@ class Node
         if (!$response->isSuccessful()) {
             throw new DOMException($response->getErrorMessage());
         }
+    }
+
+    public function getClip(): ?Clip
+    {
+        $position = $this->getPosition();
+
+        if (!$position) {
+            return null;
+        }
+
+        return new Clip(
+            $position->getX(),
+            $position->getY(),
+            $position->getWidth(),
+            $position->getHeight(),
+        );
     }
 }

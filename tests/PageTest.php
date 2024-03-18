@@ -507,4 +507,20 @@ class PageTest extends BaseTestCase
             $page->evaluate('document.body.innerText')->getReturnValue()
         );
     }
+
+    public function testElementScreenshot(): void
+    {
+        $factory = new BrowserFactory();
+
+        $browser = $factory->createBrowser();
+        $page = $browser->createPage();
+
+        $page->navigate($this->sitePath('domForm.html'))->waitForNavigation();
+
+        $element = $page->dom()->querySelector('#myform');
+        $screenshot = $page->screenshotElement($element);
+
+        self::assertNotEmpty($screenshot->getBase64());
+        self::assertGreaterThan(4000, \strlen($screenshot->getBase64()));
+    }
 }
