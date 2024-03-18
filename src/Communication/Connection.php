@@ -106,6 +106,35 @@ class Connection extends EventEmitter implements LoggerAwareInterface
 
         // create socket client
         if (\is_string($socketClient)) {
+            if (\in_array(\parse_url($socketClient, \PHP_URL_SCHEME), ['http', 'https'])) {
+                $configURL = $socketClient.'/json/version';
+
+                if (!\function_exists('curl_init')) {
+                    throw new \Exception('curl is not available');
+                }
+
+                $curl = \curl_init($configURL);
+                \curl_setopt($curl, \CURLOPT_URL, $configURL);
+                \curl_setopt($curl, \CURLOPT_RETURNTRANSFER, true);
+                $resp = \curl_exec($curl);
+                \curl_close($curl);
+
+                if (false === $resp) {
+                    throw new \Exception("Unable to request $configURL");
+                }
+
+                $json_resp = \json_decode($resp);
+                if (null === $json_resp) {
+                    throw new \Exception("Invalid JSON response from $configURL");
+                }
+
+                if (!\property_exists($json_resp, 'webSocketDebuggerUrl')) {
+                    throw new \Exception("Websocket debugger URL not found in response from $configURL");
+                }
+
+                $socketClient = $json_resp->webSocketDebuggerUrl;
+            }
+
             $socketClient = new Wrench(new WrenchBaseClient($socketClient, 'http://127.0.0.1'), $this->logger);
         } elseif (!\is_object($socketClient) && !$socketClient instanceof SocketInterface) {
             throw new \InvalidArgumentException('$socketClient param should be either a SockInterface instance or a web socket uri string');
