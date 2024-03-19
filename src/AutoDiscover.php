@@ -39,23 +39,26 @@ class AutoDiscover
                 return '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
             case 'Windows':
                 return self::getFromRegistry() ?? '%ProgramFiles(x86)%\Google\Chrome\Application\chrome.exe';
-            default: {
-                    $valid_names = array(
-                        'google-chrome',
-                        'chromium-browser',
-                        'chrome',
-                        'chromium',
-                    );
-                    foreach (\explode(\PATH_SEPARATOR, \getenv('PATH')) as $dir) {
-                        foreach ($valid_names as $name) {
-                            $file = $dir . \DIRECTORY_SEPARATOR . $name;
-                            if (\is_file($file) && \is_executable($file)) {
-                                return $file;
-                            }
+            default:
+                $valid_names = [
+                    'google-chrome',
+                    'chromium-browser',
+                    'chrome',
+                    'chromium',
+                ];
+                foreach (\explode(\PATH_SEPARATOR, \getenv('PATH')) as $dir) {
+                    foreach ($valid_names as $name) {
+                        $file = $dir.\DIRECTORY_SEPARATOR.$name;
+                        if (\is_file($file) && \is_executable($file)) {
+                            return $file;
                         }
                     }
                     return 'chrome'; // ... very unlikely to actually work, but this retains the original behavior..
                     throw new \RuntimeException('Could not find chrome binary'); // this makes more sense tbh
+                }
+
+                return 'chrome'; // ... very unlikely to actually work, but this retains the original behavior..
+                // this would make more sense: throw new \RuntimeException('Could not find chrome binary');
             }
         }
     }
