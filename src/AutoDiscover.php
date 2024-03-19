@@ -55,7 +55,7 @@ class AutoDiscover
                     }
 
                     return 'chrome'; // ... very unlikely to actually work, but this retains the original behavior..
-                    throw new \RuntimeException('Could not find chrome binary'); // this makes more sense tbh
+                    // throw new \RuntimeException('Could not find chrome binary'); // this makes more sense tbh
                 }
         }
     }
