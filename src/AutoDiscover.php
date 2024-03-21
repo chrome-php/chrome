@@ -40,7 +40,23 @@ class AutoDiscover
             case 'Windows':
                 return self::getFromRegistry() ?? '%ProgramFiles(x86)%\Google\Chrome\Application\chrome.exe';
             default:
-                return \rtrim(\explode("\n", (string) self::shellExec('command -v google-chrome chromium-browser chrome chromium'), 2)[0]) ?: 'chrome';
+                $valid_names = [
+                    'google-chrome',
+                    'chromium-browser',
+                    'chrome',
+                    'chromium',
+                ];
+                foreach (\explode(\PATH_SEPARATOR, \getenv('PATH')) as $dir) {
+                    foreach ($valid_names as $name) {
+                        $file = $dir.\DIRECTORY_SEPARATOR.$name;
+                        if (\is_file($file) && \is_executable($file)) {
+                            return $file;
+                        }
+                    }
+                }
+
+                return 'chrome'; // ... very unlikely to actually work, but this retains the original behavior..
+                // throw new \RuntimeException('Could not find chrome binary'); // this makes more sense tbh
         }
     }
 
