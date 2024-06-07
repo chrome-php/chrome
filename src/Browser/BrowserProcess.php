@@ -324,12 +324,14 @@ class BrowserProcess implements LoggerAwareInterface
         }
 
         // enable headless mode
-        if (!\array_key_exists('headless', $options) || $options['headless']) {
-            $args[] = '--headless';
-            $args[] = '--disable-gpu';
-            $args[] = '--font-render-hinting=none';
-            $args[] = '--hide-scrollbars';
-            $args[] = '--mute-audio';
+        if (!array_key_exists('headless', $options) || $options['headless']) {
+            $args[] = $options['headless'] === 'new' ? '--headless=new' : '--headless';
+            $args = array_merge($args, [
+                '--disable-gpu',
+                '--font-render-hinting=none',
+                '--hide-scrollbars',
+                '--mute-audio'
+            ]);
         }
 
         // disable loading of images (currently can't be done via devtools, only CLI)
@@ -394,6 +396,8 @@ class BrowserProcess implements LoggerAwareInterface
         if (\array_key_exists('excludedSwitches', $options) && \is_array($options['excludedSwitches'])) {
             $args = \array_diff($args, $options['excludedSwitches']);
         }
+
+        dd($args);
 
         return $args;
     }
