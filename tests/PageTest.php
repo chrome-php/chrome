@@ -507,4 +507,24 @@ class PageTest extends BaseTestCase
             $page->evaluate('document.body.innerText')->getReturnValue()
         );
     }
+
+    public function testNewHeadlessModeNavigation(): void
+    {
+        $factory = new BrowserFactory();
+
+        $factory->addOptions([
+            'headless' => 'new'
+        ]);
+
+        $browser = $factory->createBrowser();
+        $page = $browser->createPage();
+
+        $page->navigate(self::sitePath(self::WAIT_FOR_ELEMENT_RESOURCE_FILE))->waitForNavigation();
+
+        self::assertStringNotContainsString(self::WAIT_FOR_ELEMENT_HTML, $page->getHtml());
+
+        $page->waitUntilContainsElement('div[data-name=\"el\"]');
+
+        self::assertStringContainsString(self::WAIT_FOR_ELEMENT_HTML, $page->getHtml());
+    }
 }
