@@ -133,4 +133,17 @@ class BrowserFactoryTest extends BaseTestCase
         $target = $browser2->getTarget($page2TargetId);
         self::assertInstanceOf(Target::class, $target);
     }
+
+    public function testHeadlessNewModeOptionExists(): void
+    {
+        $launchOptions = [
+            'headless' => 'new'
+        ];
+
+        $factory = new BrowserFactory();
+
+        $factory->addOptions($launchOptions);
+
+        self::assertSame($launchOptions, $factory->getOptions());
+    }
 }
