@@ -397,8 +397,6 @@ class BrowserProcess implements LoggerAwareInterface
             $args = \array_diff($args, $options['excludedSwitches']);
         }
 
-        dd($args);
-
         return $args;
     }
 
