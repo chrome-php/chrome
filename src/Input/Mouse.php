@@ -31,8 +31,8 @@ class Mouse
      */
     protected $page;
 
-    protected $x = 0;
-    protected $y = 0;
+    protected $x = 0.0;
+    protected $y = 0.0;
 
     protected $button = self::BUTTON_NONE;
 
@@ -54,7 +54,7 @@ class Mouse
      *
      * @return $this
      */
-    public function move(int $x, int $y, array $options = null)
+    public function move(float $x, float $y, array $options = null)
     {
         $this->page->assertNotClosed();
 
@@ -329,13 +329,13 @@ class Mouse
     /**
      * Get the maximum distance to scroll a page.
      *
-     * @param int $distance Distance to scroll, positive or negative
-     * @param int $current  Current position
-     * @param int $maximum  Maximum possible distance
+     * @param float $distance Distance to scroll, positive or negative
+     * @param float $current  Current position
+     * @param float $maximum  Maximum possible distance
      *
-     * @return int allowed distance to scroll
+     * @return float allowed distance to scroll
      */
-    private function getMaximumDistance(int $distance, int $current, int $maximum): int
+    private function getMaximumDistance(float $distance, float $current, float $maximum): float
     {
         $result = $current + $distance;
 
