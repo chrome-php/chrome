@@ -532,7 +532,7 @@ class Page
      *
      * @return Clip
      */
-    public function getFullPageClip(int $timeout = null): Clip
+    public function getFullPageClip(?int $timeout = null): Clip
     {
         $contentSize = $this->getLayoutMetrics()->await($timeout)->getCssContentSize();
 
@@ -1013,7 +1013,7 @@ class Page
      *
      * @return CookiesCollection
      */
-    public function getCookies(int $timeout = null)
+    public function getCookies(?int $timeout = null)
     {
         return $this->readCookies()->await($timeout)->getCookies();
     }
@@ -1033,7 +1033,7 @@ class Page
      *
      * @return CookiesCollection
      */
-    public function getAllCookies(int $timeout = null)
+    public function getAllCookies(?int $timeout = null)
     {
         return $this->readAllCookies()->await($timeout)->getCookies();
     }

@@ -46,7 +46,7 @@ class ResponseWaiter
      *
      * @return $this
      */
-    public function await(int $time = null)
+    public function await(?int $time = null)
     {
         $this->response = $this->responseReader->waitForResponse($time);
 
@@ -68,7 +68,7 @@ class ResponseWaiter
      *
      * @return Response
      */
-    protected function awaitResponse(int $time = null): Response
+    protected function awaitResponse(?int $time = null): Response
     {
         if (!$this->response) {
             $this->await($time);

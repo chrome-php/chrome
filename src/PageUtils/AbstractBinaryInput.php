@@ -43,7 +43,7 @@ abstract class AbstractBinaryInput
      *
      * @return mixed
      */
-    public function getBase64(int $timeout = null)
+    public function getBase64(?int $timeout = null)
     {
         $response = $this->responseReader->waitForResponse($timeout);
 

@@ -180,7 +180,7 @@ class Keyboard
      *
      * @return $this
      */
-    public function release(string $key = null): self
+    public function release(?string $key = null): self
     {
         $this->page->assertNotClosed();
 

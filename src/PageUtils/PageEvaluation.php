@@ -72,7 +72,7 @@ class PageEvaluation
      *
      * @param int|null $timeout
      */
-    public function waitForResponse(int $timeout = null)
+    public function waitForResponse(?int $timeout = null)
     {
         $this->response = $this->responseReader->waitForResponse($timeout);
 
@@ -102,7 +102,7 @@ class PageEvaluation
      *
      * @return mixed
      */
-    public function getReturnValue(int $timeout = null)
+    public function getReturnValue(?int $timeout = null)
     {
         if (!$this->response) {
             $this->waitForResponse($timeout);
@@ -120,7 +120,7 @@ class PageEvaluation
      *
      * @return mixed
      */
-    public function getReturnType(int $timeout = null)
+    public function getReturnType(?int $timeout = null)
     {
         if (!$this->response) {
             $this->waitForResponse($timeout);

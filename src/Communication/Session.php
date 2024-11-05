@@ -82,7 +82,7 @@ class Session extends EventEmitter
      *
      * @return Response
      */
-    public function sendMessageSync(Message $message, int $timeout = null): Response
+    public function sendMessageSync(Message $message, ?int $timeout = null): Response
     {
         $responseReader = $this->sendMessage($message);
 

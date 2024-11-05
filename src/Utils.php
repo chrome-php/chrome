@@ -53,7 +53,7 @@ class Utils
      *
      * @return mixed
      */
-    public static function tryWithTimeout(int $timeoutMicroSec, \Generator $generator, callable $onTimeout = null)
+    public static function tryWithTimeout(int $timeoutMicroSec, \Generator $generator, ?callable $onTimeout = null)
     {
         $waitUntilMicroSec = \hrtime(true) / 1000 + $timeoutMicroSec;
 

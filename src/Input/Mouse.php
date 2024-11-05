@@ -54,7 +54,7 @@ class Mouse
      *
      * @return $this
      */
-    public function move(int $x, int $y, array $options = null)
+    public function move(int $x, int $y, ?array $options = null)
     {
         $this->page->assertNotClosed();
 
@@ -88,7 +88,7 @@ class Mouse
      * @throws \HeadlessChromium\Exception\CommunicationException
      * @throws \HeadlessChromium\Exception\NoResponseAvailable
      */
-    public function press(array $options = null)
+    public function press(?array $options = null)
     {
         $this->page->assertNotClosed();
         $this->page->getSession()->sendMessageSync(new Message('Input.dispatchMouseEvent', [
@@ -106,7 +106,7 @@ class Mouse
      * @throws \HeadlessChromium\Exception\CommunicationException
      * @throws \HeadlessChromium\Exception\NoResponseAvailable
      */
-    public function release(array $options = null)
+    public function release(?array $options = null)
     {
         $this->page->assertNotClosed();
         $this->page->getSession()->sendMessageSync(new Message('Input.dispatchMouseEvent', [
@@ -126,7 +126,7 @@ class Mouse
      * @throws \HeadlessChromium\Exception\CommunicationException
      * @throws \HeadlessChromium\Exception\NoResponseAvailable
      */
-    public function click(array $options = null)
+    public function click(?array $options = null)
     {
         $this->press($options);
         $this->release($options);
