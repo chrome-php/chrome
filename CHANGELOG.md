@@ -1,7 +1,14 @@
 # CHANGELOG
 
 
-## 1.11.0 (2024-03-17)
+## 1.12.0 (UPCOMING)
+
+* Add PHP 8.4 support
+* Add the ability to screenshot individual elements on the page
+* Add `AbstractBinaryInput::getRawBinary` method
+
+
+#### 1.11.0 (2024-03-17)
 
 * Add PHP 8.3 support
 * Auto-detect Chromium too
