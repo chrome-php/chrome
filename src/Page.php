@@ -940,17 +940,9 @@ class Page
      */
     public function getHtml(?int $timeout = null): string
     {
-        try {
-            return $this->evaluate('document.documentElement.outerHTML')->getReturnValue($timeout);
-        } catch (JavascriptException $e) {
-            if (0 === \strpos($e->getMessage(), 'Error during javascript evaluation: TypeError: Cannot read properties of null (reading \'outerHTML\')')) {
+        $this->getSession()->getConnection()->processAllEvents();
 
-                $this->getSession()->getConnection()->processAllEvents();
-
-                return $this->evaluate('document.documentElement.outerHTML')->getReturnValue($timeout);
-            }
-            throw $e;
-        }
+        return $this->evaluate('document.documentElement.outerHTML')->getReturnValue($timeout);
     }
 
     /**
