@@ -27,6 +27,10 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
 
+      - uses: browser-actions/setup-chrome@v1
+        with:
+          chrome-version: 122
+
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
@@ -81,4 +85,4 @@ jobs:
       - name: Execute PHPUnit
         run: vendor/bin/phpunit
         env:
-          CHROME_PATH: google-chrome-stable
+          CHROME_PATH: /opt/hostedtoolcache/setup-chrome/chromium/122.0.6261.128/x64/chrome
