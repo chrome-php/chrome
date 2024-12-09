@@ -103,8 +103,7 @@ class Cookie implements \ArrayAccess, \IteratorAggregate
         return new self($params);
     }
 
-    #[\ReturnTypeWillChange]
-    public function getIterator()
+    public function getIterator(): ArrayIterator
     {
         return new \ArrayIterator($this->data);
     }
