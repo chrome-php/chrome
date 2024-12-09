@@ -9,7 +9,7 @@
 * Have `Cookie` implement `IteratorAggregate`
 
 
-#### 1.11.0 (2024-03-17)
+## 1.11.0 (2024-03-17)
 
 * Add PHP 8.3 support
 * Auto-detect Chromium too
