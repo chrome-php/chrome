@@ -63,7 +63,7 @@ abstract class AbstractBinaryInput
      *
      * @return string
      */
-    public function getRawBinary(int $timeout = null): string
+    public function getRawBinary(?int $timeout = null): string
     {
         return \base64_decode($this->getBase64($timeout), true);
     }
