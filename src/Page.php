@@ -1086,6 +1086,12 @@ class Page
                 $browserCookie['domain'] = \parse_url($this->getCurrentUrl(), \PHP_URL_HOST);
             }
 
+            // convinience wrapper for session=false
+            // DevTools Protocol does not allow setting session=false directly, but it will be set to false if expires is set
+            if (!isset($cookie['expires']) && ($cookie['session'] ?? null) === false) {
+                $browserCookie['expires'] = time() + (1 * 60 * 60 * 24 * 365); // the max expire chromium allows, 365 days, tested on chromium 131.0.6778.139
+            }
+
             $browserCookies[] = $browserCookie;
         }
 
