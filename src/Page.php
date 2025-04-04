@@ -691,11 +691,11 @@ class Page
         return new PageScreenshot($responseReader);
     }
 
-    public function screenshotElement(Node $node): PageScreenshot
+    public function screenshotElement(Node $node, array $options = []): PageScreenshot
     {
-        return $this->screenshot([
-            'clip' => $node->getClip(),
-        ]);
+        // todo: invalidArgumentException if ['clip'] is already present?
+        $options['clip'] = $node->getClip();
+        return $this->screenshot($options);
     }
 
     /**
