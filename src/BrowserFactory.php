@@ -52,7 +52,7 @@ class BrowserFactory
 
     public function __construct(?string $chromeBinary = null)
     {
-        $this->chromeBinary = $chromeBinary ?? (new AutoDiscover())->guessChromeBinaryPath();
+        $this->chromeBinary = $chromeBinary ?? (new AutoDiscover())->guessChromeBinaryPath();ssssssss
     }
 
     /**
