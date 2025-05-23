@@ -445,9 +445,9 @@ class PageTest extends BaseTestCase
         $page->waitUntilContainsElement('div[data-name=el]'); // search for <div data-name="el">
         $page->waitUntilContainsElement('div[data-name=\"el\"]'); // search for <div data-name="&quot;el&quot;'>
 
-        self::assertStringContainsString(self::WAIT_FOR_ELEMENT_HTML, strtr($page->getHtml(), [
-            '&quot;' => '"',
-        ]));
+        self::assertStringContainsString(self::WAIT_FOR_ELEMENT_HTML, \strtr($page->getHtml(), [
+             '&quot;' => '"',
+         ]));
     }
 
     public function testWaitUntilContainsElementByXPath(): void
