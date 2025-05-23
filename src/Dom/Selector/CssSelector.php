@@ -19,11 +19,32 @@ final class CssSelector implements Selector
 
     public function expressionCount(): string
     {
-        return \sprintf('document.querySelectorAll("%s").length', $this->expression);
+        $encodedExpr = \json_encode(
+            $this->expression,
+            \JSON_UNESCAPED_SLASHES
+                | \JSON_UNESCAPED_UNICODE
+                | \JSON_THROW_ON_ERROR
+        );
+
+        return \sprintf(
+            'document.querySelectorAll(%s).length',
+            $encodedExpr
+        );
     }
 
     public function expressionFindOne(int $position): string
     {
-        return \sprintf('document.querySelectorAll("%s")[%d]', $this->expression, $position - 1);
+        $encodedExpr = \json_encode(
+            $this->expression,
+            \JSON_UNESCAPED_SLASHES
+                | \JSON_UNESCAPED_UNICODE
+                | \JSON_THROW_ON_ERROR
+        );
+
+        return \sprintf(
+            'document.querySelectorAll(%s)[%d]',
+            $encodedExpr,
+            $position - 1
+        );
     }
 }
