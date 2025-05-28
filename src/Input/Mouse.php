@@ -45,8 +45,8 @@ class Mouse
     }
 
     /**
-     * @param float        $x
-     * @param float        $y
+     * @param float      $x
+     * @param float      $y
      * @param array|null $options
      *
      * @throws \HeadlessChromium\Exception\CommunicationException
