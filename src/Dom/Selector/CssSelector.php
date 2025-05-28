@@ -10,20 +10,32 @@ namespace HeadlessChromium\Dom\Selector;
 final class CssSelector implements Selector
 {
     /** @var string */
-    private $expression;
+    private $expressionEncoded;
 
     public function __construct(string $expression)
     {
-        $this->expression = $expression;
+        $this->expressionEncoded = \json_encode(
+            $expression,
+            \JSON_UNESCAPED_SLASHES
+                | \JSON_UNESCAPED_UNICODE
+                | \JSON_THROW_ON_ERROR
+        );
     }
 
     public function expressionCount(): string
     {
-        return \sprintf('document.querySelectorAll("%s").length', $this->expression);
+        return \sprintf(
+            'document.querySelectorAll(%s).length',
+            $this->expressionEncoded
+        );
     }
 
     public function expressionFindOne(int $position): string
     {
-        return \sprintf('document.querySelectorAll("%s")[%d]', $this->expression, $position - 1);
+        return \sprintf(
+            'document.querySelectorAll(%s)[%d]',
+            $this->expressionEncoded,
+            $position - 1
+        );
     }
 }
