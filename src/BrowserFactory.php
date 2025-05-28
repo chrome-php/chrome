@@ -50,7 +50,7 @@ class BrowserFactory
      */
     protected $options = [];
 
-    public function __construct(string $chromeBinary = null)
+    public function __construct(?string $chromeBinary = null)
     {
         $this->chromeBinary = $chromeBinary ?? (new AutoDiscover())->guessChromeBinaryPath();
     }

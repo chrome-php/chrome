@@ -13,9 +13,11 @@ namespace HeadlessChromium\Communication;
 
 use Evenement\EventEmitter;
 use HeadlessChromium\Communication\Socket\SocketInterface;
+use HeadlessChromium\Communication\Socket\WaitForDataInterface;
 use HeadlessChromium\Communication\Socket\Wrench;
 use HeadlessChromium\Exception\CommunicationException;
 use HeadlessChromium\Exception\CommunicationException\CannotReadResponse;
+use HeadlessChromium\Exception\CommunicationException\CantSyncEventsException;
 use HeadlessChromium\Exception\CommunicationException\InvalidResponse;
 use HeadlessChromium\Exception\OperationTimedOut;
 use HeadlessChromium\Exception\TargetDestroyed;
@@ -96,7 +98,7 @@ class Connection extends EventEmitter implements LoggerAwareInterface
      * @param SocketInterface|string $socketClient
      * @param int|null               $sendSyncDefaultTimeout
      */
-    public function __construct($socketClient, LoggerInterface $logger = null, int $sendSyncDefaultTimeout = null)
+    public function __construct($socketClient, ?LoggerInterface $logger = null, ?int $sendSyncDefaultTimeout = null)
     {
         // set or create logger
         $this->setLogger($logger ?? new NullLogger());
@@ -264,7 +266,7 @@ class Connection extends EventEmitter implements LoggerAwareInterface
      *
      * @return Response
      */
-    public function sendMessageSync(Message $message, int $timeout = null): Response
+    public function sendMessageSync(Message $message, ?int $timeout = null): Response
     {
         $responseReader = $this->sendMessage($message);
         $response = $responseReader->waitForResponse($timeout);
@@ -346,6 +348,19 @@ class Connection extends EventEmitter implements LoggerAwareInterface
         return false;
     }
 
+    public function processAllEvents(): void
+    {
+        if (false === $this->wsClient instanceof WaitForDataInterface) {
+            throw new CantSyncEventsException();
+        }
+
+        $hasData = $this->wsClient->waitForData(0);
+
+        if ($hasData) {
+            $this->receiveData();
+        }
+    }
+
     /**
      * Dispatches the message and either stores the response or emits an event.
      *
@@ -355,7 +370,7 @@ class Connection extends EventEmitter implements LoggerAwareInterface
      *
      * @internal
      */
-    private function dispatchMessage(string $message, Session $session = null)
+    private function dispatchMessage(string $message, ?Session $session = null)
     {
         // responses come as json string
         $response = \json_decode($message, true);

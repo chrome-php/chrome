@@ -123,7 +123,7 @@ class PageNavigation
      *
      * @return mixed
      */
-    public function waitForNavigation($eventName = Page::LOAD, int $timeout = null)
+    public function waitForNavigation($eventName = Page::LOAD, ?int $timeout = null)
     {
         if (null === $timeout) {
             $timeout = 30000;

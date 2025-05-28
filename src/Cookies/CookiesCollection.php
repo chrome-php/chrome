@@ -21,7 +21,7 @@ class CookiesCollection implements \IteratorAggregate, \Countable
     /**
      * CookiesCollection constructor.
      */
-    public function __construct(array $cookies = null)
+    public function __construct(?array $cookies = null)
     {
         if ($cookies) {
             foreach ($cookies as $cookie) {

@@ -18,7 +18,7 @@ use Psr\Log\NullLogger;
 use Wrench\Client as WrenchClient;
 use Wrench\Payload\Payload;
 
-class Wrench implements SocketInterface, LoggerAwareInterface
+class Wrench implements SocketInterface, LoggerAwareInterface, WaitForDataInterface
 {
     use LoggerAwareTrait;
 
@@ -44,7 +44,7 @@ class Wrench implements SocketInterface, LoggerAwareInterface
     /**
      * @param WrenchClient $client
      */
-    public function __construct(WrenchClient $client, LoggerInterface $logger = null)
+    public function __construct(WrenchClient $client, ?LoggerInterface $logger = null)
     {
         $this->client = $client;
 
@@ -136,5 +136,10 @@ class Wrench implements SocketInterface, LoggerAwareInterface
         }
 
         return $disconnected;
+    }
+
+    public function waitForData(float $maxSeconds): bool
+    {
+        return $this->client->waitForData($maxSeconds);
     }
 }

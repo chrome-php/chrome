@@ -37,40 +37,40 @@ class NodePosition
         $leftBottomX = $points[6];
         $leftBottomY = $points[7];
 
-        $this->x = $leftTopX;
-        $this->y = $leftTopY;
+        $this->x = (float) $leftTopX;
+        $this->y = (float) $leftTopY;
 
-        $this->height = $leftBottomY - $leftTopY;
-        $this->width = $rightBottomX - $leftBottomX;
+        $this->height = (float) ($leftBottomY - $leftTopY);
+        $this->width = (float) ($rightBottomX - $leftBottomX);
     }
 
-    public function getX(): int
+    public function getX(): float
     {
-        return (int) $this->x;
+        return $this->x;
     }
 
-    public function getY(): int
+    public function getY(): float
     {
-        return (int) $this->y;
+        return $this->y;
     }
 
-    public function getWidth(): int
+    public function getWidth(): float
     {
-        return (int) $this->width;
+        return $this->width;
     }
 
-    public function getHeight(): int
+    public function getHeight(): float
     {
-        return (int) $this->height;
+        return $this->height;
     }
 
-    public function getCenterX(): int
+    public function getCenterX(): float
     {
-        return (int) ($this->x + ($this->width / 2));
+        return $this->x + ($this->width / 2);
     }
 
-    public function getCenterY(): int
+    public function getCenterY(): float
     {
-        return (int) ($this->y + ($this->height / 2));
+        return $this->y + ($this->height / 2);
     }
 }

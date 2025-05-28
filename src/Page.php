@@ -17,6 +17,7 @@ use HeadlessChromium\Communication\Target;
 use HeadlessChromium\Cookies\Cookie;
 use HeadlessChromium\Cookies\CookiesCollection;
 use HeadlessChromium\Dom\Dom;
+use HeadlessChromium\Dom\Node;
 use HeadlessChromium\Dom\Selector\CssSelector;
 use HeadlessChromium\Dom\Selector\Selector;
 use HeadlessChromium\Exception\CommunicationException;
@@ -48,6 +49,8 @@ class Page
     public const LOAD = 'load';
     public const NETWORK_IDLE = 'networkIdle';
 
+    private const MAX_COOKIE_AGE = 60 * 60 * 24 * 365;
+
     /**
      * @var Target
      */
@@ -67,6 +70,11 @@ class Page
      * @var Keyboard|null
      */
     protected $keyboard;
+
+    /**
+     * @var Dom|null
+     */
+    protected $dom = null;
 
     /**
      * Page constructor.
@@ -532,7 +540,7 @@ class Page
      *
      * @return Clip
      */
-    public function getFullPageClip(int $timeout = null): Clip
+    public function getFullPageClip(?int $timeout = null): Clip
     {
         $contentSize = $this->getLayoutMetrics()->await($timeout)->getCssContentSize();
 
@@ -683,6 +691,13 @@ class Page
         return new PageScreenshot($responseReader);
     }
 
+    public function screenshotElement(Node $node): PageScreenshot
+    {
+        return $this->screenshot([
+            'clip' => $node->getClip(),
+        ]);
+    }
+
     /**
      * Generate a PDF
      * Usage:.
@@ -807,7 +822,13 @@ class Page
 
     public function dom(): Dom
     {
-        return new Dom($this);
+        $this->assertNotClosed();
+
+        if (null === $this->dom) {
+            $this->dom = new Dom($this);
+        }
+
+        return $this->dom;
     }
 
     /**
@@ -1013,7 +1034,7 @@ class Page
      *
      * @return CookiesCollection
      */
-    public function getCookies(int $timeout = null)
+    public function getCookies(?int $timeout = null)
     {
         return $this->readCookies()->await($timeout)->getCookies();
     }
@@ -1033,7 +1054,7 @@ class Page
      *
      * @return CookiesCollection
      */
-    public function getAllCookies(int $timeout = null)
+    public function getAllCookies(?int $timeout = null)
     {
         return $this->readAllCookies()->await($timeout)->getCookies();
     }
@@ -1065,6 +1086,11 @@ class Page
             // set domain from current page
             if (!isset($browserCookie['domain'])) {
                 $browserCookie['domain'] = \parse_url($this->getCurrentUrl(), \PHP_URL_HOST);
+            }
+
+            // set maximal expires if session=false
+            if (!isset($cookie['expires']) && ($cookie['session'] ?? null) === false) {
+                $browserCookie['expires'] = \time() + self::MAX_COOKIE_AGE;
             }
 
             $browserCookies[] = $browserCookie;

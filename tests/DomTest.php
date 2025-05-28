@@ -4,6 +4,7 @@ namespace HeadlessChromium\Test;
 
 use HeadlessChromium\Browser;
 use HeadlessChromium\BrowserFactory;
+use HeadlessChromium\Exception\StaleElementException;
 
 /**
  * @covers \HeadlessChromium\Dom\Dom
@@ -186,5 +187,57 @@ class DomTest extends BaseTestCase
         self::assertCount(0, $page->dom()->querySelectorAll('#div1'));
 
         self::assertEquals('<span id="span">hello</span>', $value);
+    }
+
+    public function testDomDoesReturnsTheSameObject(): void
+    {
+        $page = $this->openSitePage('domForm.html');
+
+        $firstDom = $page->dom();
+
+        $element = $firstDom->querySelector('#myinput');
+
+        $secondDom = $page->dom();
+
+        $element->focus();
+
+        $this->assertEquals($firstDom, $secondDom);
+    }
+
+    public function testRootNodeIdIsUpdatedAfterReload(): void
+    {
+        $page = $this->openSitePage('domForm.html');
+
+        $dom = $page->dom();
+
+        $nodeId = $dom->getNodeId();
+
+        $reloadBtn = $dom->querySelector('#reload-btn');
+        $reloadBtn->click();
+
+        $page->waitForReload();
+
+        $reloadBtn = $dom->querySelector('#reload-btn');
+        $this->assertNotNull($reloadBtn);
+
+        $this->assertNotEquals($nodeId, $page->dom()->getNodeId());
+    }
+
+    public function testRegularNodeIsMarkedAsStaleAfterReload(): void
+    {
+        $page = $this->openSitePage('domForm.html');
+
+        $dom = $page->dom();
+
+        $inputNode = $dom->querySelector('#myinput');
+
+        $reloadBtn = $dom->querySelector('#reload-btn');
+        $reloadBtn->click();
+
+        $page->waitForReload();
+
+        $this->expectException(StaleElementException::class);
+
+        $inputNode->sendKeys('test');
     }
 }

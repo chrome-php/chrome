@@ -103,7 +103,7 @@ class ResponseReader
      *
      * @return Response
      */
-    public function waitForResponse(int $timeout = null): Response
+    public function waitForResponse(?int $timeout = null): Response
     {
         if ($this->hasResponse()) {
             return $this->getResponse();

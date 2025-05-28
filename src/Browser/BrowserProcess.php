@@ -78,7 +78,7 @@ class BrowserProcess implements LoggerAwareInterface
      *
      * @param LoggerInterface|null $logger
      */
-    public function __construct(LoggerInterface $logger = null)
+    public function __construct(?LoggerInterface $logger = null)
     {
         // set or create logger
         $this->setLogger($logger ?? new NullLogger());

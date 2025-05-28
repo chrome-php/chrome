@@ -1,6 +1,24 @@
 # CHANGELOG
 
 
+## 1.13.0 (2025-02-07)
+
+* Set maximal expires value if `session=false` in `Page::setCookies`
+
+
+## 1.12.1 (2025-02-07)
+
+* Fix nullable parameter definition in `AbstractBinaryInput::getRawBinary`
+
+
+## 1.12.0 (2024-12-09)
+
+* Add PHP 8.4 support
+* Add the ability to screenshot individual elements on the page
+* Add `AbstractBinaryInput::getRawBinary` method
+* Have `Cookie` implement `IteratorAggregate`
+
+
 ## 1.11.0 (2024-03-17)
 
 * Add PHP 8.3 support

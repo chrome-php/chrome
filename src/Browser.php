@@ -98,7 +98,7 @@ class Browser
      *
      * @param string|null $script
      */
-    public function setPagePreScript(string $script = null): void
+    public function setPagePreScript(?string $script = null): void
     {
         $this->pagePreScript = $script;
     }

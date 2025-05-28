@@ -41,9 +41,11 @@ abstract class AbstractBinaryInput
     /**
      * Get base64 representation of the file.
      *
+     * @param int|null $timeout
+     *
      * @return mixed
      */
-    public function getBase64(int $timeout = null)
+    public function getBase64(?int $timeout = null)
     {
         $response = $this->responseReader->waitForResponse($timeout);
 
@@ -55,9 +57,22 @@ abstract class AbstractBinaryInput
     }
 
     /**
+     * Get raw binary data.
+     *
+     * @param int|null $timeout
+     *
+     * @return string
+     */
+    public function getRawBinary(?int $timeout = null): string
+    {
+        return \base64_decode($this->getBase64($timeout), true);
+    }
+
+    /**
      * Save data to the given file.
      *
      * @param string $path
+     * @param int    $timeout
      *
      * @throws FilesystemException
      * @throws ScreenshotFailed

@@ -11,7 +11,7 @@
 
 namespace HeadlessChromium\Cookies;
 
-class Cookie implements \ArrayAccess
+class Cookie implements \ArrayAccess, \IteratorAggregate
 {
     /**
      * @var array
@@ -101,5 +101,10 @@ class Cookie implements \ArrayAccess
         $params['value'] = $value;
 
         return new self($params);
+    }
+
+    public function getIterator(): \ArrayIterator
+    {
+        return new \ArrayIterator($this->data);
     }
 }

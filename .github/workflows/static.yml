@@ -32,7 +32,7 @@ jobs:
         with:
           timeout_minutes: 5
           max_attempts: 5
-          command: composer bin phpstan update --no-interaction --no-progress
+          command: composer bin phpstan install --no-interaction --no-progress
 
       - name: Execute PHPStan
         run: vendor/bin/phpstan analyze --no-progress
