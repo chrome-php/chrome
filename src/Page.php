@@ -211,7 +211,7 @@ class Page
     /**
      * @param string $url
      * @param array  $options
-     *                        - strict: make waitForNAvigation to fail if a new navigation is initiated. Default: false
+     * @see https://chromedevtools.github.io/devtools-protocol/tot/Page/#method-navigate for available options
      *
      * @throws CommunicationException
      *
@@ -221,7 +221,7 @@ class Page
     {
         $this->assertNotClosed();
 
-        return new PageNavigation($this, $url, $options['strict'] ?? false);
+        return new PageNavigation($this, $url, $options);
     }
 
     /**
