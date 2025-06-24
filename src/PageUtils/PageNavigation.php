@@ -66,17 +66,24 @@ class PageNavigation
      *
      * @param Page   $page
      * @param string $url
-     * @param bool   $strict by default this method will wait for the page to load even if a new navigation occurs
-     *                       (ie: a new loader replaced the initial navigation). Passing $string to true will make the navigation to fail
-     *                       if a new loader is generated
-     *
+     * @param array{
+     *     // by default this method will wait for the page to load even if a new navigation occurs
+     *     // (ie: a new loader replaced the initial navigation). Passing strict to true will make the navigation to fail
+     *     // if a new loader is generated
+     *     strict?: bool,
+     *     transitionType?: string,
+     *     frameId?: string,
+     *     referrer?: string,
+     *     referrerPolicy?: string,
+     *     // for more options checkout the documentation https://chromedevtools.github.io/devtools-protocol/tot/Page/#method-navigate
+     * } $options
      * @throws Exception\CommunicationException
      * @throws Exception\CommunicationException\CannotReadResponse
      * @throws Exception\CommunicationException\InvalidResponse
      *
      * @internal
      */
-    public function __construct(Page $page, string $url, bool $strict = false)
+    public function __construct(Page $page, string $url, array $options = [])
     {
         // make sure latest loaderId was pulled
         $page->getSession()->getConnection()->readData();
@@ -84,15 +91,18 @@ class PageNavigation
         // get previous loaderId for the navigation watcher
         $this->previousLoaderId = $page->getFrameManager()->getMainFrame()->getLatestLoaderId();
 
+        $params = array_merge(['url' => $url], $options);
+        unset($params['strict']);
+
         // send navigation message
         $this->navigateResponseReader = $page->getSession()->sendMessage(
-            new Message('Page.navigate', ['url' => $url])
+            new Message('Page.navigate', $params)
         );
 
         $this->page = $page;
         $this->frame = $page->getFrameManager()->getMainFrame();
         $this->url = $url;
-        $this->strict = $strict;
+        $this->strict = $options['strict'] ?? false;
     }
 
     /**
