@@ -376,10 +376,10 @@ class Connection extends EventEmitter implements LoggerAwareInterface
         $response = \json_decode($message, true);
 
         // if json not valid throw exception
-        $jsonError = \json_last_error();
-        if (\JSON_ERROR_NONE !== $jsonError) {
+        $jsonErrorId = \json_last_error();
+        if (\JSON_ERROR_NONE !== $jsonErrorId) {
             if ($this->isStrict()) {
-                throw new CannotReadResponse(\sprintf('Response from chrome remote interface is not a valid json response. JSON error: %s', $jsonError));
+                throw new CannotReadResponse(\sprintf('Response from chrome remote interface is not a valid json response. JSON error: %d: %s', $jsonErrorId, json_last_error_msg());
             }
 
             return false;
