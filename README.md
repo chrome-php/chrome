@@ -194,8 +194,10 @@ The next calls to the script will read the uri from that file in order to connec
 use \HeadlessChromium\BrowserFactory;
 use \HeadlessChromium\Exception\BrowserConnectionFailed;
 
+$socketFile = '/tmp/chrome-php-demo-socket';
+
 // path to the file to store websocket's uri
-$socket = \file_get_contents('/tmp/chrome-php-demo-socket');
+$socket = \file_get_contents($socketFile);
 
 try {
     $browser = BrowserFactory::connectToBrowser($socket);
