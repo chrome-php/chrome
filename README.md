@@ -317,7 +317,6 @@ Sometimes the script you evaluate will click a link or submit a form, in this ca
 will want to wait for the new page to reload.
 
 You can achieve this by using ``$page->evaluate('some js that will reload the page')->waitForPageReload()``.
-An example is available in [form-submit.php](./examples/form-submit.php)
 
 #### Call a function
 
