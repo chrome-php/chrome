@@ -21,6 +21,8 @@ jobs:
           - php: '7.4'
             symfony: '8'
           - php: '8.0'
+            symfony: '6'
+          - php: '8.0'
             symfony: '7'
           - php: '8.0'
             symfony: '8'
