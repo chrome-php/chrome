@@ -50,11 +50,13 @@ class BrowserFactory
      */
     protected $options = [];
 
+    protected $envOptions = [];
+
     public function __construct(?string $chromeBinary = null)
     {
         $autoDiscover = new AutoDiscover();
         $this->chromeBinary = $chromeBinary ?? $autoDiscover->guessChromeBinaryPath();
-        $this->options = \array_merge($this->options, $autoDiscover->getDefaultOptions());
+        $this->envOptions = $autoDiscover->getDefaultOptions();
     }
 
     /**
@@ -68,7 +70,7 @@ class BrowserFactory
      */
     public function createBrowser(?array $options = null): ProcessAwareBrowser
     {
-        $options = \array_merge($this->options, $options ?? []);
+        $options = \array_merge($this->envOptions, $this->options, $options ?? []);
 
         // create logger from options
         $logger = self::createLogger($options);
