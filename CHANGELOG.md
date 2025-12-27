@@ -1,6 +1,13 @@
 # CHANGELOG
 
 
+## 1.15.0 (UPCOMING)
+
+* Add PHP 8.5 support
+* Add support for using Symfony 8 components
+* Remove support for Symfony 4 components
+
+
 ## 1.14.0 (2025-05-28)
 
 * Use more specific return type in `PageScreenshot::getException`
