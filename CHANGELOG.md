@@ -6,7 +6,6 @@
 * Add PHP 8.5 support
 * Add support for using Symfony 8 components
 * Remove support for Symfony 4 components
-* Merge options with defaults in factory
 * Add `CHROME_NO_SANDBOX` env var
 
 
