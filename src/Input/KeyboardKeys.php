@@ -172,7 +172,7 @@ trait KeyboardKeys
      */
     public function getKeyCode(): int
     {
-        return \ord($this->currentKey);
+        return \ord($this->currentKey[0]);
     }
 
     /**

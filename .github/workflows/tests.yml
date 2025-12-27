@@ -11,7 +11,7 @@ jobs:
 
     strategy:
       matrix:
-        php: ['8.2', '8.3', '8.4', '8.5']
+        php: ['7.4', '8.0', '8.1', '8.2', '8.3', '8.4', '8.5']
         symfony: ['5', '6', '7', '8']
         exclude:
           - php: '7.4'
@@ -95,7 +95,7 @@ jobs:
           command: composer update --no-interaction --no-progress
 
       - name: Execute PHPUnit
-        run: vendor/bin/phpunit --display-deprecations
+        run: vendor/bin/phpunit
         env:
           CHROME_PATH: /opt/hostedtoolcache/setup-chrome/chromium/122.0.6261.128/x64/chrome
           CHROME_NO_SANDBOX: true
