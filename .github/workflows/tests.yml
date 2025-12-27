@@ -28,6 +28,8 @@ jobs:
             symfony: '8'
           - php: '8.2'
             symfony: '8'
+          - php: '8.3'
+            symfony: '8'
           - php: '8.5'
             symfony: '5'
 
