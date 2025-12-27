@@ -69,4 +69,21 @@ class AutoDiscover
             return null;
         }
     }
+
+    /**
+     * Get default browser options from environment variables.
+     *
+     * @return array<string, mixed>
+     */
+    public function getDefaultOptions(): array
+    {
+        $options = [];
+
+        if (\array_key_exists('CHROME_NO_SANDBOX', $_SERVER)
+            && \filter_var($_SERVER['CHROME_NO_SANDBOX'], \FILTER_VALIDATE_BOOLEAN)) {
+            $options['noSandbox'] = true;
+        }
+
+        return $options;
+    }
 }

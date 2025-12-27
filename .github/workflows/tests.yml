@@ -96,3 +96,4 @@ jobs:
         run: vendor/bin/phpunit
         env:
           CHROME_PATH: /opt/hostedtoolcache/setup-chrome/chromium/122.0.6261.128/x64/chrome
+          CHROME_NO_SANDBOX: true
