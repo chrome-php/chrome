@@ -22,8 +22,6 @@ use HeadlessChromium\Utils;
 
 /**
  * A class that is aimed to be used withing the method Page::navigate.
- *
- * @internal
  */
 class PageNavigation
 {
