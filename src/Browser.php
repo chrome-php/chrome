@@ -43,6 +43,13 @@ class Browser
      */
     protected $pagePreScript;
 
+    /**
+     * Whether JavaScript execution must be disabled on every new page.
+     *
+     * @var bool
+     */
+    protected $pageScriptExecutionDisabled = false;
+
     public function __construct(Connection $connection)
     {
         $this->connection = $connection;
@@ -101,6 +108,14 @@ class Browser
     public function setPagePreScript(?string $script = null): void
     {
         $this->pagePreScript = $script;
+    }
+
+    /**
+     * Disable or enable JavaScript execution for every new page created by this browser.
+     */
+    public function setPageScriptExecutionDisabled(bool $disabled = true): void
+    {
+        $this->pageScriptExecutionDisabled = $disabled;
     }
 
     /**
@@ -256,6 +271,11 @@ class Browser
         // add prescript
         if ($this->pagePreScript) {
             $page->addPreScript($this->pagePreScript);
+        }
+
+        // disable javascript execution if requested at the browser level
+        if ($this->pageScriptExecutionDisabled) {
+            $page->setScriptExecution(false)->await();
         }
 
         $this->pages[$targetId] = $page;

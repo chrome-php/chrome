@@ -111,6 +111,38 @@ class BrowserFactoryTest extends BaseTestCase
         self::assertSame([], $factory->getOptions());
     }
 
+    public function testDisableJavascriptOption(): void
+    {
+        $factory = new BrowserFactory();
+
+        $browser = $factory->createBrowser([
+            'disableJavascript' => true,
+        ]);
+
+        $page = $browser->createPage();
+        $page->navigate(self::sitePath('javascript.html'))->waitForNavigation();
+
+        self::assertSame(
+            'javascript disabled',
+            $page->evaluate('document.body.innerText')->getReturnValue()
+        );
+    }
+
+    public function testDisableJavascriptOptionDefault(): void
+    {
+        $factory = new BrowserFactory();
+
+        $browser = $factory->createBrowser();
+
+        $page = $browser->createPage();
+        $page->navigate(self::sitePath('javascript.html'))->waitForNavigation();
+
+        self::assertSame(
+            'javascript enabled',
+            $page->evaluate('document.body.innerText')->getReturnValue()
+        );
+    }
+
     public function testConnectToBrowser(): void
     {
         // create a browser
