@@ -31,6 +31,7 @@ class BrowserFactory
      * - connectionDelay: Delay to apply between each operation for debugging purposes (default: none)
      * - customFlags: An array of flags to pass to the command line.
      * - debugLogger: A string (e.g "php://stdout"), or resource, or PSR-3 logger instance to print debug messages (default: none)
+     * - disableJavascript: Disable JavaScript execution on every page created by the browser (default: false)
      * - disableNotifications: Disable browser notifications (default: false)
      * - enableImages: Toggles loading of images (default: true)
      * - envVariables: An array of environment variables to pass to the process (example DISPLAY variable)

@@ -159,6 +159,11 @@ class BrowserProcess implements LoggerAwareInterface
 
         // create browser instance
         $this->browser = new ProcessAwareBrowser($connection, $this);
+
+        // disable javascript execution for new pages if requested
+        if (\array_key_exists('disableJavascript', $options) && (true === $options['disableJavascript'])) {
+            $this->browser->setPageScriptExecutionDisabled(true);
+        }
     }
 
     /**
