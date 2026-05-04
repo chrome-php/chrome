@@ -11,9 +11,15 @@
       let el = document.createElement('div');
 
       el.dataset.name = 'el';
-      el.innerHTML = 'content';
+      el.innerHTML = 'content1';
 
       document.body.appendChild(el)
+
+      let el2 = document.createElement('div');
+
+      el2.dataset.name = '"el"';
+      el2.innerHTML = 'content2';
+      document.body.appendChild(el2)
     }, 500)
 </script>
 </html>

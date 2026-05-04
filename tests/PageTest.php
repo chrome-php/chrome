@@ -21,7 +21,7 @@ use HeadlessChromium\Exception\InvalidTimezoneId;
  */
 class PageTest extends BaseTestCase
 {
-    private const WAIT_FOR_ELEMENT_HTML = '<div data-name="el">content</div>';
+    private const WAIT_FOR_ELEMENT_HTML = '<div data-name="el">content1</div><div data-name="&quot;el&quot;">content2</div>';
     private const WAIT_FOR_ELEMENT_RESOURCE_FILE = 'elementLoad.html';
 
     public function testSetViewport(): void
@@ -441,7 +441,9 @@ class PageTest extends BaseTestCase
 
         self::assertStringNotContainsString(self::WAIT_FOR_ELEMENT_HTML, $page->getHtml());
 
-        $page->waitUntilContainsElement('div[data-name=\"el\"]');
+        $page->waitUntilContainsElement('div[data-name="el"]'); // search for <div data-name="el">
+        $page->waitUntilContainsElement('div[data-name=el]'); // search for <div data-name="el">
+        $page->waitUntilContainsElement('div[data-name=\"el\"]'); // search for <div data-name="&quot;el&quot;'>
 
         self::assertStringContainsString(self::WAIT_FOR_ELEMENT_HTML, $page->getHtml());
     }
