@@ -128,7 +128,10 @@ class Node
         return $this->getAttributes()->get($name);
     }
 
-    public function getPosition(): ?NodePosition
+    /**
+     * @param 'content'|'padding'|'border'|'margin' $boxModel
+     */
+    public function getPosition(string $boxModel = 'content'): ?NodePosition
     {
         $message = new Message('DOM.getBoxModel', [
             'nodeId' => $this->getNodeIdForRequest(),
@@ -137,7 +140,7 @@ class Node
 
         $this->assertNotError($response);
 
-        $points = $response->getResultData('model')['content'];
+        $points = $response->getResultData('model')[$boxModel] ?? null;
 
         if (null !== $points) {
             return new NodePosition($points);

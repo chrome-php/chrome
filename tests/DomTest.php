@@ -5,6 +5,7 @@ namespace HeadlessChromium\Test;
 use HeadlessChromium\Browser;
 use HeadlessChromium\BrowserFactory;
 use HeadlessChromium\Exception\StaleElementException;
+use PHPUnit\Framework\Attributes\TestWith;
 
 /**
  * @covers \HeadlessChromium\Dom\Dom
@@ -24,14 +25,6 @@ class DomTest extends BaseTestCase
     {
         parent::tearDownAfterClass();
         self::$browser->close();
-    }
-
-    private function openSitePage($file)
-    {
-        $page = self::$browser->createPage();
-        $page->navigate(self::sitePath($file))->waitForNavigation();
-
-        return $page;
     }
 
     public function testSearchByCssSelector(): void
@@ -140,6 +133,45 @@ class DomTest extends BaseTestCase
         self::assertSame('hello', $value);
     }
 
+    #[TestWith(['margin', 0, 0, 310, 360])]
+    /** @phpstan-ignore attribute.nonRepeatable */
+    #[TestWith(['border', 20, 10, 270, 340])]
+    /** @phpstan-ignore attribute.nonRepeatable */
+    #[TestWith(['padding', 25, 15, 260, 330])]
+    /** @phpstan-ignore attribute.nonRepeatable */
+    #[TestWith(['content', 55, 30, 200, 300])]
+    /** @phpstan-ignore attribute.nonRepeatable */
+    #[TestWith([null, 55, 30, 200, 300])]
+    /** @phpstan-ignore attribute.nonRepeatable */
+    #[TestWith(['-invalid-', 0, 0, 0, 0])]
+    public function testGetPosition(
+        ?string $boxModel,
+        float $expectedX,
+        float $expectedY,
+        float $expectedWidth,
+        float $expectedHeight,
+    ): void {
+        $page = $this->openSitePage('boxModel.html');
+
+        $element = $page->dom()->querySelector('#elem');
+
+        if (null !== $boxModel) {
+            $position = $element->getPosition($boxModel);
+        } else {
+            $position = $element->getPosition();
+        }
+
+        if ('-invalid-' !== $boxModel) {
+            self::assertNotNull($position);
+            self::assertSame($expectedX, $position->getX());
+            self::assertSame($expectedY, $position->getY());
+            self::assertSame($expectedWidth, $position->getWidth());
+            self::assertSame($expectedHeight, $position->getHeight());
+        } else {
+            self::assertNull($position);
+        }
+    }
+
     public function testUploadFile(): void
     {
         $page = $this->openSitePage('domForm.html');
@@ -239,5 +271,13 @@ class DomTest extends BaseTestCase
         $this->expectException(StaleElementException::class);
 
         $inputNode->sendKeys('test');
+    }
+
+    private function openSitePage($file)
+    {
+        $page = self::$browser->createPage();
+        $page->navigate(self::sitePath($file))->waitForNavigation();
+
+        return $page;
     }
 }
