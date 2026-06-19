@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>scroll-lock issue</title>
+    <style>
+        html, body { margin: 0; padding: 0; font: 16px sans-serif; }
+        #spacer { height: 5000px; background: linear-gradient(#cfe8ff, #084b97); }
+        #overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0, 0, 0, .25);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+        }
+        #dialog {
+            width: 75vw;
+            height: 75vh;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            padding: 40px;
+            background: #fff;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, .45);
+            text-align: center;
+        }
+        #dialog h1 { margin: 0; font-size: 28px; color: #b71c1c; }
+        #dialog p { margin: 0; font-size: 18px; color: #333; }
+    </style>
+</head>
+<body>
+<div id="spacer">scroll me</div>
+<div id="overlay">
+    <div id="dialog">
+        <h1>A modal popped up</h1>
+        <p>…and locked scrolling (the page is now position:fixed)</p>
+    </div>
+</div>
+<script>
+    // On the scroll event we immediately show the modal overlay and set
+    // a scroll lock on the body. Before patch, this caused an OperationTimedOut
+    // Exception, because it changes the expected scroll position.
+    var locked = false;
+    window.addEventListener('scroll', function () {
+        if (locked) {
+            return;
+        }
+        locked = true;
+        document.body.style.position = 'fixed';
+        document.body.style.top = '0';
+        document.body.style.left = '0';
+        document.body.style.right = '0';
+        document.documentElement.style.overflow = 'hidden';
+        document.getElementById('overlay').style.display = 'flex';
+    }, { passive: true });
+</script>
+</body>
+</html>

@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>scroll timeout issue</title>
+    <style>
+        html, body { margin: 0; padding: 0; }
+        #spacer { height: 5000px; background: linear-gradient(#cfe8ff, #1565c0); }
+    </style>
+</head>
+<body>
+<div id="spacer">scroll me</div>
+<script>
+    // On the scroll event we immediately shrink height of the page (scrollable area).
+    // Before patch, this caused an OperationTimedOut Exception, because it changes
+    // the expected scroll position.
+    var shrunk = false;
+    window.addEventListener('scroll', function () {
+        if (shrunk) {
+            return;
+        }
+        shrunk = true;
+        // New max scroll becomes (1500 - viewportHeight), far below the
+        // original target that was computed against a 5000px page.
+        document.getElementById('spacer').style.height = '1500px';
+        document.getElementById('spacer').innerText = 'scrollable area shrunk';
+    }, { passive: true });
+</script>
+</body>
+</html>

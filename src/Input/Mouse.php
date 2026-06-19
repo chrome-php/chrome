@@ -141,6 +141,7 @@ class Mouse
      *
      * @throws \HeadlessChromium\Exception\CommunicationException
      * @throws \HeadlessChromium\Exception\NoResponseAvailable
+     * @throws \HeadlessChromium\Exception\OperationTimedOut
      *
      * @return $this
      */
@@ -156,6 +157,7 @@ class Mouse
      *
      * @throws \HeadlessChromium\Exception\CommunicationException
      * @throws \HeadlessChromium\Exception\NoResponseAvailable
+     * @throws \HeadlessChromium\Exception\OperationTimedOut
      *
      * @return $this
      */
@@ -180,38 +182,79 @@ class Mouse
     {
         $this->page->assertNotClosed();
 
+        // make sure the mouse is on the screen
+        $this->move($this->x, $this->y);
+
+        $distances = $this->getScrollDistances($distanceY, $distanceX); // Calculated distances to scroll.
+        $startPos = $this->getCurrentScrollPosition(); // Remember positions before scrolling started.
+
+        if ($distances['x'] === 0 && $distances['y'] === 0) {
+            return $this;
+        }
+
+        $this->sendScrollMessage($distances);
+
+        // Wait until the scroll position settles (i.e. it stops changing).
+        Utils::tryWithTimeout(
+            10_000_000,
+            $this->waitForScrollToSettle($distanceY, $distanceX, $startPos['x'], $startPos['y'])
+        );
+
+        // set new position after move
+        $endPos = $this->getCurrentScrollPosition();
+        $this->x += $endPos['x'] - $startPos['x'];
+        $this->y += $endPos['y'] - $startPos['y'];
+
+        return $this;
+    }
+
+    /**
+     * Get the distances to actually scroll on each axis, clamped to the page's
+     * current scroll boundaries.
+     *
+     * @throws \HeadlessChromium\Exception\OperationTimedOut
+     * @throws \HeadlessChromium\Exception\CommunicationException
+     * @throws \HeadlessChromium\Exception\CommunicationException\ResponseHasError
+     * @throws \HeadlessChromium\Exception\NoResponseAvailable
+     *
+     * @return array{ x: int, y: int }
+     */
+    private function getScrollDistances(int $distanceY, int $distanceX = 0): array
+    {
         $scrollableArea = $this->page->getLayoutMetrics()->getCssContentSize();
         $visibleArea = $this->page->getLayoutMetrics()->getCssVisualViewport();
 
         $maximumX = $scrollableArea['width'] - $visibleArea['clientWidth'];
         $maximumY = $scrollableArea['height'] - $visibleArea['clientHeight'];
 
-        $distanceX = $this->getMaximumDistance($distanceX, $visibleArea['pageX'], $maximumX);
-        $distanceY = $this->getMaximumDistance($distanceY, $visibleArea['pageY'], $maximumY);
+        $distanceX = $this->getMaximumDistance($distanceX, (int) $visibleArea['pageX'], (int) $maximumX);
+        $distanceY = $this->getMaximumDistance($distanceY, (int) $visibleArea['pageY'], (int) $maximumY);
 
-        $targetX = $visibleArea['pageX'] + $distanceX;
-        $targetY = $visibleArea['pageY'] + $distanceY;
+        return ['x' => $distanceX, 'y' => $distanceY];
+    }
 
-        // make sure the mouse is on the screen
-        $this->move($this->x, $this->y);
+    private function getCurrentScrollPosition(): array
+    {
+        $viewport = $this->page->getLayoutMetrics()->getCssVisualViewport();
 
-        // scroll
+        return ['x' => (int) $viewport['pageX'], 'y' => (int) $viewport['pageY']];
+    }
+
+    /**
+     * @param array{ x: int, y: int } $distances
+     *
+     * @throws \HeadlessChromium\Exception\CommunicationException
+     * @throws \HeadlessChromium\Exception\NoResponseAvailable
+     */
+    private function sendScrollMessage(array $distances): void
+    {
         $this->page->getSession()->sendMessageSync(new Message('Input.dispatchMouseEvent', [
             'type' => 'mouseWheel',
             'x' => $this->x,
             'y' => $this->y,
-            'deltaX' => $distanceX,
-            'deltaY' => $distanceY,
+            'deltaX' => $distances['x'],
+            'deltaY' => $distances['y'],
         ]));
-
-        // wait until the scroll is done
-        Utils::tryWithTimeout(30000 * 1000, $this->waitForScroll($targetX, $targetY));
-
-        // set new position after move
-        $this->x += $distanceX;
-        $this->y += $distanceY;
-
-        return $this;
     }
 
     /**
@@ -351,30 +394,76 @@ class Mouse
     }
 
     /**
-     * Wait for the browser to process the scroll command.
+     * Wait for the scroll position to settle (stop changing).
      *
-     * Return the number of microseconds to wait before trying again or true in case of success.
+     * Rather than waiting for an exact target position, this polls the live
+     * scroll position and returns once it has been stable for a few consecutive
+     * reads. A settled position is only accepted once we have either observed
+     * actual movement or reached a scroll boundary - this guards against
+     * accepting the start position before the scroll has even begun
+     * (the start-of-scroll race).
      *
-     * @see \HeadlessChromium\Utils::tryWithTimeout
+     * Yields the number of microseconds to wait before trying again or
+     * returns in case of success.
      *
-     * @param int $targetX
-     * @param int $targetY
+     * @see Utils::tryWithTimeout
      *
+     * @throws \HeadlessChromium\Exception\CommunicationException
+     * @throws \HeadlessChromium\Exception\CommunicationException\ResponseHasError
+     * @throws \HeadlessChromium\Exception\NoResponseAvailable
      * @throws \HeadlessChromium\Exception\OperationTimedOut
-     *
-     * @return bool|\Generator
      */
-    private function waitForScroll(int $targetX, int $targetY)
+    private function waitForScrollToSettle(int $distanceY, int $distanceX, int $startX, int $startY): \Generator
     {
-        while (true) {
-            $visibleArea = $this->page->getLayoutMetrics()->getCssVisualViewport();
+        $requiredStableReads = 5;
+        $stableReads = 0;
+        $lastX = $lastY = null;
+        $moved = false;
 
-            if ($visibleArea['pageX'] === $targetX && $visibleArea['pageY'] === $targetY) {
-                return true;
+        while (true) {
+            $pos = $this->getCurrentScrollPosition();
+            $moved = $moved || ($pos['x'] !== $startX || $pos['y'] !== $startY);
+
+            if ($pos['x'] === $lastX && $pos['y'] === $lastY) {
+                ++$stableReads;
+
+                if (
+                    $stableReads >= $requiredStableReads &&
+                    ($moved || $this->isAtScrollBoundary($distanceY, $distanceX, $pos['x'], $pos['y']))
+                ) {
+                    return;
+                }
+            } else {
+                $stableReads = 0;
+                $lastX = $pos['x'];
+                $lastY = $pos['y'];
             }
 
-            yield 1000;
+            yield 16_000; // Time between two frames at 60Hz.
         }
+    }
+
+    /**
+     * Whether the page can no longer be scrolled further in the requested
+     * direction (so a non-moving position is a legitimate end state).
+     *
+     * @throws \HeadlessChromium\Exception\CommunicationException
+     * @throws \HeadlessChromium\Exception\CommunicationException\ResponseHasError
+     * @throws \HeadlessChromium\Exception\NoResponseAvailable
+     * @throws \HeadlessChromium\Exception\OperationTimedOut
+     */
+    private function isAtScrollBoundary(int $distanceY, int $distanceX, int $x, int $y): bool
+    {
+        $scrollableArea = $this->page->getLayoutMetrics()->getCssContentSize();
+        $visibleArea = $this->page->getLayoutMetrics()->getCssVisualViewport();
+
+        $maximumX = (int) ($scrollableArea['width'] - $visibleArea['clientWidth']);
+        $maximumY = (int) ($scrollableArea['height'] - $visibleArea['clientHeight']);
+
+        $atBoundaryX = $distanceX > 0 ? $x >= $maximumX : ($distanceX < 0 ? $x <= 0 : true);
+        $atBoundaryY = $distanceY > 0 ? $y >= $maximumY : ($distanceY < 0 ? $y <= 0 : true);
+
+        return $atBoundaryX && $atBoundaryY;
     }
 
     /**
