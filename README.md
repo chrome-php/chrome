@@ -690,6 +690,21 @@ if ($cookieBar) {
 }
 ```
 
+### HTTP Authentication
+
+You can set credentials for HTTP Basic Authentication using `Page::authenticate` before navigating to a protected page or when using a proxy. If the credentials are invalid, an `AuthenticationFailed` exception is thrown.
+
+```php
+use HeadlessChromium\Exception\AuthenticationFailed;
+
+try {
+    $page->authenticate('username', 'password');
+    $page->navigate('http://example.com/protected')->waitForNavigation();
+} catch (AuthenticationFailed $e) {
+    // invalid credentials
+}
+```
+
 ### Set user agent
 
 You can set up a user-agent per page:
