@@ -20,6 +20,7 @@ use HeadlessChromium\Dom\Dom;
 use HeadlessChromium\Dom\Node;
 use HeadlessChromium\Dom\Selector\CssSelector;
 use HeadlessChromium\Dom\Selector\Selector;
+use HeadlessChromium\Exception\AuthenticationFailed;
 use HeadlessChromium\Exception\CommunicationException;
 use HeadlessChromium\Exception\EvaluationFailed;
 use HeadlessChromium\Exception\InvalidTimezoneId;
@@ -156,6 +157,64 @@ class Page
         $this->assertNotClosed();
 
         return $this->target->getSession();
+    }
+
+    /**
+     * Sets credentials to be used when the page encounters an HTTP authentication challenge.
+     *
+     * @throws AuthenticationFailed
+     * @throws CommunicationException
+     */
+    public function authenticate(string $username, string $password): void
+    {
+        $this->assertNotClosed();
+
+        $credentialsAttempted = false;
+
+        $this->getSession()->on('method:Fetch.authRequired', function (array $params) use ($username, $password, &$credentialsAttempted) {
+            if ($credentialsAttempted) {
+                $this->getSession()->sendMessageSync(
+                    new Message('Fetch.continueWithAuth', [
+                        'requestId' => $params['requestId'],
+                        'authChallengeResponse' => [
+                            'response' => 'CancelAuth',
+                        ],
+                    ])
+                );
+
+                throw new AuthenticationFailed('Authentication failed: invalid credentials.');
+            }
+
+            $credentialsAttempted = true;
+
+            $this->getSession()->sendMessageSync(
+                new Message('Fetch.continueWithAuth', [
+                    'requestId' => $params['requestId'],
+                    'authChallengeResponse' => [
+                        'response' => 'ProvideCredentials',
+                        'username' => $username,
+                        'password' => $password,
+                    ],
+                ])
+            );
+        });
+
+        $this->getSession()->on('method:Fetch.requestPaused', function (array $params) {
+            $this->getSession()->sendMessageSync(
+                new Message('Fetch.continueRequest', [
+                    'requestId' => $params['requestId'],
+                ])
+            );
+        });
+
+        $this->getSession()->sendMessageSync(
+            new Message('Fetch.enable', [
+                'handleAuthRequests' => true,
+                'patterns' => [
+                    ['urlPattern' => '*'],
+                ],
+            ])
+        );
     }
 
     /**
