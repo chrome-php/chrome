@@ -18,4 +18,12 @@ class PagePdfForTests extends PagePdf
     public function __construct()
     {
     }
+
+    /**
+     * @param \HeadlessChromium\Communication\ResponseReader $responseReader
+     */
+    public function setResponseReader($responseReader): void
+    {
+        $this->responseReader = $responseReader;
+    }
 }

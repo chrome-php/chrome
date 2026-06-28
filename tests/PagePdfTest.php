@@ -11,6 +11,8 @@
 
 namespace HeadlessChromium\Test;
 
+use HeadlessChromium\Communication\Response;
+use HeadlessChromium\Communication\ResponseReader;
 use HeadlessChromium\PageUtils\PagePdf;
 
 /**
@@ -94,6 +96,33 @@ class PagePdfTest extends BaseTestCase
         self::assertInstanceOf(PagePdf::class, $this->pagePdf->setOptions([$optionName => $optionValue]));
     }
 
+    public function testSaveToStreamReturnsDecodedContent(): void
+    {
+        $content = 'Test';
+        $pagePdf  = $this->createPagePdfWithResponse(\base64_encode($content));
+
+        $stream = $pagePdf->saveToStream();
+
+        self::assertIsResource($stream);
+        self::assertSame($content, \stream_get_contents($stream));
+
+        \fclose($stream);
+    }
+
+    public function testSaveToStreamUsesProvidedStream(): void
+    {
+        $content = 'Test';
+        $pagePdf  = $this->createPagePdfWithResponse(\base64_encode($content));
+
+        $stream = \fopen('php://temp', 'r+');
+        $pagePdf->saveToStream($stream);
+
+        \rewind($stream);
+        self::assertSame($content, \stream_get_contents($stream));
+
+        \fclose($stream);
+    }
+
     private static function getOptionsDataset(string $optionName, array $optionValues): array
     {
         return \array_reduce(
@@ -105,5 +134,20 @@ class PagePdfTest extends BaseTestCase
             },
             []
         );
+    }
+
+    private function createPagePdfWithResponse(string $base64Data): PagePdfForTests
+    {
+        $response = $this->createMock(Response::class);
+        $response->method('isSuccessful')->willReturn(true);
+        $response->method('getResultData')->with('data')->willReturn($base64Data);
+
+        $responseReader = $this->createMock(ResponseReader::class);
+        $responseReader->method('waitForResponse')->willReturn($response);
+
+        $pagePdf = new PagePdfForTests();
+        $pagePdf->setResponseReader($responseReader);
+
+        return $pagePdf;
     }
 }

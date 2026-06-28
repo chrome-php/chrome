@@ -519,7 +519,11 @@ header('Expires: 0');
 header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
 header('Pragma: public');
 
-echo base64_decode($pdf->getBase64());
+$outputStream = \fopen('php://output', 'w');
+
+$pdf->saveToStream($outputStream);
+
+\fclose($outputStream);
 ```
 
 Options `headerTemplate` and `footerTemplate`:
