@@ -22,8 +22,6 @@ use HeadlessChromium\Utils;
 
 /**
  * A class that is aimed to be used withing the method Page::navigate.
- *
- * @internal
  */
 class PageNavigation
 {
@@ -74,6 +72,8 @@ class PageNavigation
      * @throws Exception\CommunicationException
      * @throws Exception\CommunicationException\CannotReadResponse
      * @throws Exception\CommunicationException\InvalidResponse
+     *
+     * @internal
      */
     public function __construct(Page $page, string $url, bool $strict = false)
     {

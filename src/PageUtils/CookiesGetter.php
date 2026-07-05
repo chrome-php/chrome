@@ -13,9 +13,6 @@ namespace HeadlessChromium\PageUtils;
 
 use HeadlessChromium\Cookies\CookiesCollection;
 
-/**
- * @internal
- */
 class CookiesGetter extends ResponseWaiter
 {
     /**

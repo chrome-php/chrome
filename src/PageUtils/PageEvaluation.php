@@ -19,8 +19,6 @@ use HeadlessChromium\Page;
 
 /**
  * Used to read data from page evaluation response.
- *
- * @internal
  */
 class PageEvaluation
 {
