@@ -114,7 +114,7 @@ abstract class AbstractBinaryInput
      * Save data to the given stream.
      *
      * @param resource|null $stream If not provided, a php://temp is opened
-     * @param int|null      $timeout
+     * @param int           $timeout
      *
      * @throws FilesystemException
      *
