@@ -15,8 +15,6 @@ use HeadlessChromium\Exception\CommunicationException;
 
 /**
  * Used to read layout metrics of the page.
- *
- * @internal
  */
 class PageLayoutMetrics extends ResponseWaiter
 {
