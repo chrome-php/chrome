@@ -140,6 +140,6 @@ class Wrench implements SocketInterface, LoggerAwareInterface, WaitForDataInterf
 
     public function waitForData(float $maxSeconds): bool
     {
-        return $this->client->waitForData($maxSeconds);
+        return true === $this->client->waitForData($maxSeconds);
     }
 }

@@ -126,9 +126,6 @@ class ResponseReader
     private function waitForResponseGenerator()
     {
         while (true) {
-            // 50 microseconds between each iteration
-            $tryDelay = 50;
-
             // read available response
             $hasResponse = $this->checkForResponse();
 
@@ -136,6 +133,10 @@ class ResponseReader
             if ($hasResponse) {
                 return $this->getResponse();
             }
+
+            // wait for data to arrive on the socket instead of polling,
+            // falling back to 50 microseconds between each iteration
+            $tryDelay = $this->connection->waitForData(0.05) ? 0 : 50;
 
             // wait before next check
             yield $tryDelay;

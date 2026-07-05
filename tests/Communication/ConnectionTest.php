@@ -54,6 +54,13 @@ class ConnectionTest extends TestCase
         self::assertFalse($this->mocSocket->isConnected());
     }
 
+    public function testWaitForDataUnsupportedBySocket(): void
+    {
+        $connection = new Connection($this->mocSocket);
+
+        self::assertFalse($connection->waitForData(0));
+    }
+
     public function testCreateSession(): void
     {
         $connection = new Connection($this->mocSocket);
