@@ -15,6 +15,7 @@ use HeadlessChromium\BrowserFactory;
 use HeadlessChromium\Communication\Target;
 
 /**
+ * @covers \HeadlessChromium\Browser
  * @covers \HeadlessChromium\BrowserFactory
  * @covers \HeadlessChromium\Browser\BrowserProcess
  */
