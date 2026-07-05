@@ -15,6 +15,7 @@ use HeadlessChromium\BrowserFactory;
 use HeadlessChromium\Communication\Target;
 
 /**
+ * @covers \HeadlessChromium\Browser
  * @covers \HeadlessChromium\BrowserFactory
  * @covers \HeadlessChromium\Browser\BrowserProcess
  */
@@ -109,6 +110,38 @@ class BrowserFactoryTest extends BaseTestCase
         $factory->createBrowser()->createPage();
 
         self::assertSame([], $factory->getOptions());
+    }
+
+    public function testDisableJavascriptOption(): void
+    {
+        $factory = new BrowserFactory();
+
+        $browser = $factory->createBrowser([
+            'disableJavascript' => true,
+        ]);
+
+        $page = $browser->createPage();
+        $page->navigate(self::sitePath('javascript.html'))->waitForNavigation();
+
+        self::assertSame(
+            'javascript disabled',
+            $page->evaluate('document.body.innerText')->getReturnValue()
+        );
+    }
+
+    public function testDisableJavascriptOptionDefault(): void
+    {
+        $factory = new BrowserFactory();
+
+        $browser = $factory->createBrowser();
+
+        $page = $browser->createPage();
+        $page->navigate(self::sitePath('javascript.html'))->waitForNavigation();
+
+        self::assertSame(
+            'javascript enabled',
+            $page->evaluate('document.body.innerText')->getReturnValue()
+        );
     }
 
     public function testConnectToBrowser(): void

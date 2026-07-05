@@ -1,6 +1,11 @@
 # CHANGELOG
 
 
+## 1.16.0 (UPCOMING)
+
+* Add `disableJavascript` option
+
+
 ## 1.15.0 (2025-12-27)
 
 * Add PHP 8.5 support
