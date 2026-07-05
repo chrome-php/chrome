@@ -133,6 +133,10 @@ class Node
      */
     public function getPosition(string $boxModel = 'content'): ?NodePosition
     {
+        if (!\in_array($boxModel, ['content', 'padding', 'border', 'margin'], true)) {
+            throw new \InvalidArgumentException('Invalid box model "'.$boxModel.'" for node position. Box model must be "content", "padding", "border" or "margin".');
+        }
+
         $message = new Message('DOM.getBoxModel', [
             'nodeId' => $this->getNodeIdForRequest(),
         ]);

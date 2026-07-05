@@ -2,10 +2,10 @@
 
 namespace HeadlessChromium\Test;
 
+use Generator;
 use HeadlessChromium\Browser;
 use HeadlessChromium\BrowserFactory;
 use HeadlessChromium\Exception\StaleElementException;
-use PHPUnit\Framework\Attributes\TestWith;
 
 /**
  * @covers \HeadlessChromium\Dom\Dom
@@ -25,6 +25,14 @@ class DomTest extends BaseTestCase
     {
         parent::tearDownAfterClass();
         self::$browser->close();
+    }
+
+    private function openSitePage($file)
+    {
+        $page = self::$browser->createPage();
+        $page->navigate(self::sitePath($file))->waitForNavigation();
+
+        return $page;
     }
 
     public function testSearchByCssSelector(): void
@@ -133,24 +141,11 @@ class DomTest extends BaseTestCase
         self::assertSame('hello', $value);
     }
 
-    #[TestWith(['margin', 0, 0, 310, 360])]
-    /** @phpstan-ignore attribute.nonRepeatable */
-    #[TestWith(['border', 20, 10, 270, 340])]
-    /** @phpstan-ignore attribute.nonRepeatable */
-    #[TestWith(['padding', 25, 15, 260, 330])]
-    /** @phpstan-ignore attribute.nonRepeatable */
-    #[TestWith(['content', 55, 30, 200, 300])]
-    /** @phpstan-ignore attribute.nonRepeatable */
-    #[TestWith([null, 55, 30, 200, 300])]
-    /** @phpstan-ignore attribute.nonRepeatable */
-    #[TestWith(['-invalid-', 0, 0, 0, 0])]
-    public function testGetPosition(
-        ?string $boxModel,
-        float $expectedX,
-        float $expectedY,
-        float $expectedWidth,
-        float $expectedHeight,
-    ): void {
+    /**
+     * @dataProvider providerGetPosition
+     */
+    public function testGetPosition(?string $boxModel, float $expectedX, float $expectedY, float $expectedWidth, float $expectedHeight): void
+    {
         $page = $this->openSitePage('boxModel.html');
 
         $element = $page->dom()->querySelector('#elem');
@@ -161,15 +156,34 @@ class DomTest extends BaseTestCase
             $position = $element->getPosition();
         }
 
-        if ('-invalid-' !== $boxModel) {
-            self::assertNotNull($position);
-            self::assertSame($expectedX, $position->getX());
-            self::assertSame($expectedY, $position->getY());
-            self::assertSame($expectedWidth, $position->getWidth());
-            self::assertSame($expectedHeight, $position->getHeight());
-        } else {
-            self::assertNull($position);
-        }
+        self::assertNotNull($position);
+        self::assertSame($expectedX, $position->getX());
+        self::assertSame($expectedY, $position->getY());
+        self::assertSame($expectedWidth, $position->getWidth());
+        self::assertSame($expectedHeight, $position->getHeight());
+    }
+
+    /**
+     * @return Generator<string, array{?string, float, float, float, float}>
+     */
+    public static function providerGetPosition(): Generator
+    {
+        yield 'margin' => ['margin', 0.0, 0.0, 310.0, 360.0];
+        yield 'border' => ['border', 20.0, 10.0, 270.0, 340.0];
+        yield 'padding' => ['padding', 25.0, 15.0, 260.0, 330.0];
+        yield 'content' => ['content', 55.0, 30.0, 200.0, 300.0];
+        yield 'default' => [null, 55.0, 30.0, 200.0, 300.0];
+    }
+
+    public function testGetPositionWithInvalidBoxModel(): void
+    {
+        $page = $this->openSitePage('boxModel.html');
+
+        $element = $page->dom()->querySelector('#elem');
+
+        $this->expectException(\InvalidArgumentException::class);
+
+        $element->getPosition('-invalid-');
     }
 
     public function testUploadFile(): void
@@ -271,13 +285,5 @@ class DomTest extends BaseTestCase
         $this->expectException(StaleElementException::class);
 
         $inputNode->sendKeys('test');
-    }
-
-    private function openSitePage($file)
-    {
-        $page = self::$browser->createPage();
-        $page->navigate(self::sitePath($file))->waitForNavigation();
-
-        return $page;
     }
 }
