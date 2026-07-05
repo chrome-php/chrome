@@ -111,11 +111,27 @@ class Browser
     }
 
     /**
-     * Disable or enable JavaScript execution for every new page created by this browser.
+     * Disable or enable JavaScript execution for existing pages and pages created later.
+     *
+     * @throws CommunicationException
+     * @throws NoResponseAvailable
+     * @throws OperationTimedOut
      */
     public function setPageScriptExecutionDisabled(bool $disabled = true): void
     {
         $this->pageScriptExecutionDisabled = $disabled;
+
+        // send the message to all pages before awaiting the responses, so that
+        // a page that fails to respond does not prevent updating the others
+        $responses = [];
+
+        foreach ($this->pages as $page) {
+            $responses[] = $page->setScriptExecution(!$disabled);
+        }
+
+        foreach ($responses as $response) {
+            $response->await();
+        }
     }
 
     /**
