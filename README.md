@@ -697,7 +697,7 @@ Advanced usage
 --------------
 
 The library ships with tools that hide all the communication logic but you can use the tools used internally to
-communicate directly with Chrome debug protocol.
+communicate directly with [Chrome DevTools Protocol](https://chromedevtools.github.io/devtools-protocol/).
 
 Example:
 
