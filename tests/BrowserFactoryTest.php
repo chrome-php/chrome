@@ -144,6 +144,37 @@ class BrowserFactoryTest extends BaseTestCase
         );
     }
 
+    public function testPageScriptExecutionDisabledSetterUpdatesExistingPages(): void
+    {
+        $factory = new BrowserFactory();
+
+        $browser = $factory->createBrowser();
+
+        $page = $browser->createPage();
+        $page->navigate(self::sitePath('javascript.html'))->waitForNavigation();
+
+        self::assertSame(
+            'javascript enabled',
+            $page->evaluate('document.body.innerText')->getReturnValue()
+        );
+
+        $browser->setPageScriptExecutionDisabled();
+        $page->navigate(self::sitePath('javascript.html'))->waitForNavigation();
+
+        self::assertSame(
+            'javascript disabled',
+            $page->evaluate('document.body.innerText')->getReturnValue()
+        );
+
+        $browser->setPageScriptExecutionDisabled(false);
+        $page->navigate(self::sitePath('javascript.html'))->waitForNavigation();
+
+        self::assertSame(
+            'javascript enabled',
+            $page->evaluate('document.body.innerText')->getReturnValue()
+        );
+    }
+
     public function testConnectToBrowser(): void
     {
         // create a browser
