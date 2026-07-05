@@ -4,6 +4,7 @@
 ## 1.16.0 (UPCOMING)
 
 * Add `disableJavascript` option
+* Allow choosing the box model in `Node::getPosition()`
 
 
 ## 1.15.0 (2025-12-27)

@@ -2,6 +2,7 @@
 
 namespace HeadlessChromium\Test;
 
+use Generator;
 use HeadlessChromium\Browser;
 use HeadlessChromium\BrowserFactory;
 use HeadlessChromium\Exception\StaleElementException;
@@ -138,6 +139,51 @@ class DomTest extends BaseTestCase
         $value = $element->getAttribute('type');
 
         self::assertSame('hello', $value);
+    }
+
+    /**
+     * @dataProvider providerGetPosition
+     */
+    public function testGetPosition(?string $boxModel, float $expectedX, float $expectedY, float $expectedWidth, float $expectedHeight): void
+    {
+        $page = $this->openSitePage('boxModel.html');
+
+        $element = $page->dom()->querySelector('#elem');
+
+        if (null !== $boxModel) {
+            $position = $element->getPosition($boxModel);
+        } else {
+            $position = $element->getPosition();
+        }
+
+        self::assertNotNull($position);
+        self::assertSame($expectedX, $position->getX());
+        self::assertSame($expectedY, $position->getY());
+        self::assertSame($expectedWidth, $position->getWidth());
+        self::assertSame($expectedHeight, $position->getHeight());
+    }
+
+    /**
+     * @return Generator<string, array{?string, float, float, float, float}>
+     */
+    public static function providerGetPosition(): Generator
+    {
+        yield 'margin' => ['margin', 0.0, 0.0, 310.0, 360.0];
+        yield 'border' => ['border', 20.0, 10.0, 270.0, 340.0];
+        yield 'padding' => ['padding', 25.0, 15.0, 260.0, 330.0];
+        yield 'content' => ['content', 55.0, 30.0, 200.0, 300.0];
+        yield 'default' => [null, 55.0, 30.0, 200.0, 300.0];
+    }
+
+    public function testGetPositionWithInvalidBoxModel(): void
+    {
+        $page = $this->openSitePage('boxModel.html');
+
+        $element = $page->dom()->querySelector('#elem');
+
+        $this->expectException(\InvalidArgumentException::class);
+
+        $element->getPosition('-invalid-');
     }
 
     public function testUploadFile(): void

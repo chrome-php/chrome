@@ -128,8 +128,15 @@ class Node
         return $this->getAttributes()->get($name);
     }
 
-    public function getPosition(): ?NodePosition
+    /**
+     * @param 'content'|'padding'|'border'|'margin' $boxModel
+     */
+    public function getPosition(string $boxModel = 'content'): ?NodePosition
     {
+        if (!\in_array($boxModel, ['content', 'padding', 'border', 'margin'], true)) {
+            throw new \InvalidArgumentException('Invalid box model "'.$boxModel.'" for node position. Box model must be "content", "padding", "border" or "margin".');
+        }
+
         $message = new Message('DOM.getBoxModel', [
             'nodeId' => $this->getNodeIdForRequest(),
         ]);
@@ -137,7 +144,7 @@ class Node
 
         $this->assertNotError($response);
 
-        $points = $response->getResultData('model')['content'];
+        $points = $response->getResultData('model')[$boxModel] ?? null;
 
         if (null !== $points) {
             return new NodePosition($points);
