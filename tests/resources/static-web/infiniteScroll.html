@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>infinite-scroll issue (lazy image above)</title>
+    <style>
+        html, body { margin: 0; padding: 0; font: 16px sans-serif; }
+        #header { height: 80px; background: #1565c0; color: #fff; padding: 8px; }
+        /* The lazy image has no reserved height until it loads (the common
+           cause of layout shift in real feeds). */
+        #lazyimg { display: block; width: 640px; max-width: 100%; margin: 12px; }
+        #feed { height: 12000px; background: linear-gradient(#cfe8ff, #084b97); }
+    </style>
+</head>
+<body>
+<div id="header">feed</div>
+<img id="lazyimg" alt="">
+<div id="feed">feed content</div>
+<script>
+    // On the scroll event we simulate the finished loading of a lazy-loaded image
+    // above the current position. Before patch, this caused an OperationTimedOut
+    // Exception, because it changed the expected scroll position.
+    var loaded = false;
+
+    window.addEventListener('scroll', function () {
+        if (loaded) {
+            return;
+        }
+        loaded = true;
+        // The image finishes loading: assigning the src makes it reflow to its
+        // intrinsic 640x420 size, pushing the feed below it down.
+        var svg = "<svg xmlns='http://www.w3.org/2000/svg' width='640' height='420'>"
+            + "<rect width='100%' height='100%' fill='rgb(120,144,156)'/>"
+            + "<text x='320' y='220' font-size='32' fill='white' text-anchor='middle'"
+            + " font-family='sans-serif'>lazy-loaded image</text></svg>";
+        document.getElementById('lazyimg').src = 'data:image/svg+xml,' + encodeURIComponent(svg);
+    }, { passive: true });
+</script>
+</body>
+</html>
