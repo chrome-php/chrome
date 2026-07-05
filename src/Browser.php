@@ -121,8 +121,16 @@ class Browser
     {
         $this->pageScriptExecutionDisabled = $disabled;
 
+        // send the message to all pages before awaiting the responses, so that
+        // a page that fails to respond does not prevent updating the others
+        $responses = [];
+
         foreach ($this->pages as $page) {
-            $page->setScriptExecution(!$disabled)->await();
+            $responses[] = $page->setScriptExecution(!$disabled);
+        }
+
+        foreach ($responses as $response) {
+            $response->await();
         }
     }
 
