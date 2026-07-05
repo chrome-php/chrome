@@ -1,6 +1,11 @@
 # CHANGELOG
 
 
+## 1.15.1 (UPCOMING)
+
+* Fixed mouse scrolling timing out when the page changes during the scroll
+
+
 ## 1.15.0 (2025-12-27)
 
 * Add PHP 8.5 support

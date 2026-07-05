@@ -102,6 +102,114 @@ class MouseApiTest extends BaseTestCase
     }
 
     /**
+     * Scrolling works when the scrollable area shrinks immediately after the scroll starts.
+     *
+     * @throws \HeadlessChromium\Exception\CommunicationException
+     * @throws \HeadlessChromium\Exception\NoResponseAvailable
+     * @throws \HeadlessChromium\Exception\OperationTimedOut
+     */
+    public function testScrollDoesNotTimeOutWhenScrollableAreaShrinks(): void
+    {
+        $page = $this->openSitePage('scrollShrink.html');
+
+        $page->mouse()->scrollDown(4000); // Before patch this threw an OperationTimedOut Exception.
+
+        $windowScrollY = $page->evaluate('window.scrollY')->getReturnValue();
+        $maximumY = $page
+            ->evaluate('document.documentElement.scrollHeight - window.innerHeight')
+            ->getReturnValue();
+
+        // We asked to scroll further than the shrunken page allows, so we end up
+        // exactly at the new (smaller) maximum. The actual regression guarantee
+        // is that scrollDown() returns at all instead of timing out.
+        self::assertSame($maximumY, $windowScrollY);
+    }
+
+    /**
+     * Scrolling works when an overlay pops up and locks scrolling immediately after the scroll starts.
+     *
+     * @throws \HeadlessChromium\Exception\CommunicationException
+     * @throws \HeadlessChromium\Exception\NoResponseAvailable
+     * @throws \HeadlessChromium\Exception\OperationTimedOut
+     */
+    public function testScrollDoesNotTimeOutWhenModalLocksScrolling(): void
+    {
+        $page = $this->openSitePage('scrollLock.html');
+
+        $page->mouse()->scrollDown(4000); // Before patch this threw an OperationTimedOut Exception.
+
+        $windowScrollY = $page->evaluate('window.scrollY')->getReturnValue();
+        $maximumY = $page
+            ->evaluate('document.documentElement.scrollHeight - window.innerHeight')
+            ->getReturnValue();
+
+        // Scrolling got locked, so the page can no longer be scrolled at all and
+        // we stay at the top. The guarantee the fix restores is that scrollDown()
+        // returns instead of timing out.
+        self::assertSame(0, $maximumY);
+        self::assertSame(0, $windowScrollY);
+    }
+
+    /**
+     * Scrolling works when the layout shifts (e.g. due to lazy loaded image) during scrolling.
+     *
+     * @throws \HeadlessChromium\Exception\CommunicationException
+     * @throws \HeadlessChromium\Exception\NoResponseAvailable
+     * @throws \HeadlessChromium\Exception\OperationTimedOut
+     */
+    public function testScrollDoesNotTimeOutWhenLayoutShiftsDuringScroll(): void
+    {
+        $page = $this->openSitePage('infiniteScroll.html');
+
+        $page->mouse()->scrollDown(4000); // Before patch this threw an OperationTimedOut Exception.
+
+        $windowScrollY = $page->evaluate('window.scrollY')->getReturnValue();
+        $maximumY = $page
+            ->evaluate('document.documentElement.scrollHeight - window.innerHeight')
+            ->getReturnValue();
+
+        // The page grew (it did not shrink), so we scrolled and ended up at a
+        // valid position within the new bounds rather than timing out. The exact
+        // position is timing-dependent.
+        self::assertGreaterThan(0, $windowScrollY);
+        self::assertLessThanOrEqual($maximumY, $windowScrollY);
+    }
+
+    /**
+     * Scrolling a page that cannot scroll is a no-op.
+     *
+     * @throws \HeadlessChromium\Exception\CommunicationException
+     * @throws \HeadlessChromium\Exception\NoResponseAvailable
+     * @throws \HeadlessChromium\Exception\OperationTimedOut
+     */
+    public function testScrollOnNonScrollablePage(): void
+    {
+        $page = $this->openSitePage('b.html');
+
+        $page->mouse()->scrollDown(100);
+
+        self::assertSame(0, $page->evaluate('window.scrollY')->getReturnValue());
+        self::assertSame(['x' => 0, 'y' => 0], $page->mouse()->getPosition());
+    }
+
+    /**
+     * Scrolling returns when the page consumes the wheel event with preventDefault.
+     *
+     * @throws \HeadlessChromium\Exception\CommunicationException
+     * @throws \HeadlessChromium\Exception\NoResponseAvailable
+     * @throws \HeadlessChromium\Exception\OperationTimedOut
+     */
+    public function testScrollReturnsWhenWheelEventIsPrevented(): void
+    {
+        $page = $this->openSitePage('scrollPrevented.html');
+
+        $page->mouse()->scrollDown(500); // Before patch this threw an OperationTimedOut Exception.
+
+        self::assertSame(0, $page->evaluate('window.scrollY')->getReturnValue());
+        self::assertSame(['x' => 0, 'y' => 0], $page->mouse()->getPosition());
+    }
+
+    /**
      * @dataProvider providerFindElementWithSingleElement
      *
      * @throws \HeadlessChromium\Exception\CommunicationException
