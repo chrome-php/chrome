@@ -1,3 +1,4 @@
+/.claude
 /.phpunit.result.cache
 /composer.lock
 /phpstan.neon
