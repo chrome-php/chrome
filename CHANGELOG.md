@@ -3,7 +3,8 @@
 
 ## 1.15.1 (UPCOMING)
 
-* Fixed mouse scrolling timing out when the page changes during the scroll
+* Fix mouse scrolling timing out when the page changes during the scroll
+* Fix Linux Chrome binary detection on POSIX shells
 
 
 ## 1.15.0 (2025-12-27)
