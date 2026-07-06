@@ -12,6 +12,7 @@
 namespace HeadlessChromium;
 
 use Generator;
+use HeadlessChromium\Communication\Connection;
 use HeadlessChromium\Communication\Message;
 use HeadlessChromium\Communication\Session;
 use HeadlessChromium\Communication\Target;
@@ -1024,21 +1025,43 @@ class Page
      * Request to close the page.
      *
      * @throws CommunicationException
+     * @throws OperationTimedOut
      */
     public function close(): void
     {
         $this->assertNotClosed();
 
-        $this->getSession()
-            ->getConnection()
-            ->sendMessageSync(
-                new Message(
-                    'Target.closeTarget',
-                    ['targetId' => $this->getSession()->getTargetId()]
-                )
-            );
+        $connection = $this->getSession()->getConnection();
 
-        // TODO return close waiter
+        $connection->sendMessageSync(
+            new Message(
+                'Target.closeTarget',
+                ['targetId' => $this->getSession()->getTargetId()]
+            )
+        );
+
+        // chrome 128 and later may respond to Target.closeTarget before emitting Target.targetDestroyed,
+        // so wait for the target to be destroyed before returning
+        Utils::tryWithTimeout($connection->getSendSyncDefaultTimeout() * 1000, $this->waitForCloseGenerator($connection));
+    }
+
+    /**
+     * @throws CommunicationException\CannotReadResponse
+     * @throws CommunicationException\InvalidResponse
+     *
+     * @return bool|Generator
+     *
+     * @internal
+     */
+    private function waitForCloseGenerator(Connection $connection)
+    {
+        while (!$this->target->isDestroyed()) {
+            yield 500;
+
+            $connection->readData();
+        }
+
+        return true;
     }
 
     /**
