@@ -11,6 +11,8 @@
 
 namespace HeadlessChromium\Exception;
 
-class EvaluationFailed extends \Exception
+use Exception;
+
+class EvaluationFailed extends Exception
 {
 }

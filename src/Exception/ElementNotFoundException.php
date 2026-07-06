@@ -11,6 +11,8 @@
 
 namespace HeadlessChromium\Exception;
 
-class ElementNotFoundException extends \Exception
+use Exception;
+
+class ElementNotFoundException extends Exception
 {
 }

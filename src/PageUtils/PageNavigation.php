@@ -11,6 +11,7 @@
 
 namespace HeadlessChromium\PageUtils;
 
+use Generator;
 use HeadlessChromium\Communication\Message;
 use HeadlessChromium\Communication\ResponseReader;
 use HeadlessChromium\Exception;
@@ -143,7 +144,7 @@ class PageNavigation
      * @throws NavigationExpired
      * @throws ResponseHasError
      *
-     * @return bool|\Generator
+     * @return bool|Generator
      */
     private function navigationComplete($eventName)
     {
@@ -172,22 +173,20 @@ class PageNavigation
                     return true;
 
                     // or else just wait for the new event to trigger
-                } else {
-                    yield $delay;
                 }
+                yield $delay;
 
-                // else if frame has still the previous loader, wait for the new one
+            // else if frame has still the previous loader, wait for the new one
             } elseif ($this->frame->getLatestLoaderId() == $this->previousLoaderId) {
                 yield $delay;
 
-                // else if a new loader is present that means that a new navigation started
+            // else if a new loader is present that means that a new navigation started
             } else {
                 // if strict then throw or else replace the old navigation with the new one
                 if ($this->strict) {
                     throw new NavigationExpired('The page has navigated to an other page and this navigation expired');
-                } else {
-                    $this->currentLoaderId = $this->frame->getLatestLoaderId();
                 }
+                $this->currentLoaderId = $this->frame->getLatestLoaderId();
             }
 
             $this->page->getSession()->getConnection()->readData();

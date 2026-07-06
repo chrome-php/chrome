@@ -11,6 +11,8 @@
 
 namespace HeadlessChromium;
 
+use Throwable;
+
 class AutoDiscover
 {
     /**
@@ -65,7 +67,7 @@ class AutoDiscover
             $result = @\shell_exec($command);
 
             return \is_string($result) ? $result : null;
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             return null;
         }
     }

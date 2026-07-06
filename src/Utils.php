@@ -11,6 +11,7 @@
 
 namespace HeadlessChromium;
 
+use Generator;
 use HeadlessChromium\Communication\Connection;
 use HeadlessChromium\Communication\Message;
 use HeadlessChromium\Dom\Selector\Selector;
@@ -46,14 +47,14 @@ class Utils
      * ```
      *
      * @param int           $timeoutMicroSec
-     * @param \Generator    $generator
+     * @param Generator     $generator
      * @param callable|null $onTimeout
      *
      * @throws OperationTimedOut
      *
      * @return mixed
      */
-    public static function tryWithTimeout(int $timeoutMicroSec, \Generator $generator, ?callable $onTimeout = null)
+    public static function tryWithTimeout(int $timeoutMicroSec, Generator $generator, ?callable $onTimeout = null)
     {
         $waitUntilMicroSec = \hrtime(true) / 1000 + $timeoutMicroSec;
 
@@ -64,6 +65,7 @@ class Utils
                     // if callback was set execute it
                     return $onTimeout();
                 }
+
                 throw OperationTimedOut::createFromTimeout($timeoutMicroSec);
             }
 

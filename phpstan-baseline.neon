@@ -1,0 +1,139 @@
+parameters:
+	ignoreErrors:
+		-
+			message: '#^Left side of && is always true\.$#'
+			identifier: booleanAnd.leftAlwaysTrue
+			count: 1
+			path: src/Browser/BrowserProcess.php
+
+		-
+			message: '#^Property HeadlessChromium\\Browser\\BrowserProcess\:\:\$connection \(HeadlessChromium\\Communication\\Connection\) in isset\(\) is not nullable\.$#'
+			identifier: isset.property
+			count: 1
+			path: src/Browser/BrowserProcess.php
+
+		-
+			message: '#^Property HeadlessChromium\\Browser\\BrowserProcess\:\:\$process \(Symfony\\Component\\Process\\Process\) in isset\(\) is not nullable\.$#'
+			identifier: isset.property
+			count: 1
+			path: src/Browser/BrowserProcess.php
+
+		-
+			message: '#^If condition is always true\.$#'
+			identifier: if.alwaysTrue
+			count: 1
+			path: src/BrowserFactory.php
+
+		-
+			message: '#^Call to function is_object\(\) with HeadlessChromium\\Communication\\Socket\\SocketInterface will always evaluate to true\.$#'
+			identifier: function.alreadyNarrowedType
+			count: 1
+			path: src/Communication/Connection.php
+
+		-
+			message: '#^Instanceof between \*NEVER\* and HeadlessChromium\\Communication\\Socket\\SocketInterface will always evaluate to false\.$#'
+			identifier: instanceof.alwaysFalse
+			count: 1
+			path: src/Communication/Connection.php
+
+		-
+			message: '#^Result of && is always false\.$#'
+			identifier: booleanAnd.alwaysFalse
+			count: 1
+			path: src/Communication/Connection.php
+
+		-
+			message: '#^If condition is always false\.$#'
+			identifier: if.alwaysFalse
+			count: 1
+			path: src/Communication/ResponseReader.php
+
+		-
+			message: '#^Negated boolean expression is always true\.$#'
+			identifier: booleanNot.alwaysTrue
+			count: 1
+			path: src/Communication/ResponseReader.php
+
+		-
+			message: '#^Parameter \#1 \$id of method HeadlessChromium\\Communication\\Connection\:\:getResponseForId\(\) expects string, int given\.$#'
+			identifier: argument.type
+			count: 2
+			path: src/Communication/ResponseReader.php
+
+		-
+			message: '#^Parameter \#1 \$id of method HeadlessChromium\\Communication\\Connection\:\:hasResponseForId\(\) expects string, int given\.$#'
+			identifier: argument.type
+			count: 3
+			path: src/Communication/ResponseReader.php
+
+		-
+			message: '#^Negated boolean expression is always false\.$#'
+			identifier: booleanNot.alwaysFalse
+			count: 1
+			path: src/Communication/Session.php
+
+		-
+			message: '#^Parameter \#1 \$right of method HeadlessChromium\\Input\\Mouse\:\:scrollToBoundary\(\) expects int, \(float\|false\) given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Input/Mouse.php
+
+		-
+			message: '#^Parameter \#1 \$x of method HeadlessChromium\\Input\\Mouse\:\:move\(\) expects int, float given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Input/Mouse.php
+
+		-
+			message: '#^Parameter \#2 \$bottom of method HeadlessChromium\\Input\\Mouse\:\:scrollToBoundary\(\) expects int, \(float\|false\) given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Input/Mouse.php
+
+		-
+			message: '#^Parameter \#2 \$y of method HeadlessChromium\\Input\\Mouse\:\:move\(\) expects int, float given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Input/Mouse.php
+
+		-
+			message: '#^Parameter \#3 \$loaderId of method HeadlessChromium\\Page\:\:waitForReload\(\) expects null, string given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Page.php
+
+		-
+			message: '#^Strict comparison using \=\=\= between null and null will always evaluate to true\.$#'
+			identifier: identical.alwaysTrue
+			count: 1
+			path: src/Page.php
+
+		-
+			message: '#^Negated boolean expression is always false\.$#'
+			identifier: booleanNot.alwaysFalse
+			count: 2
+			path: src/PageUtils/PageEvaluation.php
+
+		-
+			message: '#^Parameter \#3 \$loaderId of method HeadlessChromium\\Page\:\:waitForReload\(\) expects null, string given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/PageUtils/PageEvaluation.php
+
+		-
+			message: '#^Expression on left side of \?\? is not nullable\.$#'
+			identifier: nullCoalesce.expr
+			count: 3
+			path: src/PageUtils/PageLayoutMetrics.php
+
+		-
+			message: '#^If condition is always false\.$#'
+			identifier: if.alwaysFalse
+			count: 1
+			path: src/PageUtils/PageNavigation.php
+
+		-
+			message: '#^Negated boolean expression is always false\.$#'
+			identifier: booleanNot.alwaysFalse
+			count: 1
+			path: src/PageUtils/ResponseWaiter.php

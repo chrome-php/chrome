@@ -11,6 +11,7 @@
 
 namespace HeadlessChromium\Test;
 
+use Exception;
 use Symfony\Component\Process\Process;
 
 class HttpEnabledTestCase extends BaseTestCase
@@ -34,7 +35,8 @@ class HttpEnabledTestCase extends BaseTestCase
         // ensure it started
         if (!self::$process->isRunning()) {
             $message = self::$process->getErrorOutput();
-            throw new \Exception('Cannot start webserver for tests: '.$message);
+
+            throw new Exception('Cannot start webserver for tests: '.$message);
         }
     }
 

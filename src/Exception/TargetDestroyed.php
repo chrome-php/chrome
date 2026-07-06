@@ -11,6 +11,8 @@
 
 namespace HeadlessChromium\Exception;
 
-class TargetDestroyed extends \RuntimeException
+use RuntimeException;
+
+class TargetDestroyed extends RuntimeException
 {
 }

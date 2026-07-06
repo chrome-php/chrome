@@ -12,6 +12,8 @@
 namespace HeadlessChromium\PageUtils;
 
 use HeadlessChromium\Exception\CommunicationException;
+use HeadlessChromium\Exception\NoResponseAvailable;
+use HeadlessChromium\Exception\OperationTimedOut;
 
 /**
  * Used to read layout metrics of the page.
@@ -24,8 +26,8 @@ class PageLayoutMetrics extends ResponseWaiter
      * Returns raw page metrics data.
      *
      * @throws CommunicationException\ResponseHasError
-     * @throws \HeadlessChromium\Exception\NoResponseAvailable
-     * @throws \HeadlessChromium\Exception\OperationTimedOut
+     * @throws NoResponseAvailable
+     * @throws OperationTimedOut
      *
      * @return array
      */
@@ -40,8 +42,8 @@ class PageLayoutMetrics extends ResponseWaiter
      * Returns size of scrollable area.
      *
      * @throws CommunicationException\ResponseHasError
-     * @throws \HeadlessChromium\Exception\NoResponseAvailable
-     * @throws \HeadlessChromium\Exception\OperationTimedOut
+     * @throws NoResponseAvailable
+     * @throws OperationTimedOut
      *
      * @return array
      */
@@ -54,8 +56,8 @@ class PageLayoutMetrics extends ResponseWaiter
      * Returns metrics relating to the layout viewport.
      *
      * @throws CommunicationException\ResponseHasError
-     * @throws \HeadlessChromium\Exception\NoResponseAvailable
-     * @throws \HeadlessChromium\Exception\OperationTimedOut
+     * @throws NoResponseAvailable
+     * @throws OperationTimedOut
      *
      * @return array
      */
@@ -68,8 +70,8 @@ class PageLayoutMetrics extends ResponseWaiter
      * Returns metrics relating to the visual viewport.
      *
      * @throws CommunicationException\ResponseHasError
-     * @throws \HeadlessChromium\Exception\NoResponseAvailable
-     * @throws \HeadlessChromium\Exception\OperationTimedOut
+     * @throws NoResponseAvailable
+     * @throws OperationTimedOut
      *
      * @return array
      */
@@ -82,8 +84,8 @@ class PageLayoutMetrics extends ResponseWaiter
      * Returns real size of scrollable area.
      *
      * @throws CommunicationException\ResponseHasError
-     * @throws \HeadlessChromium\Exception\NoResponseAvailable
-     * @throws \HeadlessChromium\Exception\OperationTimedOut
+     * @throws NoResponseAvailable
+     * @throws OperationTimedOut
      *
      * @return array
      */
@@ -96,8 +98,8 @@ class PageLayoutMetrics extends ResponseWaiter
      * Returns real metrics relating to the layout viewport.
      *
      * @throws CommunicationException\ResponseHasError
-     * @throws \HeadlessChromium\Exception\NoResponseAvailable
-     * @throws \HeadlessChromium\Exception\OperationTimedOut
+     * @throws NoResponseAvailable
+     * @throws OperationTimedOut
      *
      * @return array
      */
@@ -110,8 +112,8 @@ class PageLayoutMetrics extends ResponseWaiter
      * Returns real metrics relating to the visual viewport.
      *
      * @throws CommunicationException\ResponseHasError
-     * @throws \HeadlessChromium\Exception\NoResponseAvailable
-     * @throws \HeadlessChromium\Exception\OperationTimedOut
+     * @throws NoResponseAvailable
+     * @throws OperationTimedOut
      *
      * @return array
      */

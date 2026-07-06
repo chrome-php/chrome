@@ -11,13 +11,19 @@
 
 namespace HeadlessChromium\Input;
 
+use Generator;
 use HeadlessChromium\Communication\Message;
 use HeadlessChromium\Dom\Selector\CssSelector;
 use HeadlessChromium\Dom\Selector\Selector;
+use HeadlessChromium\Exception\CommunicationException;
+use HeadlessChromium\Exception\CommunicationException\ResponseHasError;
 use HeadlessChromium\Exception\ElementNotFoundException;
 use HeadlessChromium\Exception\JavascriptException;
+use HeadlessChromium\Exception\NoResponseAvailable;
+use HeadlessChromium\Exception\OperationTimedOut;
 use HeadlessChromium\Page;
 use HeadlessChromium\Utils;
+use InvalidArgumentException;
 
 class Mouse
 {
@@ -54,8 +60,8 @@ class Mouse
      * @param int        $y
      * @param array|null $options
      *
-     * @throws \HeadlessChromium\Exception\CommunicationException
-     * @throws \HeadlessChromium\Exception\NoResponseAvailable
+     * @throws CommunicationException
+     * @throws NoResponseAvailable
      *
      * @return $this
      */
@@ -74,7 +80,7 @@ class Mouse
         // number of steps to achieve the move
         $steps = $options['steps'] ?? 1;
         if ($steps <= 0) {
-            throw new \InvalidArgumentException('options "steps" for mouse move must be a positive integer');
+            throw new InvalidArgumentException('options "steps" for mouse move must be a positive integer');
         }
 
         // move
@@ -90,8 +96,8 @@ class Mouse
     }
 
     /**
-     * @throws \HeadlessChromium\Exception\CommunicationException
-     * @throws \HeadlessChromium\Exception\NoResponseAvailable
+     * @throws CommunicationException
+     * @throws NoResponseAvailable
      */
     public function press(?array $options = null)
     {
@@ -108,8 +114,8 @@ class Mouse
     }
 
     /**
-     * @throws \HeadlessChromium\Exception\CommunicationException
-     * @throws \HeadlessChromium\Exception\NoResponseAvailable
+     * @throws CommunicationException
+     * @throws NoResponseAvailable
      */
     public function release(?array $options = null)
     {
@@ -128,8 +134,8 @@ class Mouse
     /**
      * @param array|null $options
      *
-     * @throws \HeadlessChromium\Exception\CommunicationException
-     * @throws \HeadlessChromium\Exception\NoResponseAvailable
+     * @throws CommunicationException
+     * @throws NoResponseAvailable
      */
     public function click(?array $options = null)
     {
@@ -144,9 +150,9 @@ class Mouse
      *
      * @param int $distance Distance in pixels
      *
-     * @throws \HeadlessChromium\Exception\CommunicationException
-     * @throws \HeadlessChromium\Exception\NoResponseAvailable
-     * @throws \HeadlessChromium\Exception\OperationTimedOut
+     * @throws CommunicationException
+     * @throws NoResponseAvailable
+     * @throws OperationTimedOut
      *
      * @return $this
      */
@@ -160,9 +166,9 @@ class Mouse
      *
      * @param int $distance Distance in pixels
      *
-     * @throws \HeadlessChromium\Exception\CommunicationException
-     * @throws \HeadlessChromium\Exception\NoResponseAvailable
-     * @throws \HeadlessChromium\Exception\OperationTimedOut
+     * @throws CommunicationException
+     * @throws NoResponseAvailable
+     * @throws OperationTimedOut
      *
      * @return $this
      */
@@ -182,10 +188,10 @@ class Mouse
      * @param int $distanceY Distance in pixels for the Y axis
      * @param int $distanceX (optional) Distance in pixels for the X axis
      *
-     * @throws \HeadlessChromium\Exception\CommunicationException
-     * @throws \HeadlessChromium\Exception\CommunicationException\ResponseHasError
-     * @throws \HeadlessChromium\Exception\NoResponseAvailable
-     * @throws \HeadlessChromium\Exception\OperationTimedOut
+     * @throws CommunicationException
+     * @throws ResponseHasError
+     * @throws NoResponseAvailable
+     * @throws OperationTimedOut
      *
      * @return $this
      */
@@ -279,9 +285,9 @@ class Mouse
      * @param string $selectors selectors to use with document.querySelector
      * @param int    $position  (optional) which element of the result set should be used
      *
-     * @throws \HeadlessChromium\Exception\CommunicationException
-     * @throws \HeadlessChromium\Exception\NoResponseAvailable
-     * @throws \HeadlessChromium\Exception\ElementNotFoundException
+     * @throws CommunicationException
+     * @throws NoResponseAvailable
+     * @throws ElementNotFoundException
      *
      * @return $this
      */
@@ -307,9 +313,9 @@ class Mouse
      * @param Selector $selector selector to use
      * @param int      $position (optional) which element of the result set should be used
      *
-     * @throws \HeadlessChromium\Exception\CommunicationException
-     * @throws \HeadlessChromium\Exception\NoResponseAvailable
-     * @throws \HeadlessChromium\Exception\ElementNotFoundException
+     * @throws CommunicationException
+     * @throws NoResponseAvailable
+     * @throws ElementNotFoundException
      *
      * @return $this
      */
@@ -377,10 +383,10 @@ class Mouse
      * The protocol reports doubles that may be fractional (zoom, device pixel ratio), so the
      * values are truncated to allow positions to be compared for equality.
      *
-     * @throws \HeadlessChromium\Exception\CommunicationException
-     * @throws \HeadlessChromium\Exception\CommunicationException\ResponseHasError
-     * @throws \HeadlessChromium\Exception\NoResponseAvailable
-     * @throws \HeadlessChromium\Exception\OperationTimedOut
+     * @throws CommunicationException
+     * @throws ResponseHasError
+     * @throws NoResponseAvailable
+     * @throws OperationTimedOut
      *
      * @return array{x: int, y: int}
      */
@@ -404,14 +410,14 @@ class Mouse
      *
      * Yields the number of microseconds to wait between reads.
      *
-     * @see \HeadlessChromium\Utils::tryWithTimeout
+     * @see Utils::tryWithTimeout
      *
-     * @throws \HeadlessChromium\Exception\CommunicationException
-     * @throws \HeadlessChromium\Exception\CommunicationException\ResponseHasError
-     * @throws \HeadlessChromium\Exception\NoResponseAvailable
-     * @throws \HeadlessChromium\Exception\OperationTimedOut
+     * @throws CommunicationException
+     * @throws ResponseHasError
+     * @throws NoResponseAvailable
+     * @throws OperationTimedOut
      */
-    private function waitForScrollToSettle(int $startX, int $startY, int $targetX, int $targetY): \Generator
+    private function waitForScrollToSettle(int $startX, int $startY, int $targetX, int $targetY): Generator
     {
         $stableReads = 0;
         $lastX = $lastY = null;

@@ -1,8 +1,17 @@
 {
     "name": "chrome-php/chrome",
     "description": "Instrument headless chrome/chromium instances from PHP",
-    "keywords": ["chrome", "chromium", "crawl", "browser", "headless", "screenshot", "pdf", "puppeteer"],
     "license": "MIT",
+    "keywords": [
+        "chrome",
+        "chromium",
+        "crawl",
+        "browser",
+        "headless",
+        "screenshot",
+        "pdf",
+        "puppeteer"
+    ],
     "authors": [
         {
             "name": "Graham Campbell",
@@ -25,26 +34,27 @@
         "symfony/polyfill-mbstring": "^1.26",
         "symfony/process": "^5.4 || ^6.0 || ^7.0 || ^8.0"
     },
-    "require-dev":{
+    "require-dev": {
         "bamarni/composer-bin-plugin": "^1.8.2",
         "phpunit/phpunit": "^9.6.3 || ^10.0.12",
         "symfony/var-dumper": "^5.4 || ^6.0 || ^7.0 || ^8.0"
     },
-    "autoload":{
-        "psr-4" : {
-          "HeadlessChromium\\": "src/"
+    "autoload": {
+        "psr-4": {
+            "HeadlessChromium\\": "src/"
         }
     },
-    "autoload-dev":{
-        "psr-4" : {
-          "HeadlessChromium\\Test\\": "tests/"
+    "autoload-dev": {
+        "psr-4": {
+            "HeadlessChromium\\Test\\": "tests/"
         }
     },
     "config": {
         "allow-plugins": {
             "bamarni/composer-bin-plugin": true
         },
-        "preferred-install": "dist"
+        "preferred-install": "dist",
+        "sort-packages": true
     },
     "extra": {
         "bamarni-bin": {

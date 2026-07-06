@@ -14,6 +14,8 @@ namespace HeadlessChromium\PageUtils;
 use HeadlessChromium\Communication\Response;
 use HeadlessChromium\Communication\ResponseReader;
 use HeadlessChromium\Exception\CommunicationException\ResponseHasError;
+use HeadlessChromium\Exception\NoResponseAvailable;
+use HeadlessChromium\Exception\OperationTimedOut;
 
 class ResponseWaiter
 {
@@ -40,9 +42,9 @@ class ResponseWaiter
      *
      * @param int $time
      *
-     * @throws \HeadlessChromium\Exception\NoResponseAvailable
-     * @throws \HeadlessChromium\Exception\OperationTimedOut
-     * @throws \HeadlessChromium\Exception\CommunicationException\ResponseHasError
+     * @throws NoResponseAvailable
+     * @throws OperationTimedOut
+     * @throws ResponseHasError
      *
      * @return $this
      */
@@ -63,8 +65,8 @@ class ResponseWaiter
      * @param int|null $time
      *
      * @throws ResponseHasError
-     * @throws \HeadlessChromium\Exception\NoResponseAvailable
-     * @throws \HeadlessChromium\Exception\OperationTimedOut
+     * @throws NoResponseAvailable
+     * @throws OperationTimedOut
      *
      * @return Response
      */

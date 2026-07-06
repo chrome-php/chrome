@@ -16,11 +16,11 @@ use HeadlessChromium\Input\KeyboardKeys;
 class KeyboardForTests
 {
     use KeyboardKeys {
-        onKeyPress            as public;
-        onKeyRelease          as public;
+        onKeyPress as public;
+        onKeyRelease as public;
         toggleModifierFromKey as public;
-        toggleModifier        as public;
-        isKeyPressed          as public;
-        setCurrentKey         as public;
+        toggleModifier as public;
+        isKeyPressed as public;
+        setCurrentKey as public;
     }
 }

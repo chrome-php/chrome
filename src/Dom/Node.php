@@ -141,9 +141,9 @@ class Node
 
         if (null !== $points) {
             return new NodePosition($points);
-        } else {
-            return null;
         }
+
+        return null;
     }
 
     public function hasPosition(): bool

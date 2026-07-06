@@ -4,6 +4,9 @@ on:
   push:
   pull_request:
 
+permissions:
+  contents: read
+
 jobs:
   phpstan:
     name: PHPStan
@@ -11,7 +14,7 @@ jobs:
 
     steps:
       - name: Checkout Code
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
@@ -21,18 +24,87 @@ jobs:
           coverage: none
 
       - name: Install Dependencies
-        uses: nick-invision/retry@v3
+        uses: nick-fields/retry@v4
         with:
           timeout_minutes: 5
           max_attempts: 5
           command: composer update --no-interaction --no-progress
 
       - name: Install PHPStan
-        uses: nick-invision/retry@v3
+        uses: nick-fields/retry@v4
         with:
           timeout_minutes: 5
           max_attempts: 5
-          command: composer bin phpstan install --no-interaction --no-progress
+          command: composer bin phpstan update --no-interaction --no-progress
 
       - name: Execute PHPStan
         run: vendor/bin/phpstan analyze --no-progress
+
+  php-cs-fixer:
+    name: PHP-CS-Fixer
+    runs-on: ubuntu-24.04
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v7
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '7.4'
+          tools: composer:v2
+          coverage: none
+          extensions: mbstring
+
+      - name: Install Dependencies
+        uses: nick-fields/retry@v4
+        with:
+          timeout_minutes: 5
+          max_attempts: 5
+          command: composer update --no-interaction --no-progress
+
+      - name: Install PHP-CS-Fixer
+        uses: nick-fields/retry@v4
+        with:
+          timeout_minutes: 5
+          max_attempts: 5
+          command: composer bin php-cs-fixer update --no-interaction --no-progress
+
+      - name: Execute PHP-CS-Fixer
+        run: vendor/bin/php-cs-fixer fix --diff --dry-run
+
+  composer-normalize:
+    name: Composer Normalize
+    runs-on: ubuntu-24.04
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v7
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '7.4'
+          tools: composer:v2
+          coverage: none
+
+      - name: Install Dependencies
+        uses: nick-fields/retry@v4
+        with:
+          timeout_minutes: 5
+          max_attempts: 5
+          command: composer install --no-interaction --no-progress
+
+      - name: Install Composer Normalize
+        uses: nick-fields/retry@v4
+        with:
+          timeout_minutes: 5
+          max_attempts: 5
+          command: composer bin composer-normalize update --no-interaction --no-progress
+
+      - name: Execute Composer Normalize
+        uses: nick-fields/retry@v4
+        with:
+          timeout_minutes: 5
+          max_attempts: 5
+          command: composer bin composer-normalize normalize --diff --dry-run ../../composer.json

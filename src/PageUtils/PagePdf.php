@@ -11,9 +11,12 @@
 
 namespace HeadlessChromium\PageUtils;
 
+use Exception;
 use HeadlessChromium\Communication\Message;
+use HeadlessChromium\Exception\CommunicationException;
 use HeadlessChromium\Exception\PdfFailed;
 use HeadlessChromium\Page;
+use InvalidArgumentException;
 
 class PagePdf extends AbstractBinaryInput
 {
@@ -50,7 +53,7 @@ class PagePdf extends AbstractBinaryInput
     private $options = [];
 
     /**
-     * @throws \HeadlessChromium\Exception\CommunicationException
+     * @throws CommunicationException
      */
     public function __construct(Page $page, array $options = [])
     {
@@ -60,7 +63,7 @@ class PagePdf extends AbstractBinaryInput
     }
 
     /**
-     * @throws \HeadlessChromium\Exception\CommunicationException
+     * @throws CommunicationException
      */
     public function print(): self
     {
@@ -72,7 +75,7 @@ class PagePdf extends AbstractBinaryInput
     }
 
     /**
-     * @throws \InvalidArgumentException
+     * @throws InvalidArgumentException
      */
     public function setOptions(array $options): self
     {
@@ -87,12 +90,12 @@ class PagePdf extends AbstractBinaryInput
      * @param string                $name
      * @param string|int|float|bool $value
      *
-     * @throws \InvalidArgumentException
+     * @throws InvalidArgumentException
      */
     private function validateOption(string $name, $value): bool
     {
         if (false === \in_array($name, \array_keys(self::OPTIONS))) {
-            throw new \InvalidArgumentException("Unknown option '{$name}' for print to pdf.");
+            throw new InvalidArgumentException("Unknown option '{$name}' for print to pdf.");
         }
         switch (self::OPTIONS[$name]) {
             case self::TYPE_NUMERIC:
@@ -114,7 +117,7 @@ class PagePdf extends AbstractBinaryInput
      *
      * @internal
      */
-    protected function getException(string $message): \Exception
+    protected function getException(string $message): Exception
     {
         return new PdfFailed(
             \sprintf('Cannot make a PDF. Reason : %s', $message)
@@ -124,10 +127,10 @@ class PagePdf extends AbstractBinaryInput
     /**
      * Wrapper to throw exception in expression when running in php 7.
      *
-     * @throws \InvalidArgumentException
+     * @throws InvalidArgumentException
      */
     private function invalidArgument(string $message): void
     {
-        throw new \InvalidArgumentException($message);
+        throw new InvalidArgumentException($message);
     }
 }
