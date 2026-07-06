@@ -434,7 +434,7 @@ class BrowserProcess implements LoggerAwareInterface
 
                         // exception
                         $message = 'Chrome process stopped before startup completed.';
-                        $error = \trim($process->getErrorOutput());
+                        $error = \trim($process->getErrorOutput(), " \n\r\t\0\x0B");
                         if (!empty($error)) {
                             $message .= ' Additional info: '.$error;
                         }
@@ -442,7 +442,7 @@ class BrowserProcess implements LoggerAwareInterface
                         throw new RuntimeException($message);
                     }
 
-                    $output = \trim($process->getIncrementalErrorOutput());
+                    $output = \trim($process->getIncrementalErrorOutput(), " \n\r\t\0\x0B");
 
                     if ($output) {
                         // log
@@ -451,7 +451,7 @@ class BrowserProcess implements LoggerAwareInterface
                         $outputs = \explode(\PHP_EOL, $output);
 
                         foreach ($outputs as $output) {
-                            $output = \trim($output);
+                            $output = \trim($output, " \n\r\t\0\x0B");
 
                             // ignore empty line
                             if (empty($output)) {
@@ -470,7 +470,7 @@ class BrowserProcess implements LoggerAwareInterface
                                 throw new RuntimeException('Devtools could not start');
                             }
                             // log
-                            $this->logger->debug('process: ignoring output:'.\trim($output));
+                            $this->logger->debug('process: ignoring output:'.\trim($output, " \n\r\t\0\x0B"));
                         }
                     }
 
