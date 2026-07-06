@@ -11,13 +11,16 @@
 
 namespace HeadlessChromium\Browser;
 
+use Exception;
 use HeadlessChromium\Communication\Connection;
 use HeadlessChromium\Exception\OperationTimedOut;
 use HeadlessChromium\Utils;
+use InvalidArgumentException;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
+use RuntimeException;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Process\Process;
 use Wrench\Exception\SocketException;
@@ -95,7 +98,7 @@ class BrowserProcess implements LoggerAwareInterface
         if ($this->wasStarted) {
             // cannot start twice because once started this class contains the necessary data to cleanup the browser.
             // starting in again would result in replacing those data.
-            throw new \RuntimeException('This process was already started');
+            throw new RuntimeException('This process was already started');
         }
 
         $this->wasStarted = true;
@@ -212,7 +215,7 @@ class BrowserProcess implements LoggerAwareInterface
                         // log
                         $this->logger->debug('process: trying to close chrome gracefully');
                         $this->browser->sendCloseMessage();
-                    } catch (\Exception $e) {
+                    } catch (Exception $e) {
                         // log
                         $this->logger->debug('process: closing chrome gracefully - compatibility');
 
@@ -274,7 +277,7 @@ class BrowserProcess implements LoggerAwareInterface
                 // cleaning
                 $fs = new Filesystem();
                 $fs->remove($this->userDataDir);
-            } catch (\Exception $e) {
+            } catch (Exception $e) {
                 // log
                 $this->logger->debug('process: ✗ could not clean temporary resources');
             }
@@ -345,12 +348,12 @@ class BrowserProcess implements LoggerAwareInterface
         // window's size
         if (\array_key_exists('windowSize', $options) && $options['windowSize']) {
             if (
-                !\is_array($options['windowSize']) ||
-                2 !== \count($options['windowSize']) ||
-                !\is_numeric($options['windowSize'][0]) ||
-                !\is_numeric($options['windowSize'][1])
+                !\is_array($options['windowSize'])
+                || 2 !== \count($options['windowSize'])
+                || !\is_numeric($options['windowSize'][0])
+                || !\is_numeric($options['windowSize'][1])
             ) {
-                throw new \InvalidArgumentException('Option "windowSize" must be an array of dimensions (eg: [1000, 1200])');
+                throw new InvalidArgumentException('Option "windowSize" must be an array of dimensions (eg: [1000, 1200])');
             }
 
             $args[] = '--window-size='.\implode(',', $options['windowSize']);
@@ -429,7 +432,8 @@ class BrowserProcess implements LoggerAwareInterface
                         if (!empty($error)) {
                             $message .= ' Additional info: '.$error;
                         }
-                        throw new \RuntimeException($message);
+
+                        throw new RuntimeException($message);
                     }
 
                     $output = \trim($process->getIncrementalErrorOutput());
@@ -456,11 +460,11 @@ class BrowserProcess implements LoggerAwareInterface
                                 return $matches[1];
                             } elseif (\preg_match('/Cannot start http server for devtools\./', $output, $matches)) {
                                 $process->stop();
-                                throw new \RuntimeException('Devtools could not start');
-                            } else {
-                                // log
-                                $this->logger->debug('process: ignoring output:'.\trim($output));
+
+                                throw new RuntimeException('Devtools could not start');
                             }
+                            // log
+                            $this->logger->debug('process: ignoring output:'.\trim($output));
                         }
                     }
 
@@ -472,7 +476,8 @@ class BrowserProcess implements LoggerAwareInterface
             return Utils::tryWithTimeout($timeout, $generator($process));
         } catch (OperationTimedOut $e) {
             $process->stop();
-            throw new \RuntimeException('Cannot start browser', 0, $e);
+
+            throw new RuntimeException('Cannot start browser', 0, $e);
         }
     }
 

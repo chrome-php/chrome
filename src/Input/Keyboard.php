@@ -12,6 +12,8 @@
 namespace HeadlessChromium\Input;
 
 use HeadlessChromium\Communication\Message;
+use HeadlessChromium\Exception\CommunicationException;
+use HeadlessChromium\Exception\NoResponseAvailable;
 use HeadlessChromium\Page;
 
 class Keyboard
@@ -41,8 +43,8 @@ class Keyboard
      *
      * @param string $text text string to be typed
      *
-     * @throws \HeadlessChromium\Exception\CommunicationException
-     * @throws \HeadlessChromium\Exception\NoResponseAvailable
+     * @throws CommunicationException
+     * @throws NoResponseAvailable
      *
      * @return $this
      */
@@ -78,8 +80,8 @@ class Keyboard
      *
      * @param string $key single raw key to be typed
      *
-     * @throws \HeadlessChromium\Exception\CommunicationException
-     * @throws \HeadlessChromium\Exception\NoResponseAvailable
+     * @throws CommunicationException
+     * @throws NoResponseAvailable
      *
      * @return $this
      */
@@ -112,8 +114,8 @@ class Keyboard
      *
      * @param string $key single key to be typed
      *
-     * @throws \HeadlessChromium\Exception\CommunicationException
-     * @throws \HeadlessChromium\Exception\NoResponseAvailable
+     * @throws CommunicationException
+     * @throws NoResponseAvailable
      *
      * @return $this
      */
@@ -136,8 +138,8 @@ class Keyboard
      *
      * @param string $key single key to be pressed
      *
-     * @throws \HeadlessChromium\Exception\CommunicationException
-     * @throws \HeadlessChromium\Exception\NoResponseAvailable
+     * @throws CommunicationException
+     * @throws NoResponseAvailable
      *
      * @return $this
      */
@@ -175,8 +177,8 @@ class Keyboard
      *
      * @param string $key (optional) single key to be released
      *
-     * @throws \HeadlessChromium\Exception\CommunicationException
-     * @throws \HeadlessChromium\Exception\NoResponseAvailable
+     * @throws CommunicationException
+     * @throws NoResponseAvailable
      *
      * @return $this
      */

@@ -1,6 +1,9 @@
+includes:
+    - phpstan-baseline.neon
+    - vendor-bin/phpstan/vendor/phpstan/phpstan-deprecation-rules/rules.neon
+
 parameters:
-    level: 3
+    level: 5
 
     paths:
         - src
-        - tests

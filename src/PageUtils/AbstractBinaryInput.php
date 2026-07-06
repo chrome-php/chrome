@@ -11,6 +11,7 @@
 
 namespace HeadlessChromium\PageUtils;
 
+use Exception;
 use HeadlessChromium\Communication\ResponseReader;
 use HeadlessChromium\Exception\FilesystemException;
 use HeadlessChromium\Exception\ScreenshotFailed;
@@ -113,7 +114,7 @@ abstract class AbstractBinaryInput
     /**
      * @internal
      *
-     * @return \Exception
+     * @return Exception
      */
-    abstract protected function getException(string $message): \Exception;
+    abstract protected function getException(string $message): Exception;
 }

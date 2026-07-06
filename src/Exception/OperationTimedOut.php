@@ -11,7 +11,9 @@
 
 namespace HeadlessChromium\Exception;
 
-class OperationTimedOut extends \Exception
+use Exception;
+
+class OperationTimedOut extends Exception
 {
     public static function createFromTimeout(int $timeoutMicroSec): self
     {

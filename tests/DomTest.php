@@ -6,6 +6,7 @@ use Generator;
 use HeadlessChromium\Browser;
 use HeadlessChromium\BrowserFactory;
 use HeadlessChromium\Exception\StaleElementException;
+use InvalidArgumentException;
 
 /**
  * @covers \HeadlessChromium\Dom\Dom
@@ -181,7 +182,7 @@ class DomTest extends BaseTestCase
 
         $element = $page->dom()->querySelector('#elem');
 
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
 
         $element->getPosition('-invalid-');
     }

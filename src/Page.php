@@ -11,6 +11,7 @@
 
 namespace HeadlessChromium;
 
+use Generator;
 use HeadlessChromium\Communication\Message;
 use HeadlessChromium\Communication\Session;
 use HeadlessChromium\Communication\Target;
@@ -36,6 +37,7 @@ use HeadlessChromium\PageUtils\PageNavigation;
 use HeadlessChromium\PageUtils\PagePdf;
 use HeadlessChromium\PageUtils\PageScreenshot;
 use HeadlessChromium\PageUtils\ResponseWaiter;
+use InvalidArgumentException;
 
 class Page
 {
@@ -74,7 +76,7 @@ class Page
     /**
      * @var Dom|null
      */
-    protected $dom = null;
+    protected $dom;
 
     /**
      * Page constructor.
@@ -325,7 +327,7 @@ class Page
     public function addScriptTag(array $options): PageEvaluation
     {
         if (isset($options['url']) && isset($options['content'])) {
-            throw new \InvalidArgumentException('addScript accepts "url" or "content" option, not both');
+            throw new InvalidArgumentException('addScript accepts "url" or "content" option, not both');
         } elseif (isset($options['url'])) {
             $scriptFunction = 'async function(src) {
                 const script = document.createElement("script");
@@ -358,7 +360,7 @@ class Page
             }';
             $arguments = [$options['content']];
         } else {
-            throw new \InvalidArgumentException('addScript requires one of "url" or "content" option');
+            throw new InvalidArgumentException('addScript requires one of "url" or "content" option');
         }
 
         return $this->callFunction($scriptFunction, $arguments);
@@ -415,7 +417,7 @@ class Page
      *
      * @throws CommunicationException\CannotReadResponse
      * @throws CommunicationException\InvalidResponse
-     * @throws Exception\OperationTimedOut
+     * @throws OperationTimedOut
      *
      * @return $this
      */
@@ -439,7 +441,7 @@ class Page
      * @throws CommunicationException\CannotReadResponse
      * @throws CommunicationException\InvalidResponse
      *
-     * @return bool|\Generator
+     * @return bool|Generator
      *
      * @internal
      */
@@ -456,7 +458,7 @@ class Page
 
                 yield $delay;
 
-                // else if frame has still the previous loader, wait for the new one
+            // else if frame has still the previous loader, wait for the new one
             } else {
                 yield $delay;
             }
@@ -493,13 +495,13 @@ class Page
      * @throws CommunicationException
      * @throws EvaluationFailed
      *
-     * @return bool|\Generator
+     * @return bool|Generator
      *
      * @internal
      */
     public function waitForElement($selectors, int $position = 1)
     {
-        if (!($selectors instanceof Selector)) {
+        if (!$selectors instanceof Selector) {
             $selectors = new CssSelector($selectors);
         }
 
@@ -634,24 +636,24 @@ class Page
 
         // make sure format is valid
         if (!\in_array($screenshotOptions['format'], ['png', 'jpeg', 'webp'])) {
-            throw new \InvalidArgumentException('Invalid options "format" for page screenshot. Format must be "png", "jpeg" or "webp".');
+            throw new InvalidArgumentException('Invalid options "format" for page screenshot. Format must be "png", "jpeg" or "webp".');
         }
 
         // get quality
         if (\array_key_exists('quality', $options)) {
             // quality requires type to be jpeg or webp
             if (!\in_array($screenshotOptions['format'], ['jpeg', 'webp'])) {
-                throw new \InvalidArgumentException('Invalid options "quality" for page screenshot. Quality requires the image format to be "jpeg" or "webp".');
+                throw new InvalidArgumentException('Invalid options "quality" for page screenshot. Quality requires the image format to be "jpeg" or "webp".');
             }
 
             // quality must be an integer
             if (!\is_int($options['quality'])) {
-                throw new \InvalidArgumentException('Invalid options "quality" for page screenshot. Quality must be an integer value.');
+                throw new InvalidArgumentException('Invalid options "quality" for page screenshot. Quality must be an integer value.');
             }
 
             // quality must be between 0 and 100
             if ($options['quality'] < 0 || $options['quality'] > 100) {
-                throw new \InvalidArgumentException('Invalid options "quality" for page screenshot. Quality must be comprised between 0 and 100.');
+                throw new InvalidArgumentException('Invalid options "quality" for page screenshot. Quality must be comprised between 0 and 100.');
             }
 
             // set quality
@@ -661,8 +663,8 @@ class Page
         // clip
         if (\array_key_exists('clip', $options)) {
             // make sure it's a Clip instance
-            if (!($options['clip'] instanceof Clip)) {
-                throw new \InvalidArgumentException(\sprintf('Invalid options "clip" for page screenshot, it must be a %s instance.', Clip::class));
+            if (!$options['clip'] instanceof Clip) {
+                throw new InvalidArgumentException(\sprintf('Invalid options "clip" for page screenshot, it must be a %s instance.', Clip::class));
             }
 
             // add to params
@@ -678,7 +680,7 @@ class Page
         // optimize for speed
         if (\array_key_exists('optimizeForSpeed', $options)) {
             if (!\is_bool($options['optimizeForSpeed'])) {
-                throw new \InvalidArgumentException('Invalid options "optimizeForSpeed" for page screenshot. OptimizeForSpeed must be a boolean value.');
+                throw new InvalidArgumentException('Invalid options "optimizeForSpeed" for page screenshot. OptimizeForSpeed must be a boolean value.');
             }
 
             $screenshotOptions['optimizeForSpeed'] = $options['optimizeForSpeed'];
@@ -724,7 +726,7 @@ class Page
      *                       - scale: default 1
      *
      * @throws CommunicationException
-     * @throws \InvalidArgumentException
+     * @throws InvalidArgumentException
      *
      * @return PagePdf
      */
@@ -950,6 +952,7 @@ class Page
 
                 return $this->evaluate('document.documentElement.outerHTML')->getReturnValue($timeout);
             }
+
             throw $e;
         }
     }
@@ -1029,7 +1032,7 @@ class Page
      * @param int|null $timeout
      *
      * @throws CommunicationException
-     * @throws Exception\OperationTimedOut
+     * @throws OperationTimedOut
      * @throws NoResponseAvailable
      *
      * @return CookiesCollection
@@ -1049,7 +1052,7 @@ class Page
      * @param int|null $timeout
      *
      * @throws CommunicationException
-     * @throws Exception\OperationTimedOut
+     * @throws OperationTimedOut
      * @throws NoResponseAvailable
      *
      * @return CookiesCollection

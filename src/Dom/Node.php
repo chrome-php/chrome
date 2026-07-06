@@ -10,6 +10,7 @@ use HeadlessChromium\Communication\Response;
 use HeadlessChromium\Exception\DomException;
 use HeadlessChromium\Exception\StaleElementException;
 use HeadlessChromium\Page;
+use InvalidArgumentException;
 
 class Node
 {
@@ -134,7 +135,7 @@ class Node
     public function getPosition(string $boxModel = 'content'): ?NodePosition
     {
         if (!\in_array($boxModel, ['content', 'padding', 'border', 'margin'], true)) {
-            throw new \InvalidArgumentException('Invalid box model "'.$boxModel.'" for node position. Box model must be "content", "padding", "border" or "margin".');
+            throw new InvalidArgumentException('Invalid box model "'.$boxModel.'" for node position. Box model must be "content", "padding", "border" or "margin".');
         }
 
         $message = new Message('DOM.getBoxModel', [
@@ -148,9 +149,9 @@ class Node
 
         if (null !== $points) {
             return new NodePosition($points);
-        } else {
-            return null;
         }
+
+        return null;
     }
 
     public function hasPosition(): bool

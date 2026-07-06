@@ -11,6 +11,7 @@
 
 namespace HeadlessChromium;
 
+use Exception;
 use HeadlessChromium\Communication\Connection;
 use HeadlessChromium\Communication\Message;
 use HeadlessChromium\Communication\Target;
@@ -18,6 +19,7 @@ use HeadlessChromium\Exception\CommunicationException;
 use HeadlessChromium\Exception\CommunicationException\ResponseHasError;
 use HeadlessChromium\Exception\NoResponseAvailable;
 use HeadlessChromium\Exception\OperationTimedOut;
+use RuntimeException;
 
 class Browser
 {
@@ -137,7 +139,7 @@ class Browser
     /**
      * Closes the browser.
      *
-     * @throws \Exception
+     * @throws Exception
      */
     public function close(): void
     {
@@ -160,7 +162,8 @@ class Browser
         if (!$r->isSuccessful()) {
             // log
             $this->connection->getLogger()->debug('process: ✗ could not close gracefully');
-            throw new \Exception('cannot close, Browser.close not supported');
+
+            throw new Exception('cannot close, Browser.close not supported');
         }
         $this->connection->disconnect();
     }
@@ -187,7 +190,7 @@ class Browser
 
         $target = $this->getTarget($targetId);
         if (!$target) {
-            throw new \RuntimeException('Target could not be created for page.');
+            throw new RuntimeException('Target could not be created for page.');
         }
 
         $page = $this->getPage($targetId);

@@ -12,13 +12,14 @@
 namespace HeadlessChromium\PageUtils;
 
 use HeadlessChromium\Cookies\CookiesCollection;
+use HeadlessChromium\Exception\NoResponseAvailable;
 
 class CookiesGetter extends ResponseWaiter
 {
     /**
      * Gets the cookies collection.
      *
-     * @throws \HeadlessChromium\Exception\NoResponseAvailable
+     * @throws NoResponseAvailable
      *
      * @return CookiesCollection
      */

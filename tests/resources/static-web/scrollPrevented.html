@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>wheel prevented</title>
+    <style>
+        html, body { margin: 0; padding: 0; }
+        #spacer { height: 5000px; }
+    </style>
+</head>
+<body>
+<div id="spacer">wheel events are consumed</div>
+<script>
+    // A non-passive wheel listener that consumes the event: the page never scrolls,
+    // and the devtools protocol exposes no signal that this happened.
+    window.addEventListener('wheel', function (event) {
+        event.preventDefault();
+    }, { passive: false });
+</script>
+</body>
+</html>

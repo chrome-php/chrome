@@ -11,13 +11,19 @@
 
 namespace HeadlessChromium\Input;
 
+use Generator;
 use HeadlessChromium\Communication\Message;
 use HeadlessChromium\Dom\Selector\CssSelector;
 use HeadlessChromium\Dom\Selector\Selector;
+use HeadlessChromium\Exception\CommunicationException;
+use HeadlessChromium\Exception\CommunicationException\ResponseHasError;
 use HeadlessChromium\Exception\ElementNotFoundException;
 use HeadlessChromium\Exception\JavascriptException;
+use HeadlessChromium\Exception\NoResponseAvailable;
+use HeadlessChromium\Exception\OperationTimedOut;
 use HeadlessChromium\Page;
 use HeadlessChromium\Utils;
+use InvalidArgumentException;
 
 class Mouse
 {
@@ -25,6 +31,11 @@ class Mouse
     public const BUTTON_NONE = 'none';
     public const BUTTON_RIGHT = 'right';
     public const BUTTON_MIDDLE = 'middle';
+
+    private const SCROLL_TIMEOUT = 10_000_000;
+    private const SCROLL_POLL_INTERVAL = 16_000; // one frame at 60Hz, in microseconds
+    private const SCROLL_SETTLE_READS = 5;
+    private const SCROLL_UNMOVED_SETTLE_READS = 15; // covers compositor-to-main commit latency when nothing scrolls
 
     /**
      * @var Page
@@ -49,8 +60,8 @@ class Mouse
      * @param int        $y
      * @param array|null $options
      *
-     * @throws \HeadlessChromium\Exception\CommunicationException
-     * @throws \HeadlessChromium\Exception\NoResponseAvailable
+     * @throws CommunicationException
+     * @throws NoResponseAvailable
      *
      * @return $this
      */
@@ -69,7 +80,7 @@ class Mouse
         // number of steps to achieve the move
         $steps = $options['steps'] ?? 1;
         if ($steps <= 0) {
-            throw new \InvalidArgumentException('options "steps" for mouse move must be a positive integer');
+            throw new InvalidArgumentException('options "steps" for mouse move must be a positive integer');
         }
 
         // move
@@ -85,8 +96,8 @@ class Mouse
     }
 
     /**
-     * @throws \HeadlessChromium\Exception\CommunicationException
-     * @throws \HeadlessChromium\Exception\NoResponseAvailable
+     * @throws CommunicationException
+     * @throws NoResponseAvailable
      */
     public function press(?array $options = null)
     {
@@ -103,8 +114,8 @@ class Mouse
     }
 
     /**
-     * @throws \HeadlessChromium\Exception\CommunicationException
-     * @throws \HeadlessChromium\Exception\NoResponseAvailable
+     * @throws CommunicationException
+     * @throws NoResponseAvailable
      */
     public function release(?array $options = null)
     {
@@ -123,8 +134,8 @@ class Mouse
     /**
      * @param array|null $options
      *
-     * @throws \HeadlessChromium\Exception\CommunicationException
-     * @throws \HeadlessChromium\Exception\NoResponseAvailable
+     * @throws CommunicationException
+     * @throws NoResponseAvailable
      */
     public function click(?array $options = null)
     {
@@ -139,8 +150,9 @@ class Mouse
      *
      * @param int $distance Distance in pixels
      *
-     * @throws \HeadlessChromium\Exception\CommunicationException
-     * @throws \HeadlessChromium\Exception\NoResponseAvailable
+     * @throws CommunicationException
+     * @throws NoResponseAvailable
+     * @throws OperationTimedOut
      *
      * @return $this
      */
@@ -154,8 +166,9 @@ class Mouse
      *
      * @param int $distance Distance in pixels
      *
-     * @throws \HeadlessChromium\Exception\CommunicationException
-     * @throws \HeadlessChromium\Exception\NoResponseAvailable
+     * @throws CommunicationException
+     * @throws NoResponseAvailable
+     * @throws OperationTimedOut
      *
      * @return $this
      */
@@ -167,12 +180,18 @@ class Mouse
     /**
      * Scroll a positive or negative distance using the mouseWheel event type.
      *
+     * The requested distance is clamped to the current scroll boundaries of the page. The method
+     * returns once the scroll position has settled, which is not necessarily at the requested
+     * distance: the page may shrink, grow, lock scrolling, or consume the wheel event while the
+     * scroll is in flight.
+     *
      * @param int $distanceY Distance in pixels for the Y axis
      * @param int $distanceX (optional) Distance in pixels for the X axis
      *
-     * @throws \HeadlessChromium\Exception\CommunicationException
-     * @throws \HeadlessChromium\Exception\NoResponseAvailable
-     * @throws \HeadlessChromium\Exception\OperationTimedOut
+     * @throws CommunicationException
+     * @throws ResponseHasError
+     * @throws NoResponseAvailable
+     * @throws OperationTimedOut
      *
      * @return $this
      */
@@ -180,17 +199,24 @@ class Mouse
     {
         $this->page->assertNotClosed();
 
-        $scrollableArea = $this->page->getLayoutMetrics()->getCssContentSize();
-        $visibleArea = $this->page->getLayoutMetrics()->getCssVisualViewport();
+        $metrics = $this->page->getLayoutMetrics();
+        $scrollableArea = $metrics->getCssContentSize();
+        $visibleArea = $metrics->getCssVisualViewport();
 
-        $maximumX = $scrollableArea['width'] - $visibleArea['clientWidth'];
-        $maximumY = $scrollableArea['height'] - $visibleArea['clientHeight'];
+        // the protocol reports doubles that may be fractional (zoom, device pixel ratio)
+        $startX = (int) $visibleArea['pageX'];
+        $startY = (int) $visibleArea['pageY'];
 
-        $distanceX = $this->getMaximumDistance($distanceX, $visibleArea['pageX'], $maximumX);
-        $distanceY = $this->getMaximumDistance($distanceY, $visibleArea['pageY'], $maximumY);
+        // scrollbar asymmetries can push the raw difference slightly negative
+        $maximumX = \max(0, (int) ($scrollableArea['width'] - $visibleArea['clientWidth']));
+        $maximumY = \max(0, (int) ($scrollableArea['height'] - $visibleArea['clientHeight']));
 
-        $targetX = $visibleArea['pageX'] + $distanceX;
-        $targetY = $visibleArea['pageY'] + $distanceY;
+        $distanceX = $this->getMaximumDistance($distanceX, $startX, $maximumX);
+        $distanceY = $this->getMaximumDistance($distanceY, $startY, $maximumY);
+
+        if (0 === $distanceX && 0 === $distanceY) {
+            return $this;
+        }
 
         // make sure the mouse is on the screen
         $this->move($this->x, $this->y);
@@ -205,11 +231,12 @@ class Mouse
         ]));
 
         // wait until the scroll is done
-        Utils::tryWithTimeout(30000 * 1000, $this->waitForScroll($targetX, $targetY));
+        Utils::tryWithTimeout(self::SCROLL_TIMEOUT, $this->waitForScrollToSettle($startX, $startY, $startX + $distanceX, $startY + $distanceY));
 
         // set new position after move
-        $this->x += $distanceX;
-        $this->y += $distanceY;
+        $endPosition = $this->getCurrentScrollPosition();
+        $this->x += $endPosition['x'] - $startX;
+        $this->y += $endPosition['y'] - $startY;
 
         return $this;
     }
@@ -258,9 +285,9 @@ class Mouse
      * @param string $selectors selectors to use with document.querySelector
      * @param int    $position  (optional) which element of the result set should be used
      *
-     * @throws \HeadlessChromium\Exception\CommunicationException
-     * @throws \HeadlessChromium\Exception\NoResponseAvailable
-     * @throws \HeadlessChromium\Exception\ElementNotFoundException
+     * @throws CommunicationException
+     * @throws NoResponseAvailable
+     * @throws ElementNotFoundException
      *
      * @return $this
      */
@@ -286,9 +313,9 @@ class Mouse
      * @param Selector $selector selector to use
      * @param int      $position (optional) which element of the result set should be used
      *
-     * @throws \HeadlessChromium\Exception\CommunicationException
-     * @throws \HeadlessChromium\Exception\NoResponseAvailable
-     * @throws \HeadlessChromium\Exception\ElementNotFoundException
+     * @throws CommunicationException
+     * @throws NoResponseAvailable
+     * @throws ElementNotFoundException
      *
      * @return $this
      */
@@ -351,29 +378,72 @@ class Mouse
     }
 
     /**
-     * Wait for the browser to process the scroll command.
+     * Get the current page scroll position in CSS pixels.
      *
-     * Return the number of microseconds to wait before trying again or true in case of success.
+     * The protocol reports doubles that may be fractional (zoom, device pixel ratio), so the
+     * values are truncated to allow positions to be compared for equality.
      *
-     * @see \HeadlessChromium\Utils::tryWithTimeout
+     * @throws CommunicationException
+     * @throws ResponseHasError
+     * @throws NoResponseAvailable
+     * @throws OperationTimedOut
      *
-     * @param int $targetX
-     * @param int $targetY
-     *
-     * @throws \HeadlessChromium\Exception\OperationTimedOut
-     *
-     * @return bool|\Generator
+     * @return array{x: int, y: int}
      */
-    private function waitForScroll(int $targetX, int $targetY)
+    private function getCurrentScrollPosition(): array
     {
-        while (true) {
-            $visibleArea = $this->page->getLayoutMetrics()->getCssVisualViewport();
+        $viewport = $this->page->getLayoutMetrics()->getCssVisualViewport();
 
-            if ($visibleArea['pageX'] === $targetX && $visibleArea['pageY'] === $targetY) {
-                return true;
+        return ['x' => (int) $viewport['pageX'], 'y' => (int) $viewport['pageY']];
+    }
+
+    /**
+     * Wait for the page's scroll position to settle after a wheel event.
+     *
+     * The browser applies wheel scrolling on the compositor thread and commits the new offset to
+     * the main thread on a later frame, and the position can keep shifting afterwards (scroll
+     * anchoring, overlays, lazy-loaded content), so waiting for an exact pre-computed target can
+     * wait forever. Instead, return as soon as the expected target is reached, or once the
+     * position stops changing across consecutive reads. A position that never left the start is
+     * given a longer grace period, since the scroll may not have been committed yet or the wheel
+     * event may have been consumed by the page.
+     *
+     * Yields the number of microseconds to wait between reads.
+     *
+     * @see Utils::tryWithTimeout
+     *
+     * @throws CommunicationException
+     * @throws ResponseHasError
+     * @throws NoResponseAvailable
+     * @throws OperationTimedOut
+     */
+    private function waitForScrollToSettle(int $startX, int $startY, int $targetX, int $targetY): Generator
+    {
+        $stableReads = 0;
+        $lastX = $lastY = null;
+
+        while (true) {
+            $position = $this->getCurrentScrollPosition();
+
+            if ($position['x'] === $targetX && $position['y'] === $targetY) {
+                return;
             }
 
-            yield 1000;
+            if ($position['x'] === $lastX && $position['y'] === $lastY) {
+                ++$stableReads;
+            } else {
+                $stableReads = 1;
+                $lastX = $position['x'];
+                $lastY = $position['y'];
+            }
+
+            $moved = $position['x'] !== $startX || $position['y'] !== $startY;
+
+            if ($stableReads >= ($moved ? self::SCROLL_SETTLE_READS : self::SCROLL_UNMOVED_SETTLE_READS)) {
+                return;
+            }
+
+            yield self::SCROLL_POLL_INTERVAL;
         }
     }
 

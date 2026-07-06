@@ -11,7 +11,10 @@
 
 namespace HeadlessChromium\Communication;
 
-class Response implements \ArrayAccess
+use ArrayAccess;
+use Exception;
+
+class Response implements ArrayAccess
 {
     protected $message;
 
@@ -121,7 +124,7 @@ class Response implements \ArrayAccess
      */
     public function offsetSet($offset, $value): void
     {
-        throw new \Exception('Responses are immutable');
+        throw new Exception('Responses are immutable');
     }
 
     /**
@@ -129,6 +132,6 @@ class Response implements \ArrayAccess
      */
     public function offsetUnset($offset): void
     {
-        throw new \Exception('Responses are immutable');
+        throw new Exception('Responses are immutable');
     }
 }

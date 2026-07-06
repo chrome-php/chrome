@@ -21,6 +21,8 @@ use HeadlessChromium\Exception\CommunicationException\CantSyncEventsException;
 use HeadlessChromium\Exception\CommunicationException\InvalidResponse;
 use HeadlessChromium\Exception\OperationTimedOut;
 use HeadlessChromium\Exception\TargetDestroyed;
+use InvalidArgumentException;
+use JsonException;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
 use Psr\Log\LoggerInterface;
@@ -110,7 +112,7 @@ class Connection extends EventEmitter implements LoggerAwareInterface
         if (\is_string($socketClient)) {
             $socketClient = new Wrench(new WrenchBaseClient($socketClient, 'http://127.0.0.1'), $this->logger);
         } elseif (!\is_object($socketClient) && !$socketClient instanceof SocketInterface) {
-            throw new \InvalidArgumentException('$socketClient param should be either a SockInterface instance or a web socket uri string');
+            throw new InvalidArgumentException('$socketClient param should be either a SockInterface instance or a web socket uri string');
         }
 
         $this->wsClient = $socketClient;
@@ -386,7 +388,7 @@ class Connection extends EventEmitter implements LoggerAwareInterface
     {
         try {
             $response = \json_decode($message, true, 512, \JSON_THROW_ON_ERROR);
-        } catch (\JsonException $e) {
+        } catch (JsonException $e) {
             if ($this->isStrict()) {
                 throw new CannotReadResponse('Response from chrome remote interface is not a valid JSON response', 0, $e);
             }
@@ -410,19 +412,18 @@ class Connection extends EventEmitter implements LoggerAwareInterface
                     $session = $this->sessions[$response['params']['sessionId']];
 
                     return $this->dispatchMessage($response['params']['message'], $session);
+                }
+                if (!$session && isset($response['sessionId'])) {
+                    $session = $this->sessions[$response['sessionId']] ?? null;
+                }
+                if ($session) {
+                    $this->logger->debug(
+                        'session('.$session->getSessionId().'): ⇶ dispatching method:'.$response['method']
+                    );
+                    $session->emit('method:'.$response['method'], [$response['params']]);
                 } else {
-                    if (!$session && isset($response['sessionId'])) {
-                        $session = $this->sessions[$response['sessionId']] ?? null;
-                    }
-                    if ($session) {
-                        $this->logger->debug(
-                            'session('.$session->getSessionId().'): ⇶ dispatching method:'.$response['method']
-                        );
-                        $session->emit('method:'.$response['method'], [$response['params']]);
-                    } else {
-                        $this->logger->debug('connection: ⇶ dispatching method:'.$response['method']);
-                        $this->emit('method:'.$response['method'], [$response['params']]);
-                    }
+                    $this->logger->debug('connection: ⇶ dispatching method:'.$response['method']);
+                    $this->emit('method:'.$response['method'], [$response['params']]);
                 }
 
                 return false;

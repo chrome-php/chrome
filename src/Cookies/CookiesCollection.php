@@ -11,7 +11,12 @@
 
 namespace HeadlessChromium\Cookies;
 
-class CookiesCollection implements \IteratorAggregate, \Countable
+use ArrayIterator;
+use Countable;
+use IteratorAggregate;
+use RuntimeException;
+
+class CookiesCollection implements IteratorAggregate, Countable
 {
     /**
      * @var Cookie[]
@@ -47,7 +52,7 @@ class CookiesCollection implements \IteratorAggregate, \Countable
     #[\ReturnTypeWillChange]
     public function getIterator()
     {
-        return new \ArrayIterator($this->cookies);
+        return new ArrayIterator($this->cookies);
     }
 
     /**
@@ -69,7 +74,7 @@ class CookiesCollection implements \IteratorAggregate, \Countable
     public function getAt($i): Cookie
     {
         if (!isset($this->cookies[$i])) {
-            throw new \RuntimeException(\sprintf('No cookie at index %s', $i));
+            throw new RuntimeException(\sprintf('No cookie at index %s', $i));
         }
 
         return $this->cookies[$i];

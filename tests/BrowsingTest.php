@@ -13,6 +13,8 @@ namespace HeadlessChromium\Test;
 
 use HeadlessChromium\Browser;
 use HeadlessChromium\BrowserFactory;
+use HeadlessChromium\Exception\CommunicationException;
+use HeadlessChromium\Exception\NoResponseAvailable;
 
 /**
  * @covers \HeadlessChromium\Browser
@@ -44,8 +46,8 @@ class BrowsingTest extends BaseTestCase
     }
 
     /**
-     * @throws \HeadlessChromium\Exception\CommunicationException
-     * @throws \HeadlessChromium\Exception\NoResponseAvailable
+     * @throws CommunicationException
+     * @throws NoResponseAvailable
      */
     public function testPageNavigateEvaluate(): void
     {
@@ -114,8 +116,8 @@ class BrowsingTest extends BaseTestCase
     }
 
     /**
-     * @throws \HeadlessChromium\Exception\CommunicationException
-     * @throws \HeadlessChromium\Exception\NoResponseAvailable
+     * @throws CommunicationException
+     * @throws NoResponseAvailable
      */
     public function testGetPagesNavigateEvaluate(): void
     {

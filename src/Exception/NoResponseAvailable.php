@@ -11,6 +11,8 @@
 
 namespace HeadlessChromium\Exception;
 
-class NoResponseAvailable extends \Exception
+use Exception;
+
+class NoResponseAvailable extends Exception
 {
 }

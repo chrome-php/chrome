@@ -12,6 +12,8 @@
 namespace HeadlessChromium\Test;
 
 use HeadlessChromium\PageUtils\PagePdf;
+use InvalidArgumentException;
+use stdClass;
 
 /**
  * @covers \HeadlessChromium\PagePdf
@@ -49,7 +51,7 @@ class PagePdfTest extends BaseTestCase
             self::getOptionsDataset('landscape', self::TYPES_STRING),
             self::getOptionsDataset('headerTemplate', self::TYPES_NUMERIC),
             self::getOptionsDataset('scale', self::TYPES_STRING),
-            [['headerTemplate', new \stdClass()]],
+            [['headerTemplate', new stdClass()]],
             [['footerTemplate', []]],
             [['unknown_field',  1]],
         );
@@ -81,7 +83,7 @@ class PagePdfTest extends BaseTestCase
      */
     public function testInvalidOptions(string $optionName, $optionValue): void
     {
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
 
         $this->pagePdf->setOptions([$optionName => $optionValue]);
     }

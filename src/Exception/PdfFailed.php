@@ -11,6 +11,8 @@
 
 namespace HeadlessChromium\Exception;
 
-class PdfFailed extends \Exception
+use Exception;
+
+class PdfFailed extends Exception
 {
 }
