@@ -348,6 +348,18 @@ class Connection extends EventEmitter implements LoggerAwareInterface
         return false;
     }
 
+    /**
+     * Waits for data to be available on the socket, when supported.
+     *
+     * @param float $maxSeconds the maximum amount of time to wait, in seconds
+     *
+     * @return bool true if data is available to be read
+     */
+    public function waitForData(float $maxSeconds): bool
+    {
+        return $this->wsClient instanceof WaitForDataInterface && $this->wsClient->waitForData($maxSeconds);
+    }
+
     public function processAllEvents(): void
     {
         if (false === $this->wsClient instanceof WaitForDataInterface) {
