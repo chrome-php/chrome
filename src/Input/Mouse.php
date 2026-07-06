@@ -42,8 +42,8 @@ class Mouse
      */
     protected $page;
 
-    protected $x = 0;
-    protected $y = 0;
+    protected $x = 0.0;
+    protected $y = 0.0;
 
     protected $button = self::BUTTON_NONE;
 
@@ -56,8 +56,8 @@ class Mouse
     }
 
     /**
-     * @param int        $x
-     * @param int        $y
+     * @param float      $x
+     * @param float      $y
      * @param array|null $options
      *
      * @throws CommunicationException
@@ -65,7 +65,7 @@ class Mouse
      *
      * @return $this
      */
-    public function move(int $x, int $y, ?array $options = null)
+    public function move(float $x, float $y, ?array $options = null)
     {
         $this->page->assertNotClosed();
 
@@ -336,7 +336,7 @@ class Mouse
         $rightBoundary = \floor($element['right']);
         $bottomBoundary = \floor($element['bottom']);
 
-        $this->scrollToBoundary($rightBoundary, $bottomBoundary);
+        $this->scrollToBoundary((int) $rightBoundary, (int) $bottomBoundary);
 
         $visibleArea = $this->page->getLayoutMetrics()->getLayoutViewport();
 
@@ -345,8 +345,8 @@ class Mouse
         $minX = $element['left'] - $offsetX;
         $minY = $element['top'] - $offsetY;
 
-        $positionX = \floor($minX + (($rightBoundary - $offsetX) - $minX) / 2);
-        $positionY = \ceil($minY + (($bottomBoundary - $offsetY) - $minY) / 2);
+        $positionX = $minX + (($rightBoundary - $offsetX) - $minX) / 2;
+        $positionY = $minY + (($bottomBoundary - $offsetY) - $minY) / 2;
 
         $this->move($positionX, $positionY);
 
@@ -450,7 +450,7 @@ class Mouse
     /**
      * Get the current mouse position.
      *
-     * @return array [x, y]
+     * @return array{x: float, y: float}
      */
     public function getPosition(): array
     {

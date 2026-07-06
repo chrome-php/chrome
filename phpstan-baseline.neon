@@ -73,30 +73,6 @@ parameters:
 			path: src/Communication/Session.php
 
 		-
-			message: '#^Parameter \#1 \$right of method HeadlessChromium\\Input\\Mouse\:\:scrollToBoundary\(\) expects int, \(float\|false\) given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Input/Mouse.php
-
-		-
-			message: '#^Parameter \#1 \$x of method HeadlessChromium\\Input\\Mouse\:\:move\(\) expects int, float given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Input/Mouse.php
-
-		-
-			message: '#^Parameter \#2 \$bottom of method HeadlessChromium\\Input\\Mouse\:\:scrollToBoundary\(\) expects int, \(float\|false\) given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Input/Mouse.php
-
-		-
-			message: '#^Parameter \#2 \$y of method HeadlessChromium\\Input\\Mouse\:\:move\(\) expects int, float given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Input/Mouse.php
-
-		-
 			message: '#^Parameter \#3 \$loaderId of method HeadlessChromium\\Page\:\:waitForReload\(\) expects null, string given\.$#'
 			identifier: argument.type
 			count: 1
