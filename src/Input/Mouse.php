@@ -36,6 +36,8 @@ class Mouse
     private const SCROLL_POLL_INTERVAL = 16_000; // one frame at 60Hz, in microseconds
     private const SCROLL_SETTLE_READS = 5;
     private const SCROLL_UNMOVED_SETTLE_READS = 15; // covers compositor-to-main commit latency when nothing scrolls
+    private const FIND_ELEMENT_MAX_ATTEMPTS = 50;
+    private const FIND_ELEMENT_POLL_INTERVAL = 20_000; // in microseconds
 
     /**
      * @var Page
@@ -242,34 +244,6 @@ class Mouse
     }
 
     /**
-     * Scroll in both X and Y axis until the given boundaries fit in the screen.
-     *
-     * This method currently scrolls only to right and bottom. If the desired element is outside the visible screen
-     * to the left or top, thie method will not work. Its visibility will stay private until it works for both cases.
-     *
-     * @param int $right  The element right boundary
-     * @param int $bottom The element bottom boundary
-     *
-     * @return $this
-     */
-    private function scrollToBoundary(int $right, int $bottom): self
-    {
-        $visibleArea = $this->page->getLayoutMetrics()->getCssLayoutViewport();
-
-        $distanceX = $distanceY = 0;
-
-        if ($right > $visibleArea['clientWidth']) {
-            $distanceX = $right - $visibleArea['clientWidth'];
-        }
-
-        if ($bottom > $visibleArea['clientHeight']) {
-            $distanceY = $bottom - $visibleArea['clientHeight'];
-        }
-
-        return $this->scroll($distanceY, $distanceX);
-    }
-
-    /**
      * Find an element and move the mouse to a random position over it.
      *
      * The search could result in several elements. The $position param can be used to select a specific element.
@@ -324,7 +298,35 @@ class Mouse
         $this->page->assertNotClosed();
 
         try {
-            $element = Utils::getElementPositionFromPage($this->page, $selector, $position);
+            $elementCount = $this->page
+                ->evaluate(\sprintf('JSON.parse(JSON.stringify(%s));', $selector->expressionCount()))
+                ->getReturnValue();
+
+            $position = \max(1, \min($position, (int) $elementCount));
+
+            // scroll the element into view and read its position relative to the viewport,
+            // repeating until the position is stable and visible: wheel events cannot be
+            // used here, and a single scroll may not be enough, because the viewport of
+            // chrome 128 to 143 resizes itself shortly after startup, invalidating any
+            // scroll target computed against the layout from before the resize
+            $element = null;
+
+            for ($attempt = 0; $attempt < self::FIND_ELEMENT_MAX_ATTEMPTS; ++$attempt) {
+                $previous = $element;
+
+                $element = $this->page
+                    ->evaluate(\sprintf(
+                        '(function () { var element = %s; element.scrollIntoView({block: "nearest", inline: "nearest"}); var rect = element.getBoundingClientRect(); return {x: rect.x, left: rect.left, top: rect.top, width: rect.width, height: rect.height, viewportWidth: window.innerWidth, viewportHeight: window.innerHeight}; })();',
+                        $selector->expressionFindOne($position)
+                    ))
+                    ->getReturnValue();
+
+                if ($element === $previous && $this->isElementCenterVisible($element)) {
+                    break;
+                }
+
+                \usleep(self::FIND_ELEMENT_POLL_INTERVAL);
+            }
         } catch (JavascriptException $exception) {
             throw new ElementNotFoundException('The search for "'.$selector->expressionCount().'" returned no result.');
         }
@@ -333,24 +335,26 @@ class Mouse
             throw new ElementNotFoundException('The search for "'.$selector->expressionFindOne($position).'" returned an element with no position.');
         }
 
-        $rightBoundary = \floor($element['right']);
-        $bottomBoundary = \floor($element['bottom']);
-
-        $this->scrollToBoundary((int) $rightBoundary, (int) $bottomBoundary);
-
-        $visibleArea = $this->page->getLayoutMetrics()->getLayoutViewport();
-
-        $offsetX = $visibleArea['pageX'];
-        $offsetY = $visibleArea['pageY'];
-        $minX = $element['left'] - $offsetX;
-        $minY = $element['top'] - $offsetY;
-
-        $positionX = $minX + (($rightBoundary - $offsetX) - $minX) / 2;
-        $positionY = $minY + (($bottomBoundary - $offsetY) - $minY) / 2;
-
-        $this->move($positionX, $positionY);
+        // move the mouse to the center of the element
+        $this->move($element['left'] + $element['width'] / 2, $element['top'] + $element['height'] / 2);
 
         return $this;
+    }
+
+    /**
+     * Check that the center of an element position is within the viewport.
+     */
+    private function isElementCenterVisible(array $element): bool
+    {
+        if (false === \array_key_exists('x', $element)) {
+            return false;
+        }
+
+        $centerX = $element['left'] + $element['width'] / 2;
+        $centerY = $element['top'] + $element['height'] / 2;
+
+        return $centerX >= 0 && $centerX < $element['viewportWidth']
+            && $centerY >= 0 && $centerY < $element['viewportHeight'];
     }
 
     /**

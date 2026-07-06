@@ -9,7 +9,7 @@ permissions:
 
 jobs:
   tests:
-    name: PHP ${{ matrix.php }}; Symfony ${{ matrix.symfony }}
+    name: PHP ${{ matrix.php }}; Symfony ${{ matrix.symfony }}; Chrome ${{ matrix.chrome }}
     runs-on: ubuntu-24.04
 
     strategy:
@@ -39,6 +39,15 @@ jobs:
             symfony: '8'
           - php: '8.5'
             symfony: '5'
+        include:
+          - symfony: '5'
+            chrome: '122'
+          - symfony: '6'
+            chrome: '130'
+          - symfony: '7'
+            chrome: '140'
+          - symfony: '8'
+            chrome: '150'
 
     steps:
       - name: Checkout Code
@@ -48,7 +57,7 @@ jobs:
         id: setup-chrome
         uses: browser-actions/setup-chrome@v2
         with:
-          chrome-version: 122
+          chrome-version: ${{ matrix.chrome }}
 
       - name: Setup PHP
         uses: shivammathur/setup-php@v2

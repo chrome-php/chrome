@@ -163,6 +163,12 @@ class BrowserProcess implements LoggerAwareInterface
         // create browser instance
         $this->browser = new ProcessAwareBrowser($connection, $this);
 
+        // pin the viewport size in headless mode: chrome 128 to 143 subtract window
+        // decorations from the headless viewport and resize it shortly after startup
+        if (!\array_key_exists('headless', $options) || $options['headless']) {
+            $this->browser->setPageViewportSize($options['windowSize'] ?? [800, 600]);
+        }
+
         // disable javascript execution for new pages if requested
         if (\array_key_exists('disableJavascript', $options) && (true === $options['disableJavascript'])) {
             $this->browser->setPageScriptExecutionDisabled(true);

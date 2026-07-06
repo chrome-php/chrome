@@ -46,6 +46,13 @@ class Browser
     protected $pagePreScript;
 
     /**
+     * A viewport size to be automatically set on every new page.
+     *
+     * @var array{0: int, 1: int}|null
+     */
+    protected $pageViewportSize;
+
+    /**
      * Whether JavaScript execution must be disabled on every new page.
      *
      * @var bool
@@ -110,6 +117,17 @@ class Browser
     public function setPagePreScript(?string $script = null): void
     {
         $this->pagePreScript = $script;
+    }
+
+    /**
+     * Set a viewport size to be set on every new page.
+     * Use null to keep the natural viewport size.
+     *
+     * @param array{0: int, 1: int}|null $size width and height
+     */
+    public function setPageViewportSize(?array $size = null): void
+    {
+        $this->pageViewportSize = $size;
     }
 
     /**
@@ -279,6 +297,11 @@ class Browser
 
         // Page.setLifecycleEventsEnabled
         $page->getSession()->sendMessageSync(new Message('Page.setLifecycleEventsEnabled', ['enabled' => true]));
+
+        // set the viewport size
+        if ($this->pageViewportSize) {
+            $page->setViewport($this->pageViewportSize[0], $this->pageViewportSize[1])->await();
+        }
 
         // set up http headers
         $headers = $this->connection->getConnectionHttpHeaders();
