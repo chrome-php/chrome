@@ -18,6 +18,9 @@ use HeadlessChromium\Exception\ScreenshotFailed;
 
 abstract class AbstractBinaryInput
 {
+    // must be a multiple of four so that each base64 chunk can be decoded on its own
+    private const WRITE_CHUNK_SIZE = 1024 * 1024;
+
     /**
      * @var ResponseReader
      */
@@ -114,10 +117,15 @@ abstract class AbstractBinaryInput
     /**
      * Save data to the given stream.
      *
-     * @param resource|null $stream If not provided, a php://temp is opened
+     * The data is decoded and written to the stream in chunks, avoiding
+     * allocating the decoded data in memory as a whole. The given stream
+     * must be blocking.
+     *
+     * @param resource|null $stream  If not provided, a php://temp stream is opened
      * @param int           $timeout
      *
      * @throws FilesystemException
+     * @throws ScreenshotFailed
      *
      * @return resource
      */
@@ -129,20 +137,45 @@ abstract class AbstractBinaryInput
             throw $this->getException($response->getErrorMessage());
         }
 
-        $ownStream = $stream === null;
+        $ownStream = null === $stream;
 
         if ($ownStream) {
             $stream = \fopen('php://temp', 'r+');
 
-            if ($stream === false) {
+            if (false === $stream) {
                 throw new FilesystemException('Could not open a temporary stream.');
+            }
+        } elseif (!\is_resource($stream)) {
+            throw new FilesystemException('The given stream is not a valid stream resource.');
+        }
+
+        $data = (string) $response->getResultData('data');
+        $length = \strlen($data);
+
+        for ($offset = 0; $offset < $length; $offset += self::WRITE_CHUNK_SIZE) {
+            $chunk = \base64_decode(\substr($data, $offset, self::WRITE_CHUNK_SIZE), true);
+
+            if (false === $chunk) {
+                throw $this->getException('Failed to decode the data to save.');
+            }
+
+            $chunkLength = \strlen($chunk);
+            $written = 0;
+
+            while ($written < $chunkLength) {
+                $result = @\fwrite($stream, 0 === $written ? $chunk : \substr($chunk, $written));
+
+                if (false === $result || 0 === $result) {
+                    throw new FilesystemException('Could not write to the given stream.');
+                }
+
+                $written += $result;
             }
         }
 
-        $filter = \stream_filter_append($stream, 'convert.base64-decode', STREAM_FILTER_WRITE);
-        \fwrite($stream, $response->getResultData('data'));
-        \stream_filter_remove($filter);
-        \fflush($stream);
+        if (!\fflush($stream)) {
+            throw new FilesystemException('Could not flush the given stream.');
+        }
 
         if ($ownStream) {
             \rewind($stream);

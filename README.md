@@ -527,11 +527,11 @@ header('Expires: 0');
 header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
 header('Pragma: public');
 
-$outputStream = \fopen('php://output', 'w');
+$outputStream = fopen('php://output', 'w');
 
 $pdf->saveToStream($outputStream);
 
-\fclose($outputStream);
+fclose($outputStream);
 ```
 
 Options `headerTemplate` and `footerTemplate`:
