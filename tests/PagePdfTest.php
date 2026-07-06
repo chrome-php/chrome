@@ -11,6 +11,12 @@
 
 namespace HeadlessChromium\Test;
 
+use HeadlessChromium\Communication\Connection;
+use HeadlessChromium\Communication\Message;
+use HeadlessChromium\Communication\ResponseReader;
+use HeadlessChromium\Communication\Socket\MockSocket;
+use HeadlessChromium\Exception\FilesystemException;
+use HeadlessChromium\Exception\PdfFailed;
 use HeadlessChromium\PageUtils\PagePdf;
 use InvalidArgumentException;
 use stdClass;
@@ -96,6 +102,93 @@ class PagePdfTest extends BaseTestCase
         self::assertInstanceOf(PagePdf::class, $this->pagePdf->setOptions([$optionName => $optionValue]));
     }
 
+    public function testSaveToStreamReturnsDecodedContent(): void
+    {
+        $content = 'Test';
+        $pagePdf = $this->createPagePdfWithResponse(\base64_encode($content));
+
+        $stream = $pagePdf->saveToStream();
+
+        self::assertIsResource($stream);
+        self::assertSame($content, \stream_get_contents($stream));
+
+        \fclose($stream);
+    }
+
+    public function testSaveToStreamUsesProvidedStream(): void
+    {
+        $content = 'Test';
+        $pagePdf = $this->createPagePdfWithResponse(\base64_encode($content));
+
+        $stream = \fopen('php://temp', 'r+');
+        $pagePdf->saveToStream($stream);
+
+        // the decoding filter must have been removed: later writes go through verbatim
+        \fwrite($stream, 'raw');
+
+        \rewind($stream);
+        self::assertSame($content.'raw', \stream_get_contents($stream));
+
+        \fclose($stream);
+    }
+
+    public function testSaveToStreamWritesLargeContentInChunks(): void
+    {
+        $content = \str_repeat('abcdef', 500000);
+        $pagePdf = $this->createPagePdfWithResponse(\base64_encode($content));
+
+        $stream = $pagePdf->saveToStream();
+
+        self::assertSame($content, \stream_get_contents($stream));
+
+        \fclose($stream);
+    }
+
+    public function testSaveToStreamRejectsNonWritableStream(): void
+    {
+        $pagePdf = $this->createPagePdfWithResponse(\base64_encode('Test'));
+
+        $this->expectException(FilesystemException::class);
+
+        $pagePdf->saveToStream(\fopen(__FILE__, 'r'));
+    }
+
+    public function testSaveToStreamRejectsClosedStream(): void
+    {
+        $pagePdf = $this->createPagePdfWithResponse(\base64_encode('Test'));
+
+        $stream = \fopen('php://temp', 'r+');
+        \fclose($stream);
+
+        $this->expectException(FilesystemException::class);
+
+        $pagePdf->saveToStream($stream);
+    }
+
+    public function testSaveToStreamRejectsMalformedData(): void
+    {
+        $pagePdf = $this->createPagePdfWithResponse('not base64!');
+
+        $this->expectException(PdfFailed::class);
+
+        $pagePdf->saveToStream();
+    }
+
+    public function testSaveToStreamRejectsZeroLengthWrites(): void
+    {
+        \stream_wrapper_register('zerowrite', ZeroWriteStreamForTests::class);
+
+        try {
+            $pagePdf = $this->createPagePdfWithResponse(\base64_encode('Test'));
+
+            $this->expectException(FilesystemException::class);
+
+            $pagePdf->saveToStream(\fopen('zerowrite://pdf', 'w'));
+        } finally {
+            \stream_wrapper_unregister('zerowrite');
+        }
+    }
+
     private static function getOptionsDataset(string $optionName, array $optionValues): array
     {
         return \array_reduce(
@@ -107,5 +200,19 @@ class PagePdfTest extends BaseTestCase
             },
             []
         );
+    }
+
+    private function createPagePdfWithResponse(string $base64Data): PagePdfForTests
+    {
+        $message = new Message('Page.printToPDF', []);
+        $mockSocket = new MockSocket();
+        $connection = new Connection($mockSocket);
+
+        $mockSocket->addReceivedData(\json_encode(['id' => $message->getId(), 'result' => ['data' => $base64Data]]));
+
+        $pagePdf = new PagePdfForTests();
+        $pagePdf->setResponseReader(new ResponseReader($message, $connection));
+
+        return $pagePdf;
     }
 }

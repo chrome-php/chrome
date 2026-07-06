@@ -11,11 +11,17 @@
 
 namespace HeadlessChromium\Test;
 
+use HeadlessChromium\Communication\ResponseReader;
 use HeadlessChromium\PageUtils\PagePdf;
 
 class PagePdfForTests extends PagePdf
 {
     public function __construct()
     {
+    }
+
+    public function setResponseReader(ResponseReader $responseReader): void
+    {
+        $this->responseReader = $responseReader;
     }
 }
