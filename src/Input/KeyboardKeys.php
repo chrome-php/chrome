@@ -218,6 +218,6 @@ trait KeyboardKeys
      */
     protected function setCurrentKey(string $key): void
     {
-        $this->currentKey = \ucfirst(\trim($key));
+        $this->currentKey = \ucfirst(\trim($key, " \n\r\t\0\x0B"));
     }
 }

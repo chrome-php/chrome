@@ -1,6 +1,11 @@
 # CHANGELOG
 
 
+## 1.16.1 (Unreleased)
+
+* Pass explicit trim characters ahead of the PHP 8.6 trim default change
+
+
 ## 1.16.0 (2026-07-06)
 
 * Promote the returned `PageUtils` helper classes to the public API
