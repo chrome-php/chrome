@@ -112,6 +112,46 @@ abstract class AbstractBinaryInput
     }
 
     /**
+     * Save data to the given stream.
+     *
+     * @param resource|null $stream If not provided, a php://temp is opened
+     * @param int           $timeout
+     *
+     * @throws FilesystemException
+     *
+     * @return resource
+     */
+    public function saveToStream($stream = null, int $timeout = 5000)
+    {
+        $response = $this->responseReader->waitForResponse($timeout);
+
+        if (!$response->isSuccessful()) {
+            throw $this->getException($response->getErrorMessage());
+        }
+
+        $ownStream = $stream === null;
+
+        if ($ownStream) {
+            $stream = \fopen('php://temp', 'r+');
+
+            if ($stream === false) {
+                throw new FilesystemException('Could not open a temporary stream.');
+            }
+        }
+
+        $filter = \stream_filter_append($stream, 'convert.base64-decode', STREAM_FILTER_WRITE);
+        \fwrite($stream, $response->getResultData('data'));
+        \stream_filter_remove($filter);
+        \fflush($stream);
+
+        if ($ownStream) {
+            \rewind($stream);
+        }
+
+        return $stream;
+    }
+
+    /**
      * @internal
      *
      * @return Exception
