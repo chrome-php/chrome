@@ -15,6 +15,7 @@ use finfo;
 use HeadlessChromium\BrowserFactory;
 use HeadlessChromium\Dom\Selector\XPathSelector;
 use HeadlessChromium\Exception\InvalidTimezoneId;
+use InvalidArgumentException;
 
 /**
  * @covers \HeadlessChromium\Page
@@ -61,6 +62,35 @@ class PageTest extends BaseTestCase
 
         self::assertSame('foobar', $value1);
         self::assertSame('barbaz', $value2);
+    }
+
+    public function testNavigateWithReferrer(): void
+    {
+        $factory = new BrowserFactory();
+
+        $browser = $factory->createBrowser();
+
+        $page = $browser->createPage();
+
+        // the default referrer policy strips the referrer when navigating to a file:// URL
+        $page->navigate(self::sitePath('a.html'), ['referrer' => 'https://example.com/', 'referrerPolicy' => 'unsafeUrl'])->waitForNavigation();
+
+        $referrer = $page->evaluate('document.referrer')->getReturnValue();
+
+        self::assertSame('https://example.com/', $referrer);
+    }
+
+    public function testNavigateWithInvalidOption(): void
+    {
+        $factory = new BrowserFactory();
+
+        $browser = $factory->createBrowser();
+
+        $page = $browser->createPage();
+
+        $this->expectException(InvalidArgumentException::class);
+
+        $page->navigate(self::sitePath('a.html'), ['frameId' => '1234']);
     }
 
     public function testSetTimezone(): void

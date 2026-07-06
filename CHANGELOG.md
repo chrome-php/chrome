@@ -5,6 +5,7 @@
 
 * Add `disableJavascript` option
 * Allow choosing the box model in `Node::getPosition()`
+* Allow setting `referrer`, `referrerPolicy` and `transitionType` in `Page::navigate()`
 
 
 ## 1.15.1 (UPCOMING)

@@ -20,6 +20,7 @@ use HeadlessChromium\Exception\NavigationExpired;
 use HeadlessChromium\Frame;
 use HeadlessChromium\Page;
 use HeadlessChromium\Utils;
+use InvalidArgumentException;
 
 /**
  * A class that is aimed to be used withing the method Page::navigate.
@@ -66,17 +67,12 @@ class PageNavigation
      *
      * @param Page   $page
      * @param string $url
-     * @param array{
-     *     // by default this method will wait for the page to load even if a new navigation occurs
-     *     // (ie: a new loader replaced the initial navigation). Passing strict to true will make the navigation to fail
-     *     // if a new loader is generated
-     *     strict?: bool,
-     *     transitionType?: string,
-     *     frameId?: string,
-     *     referrer?: string,
-     *     referrerPolicy?: string,
-     *     // for more options checkout the documentation https://chromedevtools.github.io/devtools-protocol/tot/Page/#method-navigate
-     * } $options
+     * @param array  $options
+     *                        - strict: make waitForNavigation to fail if a new navigation is initiated. Default: false
+     *                        - referrer: the referrer URL to use for the navigation
+     *                        - referrerPolicy: the referrer policy to use for the navigation
+     *                        - transitionType: the transition type to use for the navigation
+     *
      * @throws Exception\CommunicationException
      * @throws Exception\CommunicationException\CannotReadResponse
      * @throws Exception\CommunicationException\InvalidResponse
@@ -85,14 +81,21 @@ class PageNavigation
      */
     public function __construct(Page $page, string $url, array $options = [])
     {
+        $params = ['url' => $url];
+
+        foreach ($options as $key => $value) {
+            if (\in_array($key, ['referrer', 'referrerPolicy', 'transitionType'], true)) {
+                $params[$key] = $value;
+            } elseif ('strict' !== $key) {
+                throw new InvalidArgumentException('Invalid option "'.$key.'" for page navigation. Supported options are "strict", "referrer", "referrerPolicy" and "transitionType".');
+            }
+        }
+
         // make sure latest loaderId was pulled
         $page->getSession()->getConnection()->readData();
 
         // get previous loaderId for the navigation watcher
         $this->previousLoaderId = $page->getFrameManager()->getMainFrame()->getLatestLoaderId();
-
-        $params = array_merge(['url' => $url], $options);
-        unset($params['strict']);
 
         // send navigation message
         $this->navigateResponseReader = $page->getSession()->sendMessage(

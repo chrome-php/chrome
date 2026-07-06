@@ -213,7 +213,10 @@ class Page
     /**
      * @param string $url
      * @param array  $options
-     * @see https://chromedevtools.github.io/devtools-protocol/tot/Page/#method-navigate for available options
+     *                        - strict: make waitForNavigation to fail if a new navigation is initiated. Default: false
+     *                        - referrer: the referrer URL to use for the navigation
+     *                        - referrerPolicy: the referrer policy to use for the navigation
+     *                        - transitionType: the transition type to use for the navigation
      *
      * @throws CommunicationException
      *
