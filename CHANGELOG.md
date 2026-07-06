@@ -1,7 +1,7 @@
 # CHANGELOG
 
 
-## 1.16.1 (Unreleased)
+## 1.16.1 (2026-07-06)
 
 * Pass explicit trim characters ahead of the PHP 8.6 trim default change
 
