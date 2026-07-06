@@ -16,7 +16,6 @@ jobs:
       matrix:
         php: ['7.4', '8.0', '8.1', '8.2', '8.3', '8.4', '8.5']
         symfony: ['5', '6', '7', '8']
-        chrome: ['122', '150']
         exclude:
           - php: '7.4'
             symfony: '6'
@@ -40,6 +39,15 @@ jobs:
             symfony: '8'
           - php: '8.5'
             symfony: '5'
+        include:
+          - symfony: '5'
+            chrome: '122'
+          - symfony: '6'
+            chrome: '130'
+          - symfony: '7'
+            chrome: '140'
+          - symfony: '8'
+            chrome: '150'
 
     steps:
       - name: Checkout Code
