@@ -86,7 +86,7 @@ class MouseApiTest extends BaseTestCase
         $windowScrollY = $page->evaluate('window.scrollY')->getReturnValue();
 
         self::assertSame(100, $windowScrollY);
-        self::assertSame(100, $page->mouse()->getPosition()['y']);
+        self::assertSame(100.0, $page->mouse()->getPosition()['y']);
 
         // scrolling 100px up should revert the last action
         $page->mouse()->scrollUp(100);
@@ -94,7 +94,7 @@ class MouseApiTest extends BaseTestCase
         $windowScrollY = $page->evaluate('window.scrollY')->getReturnValue();
 
         self::assertSame(0, $windowScrollY);
-        self::assertSame(0, $page->mouse()->getPosition()['y']);
+        self::assertSame(0.0, $page->mouse()->getPosition()['y']);
 
         // try to scroll more than possible
         $page->mouse()->scrollDown(10000);
@@ -193,7 +193,7 @@ class MouseApiTest extends BaseTestCase
         $page->mouse()->scrollDown(100);
 
         self::assertSame(0, $page->evaluate('window.scrollY')->getReturnValue());
-        self::assertSame(['x' => 0, 'y' => 0], $page->mouse()->getPosition());
+        self::assertSame(['x' => 0.0, 'y' => 0.0], $page->mouse()->getPosition());
     }
 
     /**
@@ -210,7 +210,7 @@ class MouseApiTest extends BaseTestCase
         $page->mouse()->scrollDown(500); // Before patch this threw an OperationTimedOut Exception.
 
         self::assertSame(0, $page->evaluate('window.scrollY')->getReturnValue());
-        self::assertSame(['x' => 0, 'y' => 0], $page->mouse()->getPosition());
+        self::assertSame(['x' => 0.0, 'y' => 0.0], $page->mouse()->getPosition());
     }
 
     /**
@@ -382,5 +382,18 @@ class MouseApiTest extends BaseTestCase
 
         self::assertGreaterThanOrEqual(1, $y); // 87
         self::assertLessThanOrEqual(107, $y);
+    }
+
+    /**
+     * @throws CommunicationException
+     * @throws NoResponseAvailable
+     */
+    public function testMoveWithFractionalCoordinates(): void
+    {
+        $page = $this->openSitePage('b.html');
+
+        $page->mouse()->move(10.5, 20.25);
+
+        self::assertSame(['x' => 10.5, 'y' => 20.25], $page->mouse()->getPosition());
     }
 }

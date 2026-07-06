@@ -9,6 +9,8 @@
 * Add `Page::authenticate` and `Page::clearAuthentication` methods
 * Add `AbstractBinaryInput::saveToStream` method
 * Allow specifying options in `Page::screenshotElement()`
+* Allow fractional mouse coordinates in `Mouse::move()`
+* Return floats from `Mouse::getPosition()`
 
 
 ## 1.15.1 (UPCOMING)
