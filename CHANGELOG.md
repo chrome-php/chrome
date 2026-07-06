@@ -1,7 +1,7 @@
 # CHANGELOG
 
 
-## 1.16.0 (UPCOMING)
+## 1.16.0 (2026-07-06)
 
 * Promote the returned `PageUtils` helper classes to the public API
 * Add an option and browser API to disable JavaScript execution on existing and future pages
