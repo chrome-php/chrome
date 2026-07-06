@@ -3,14 +3,17 @@
 
 ## 1.16.0 (UPCOMING)
 
-* Add `disableJavascript` option
+* Promote the returned `PageUtils` helper classes to the public API
+* Add an option and browser API to disable JavaScript execution on existing and future pages
 * Allow choosing the box model in `Node::getPosition()`
 * Allow setting `referrer`, `referrerPolicy` and `transitionType` in `Page::navigate()`
-* Add `Page::authenticate` and `Page::clearAuthentication` methods
+* Add `Page::authenticate` and `Page::clearAuthentication` methods for HTTP authentication challenges
 * Add `AbstractBinaryInput::saveToStream` method
 * Allow specifying options in `Page::screenshotElement()`
 * Allow fractional mouse coordinates in `Mouse::move()`
 * Return floats from `Mouse::getPosition()`
+* Wait for socket data instead of polling for responses
+* Require `chrome-php/wrench` `^1.9`
 
 
 ## 1.15.1 (2026-07-06)
