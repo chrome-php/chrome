@@ -555,4 +555,38 @@ class PageTest extends BaseTestCase
         self::assertNotEmpty($screenshot->getBase64());
         self::assertGreaterThan(4000, \strlen($screenshot->getBase64()));
     }
+
+    public function testElementScreenshotWithOptions(): void
+    {
+        $finfo = new finfo(\FILEINFO_MIME_TYPE);
+        $factory = new BrowserFactory();
+
+        $browser = $factory->createBrowser();
+        $page = $browser->createPage();
+
+        $page->navigate($this->sitePath('domForm.html'))->waitForNavigation();
+
+        $element = $page->dom()->querySelector('#myform');
+        $screenshot = $page->screenshotElement($element, ['format' => 'jpeg', 'quality' => 80]);
+
+        $mimeType = $finfo->buffer(\base64_decode($screenshot->getBase64()));
+
+        self::assertSame('image/jpeg', $mimeType);
+    }
+
+    public function testElementScreenshotWithClip(): void
+    {
+        $factory = new BrowserFactory();
+
+        $browser = $factory->createBrowser();
+        $page = $browser->createPage();
+
+        $page->navigate($this->sitePath('domForm.html'))->waitForNavigation();
+
+        $element = $page->dom()->querySelector('#myform');
+
+        $this->expectException(InvalidArgumentException::class);
+
+        $page->screenshotElement($element, ['clip' => $page->getFullPageClip()]);
+    }
 }

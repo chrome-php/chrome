@@ -863,11 +863,28 @@ class Page
         return new PageScreenshot($responseReader);
     }
 
-    public function screenshotElement(Node $node): PageScreenshot
+    /**
+     * Take a screenshot of the given element.
+     *
+     * The same options as for Page::screenshot are supported, except "clip",
+     * which is derived from the element and may not be given.
+     *
+     * @param Node  $node
+     * @param array $options see Page::screenshot
+     *
+     * @throws CommunicationException
+     *
+     * @return PageScreenshot
+     */
+    public function screenshotElement(Node $node, array $options = []): PageScreenshot
     {
-        return $this->screenshot([
-            'clip' => $node->getClip(),
-        ]);
+        if (\array_key_exists('clip', $options)) {
+            throw new InvalidArgumentException('Invalid options "clip" for element screenshot. The clip is derived from the element.');
+        }
+
+        $options['clip'] = $node->getClip();
+
+        return $this->screenshot($options);
     }
 
     /**

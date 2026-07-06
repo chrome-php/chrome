@@ -8,6 +8,7 @@
 * Allow setting `referrer`, `referrerPolicy` and `transitionType` in `Page::navigate()`
 * Add `Page::authenticate` and `Page::clearAuthentication` methods
 * Add `AbstractBinaryInput::saveToStream` method
+* Allow specifying options in `Page::screenshotElement()`
 
 
 ## 1.15.1 (UPCOMING)
