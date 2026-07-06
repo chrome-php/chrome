@@ -690,6 +690,25 @@ if ($cookieBar) {
 }
 ```
 
+### HTTP Authentication
+
+You can set credentials to answer HTTP authentication challenges, such as basic authentication or a proxy requiring authentication, using `Page::authenticate` before navigating. If the credentials are rejected, an `AuthenticationFailed` exception is thrown while waiting for the navigation.
+
+```php
+use HeadlessChromium\Exception\AuthenticationFailed;
+
+try {
+    $page->authenticate('username', 'password', 'https://example.com');
+    $page->navigate('https://example.com/protected')->waitForNavigation();
+} catch (AuthenticationFailed $e) {
+    // invalid credentials
+}
+```
+
+The origin argument restricts the credentials to challenges coming from that origin, compared by scheme, host and port, so that they cannot leak to other origins, e.g. through pages embedding cross-origin resources. Omit the origin to answer every challenge, e.g. when authenticating to a proxy. Use `Page::clearAuthentication` to remove the credentials again.
+
+`Page::authenticate` intercepts requests using the DevTools fetch domain, so it should not be combined with custom `Fetch.enable` usage on the same page.
+
 ### Set user agent
 
 You can set up a user-agent per page:
