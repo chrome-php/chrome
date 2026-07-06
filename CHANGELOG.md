@@ -13,7 +13,7 @@
 * Return floats from `Mouse::getPosition()`
 
 
-## 1.15.1 (UPCOMING)
+## 1.15.1 (2026-07-06)
 
 * Fix mouse scrolling timing out when the page changes during the scroll
 * Fix Linux Chrome binary detection on POSIX shells
