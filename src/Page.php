@@ -31,6 +31,7 @@ use HeadlessChromium\Exception\OperationTimedOut;
 use HeadlessChromium\Exception\TargetDestroyed;
 use HeadlessChromium\Input\Keyboard;
 use HeadlessChromium\Input\Mouse;
+use HeadlessChromium\PageUtils\AuthenticationScope;
 use HeadlessChromium\PageUtils\CookiesGetter;
 use HeadlessChromium\PageUtils\PageEvaluation;
 use HeadlessChromium\PageUtils\PageLayoutMetrics;
@@ -78,6 +79,34 @@ class Page
      * @var Dom|null
      */
     protected $dom;
+
+    /**
+     * Credentials to be used to answer HTTP authentication challenges.
+     *
+     * @var array{username: string, password: string}|null
+     */
+    protected $authCredentials;
+
+    /**
+     * Scope the authentication credentials are restricted to.
+     *
+     * @var AuthenticationScope|null
+     */
+    protected $authScope;
+
+    /**
+     * Challenges that were already provided the credentials.
+     *
+     * @var array<string, true>
+     */
+    protected $attemptedAuthentications = [];
+
+    /**
+     * Whether the authentication challenge listeners were registered.
+     *
+     * @var bool
+     */
+    protected $authListenersRegistered = false;
 
     /**
      * Page constructor.
@@ -162,58 +191,137 @@ class Page
     }
 
     /**
-     * Sets credentials to be used when the page encounters an HTTP authentication challenge.
+     * Sets credentials to be used when the page encounters an HTTP authentication challenge,
+     * such as basic authentication or a proxy requiring authentication.
      *
-     * @throws AuthenticationFailed
+     * When an origin is given, the credentials are only used to answer challenges coming from
+     * that origin, compared by scheme, host and port, and only requests within that origin are
+     * intercepted. Omit the origin to answer every challenge, e.g. when authenticating to a proxy.
+     *
+     * Calling this method again replaces the credentials and the origin. If the browser rejects
+     * the credentials by repeating a challenge, the request is cancelled and an
+     * AuthenticationFailed exception is thrown from the method that is reading the browser
+     * messages at that time, usually PageNavigation::waitForNavigation.
+     *
+     * @throws InvalidArgumentException
      * @throws CommunicationException
+     * @throws NoResponseAvailable
+     * @throws OperationTimedOut
      */
-    public function authenticate(string $username, string $password): void
+    public function authenticate(string $username, string $password, ?string $origin = null): void
     {
         $this->assertNotClosed();
 
-        $credentialsAttempted = false;
+        $scope = null !== $origin ? new AuthenticationScope($origin) : null;
 
-        $this->getSession()->on('method:Fetch.authRequired', function (array $params) use ($username, $password, &$credentialsAttempted) {
-            if ($credentialsAttempted) {
-                $this->getSession()->sendMessageSync(
-                    new Message('Fetch.continueWithAuth', [
-                        'requestId' => $params['requestId'],
-                        'authChallengeResponse' => [
-                            'response' => 'CancelAuth',
-                        ],
-                    ])
-                );
+        $this->authCredentials = ['username' => $username, 'password' => $password];
+        $this->authScope = $scope;
+        $this->attemptedAuthentications = [];
+
+        $this->registerAuthenticationListeners();
+
+        $this->getSession()->sendMessageSync(
+            new Message('Fetch.enable', [
+                'handleAuthRequests' => true,
+                'patterns' => [
+                    ['urlPattern' => null !== $scope ? $scope->getUrlPattern() : '*'],
+                ],
+            ])
+        );
+    }
+
+    /**
+     * Removes the credentials set with Page::authenticate and stops intercepting requests.
+     *
+     * @throws CommunicationException
+     * @throws NoResponseAvailable
+     * @throws OperationTimedOut
+     */
+    public function clearAuthentication(): void
+    {
+        $this->assertNotClosed();
+
+        if (null === $this->authCredentials) {
+            return;
+        }
+
+        $this->authCredentials = null;
+        $this->authScope = null;
+        $this->attemptedAuthentications = [];
+
+        $this->getSession()->sendMessageSync(new Message('Fetch.disable'));
+    }
+
+    /**
+     * Registers the fetch domain listeners used to answer authentication challenges.
+     */
+    private function registerAuthenticationListeners(): void
+    {
+        if ($this->authListenersRegistered) {
+            return;
+        }
+
+        $this->authListenersRegistered = true;
+
+        $this->getSession()->on('method:Fetch.authRequired', function (array $params): void {
+            $requestId = $params['requestId'];
+            $challenge = $params['authChallenge'] ?? [];
+
+            $attemptKey = \implode("\0", [
+                $requestId,
+                $challenge['source'] ?? '',
+                $challenge['origin'] ?? '',
+                $challenge['scheme'] ?? '',
+                $challenge['realm'] ?? '',
+            ]);
+
+            // a challenge that was already provided the credentials means they were rejected
+            if (\array_key_exists($attemptKey, $this->attemptedAuthentications)) {
+                $this->cancelAuthenticationChallenge($requestId);
 
                 throw new AuthenticationFailed('Authentication failed: invalid credentials.');
             }
 
-            $credentialsAttempted = true;
+            // cancel out of scope challenges without exposing the credentials
+            if (null === $this->authCredentials || (null !== $this->authScope && !$this->authScope->matchesOrigin($challenge['origin'] ?? ''))) {
+                $this->cancelAuthenticationChallenge($requestId);
+
+                return;
+            }
+
+            $this->attemptedAuthentications[$attemptKey] = true;
 
             $this->getSession()->sendMessageSync(
                 new Message('Fetch.continueWithAuth', [
-                    'requestId' => $params['requestId'],
+                    'requestId' => $requestId,
                     'authChallengeResponse' => [
                         'response' => 'ProvideCredentials',
-                        'username' => $username,
-                        'password' => $password,
+                        'username' => $this->authCredentials['username'],
+                        'password' => $this->authCredentials['password'],
                     ],
                 ])
             );
         });
 
-        $this->getSession()->on('method:Fetch.requestPaused', function (array $params) {
+        $this->getSession()->on('method:Fetch.requestPaused', function (array $params): void {
             $this->getSession()->sendMessageSync(
                 new Message('Fetch.continueRequest', [
                     'requestId' => $params['requestId'],
                 ])
             );
         });
+    }
 
+    /**
+     * Cancels an authentication challenge without exposing the credentials.
+     */
+    private function cancelAuthenticationChallenge(string $requestId): void
+    {
         $this->getSession()->sendMessageSync(
-            new Message('Fetch.enable', [
-                'handleAuthRequests' => true,
-                'patterns' => [
-                    ['urlPattern' => '*'],
+            new Message('Fetch.continueWithAuth', [
+                'requestId' => $requestId,
+                'authChallengeResponse' => [
+                    'response' => 'CancelAuth',
                 ],
             ])
         );

@@ -11,6 +11,8 @@
 
 namespace HeadlessChromium\Exception;
 
-class AuthenticationFailed extends \Exception
+use Exception;
+
+class AuthenticationFailed extends Exception
 {
 }

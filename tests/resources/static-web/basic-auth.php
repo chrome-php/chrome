@@ -1,7 +1,16 @@
 <?php
 
-$expectedUser = 'testuser';
-$expectedPass = 'testpass';
+/*
+ * This file is part of Chrome PHP.
+ *
+ * (c) Soufiane Ghzal <sghzal@gmail.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+$expectedUser = $_GET['user'] ?? 'testuser';
+$expectedPass = $_GET['pass'] ?? 'testpass';
 
 $user = $_SERVER['PHP_AUTH_USER'] ?? null;
 $pass = $_SERVER['PHP_AUTH_PW'] ?? null;
