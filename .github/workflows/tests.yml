@@ -48,7 +48,7 @@ jobs:
         id: setup-chrome
         uses: browser-actions/setup-chrome@v2
         with:
-          chrome-version: 127
+          chrome-version: 128
 
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
