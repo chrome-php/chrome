@@ -297,6 +297,13 @@ try {
 }
 ```
 
+The navigation accepts the options ``strict``, ``referrer``, ``referrerPolicy`` and ``transitionType``:
+
+```php
+// navigate with a custom referrer
+$navigation = $page->navigate('http://example.com', ['referrer' => 'https://google.com/']);
+```
+
 #### Evaluate script on the page
 
 Once the page has completed the navigation you can evaluate arbitrary script on this page:

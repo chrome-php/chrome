@@ -20,6 +20,7 @@ use HeadlessChromium\Exception\NavigationExpired;
 use HeadlessChromium\Frame;
 use HeadlessChromium\Page;
 use HeadlessChromium\Utils;
+use InvalidArgumentException;
 
 /**
  * A class that is aimed to be used withing the method Page::navigate.
@@ -66,9 +67,11 @@ class PageNavigation
      *
      * @param Page   $page
      * @param string $url
-     * @param bool   $strict by default this method will wait for the page to load even if a new navigation occurs
-     *                       (ie: a new loader replaced the initial navigation). Passing $string to true will make the navigation to fail
-     *                       if a new loader is generated
+     * @param array  $options
+     *                        - strict: make waitForNavigation to fail if a new navigation is initiated. Default: false
+     *                        - referrer: the referrer URL to use for the navigation
+     *                        - referrerPolicy: the referrer policy to use for the navigation
+     *                        - transitionType: the transition type to use for the navigation
      *
      * @throws Exception\CommunicationException
      * @throws Exception\CommunicationException\CannotReadResponse
@@ -76,8 +79,18 @@ class PageNavigation
      *
      * @internal
      */
-    public function __construct(Page $page, string $url, bool $strict = false)
+    public function __construct(Page $page, string $url, array $options = [])
     {
+        $params = ['url' => $url];
+
+        foreach ($options as $key => $value) {
+            if (\in_array($key, ['referrer', 'referrerPolicy', 'transitionType'], true)) {
+                $params[$key] = $value;
+            } elseif ('strict' !== $key) {
+                throw new InvalidArgumentException('Invalid option "'.$key.'" for page navigation. Supported options are "strict", "referrer", "referrerPolicy" and "transitionType".');
+            }
+        }
+
         // make sure latest loaderId was pulled
         $page->getSession()->getConnection()->readData();
 
@@ -86,13 +99,13 @@ class PageNavigation
 
         // send navigation message
         $this->navigateResponseReader = $page->getSession()->sendMessage(
-            new Message('Page.navigate', ['url' => $url])
+            new Message('Page.navigate', $params)
         );
 
         $this->page = $page;
         $this->frame = $page->getFrameManager()->getMainFrame();
         $this->url = $url;
-        $this->strict = $strict;
+        $this->strict = $options['strict'] ?? false;
     }
 
     /**
