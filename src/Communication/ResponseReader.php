@@ -11,8 +11,10 @@
 
 namespace HeadlessChromium\Communication;
 
+use Generator;
 use HeadlessChromium\Exception\NoResponseAvailable;
 use HeadlessChromium\Exception\OperationTimedOut;
+use HeadlessChromium\Exception\TargetDestroyed;
 use HeadlessChromium\Utils;
 
 class ResponseReader
@@ -30,7 +32,7 @@ class ResponseReader
     /**
      * @var Response|null
      */
-    protected $response = null;
+    protected $response;
 
     /**
      * Response constructor.
@@ -119,7 +121,7 @@ class ResponseReader
      *
      * @throws NoResponseAvailable
      *
-     * @return \Generator|Response
+     * @return Generator|Response
      *
      * @internal
      */
@@ -179,7 +181,7 @@ class ResponseReader
 
         // check if the session was destroyed in the mean time
         if (null !== $this->message->getSessionId() && $this->connection->isSessionDestroyed($this->message->getSessionId())) {
-            throw new \HeadlessChromium\Exception\TargetDestroyed('The session is destroyed.');
+            throw new TargetDestroyed('The session is destroyed.');
         }
 
         return false;

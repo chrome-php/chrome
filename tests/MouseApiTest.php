@@ -17,6 +17,10 @@ use HeadlessChromium\BrowserFactory;
 use HeadlessChromium\Dom\Selector\CssSelector;
 use HeadlessChromium\Dom\Selector\Selector;
 use HeadlessChromium\Dom\Selector\XPathSelector;
+use HeadlessChromium\Exception\CommunicationException;
+use HeadlessChromium\Exception\ElementNotFoundException;
+use HeadlessChromium\Exception\NoResponseAvailable;
+use HeadlessChromium\Exception\OperationTimedOut;
 
 /**
  * @covers \HeadlessChromium\Browser
@@ -48,8 +52,8 @@ class MouseApiTest extends BaseTestCase
     }
 
     /**
-     * @throws \HeadlessChromium\Exception\CommunicationException
-     * @throws \HeadlessChromium\Exception\NoResponseAvailable
+     * @throws CommunicationException
+     * @throws NoResponseAvailable
      */
     public function testClickLink(): void
     {
@@ -68,8 +72,8 @@ class MouseApiTest extends BaseTestCase
     }
 
     /**
-     * @throws \HeadlessChromium\Exception\CommunicationException
-     * @throws \HeadlessChromium\Exception\NoResponseAvailable
+     * @throws CommunicationException
+     * @throws NoResponseAvailable
      */
     public function testScroll(): void
     {
@@ -104,9 +108,9 @@ class MouseApiTest extends BaseTestCase
     /**
      * Scrolling works when the scrollable area shrinks immediately after the scroll starts.
      *
-     * @throws \HeadlessChromium\Exception\CommunicationException
-     * @throws \HeadlessChromium\Exception\NoResponseAvailable
-     * @throws \HeadlessChromium\Exception\OperationTimedOut
+     * @throws CommunicationException
+     * @throws NoResponseAvailable
+     * @throws OperationTimedOut
      */
     public function testScrollDoesNotTimeOutWhenScrollableAreaShrinks(): void
     {
@@ -128,9 +132,9 @@ class MouseApiTest extends BaseTestCase
     /**
      * Scrolling works when an overlay pops up and locks scrolling immediately after the scroll starts.
      *
-     * @throws \HeadlessChromium\Exception\CommunicationException
-     * @throws \HeadlessChromium\Exception\NoResponseAvailable
-     * @throws \HeadlessChromium\Exception\OperationTimedOut
+     * @throws CommunicationException
+     * @throws NoResponseAvailable
+     * @throws OperationTimedOut
      */
     public function testScrollDoesNotTimeOutWhenModalLocksScrolling(): void
     {
@@ -153,9 +157,9 @@ class MouseApiTest extends BaseTestCase
     /**
      * Scrolling works when the layout shifts (e.g. due to lazy loaded image) during scrolling.
      *
-     * @throws \HeadlessChromium\Exception\CommunicationException
-     * @throws \HeadlessChromium\Exception\NoResponseAvailable
-     * @throws \HeadlessChromium\Exception\OperationTimedOut
+     * @throws CommunicationException
+     * @throws NoResponseAvailable
+     * @throws OperationTimedOut
      */
     public function testScrollDoesNotTimeOutWhenLayoutShiftsDuringScroll(): void
     {
@@ -178,9 +182,9 @@ class MouseApiTest extends BaseTestCase
     /**
      * Scrolling a page that cannot scroll is a no-op.
      *
-     * @throws \HeadlessChromium\Exception\CommunicationException
-     * @throws \HeadlessChromium\Exception\NoResponseAvailable
-     * @throws \HeadlessChromium\Exception\OperationTimedOut
+     * @throws CommunicationException
+     * @throws NoResponseAvailable
+     * @throws OperationTimedOut
      */
     public function testScrollOnNonScrollablePage(): void
     {
@@ -195,9 +199,9 @@ class MouseApiTest extends BaseTestCase
     /**
      * Scrolling returns when the page consumes the wheel event with preventDefault.
      *
-     * @throws \HeadlessChromium\Exception\CommunicationException
-     * @throws \HeadlessChromium\Exception\NoResponseAvailable
-     * @throws \HeadlessChromium\Exception\OperationTimedOut
+     * @throws CommunicationException
+     * @throws NoResponseAvailable
+     * @throws OperationTimedOut
      */
     public function testScrollReturnsWhenWheelEventIsPrevented(): void
     {
@@ -212,10 +216,10 @@ class MouseApiTest extends BaseTestCase
     /**
      * @dataProvider providerFindElementWithSingleElement
      *
-     * @throws \HeadlessChromium\Exception\CommunicationException
-     * @throws \HeadlessChromium\Exception\NoResponseAvailable
+     * @throws CommunicationException
+     * @throws NoResponseAvailable
      */
-    public function testFindElement_withSingleElement(Selector $selector): void
+    public function testFindElementWithSingleElement(Selector $selector): void
     {
         // initial navigation
         $page = $this->openSitePage('b.html');
@@ -240,8 +244,8 @@ class MouseApiTest extends BaseTestCase
     /**
      * @dataProvider providerFindElementAfterMove
      *
-     * @throws \HeadlessChromium\Exception\CommunicationException
-     * @throws \HeadlessChromium\Exception\NoResponseAvailable
+     * @throws CommunicationException
+     * @throws NoResponseAvailable
      */
     public function testFindElementAfterMove(Selector $selector): void
     {
@@ -270,8 +274,8 @@ class MouseApiTest extends BaseTestCase
     /**
      * @dataProvider providerFindElementWithMultipleElements
      *
-     * @throws \HeadlessChromium\Exception\CommunicationException
-     * @throws \HeadlessChromium\Exception\NoResponseAvailable
+     * @throws CommunicationException
+     * @throws NoResponseAvailable
      */
     public function testFindElementWithMultipleElements(Selector $selector, int $position, string $expectedPageTitle): void
     {
@@ -303,8 +307,8 @@ class MouseApiTest extends BaseTestCase
     /**
      * @dataProvider providerFindElementWithScrolling
      *
-     * @throws \HeadlessChromium\Exception\CommunicationException
-     * @throws \HeadlessChromium\Exception\NoResponseAvailable
+     * @throws CommunicationException
+     * @throws NoResponseAvailable
      */
     public function testFindElementWithScrolling(Selector $selector): void
     {
@@ -333,13 +337,13 @@ class MouseApiTest extends BaseTestCase
     /**
      * @dataProvider providerFindElementWithMissingElement
      *
-     * @throws \HeadlessChromium\Exception\CommunicationException
-     * @throws \HeadlessChromium\Exception\NoResponseAvailable
-     * @throws \HeadlessChromium\Exception\ElementNotFoundException
+     * @throws CommunicationException
+     * @throws NoResponseAvailable
+     * @throws ElementNotFoundException
      */
     public function testFindElementWithMissingElement(Selector $selector): void
     {
-        $this->expectException(\HeadlessChromium\Exception\ElementNotFoundException::class);
+        $this->expectException(ElementNotFoundException::class);
 
         // initial navigation
         $page = $this->openSitePage('b.html');
@@ -357,8 +361,8 @@ class MouseApiTest extends BaseTestCase
     }
 
     /**
-     * @throws \HeadlessChromium\Exception\CommunicationException
-     * @throws \HeadlessChromium\Exception\NoResponseAvailable
+     * @throws CommunicationException
+     * @throws NoResponseAvailable
      */
     public function testGetPosition(): void
     {

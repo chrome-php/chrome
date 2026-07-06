@@ -4,6 +4,9 @@ on:
   push:
   pull_request:
 
+permissions:
+  contents: read
+
 jobs:
   tests:
     name: PHP ${{ matrix.php }}; Symfony ${{ matrix.symfony }}
@@ -39,9 +42,11 @@ jobs:
 
     steps:
       - name: Checkout Code
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
-      - uses: browser-actions/setup-chrome@v1
+      - name: Setup Chrome
+        id: setup-chrome
+        uses: browser-actions/setup-chrome@v2
         with:
           chrome-version: 122
 
@@ -58,7 +63,7 @@ jobs:
         run: echo "::add-matcher::${{ runner.tool_cache }}/phpunit.json"
 
       - name: Select Symfony 5
-        uses: nick-invision/retry@v3
+        uses: nick-fields/retry@v4
         with:
           timeout_minutes: 5
           max_attempts: 5
@@ -66,7 +71,7 @@ jobs:
         if: "matrix.symfony == '5'"
 
       - name: Select Symfony 6
-        uses: nick-invision/retry@v3
+        uses: nick-fields/retry@v4
         with:
           timeout_minutes: 5
           max_attempts: 5
@@ -74,7 +79,7 @@ jobs:
         if: "matrix.symfony == '6'"
 
       - name: Select Symfony 7
-        uses: nick-invision/retry@v3
+        uses: nick-fields/retry@v4
         with:
           timeout_minutes: 5
           max_attempts: 5
@@ -82,7 +87,7 @@ jobs:
         if: "matrix.symfony == '7'"
 
       - name: Select Symfony 8
-        uses: nick-invision/retry@v3
+        uses: nick-fields/retry@v4
         with:
           timeout_minutes: 5
           max_attempts: 5
@@ -90,7 +95,7 @@ jobs:
         if: "matrix.symfony == '8'"
 
       - name: Install Dependencies
-        uses: nick-invision/retry@v3
+        uses: nick-fields/retry@v4
         with:
           timeout_minutes: 5
           max_attempts: 5
@@ -99,5 +104,5 @@ jobs:
       - name: Execute PHPUnit
         run: vendor/bin/phpunit
         env:
-          CHROME_PATH: /opt/hostedtoolcache/setup-chrome/chromium/122.0.6261.128/x64/chrome
+          CHROME_PATH: ${{ steps.setup-chrome.outputs.chrome-path }}
           CHROME_NO_SANDBOX: true

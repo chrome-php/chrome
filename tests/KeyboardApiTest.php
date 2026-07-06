@@ -13,6 +13,9 @@ namespace HeadlessChromium\Test;
 
 use HeadlessChromium\Browser;
 use HeadlessChromium\BrowserFactory;
+use HeadlessChromium\Exception\CommunicationException;
+use HeadlessChromium\Exception\CommunicationException\InvalidResponse;
+use HeadlessChromium\Exception\NoResponseAvailable;
 
 /**
  * @covers \HeadlessChromium\Input\Keyboard
@@ -43,8 +46,8 @@ class KeyboardApiTest extends BaseTestCase
     }
 
     /**
-     * @throws \HeadlessChromium\Exception\CommunicationException
-     * @throws \HeadlessChromium\Exception\NoResponseAvailable
+     * @throws CommunicationException
+     * @throws NoResponseAvailable
      */
     public function testTypeText(): void
     {
@@ -66,8 +69,8 @@ class KeyboardApiTest extends BaseTestCase
     }
 
     /**
-     * @throws \HeadlessChromium\Exception\CommunicationException
-     * @throws \HeadlessChromium\Exception\NoResponseAvailable
+     * @throws CommunicationException
+     * @throws NoResponseAvailable
      */
     public function testTypeRawKey(): void
     {
@@ -93,8 +96,8 @@ class KeyboardApiTest extends BaseTestCase
     }
 
     /**
-     * @throws \HeadlessChromium\Exception\CommunicationException
-     * @throws \HeadlessChromium\Exception\NoResponseAvailable
+     * @throws CommunicationException
+     * @throws NoResponseAvailable
      */
     public function testTypeKeyCombinations(): void
     {
@@ -131,8 +134,8 @@ class KeyboardApiTest extends BaseTestCase
     }
 
     /**
-     * @throws \HeadlessChromium\Exception\CommunicationException
-     * @throws \HeadlessChromium\Exception\NoResponseAvailable
+     * @throws CommunicationException
+     * @throws NoResponseAvailable
      */
     public function testReleaseAll(): void
     {
@@ -148,8 +151,8 @@ class KeyboardApiTest extends BaseTestCase
     }
 
     /**
-     * @throws \HeadlessChromium\Exception\CommunicationException
-     * @throws \HeadlessChromium\Exception\NoResponseAvailable
+     * @throws CommunicationException
+     * @throws NoResponseAvailable
      */
     public function testKeyInterval(): void
     {
@@ -170,9 +173,9 @@ class KeyboardApiTest extends BaseTestCase
     }
 
     /**
-     * @throws \HeadlessChromium\Exception\CommunicationException
-     * @throws \HeadlessChromium\Exception\NoResponseAvailable
-     * @throws \HeadlessChromium\Exception\CommunicationException\InvalidResponse
+     * @throws CommunicationException
+     * @throws NoResponseAvailable
+     * @throws InvalidResponse
      */
     public function testTypeUnicodeText(): void
     {

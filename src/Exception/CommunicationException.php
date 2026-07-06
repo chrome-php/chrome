@@ -11,6 +11,8 @@
 
 namespace HeadlessChromium\Exception;
 
-class CommunicationException extends \Exception
+use Exception;
+
+class CommunicationException extends Exception
 {
 }

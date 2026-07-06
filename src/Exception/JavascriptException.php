@@ -11,6 +11,8 @@
 
 namespace HeadlessChromium\Exception;
 
-class JavascriptException extends \Exception
+use Exception;
+
+class JavascriptException extends Exception
 {
 }

@@ -19,6 +19,7 @@ use HeadlessChromium\Communication\Socket\MockSocket;
 use HeadlessChromium\Exception\NoResponseAvailable;
 use HeadlessChromium\Exception\OperationTimedOut;
 use PHPUnit\Framework\TestCase;
+use stdClass;
 
 /**
  * @covers \HeadlessChromium\Communication\ResponseReader
@@ -99,7 +100,7 @@ class ResponseReaderTest extends TestCase
         $mockSocket = new MockSocket();
         $connection = new Connection($mockSocket);
 
-        $emitWatcher = new \stdClass();
+        $emitWatcher = new stdClass();
         $emitWatcher->emittedCount = 0;
 
         $connection->on('method:qux.quux', function () use ($emitWatcher): void {

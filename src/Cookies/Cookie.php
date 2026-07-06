@@ -11,7 +11,12 @@
 
 namespace HeadlessChromium\Cookies;
 
-class Cookie implements \ArrayAccess, \IteratorAggregate
+use ArrayAccess;
+use ArrayIterator;
+use IteratorAggregate;
+use RuntimeException;
+
+class Cookie implements ArrayAccess, IteratorAggregate
 {
     /**
      * @var array
@@ -77,7 +82,7 @@ class Cookie implements \ArrayAccess, \IteratorAggregate
      */
     public function offsetSet($offset, $value): void
     {
-        throw new \RuntimeException('Cannot set cookie values');
+        throw new RuntimeException('Cannot set cookie values');
     }
 
     /**
@@ -85,7 +90,7 @@ class Cookie implements \ArrayAccess, \IteratorAggregate
      */
     public function offsetUnset($offset): void
     {
-        throw new \RuntimeException('Cannot unset cookie values');
+        throw new RuntimeException('Cannot unset cookie values');
     }
 
     /**
@@ -103,8 +108,8 @@ class Cookie implements \ArrayAccess, \IteratorAggregate
         return new self($params);
     }
 
-    public function getIterator(): \ArrayIterator
+    public function getIterator(): ArrayIterator
     {
-        return new \ArrayIterator($this->data);
+        return new ArrayIterator($this->data);
     }
 }

@@ -11,6 +11,8 @@
 
 namespace HeadlessChromium;
 
+use RuntimeException;
+
 class FrameManager
 {
     /**
@@ -88,7 +90,7 @@ class FrameManager
     public function getFrame($frameId): Frame
     {
         if (!isset($this->frames[$frameId])) {
-            throw new \RuntimeException(\sprintf('No such frame "%s"', $frameId));
+            throw new RuntimeException(\sprintf('No such frame "%s"', $frameId));
         }
 
         return $this->frames[$frameId];

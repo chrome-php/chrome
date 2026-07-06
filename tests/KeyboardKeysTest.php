@@ -74,13 +74,13 @@ class KeyboardKeysTest extends BaseTestCase
 
         self::assertSame($expectedKey, $this->keyboard->getCurrentKey());
         self::assertSame(0, $this->keyboard->getModifiers());
-        self::assertSame(1, \count($this->keyboard->getPressedKeys()));
+        self::assertCount(1, $this->keyboard->getPressedKeys());
         self::assertTrue($this->keyboard->isKeyPressed());
 
         $this->keyboard->onKeyRelease($key);
 
         self::assertSame($expectedKey, $this->keyboard->getCurrentKey());
-        self::assertSame(0, \count($this->keyboard->getPressedKeys()));
+        self::assertCount(0, $this->keyboard->getPressedKeys());
         self::assertSame(0, $this->keyboard->getModifiers());
         self::assertFalse($this->keyboard->isKeyPressed());
     }

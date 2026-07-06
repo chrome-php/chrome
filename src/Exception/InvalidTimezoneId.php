@@ -11,6 +11,8 @@
 
 namespace HeadlessChromium\Exception;
 
-class InvalidTimezoneId extends \Exception
+use Exception;
+
+class InvalidTimezoneId extends Exception
 {
 }

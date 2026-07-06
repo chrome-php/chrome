@@ -11,6 +11,8 @@
 
 namespace HeadlessChromium\Exception;
 
-class BrowserConnectionFailed extends \Exception
+use Exception;
+
+class BrowserConnectionFailed extends Exception
 {
 }

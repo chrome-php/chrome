@@ -11,6 +11,8 @@
 
 namespace HeadlessChromium\Exception;
 
-class NavigationExpired extends \Exception
+use Exception;
+
+class NavigationExpired extends Exception
 {
 }
