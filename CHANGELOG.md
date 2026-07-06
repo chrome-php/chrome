@@ -14,6 +14,7 @@
 * Return floats from `Mouse::getPosition()`
 * Wait for socket data instead of polling for responses
 * Require `chrome-php/wrench` `^1.9`
+* Support newer versions of Chrome
 
 
 ## 1.15.1 (2026-07-06)
