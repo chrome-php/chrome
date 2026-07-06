@@ -64,8 +64,9 @@ class KeyboardApiTest extends BaseTestCase
             ->evaluate('document.querySelector("#textarea").value;')
             ->getReturnValue();
 
-        // checks if the input contains the typed text
-        self::assertSame($text, $value);
+        // checks if the input contains the typed text, comparing carriage returns as
+        // newlines because chrome 149 and later normalize them while typing
+        self::assertSame(\str_replace("\r", "\n", $text), \str_replace("\r", "\n", $value));
     }
 
     /**

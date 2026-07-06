@@ -40,9 +40,9 @@ class BrowserFactoryTest extends BaseTestCase
 
         $page = $browser->createPage();
 
-        $response = $page->evaluate('[window.outerHeight, window.outerWidth]')->getReturnValue();
+        $response = $page->evaluate('[window.outerHeight, window.outerWidth, window.innerHeight, window.innerWidth]')->getReturnValue();
 
-        self::assertEquals([333, 1212], $response);
+        self::assertEquals([333, 1212, 333, 1212], $response);
     }
 
     public function testUserAgentOption(): void
@@ -190,11 +190,15 @@ class BrowserFactoryTest extends BaseTestCase
         $page2 = $browser->createPage();
         $page2TargetId = $page2->getSession()->getTargetId();
 
-        // update 2d browser
-        $browser2->getConnection()->readData();
+        // update 2d browser, waiting for the target created event to arrive
+        $target = null;
+        for ($i = 0; $i < 100 && null === $target; ++$i) {
+            \usleep(10000);
+            $browser2->getConnection()->readData();
+            $target = $browser2->getTarget($page2TargetId);
+        }
 
         // make sure 2nd browser received the new page
-        $target = $browser2->getTarget($page2TargetId);
         self::assertInstanceOf(Target::class, $target);
     }
 }

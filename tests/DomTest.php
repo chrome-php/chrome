@@ -257,17 +257,16 @@ class DomTest extends BaseTestCase
 
         $dom = $page->dom();
 
-        $nodeId = $dom->getNodeId();
-
         $reloadBtn = $dom->querySelector('#reload-btn');
         $reloadBtn->click();
 
         $page->waitForReload();
 
+        // the root node id must have been refetched for the query to find the button:
+        // chrome 142 and later may reuse the node id of the old document root, and older
+        // versions renumber the document on every fetch, so the ids cannot be compared
         $reloadBtn = $dom->querySelector('#reload-btn');
         $this->assertNotNull($reloadBtn);
-
-        $this->assertNotEquals($nodeId, $page->dom()->getNodeId());
     }
 
     public function testRegularNodeIsMarkedAsStaleAfterReload(): void
