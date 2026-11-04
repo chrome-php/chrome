@@ -20,6 +20,7 @@ use HeadlessChromium\Exception\CommunicationException\CannotReadResponse;
 use HeadlessChromium\Exception\CommunicationException\InvalidResponse;
 use HeadlessChromium\Exception\OperationTimedOut;
 use PHPUnit\Framework\TestCase;
+use stdClass;
 
 /**
  * @covers \HeadlessChromium\Communication\Connection
@@ -204,6 +205,43 @@ class ConnectionTest extends TestCase
             $data
         );
         self::assertFalse($connection->hasResponseForId(1));
+    }
+
+    public function testReadDataDispatchesAllEvents(): void
+    {
+        $connection = new Connection($this->mocSocket);
+        $connection->connect();
+
+        $emitWatcher = new stdClass();
+        $emitWatcher->emittedCount = 0;
+
+        $connection->on('method:qux.quux', function () use ($emitWatcher): void {
+            ++$emitWatcher->emittedCount;
+        });
+
+        $this->mocSocket->addReceivedData(\json_encode(['method' => 'qux.quux', 'params' => []]));
+        $this->mocSocket->addReceivedData(\json_encode(['method' => 'qux.quux', 'params' => []]));
+
+        self::assertTrue($connection->readData());
+        self::assertSame(2, $emitWatcher->emittedCount);
+    }
+
+    public function testReadDataReceivesOnlyOnce(): void
+    {
+        $connection = new Connection($this->mocSocket);
+        $connection->connect();
+
+        $connection->once('method:qux.quux', function (): void {
+            $this->mocSocket->addReceivedData(\json_encode(['id' => 1, 'foo' => 'bar']));
+        });
+
+        $this->mocSocket->addReceivedData(\json_encode(['method' => 'qux.quux', 'params' => []]));
+
+        self::assertTrue($connection->readData());
+        self::assertFalse($connection->hasResponseForId(1));
+
+        self::assertTrue($connection->readData());
+        self::assertTrue($connection->hasResponseForId(1));
     }
 
     public function testExceptionInvalideJson(): void

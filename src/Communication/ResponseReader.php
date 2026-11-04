@@ -168,7 +168,7 @@ class ResponseReader
 
         // read data
         while (!$this->connection->hasResponseForId($id)) {
-            if (!$this->connection->readLine()) {
+            if (!$this->connection->readLine() || !$this->connection->hasBufferedData()) {
                 break;
             }
         }
