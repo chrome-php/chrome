@@ -206,6 +206,22 @@ class ConnectionTest extends TestCase
         self::assertFalse($connection->hasResponseForId(1));
     }
 
+    public function testWaitForDataWhenMessagesAreAlreadyBuffered(): void
+    {
+        $connection = new Connection($this->mocSocket);
+        $connection->connect();
+
+        $this->mocSocket->addReceivedData(\json_encode(['id' => 1, 'result' => []]));
+        $this->mocSocket->addReceivedData(\json_encode(['id' => 2, 'result' => []]));
+
+        // readLine() pulls both messages from the socket but dispatches only the first one
+        self::assertTrue($connection->readLine());
+        self::assertTrue($connection->waitForData(0));
+
+        self::assertTrue($connection->readLine());
+        self::assertFalse($connection->waitForData(0));
+    }
+
     public function testExceptionInvalideJson(): void
     {
         $this->expectException(CannotReadResponse::class);

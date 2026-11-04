@@ -359,6 +359,11 @@ class Connection extends EventEmitter implements LoggerAwareInterface
      */
     public function waitForData(float $maxSeconds): bool
     {
+        // Messages already buffered by readData() are not visible to the socket select.
+        if ([] !== $this->receivedData) {
+            return true;
+        }
+
         return $this->wsClient instanceof WaitForDataInterface && $this->wsClient->waitForData($maxSeconds);
     }
 
