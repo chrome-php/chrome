@@ -1,6 +1,11 @@
 # CHANGELOG
 
 
+## 1.16.2 (Unreleased)
+
+* Fix buffered events delaying responses by 50ms each
+
+
 ## 1.16.1 (2026-07-06)
 
 * Pass explicit trim characters ahead of the PHP 8.6 trim default change

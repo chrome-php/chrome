@@ -123,6 +123,47 @@ class ResponseReaderTest extends TestCase
         self::assertSame(1, $emitWatcher->emittedCount);
     }
 
+    public function testCheckForResponseReadsPastEvents(): void
+    {
+        $message = new Message('foo', ['bar' => 'baz']);
+        $mockSocket = new MockSocket();
+        $connection = new Connection($mockSocket);
+
+        $emitWatcher = new stdClass();
+        $emitWatcher->emittedCount = 0;
+
+        $connection->on('method:qux.quux', function () use ($emitWatcher): void {
+            ++$emitWatcher->emittedCount;
+        });
+
+        $responseReader = new ResponseReader($message, $connection);
+
+        $mockSocket->addReceivedData(\json_encode(['method' => 'qux.quux', 'params' => []]));
+        $mockSocket->addReceivedData(\json_encode(['method' => 'qux.quux', 'params' => []]));
+        $mockSocket->addReceivedData(\json_encode(['id' => $message->getId(), 'foo' => 'qux']));
+
+        self::assertTrue($responseReader->checkForResponse());
+        self::assertSame(2, $emitWatcher->emittedCount);
+    }
+
+    public function testCheckForResponseReceivesOnlyOnce(): void
+    {
+        $message = new Message('foo', ['bar' => 'baz']);
+        $mockSocket = new MockSocket();
+        $connection = new Connection($mockSocket);
+
+        $connection->once('method:qux.quux', function () use ($mockSocket, $message): void {
+            $mockSocket->addReceivedData(\json_encode(['id' => $message->getId(), 'foo' => 'qux']));
+        });
+
+        $responseReader = new ResponseReader($message, $connection);
+
+        $mockSocket->addReceivedData(\json_encode(['method' => 'qux.quux', 'params' => []]));
+
+        self::assertFalse($responseReader->checkForResponse());
+        self::assertTrue($responseReader->checkForResponse());
+    }
+
     public function testExceptionNoResponse(): void
     {
         $message = new Message('foo', ['bar' => 'baz']);

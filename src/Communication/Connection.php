@@ -329,6 +329,10 @@ class Connection extends EventEmitter implements LoggerAwareInterface
 
         while ($this->readLine()) {
             $hasData = true;
+
+            if (!$this->hasBufferedData()) {
+                break;
+            }
         }
 
         return $hasData;
@@ -344,10 +348,20 @@ class Connection extends EventEmitter implements LoggerAwareInterface
         // dispatch first line of buffer
         $datum = \array_shift($this->receivedData);
         if ($datum) {
-            return $this->dispatchMessage($datum);
+            $this->dispatchMessage($datum);
         }
 
-        return false;
+        return null !== $datum;
+    }
+
+    /**
+     * True if received data is waiting to be read.
+     *
+     * @internal
+     */
+    public function hasBufferedData(): bool
+    {
+        return !empty($this->receivedData);
     }
 
     /**
