@@ -1,7 +1,7 @@
 # CHANGELOG
 
 
-## 1.16.2 (Unreleased)
+## 1.16.2 (2026-11-04)
 
 * Fix buffered events delaying responses by 50ms each
 
