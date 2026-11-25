@@ -1,6 +1,13 @@
 # CHANGELOG
 
 
+## 1.16.3 (Unreleased)
+
+* Fix failed connections and stalled reads when connecting to a browser over `wss://`
+* Require `chrome-php/wrench` `^1.9.3`
+* Add PHP 8.6 support
+
+
 ## 1.16.2 (2026-11-04)
 
 * Fix buffered events delaying responses by 50ms each
