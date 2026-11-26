@@ -1,7 +1,7 @@
 # CHANGELOG
 
 
-## 1.16.3 (Unreleased)
+## 1.16.3 (2026-11-25)
 
 * Fix failed connections and stalled reads when connecting to a browser over `wss://`
 * Require `chrome-php/wrench` `^1.9.3`
